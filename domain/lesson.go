@@ -29,7 +29,7 @@ type Section struct {
 type Exercise struct {
 	ID          int      `json:"id"`
 	Type        string   `json:"type"`
-	Topic 		string   `json:"topic"`
+	Topic       string   `json:"topic"`
 	Difficulty  string   `json:"difficulty"`
 	Question    string   `json:"question"`
 	Options     []string `json:"options,omitempty"`
@@ -42,12 +42,6 @@ type Lesson struct {
 	Overview  string     `json:"overview"`
 	Sections  []Section  `json:"sections"`
 	Exercises []Exercise `json:"exercises"`
-}
-
-type Document struct {
-	Title       string
-	ContentType string
-	Data        []byte
 }
 
 type DraftStatus string
@@ -70,10 +64,4 @@ type LessonDraft struct {
 	UpdatedAt    *time.Time  `json:"updated_at"`
 	Model        string      `json:"model"` // Ví dụ: "gemini-1.5-flash"
 	LessonData   *Lesson     `json:"lesson_data,omitempty"`
-}
-
-type AIModelInfo struct {
-	ID          string `json:"id"`           // Ví dụ: "gemini-1.5-flash", "gemini-2.0-flash"
-	DisplayName string `json:"display_name"` // Ví dụ: "Gemini 1.5 Flash"
-	Description string `json:"description"`  // Mô tả ngắn về model
 }
