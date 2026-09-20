@@ -37,17 +37,25 @@ func (a *AttendanceRecord) DurationMin() int {
 
 type ClassSession struct {
 	id         uuid.UUID
+	studentID  uuid.UUID
 	startAt    time.Time
 	endAt      time.Time
 	attendance []AttendanceRecord
 }
 
-func NewClassSession(startTime time.Time, endTime time.Time) (*ClassSession, error) {
+func NewClassSession(studentID uuid.UUID, startTime time.Time, endTime time.Time) (*ClassSession, error) {
+	if studentID == uuid.Nil() {
+		return nil, errors.New("student ID không được để trống")
+	}
+	if startTime.IsZero() || endTime.IsZero() {
+		return nil, errors.New("thời gian bắt đầu và kết thúc không được để trống")
+	}
 	if startTime.After(endTime) {
 		return nil, errors.New("thời gian bắt đầu phải nhỏ hơn thời gian kết thúc")
 	}
 	return &ClassSession{
 		id:         uuid.New(),
+		studentID:  studentID,
 		startAt:    startTime,
 		endAt:      endTime,
 		attendance: make([]AttendanceRecord, 0),
@@ -79,25 +87,35 @@ func (s *ClassSession) AddAttendance(name string, firstJoinedAt time.Time, lastL
 	}
 	return nil
 }
+func (s *ClassSession) StudentID() uuid.UUID {
+	return s.studentID
+}
+func (s *ClassSession) StartTime() time.Time {
+	return s.startAt
+}
+func (s *ClassSession) EndTime() time.Time {
+	return s.endAt
+}
+func (s *ClassSession) Attendance() []AttendanceRecord {
+	copied := make([]AttendanceRecord, len(s.attendance))
+	copy(copied, s.attendance)
+	return copied
+}
+func (s *ClassSession) ID() uuid.UUID {
+	return s.id
+}
 func ReconstituteClassSession(
 	id uuid.UUID,
+	studentID uuid.UUID,
 	startTime time.Time,
 	endTime time.Time,
 	attendance []AttendanceRecord,
 ) *ClassSession {
 	return &ClassSession{
 		id:         id, // 👈 Nhận ID đã có từ SQLite
+		studentID:  studentID,
 		startAt:    startTime,
 		endAt:      endTime,
 		attendance: attendance,
 	}
-}
-
-func (s *ClassSession) ID() uuid.UUID        { return s.id }
-func (s *ClassSession) StartTime() time.Time { return s.startAt }
-func (s *ClassSession) EndTime() time.Time   { return s.endAt }
-func (s *ClassSession) Attendance() []AttendanceRecord {
-	copied := make([]AttendanceRecord, len(s.attendance))
-	copy(copied, s.attendance)
-	return copied
 }

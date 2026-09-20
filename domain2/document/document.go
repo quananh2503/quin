@@ -52,4 +52,10 @@ func (d *SourceDocument) ID() uuid.UUID             { return d.id }
 func (d *SourceDocument) TotalPages() int           { return d.totalPages }
 func (d *SourceDocument) PagePreviewURLs() []string { return d.pagePreviewURLs }
 func (d *SourceDocument) StoragePath() string       { return d.storagePath }
-func (d *SourceDocument) IsReady() bool             { return d.status == DocStatusReady }
+func (d *SourceDocument) CreatedAt() time.Time      { return d.createdAt }
+func (d *SourceDocument) OriginalFileName() string  { return d.originalFileName }
+func (d *SourceDocument) ErrorReason() error        { return d.ErrReason }
+func (d *SourceDocument) Status() DocumentStatus    { return d.status }
+func (d *SourceDocument) IsReady() bool {
+	return d.status == DocStatusReady
+}

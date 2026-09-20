@@ -14,7 +14,7 @@ type LessonDraftRepo interface {
 }
 
 type LessonGenerator interface {
-	Generate(ctx context.Context, material lesson.StudyMaterial, model string, prompt string) (*lesson.Lesson, error)
+	Generate(ctx context.Context, title string, material lesson.StudyMaterial, model string, prompt string) (*lesson.Lesson, error)
 }
 
 type GenerateLessonCommand struct {
@@ -38,18 +38,18 @@ func (u *GenerateLessonUsecase) Create(ctx context.Context, cmd GenerateLessonCo
 		return uuid.Nil(), errors.New("material không được để trống")
 	}
 
-	draft := lesson.NewLessonDraft(cmd.Title, cmd.Model, cmd.Prompt, lesson.LessonDraftProcessing)
+	draft := lesson.NewLessonDraft(cmd.Title, cmd.Model, cmd.Prompt, lesson.LessonDraftProcessing, cmd.Material)
 
 	if err := u.repo.Save(ctx, draft); err != nil {
 		return uuid.Nil(), fmt.Errorf("không thể lưu Lesson Draft: %w", err)
 	}
 
-	go u.processGenerationInBackground(draft, cmd)
+	go u.processGenerationInBackground(draft, cmd.Title, cmd.Model, cmd.Prompt, cmd.Material)
 
 	return draft.ID(), nil
 }
 
-func (u *GenerateLessonUsecase) processGenerationInBackground(draft *lesson.LessonDraft, cmd GenerateLessonCommand) {
+func (u *GenerateLessonUsecase) processGenerationInBackground(draft *lesson.LessonDraft, title string, model string, prompt string, material lesson.StudyMaterial) {
 
 	bgCtx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 	defer cancel()
@@ -62,7 +62,7 @@ func (u *GenerateLessonUsecase) processGenerationInBackground(draft *lesson.Less
 		}
 	}()
 
-	generatedLesson, err := u.generator.Generate(bgCtx, cmd.Material, cmd.Model, cmd.Prompt)
+	generatedLesson, err := u.generator.Generate(bgCtx, title, material, model, prompt)
 	if err != nil {
 		err = fmt.Errorf("AI Grader lỗi khi tạo bài giảng: %w", err)
 		return

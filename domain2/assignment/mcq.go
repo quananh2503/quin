@@ -28,6 +28,15 @@ func (a MCQAnswer) IsValid(ex exercise.MultipleChoiceExercise) (bool, string) {
 	}
 	return false, "Đáp án không hợp lệ"
 }
+func (a MCQAnswer) SelectedOption() string {
+	return a.selectedOption
+}
+func (a MCQAnswer) WorkingText() string {
+	return a.workingText
+}
+func (a MCQAnswer) WorkingData() [][]byte {
+	return a.workingData
+}
 
 type MCQEvalReq struct {
 	itemID         uuid.UUID
@@ -44,10 +53,11 @@ type MCQEvalRes struct {
 	detectedMistakes []DetectedMistake
 }
 
-func NewMCQEvalRes(itemID uuid.UUID, comment string) MCQEvalRes {
+func NewMCQEvalRes(itemID uuid.UUID, comment string, detectedMistakes []DetectedMistake) MCQEvalRes {
 	return MCQEvalRes{
-		itemID:  itemID,
-		comment: comment,
+		itemID:           itemID,
+		comment:          comment,
+		detectedMistakes: detectedMistakes,
 	}
 }
 func (e MCQEvalRes) ItemID() uuid.UUID { return e.itemID }
@@ -56,11 +66,12 @@ func (e MCQEvalRes) DetectedMistakes() []DetectedMistake {
 }
 
 type MCQAssignmentItem struct {
-	id        uuid.UUID
-	exercise  exercise.MultipleChoiceExercise
-	answer    *MCQAnswer
-	comment   string
-	isCorrect bool
+	id          uuid.UUID
+	exercise    exercise.MultipleChoiceExercise
+	answer      *MCQAnswer
+	comment     string
+	isCorrect   bool
+	isEvaluated bool
 }
 
 func (e *MCQAssignmentItem) OutputResult() string {
@@ -85,12 +96,14 @@ func (e *MCQAssignmentItem) ApplyEvalResult(res MCQEvalRes) []mistake.Mistake {
 		e.comment = "Chưa chọn đáp án"
 		return nil
 	}
+	e.isEvaluated = true
 	var mistakes []mistake.Mistake
 	if res.DetectedMistakes() != nil {
 		for _, m := range res.DetectedMistakes() {
 			mistakes = append(mistakes, mistake.NewMistake(m.topic, m.reason, e.id))
 		}
 	}
+
 	if e.answer.selectedOption != e.exercise.Answer() {
 		e.comment = res.comment
 		e.isCorrect = false
@@ -111,7 +124,10 @@ func (e *MCQAssignmentItem) GenerateEvalRequest() MCQEvalReq {
 		workText = e.answer.workingText
 		workData = e.answer.workingData
 	}
-
+	isValid, rs := e.IsValid()
+	if !isValid {
+		e.comment = rs
+	}
 	return MCQEvalReq{
 		itemID:         e.id,
 		selectedOption: selected,
@@ -132,12 +148,21 @@ func (e *MCQAssignmentItem) Comment() string {
 func (e *MCQAssignmentItem) IsCorrect() bool {
 	return e.isCorrect
 }
-func NewMCQAnswer(itemID uuid.UUID, selectedOption string, text string, data [][]byte) (*MCQAnswer, error) {
+func (e *MCQAssignmentItem) IsValid() (bool, string) {
+	if e.answer == nil {
+		return false, "Chưa chọn đáp án"
+	}
+	return e.answer.IsValid(e.exercise)
+}
+func (e *MCQAssignmentItem) IsEvaluated() bool {
+	return e.isEvaluated
+}
+func NewMCQAnswer(itemID uuid.UUID, selectedOption string, text string, data [][]byte) (MCQAnswer, error) {
 	if itemID == uuid.Nil() {
-		return nil, errors.New("itemID không hợp lệ")
+		return MCQAnswer{}, errors.New("itemID không hợp lệ")
 	}
 	// Chú ý: Trả về Value (hoặc Pointer trỏ tới Value), nhưng bản thân nó là bất biến
-	return &MCQAnswer{
+	return MCQAnswer{
 		itemID:         itemID,
 		selectedOption: selectedOption,
 		workingText:    text,

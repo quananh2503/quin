@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/url"
 	"strings"
+	"uuid"
 )
 
 type MaterialType string
@@ -11,6 +12,7 @@ type MaterialType string
 const (
 	MaterialYouTube MaterialType = "YOUTUBE"
 	MaterialPDF     MaterialType = "PDF"
+	MaterialMistake MaterialType = "MISTAKE"
 )
 
 // 1. ĐỊNH NGHĨA INTERFACE CHUNG
@@ -43,15 +45,44 @@ func NewYouTubeMaterial(rawURL string) (YouTubeMaterial, error) {
 
 // 3. STRUCT DÀNH RIÊNG CHO PDF (Không chứa URL rác)
 type PDFMaterial struct {
-	binaryData []byte
+	filePath string
+	pages    []int
 }
 
 func (p PDFMaterial) Type() MaterialType { return MaterialPDF }
-func (p PDFMaterial) BinaryData() []byte { return p.binaryData }
+func (p PDFMaterial) FilePath() string   { return p.filePath }
+func (p PDFMaterial) Pages() []int       { return p.pages }
 
-func NewSlicedPDFMaterial(data []byte) (PDFMaterial, error) {
-	if len(data) == 0 {
+func NewSlicedPDFMaterial(filepath string, pages []int) (PDFMaterial, error) {
+	if len(pages) == 0 {
 		return PDFMaterial{}, errors.New("dữ liệu PDF rỗng")
 	}
-	return PDFMaterial{binaryData: data}, nil
+	return PDFMaterial{filePath: filepath, pages: pages}, nil
+}
+
+type MistakeItem struct {
+	Topic  string
+	Reason string
+}
+type MistakeMaterial struct {
+	mistakeID      uuid.UUID
+	studentID      uuid.UUID
+	topic          string
+	reason         string
+	mistakeContext []MistakeItem
+}
+
+func NewMistakeMaterial(studentID uuid.UUID, mistakeID uuid.UUID, topic string, reason string, context []MistakeItem) MistakeMaterial {
+	return MistakeMaterial{
+		mistakeID:      mistakeID,
+		studentID:      studentID,
+		topic:          topic,
+		reason:         reason,
+		mistakeContext: context,
+	}
+}
+func (m MistakeMaterial) Type() MaterialType   { return MaterialMistake }
+func (m MistakeMaterial) StudentID() uuid.UUID { return m.studentID }
+func (m MistakeMaterial) MistakeID() uuid.UUID {
+	return m.mistakeID
 }

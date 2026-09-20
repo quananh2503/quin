@@ -17,33 +17,40 @@ import (
 // WorkspacePublisherGateway: Cổng giao tiếp duy nhất ra bên ngoài (OneNote / Google Docs)
 // Chú ý: Chỉ nhận các khái niệm thuần túy: StudentID (UUID), Lesson (Content), ChapterName, PageName.
 type WorkspacePublisherGateway interface {
-	PublishLesson(
+	PublishAssignment(
 		ctx context.Context,
 		assignmentID uuid.UUID,
 		studentID uuid.UUID,
-		studentName string, // Cần để OneNote tự tạo sổ nếu chưa có
+		studentName string,
 		lsn lesson.Lesson,
 		studentChapterName string,
 		teacherChapterName string,
 		pageName string,
 	) error
 }
-
 type StudentRepo interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*student.Student, error)
+	Save(ctx context.Context, stu student.Student) error
 }
 
-type DraftRepo interface {
-	GetByID(ctx context.Context, id uuid.UUID) (*lesson.LessonDraft, error)
+type LessonRepo interface {
+	GetByID(ctx context.Context, id uuid.UUID) (*lesson.Lesson, error)
 }
 
 // ==========================================================
 // 2. COMMAND (DTO ĐẦU VÀO)
 // ==========================================================
 
-type PublishLessonCommand struct {
-	DraftID            uuid.UUID
+type AssignNormalLessonCommand struct {
+	LessonID           uuid.UUID
 	StudentID          uuid.UUID
+	PageName           string
+	StudentChapterName string
+	TeacherChapterName string
+}
+
+type AssignRemediationLessonCommand struct {
+	LessonID           uuid.UUID
 	PageName           string
 	StudentChapterName string
 	TeacherChapterName string
@@ -53,74 +60,160 @@ type PublishLessonCommand struct {
 // 3. USECASE (ĐIỀU PHỐI TUYẾN TÍNH - KHÔNG RÒ RỈ HẠ TẦNG)
 // ==========================================================
 
-type PublishLessonUsecase struct {
-	studentRepo    StudentRepo
-	draftRepo      DraftRepo
-	assignmentRepo AssignmentRepo
-	publisher      WorkspacePublisherGateway
+type AssignLessonUsecase struct {
+	studentRepo      StudentRepo
+	lessonRepo       LessonRepo
+	assignmentRepo   AssignmentRepo
+	mistakeGraphRepo GraphMistakeRepo
+	publisher        WorkspacePublisherGateway
 }
 
-func NewPublishLessonUsecase(
+func NewAssignLessonUsecase(
 	studentRepo StudentRepo,
-	draftRepo DraftRepo,
+	lessonRepo LessonRepo,
 	assignmentRepo AssignmentRepo,
+	mistakeGraphRepo GraphMistakeRepo,
 	publisher WorkspacePublisherGateway,
-) *PublishLessonUsecase {
-	return &PublishLessonUsecase{
-		studentRepo:    studentRepo,
-		draftRepo:      draftRepo,
-		assignmentRepo: assignmentRepo,
-		publisher:      publisher,
+) *AssignLessonUsecase {
+
+	return &AssignLessonUsecase{
+		studentRepo:      studentRepo,
+		lessonRepo:       lessonRepo,
+		assignmentRepo:   assignmentRepo,
+		mistakeGraphRepo: mistakeGraphRepo,
+		publisher:        publisher,
 	}
 }
+func (u *AssignLessonUsecase) AssignNormal(
+	ctx context.Context,
+	cmd AssignNormalLessonCommand,
+) error {
 
-func (u *PublishLessonUsecase) Publish(ctx context.Context, cmd PublishLessonCommand) error {
-	// BƯỚC 1: Lấy các Entity nội bộ từ DB (Chỉ dùng UUID)
 	stu, err := u.studentRepo.GetByID(ctx, cmd.StudentID)
 	if err != nil {
 		return fmt.Errorf("không tìm thấy học sinh: %w", err)
 	}
 
-	draft, err := u.draftRepo.GetByID(ctx, cmd.DraftID)
+	lsn, err := u.lessonRepo.GetByID(ctx, cmd.LessonID)
 	if err != nil {
-		return fmt.Errorf("không tìm thấy bản nháp bài giảng: %w", err)
-	}
-	if draft.Lesson() == nil {
-		return errors.New("bản nháp chưa hoàn thành việc sinh bài giảng")
+		return fmt.Errorf("không tìm thấy lesson: %w", err)
 	}
 
-	newAssignment, err := assignment.NewNormalAssignmentFromLesson(stu.ID(), cmd.PageName, *draft.Lesson())
-	if err != nil {
-		return fmt.Errorf("lỗi khởi tạo assignment: %w", err)
-	}
-
-	// BƯỚC 2: Ra lệnh cho Gateway xuất bản lên nền tảng ngoài
-	// Gateway (Hạ tầng) sẽ tự:
-	// - Tra bảng mapping xem học sinh có sổ OneNote chưa (nếu chưa tự tạo Tên_HS, Tên_GV).
-	// - Tạo trang OneNote cho cả thầy và trò.
-	// - TỰ LƯU MỌI METADATA (URL, PageID) VÀO BẢNG external_identity_mappings.
-	// 👉 UseCase không cần nhận lại URL hay ID rác nào của OneNote!
-	err = u.publisher.PublishLesson(
-		ctx,
-		newAssignment.ID(),
+	a, err := assignment.NewNormalAssignmentFromLesson(
 		stu.ID(),
-		stu.Name(),
-		*draft.Lesson(),
+		cmd.PageName,
+		*lsn,
+	)
+	if err != nil {
+		return fmt.Errorf("không thể tạo assignment: %w", err)
+	}
+
+	if err := u.publish(
+		ctx,
+		stu,
+		lsn,
+		a,
 		cmd.StudentChapterName,
 		cmd.TeacherChapterName,
 		cmd.PageName,
+	); err != nil {
+		return err
+	}
+
+	return nil
+}
+func (u *AssignLessonUsecase) AssignRemediation(
+	ctx context.Context,
+	cmd AssignRemediationLessonCommand,
+) error {
+
+	lsn, err := u.lessonRepo.GetByID(ctx, cmd.LessonID)
+	if err != nil {
+		return fmt.Errorf("không tìm thấy lesson: %w", err)
+	}
+
+	material, ok := lsn.Material().(lesson.MistakeMaterial)
+	if !ok {
+		return errors.New("lesson không được tạo từ mistake")
+	}
+
+	studentID := material.StudentID()
+	mistakeID := material.MistakeID()
+
+	stu, err := u.studentRepo.GetByID(ctx, studentID)
+	if err != nil {
+		return fmt.Errorf("không tìm thấy học sinh: %w", err)
+	}
+
+	a, err := assignment.NewRemediationAssignmentFromLesson(
+		studentID,
+		mistakeID,
+		cmd.PageName,
+		*lsn,
 	)
 	if err != nil {
-		return fmt.Errorf("lỗi từ nền tảng xuất bản bên ngoài: %w", err)
+		return fmt.Errorf("không thể tạo remediation assignment: %w", err)
 	}
 
-	// BƯỚC 3: Tạo Aggregate Assignment nội bộ (Chỉ quản lý UUID và câu hỏi)
-
-	// BƯỚC 4: Lưu Assignment mới vào Database
-	if err := u.assignmentRepo.Save(ctx, newAssignment); err != nil {
-		return fmt.Errorf("lỗi lưu assignment vào cơ sở dữ liệu: %w", err)
+	if err := u.publish(
+		ctx,
+		stu,
+		lsn,
+		a,
+		cmd.StudentChapterName,
+		cmd.TeacherChapterName,
+		cmd.PageName,
+	); err != nil {
+		return err
 	}
 
-	// Xong! Không cần u.studentRepo.Save() vì Student không bị ô nhiễm ID OneNote nữa.
+	graph, err := u.mistakeGraphRepo.GetByStudentID(ctx, studentID)
+	if err != nil {
+		return fmt.Errorf("không thể lấy mistake graph: %w", err)
+	}
+
+	if err := graph.StartRemediation(mistakeID); err != nil {
+		return fmt.Errorf("không thể bắt đầu remediation: %w", err)
+	}
+
+	if err := u.mistakeGraphRepo.Save(ctx, graph); err != nil {
+		return fmt.Errorf("không thể lưu mistake graph: %w", err)
+	}
+
+	return nil
+}
+func (u *AssignLessonUsecase) publish(
+	ctx context.Context,
+	stu *student.Student,
+	lsn *lesson.Lesson,
+	a *assignment.Assignment,
+	studentChapterName string,
+	teacherChapterName string,
+	pageName string,
+) error {
+
+	if err := u.publisher.PublishAssignment(
+		ctx,
+		a.ID(),
+		stu.ID(),
+		stu.Name(),
+		*lsn,
+		studentChapterName,
+		teacherChapterName,
+		pageName,
+	); err != nil {
+		return fmt.Errorf(
+			"không thể publish assignment: %w",
+			err,
+		)
+	}
+
+	if err := u.assignmentRepo.Save(ctx, a); err != nil {
+		return fmt.Errorf(
+			"không thể lưu assignment: %w",
+			err,
+		)
+	}
+
 	return nil
 }

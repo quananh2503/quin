@@ -4,14 +4,8 @@ import (
 	"errors"
 	"meet-attendance-clean/domain2/lesson"
 	"meet-attendance-clean/domain2/mistake"
+	"time"
 	"uuid"
-)
-
-type AssignmentType string
-
-const (
-	AssignmentTypeNormal      AssignmentType = "Normal"
-	AssignmentTypeRemediation AssignmentType = "Remediation"
 )
 
 type AssignmentStatus string
@@ -22,16 +16,34 @@ const (
 	AssignmentStatusCompleted AssignmentStatus = "Completed"
 )
 
-type Assignment struct {
-	id        uuid.UUID
-	studentID uuid.UUID
-	items     []AssignmentItem
-	title     string
-	typ       AssignmentType
-	status    AssignmentStatus
+type AssignmentPurpose interface {
+	isAssignmentPurpose()
+}
+type AssignmentPurposeNormal struct {
 }
 
-func NewAssignment(studentID uuid.UUID, title string, typ AssignmentType, items ...AssignmentItem) (*Assignment, error) {
+func (AssignmentPurposeNormal) isAssignmentPurpose() {}
+
+type AssignmentPurposeRemediation struct {
+	mistakeID uuid.UUID
+}
+
+func (AssignmentPurposeRemediation) isAssignmentPurpose() {}
+func (p AssignmentPurposeRemediation) MistakeID() uuid.UUID {
+	return p.mistakeID
+}
+
+type Assignment struct {
+	id         uuid.UUID
+	studentID  uuid.UUID
+	items      []AssignmentItem
+	title      string
+	purpose    AssignmentPurpose
+	status     AssignmentStatus
+	assignedAt time.Time
+}
+
+func NewAssignment(studentID uuid.UUID, title string, purpose AssignmentPurpose, items ...AssignmentItem) (*Assignment, error) {
 	if studentID == uuid.Nil() {
 		return nil, errors.New("student ID không được định nghĩa")
 	}
@@ -42,12 +54,13 @@ func NewAssignment(studentID uuid.UUID, title string, typ AssignmentType, items 
 		return nil, errors.New("không có item nào được định nghĩa")
 	}
 	return &Assignment{
-		id:        uuid.New(),
-		studentID: studentID,
-		title:     title,
-		typ:       typ,
-		items:     items,
-		status:    AssignmentStatusPending,
+		id:         uuid.New(),
+		studentID:  studentID,
+		title:      title,
+		purpose:    purpose,
+		items:      items,
+		status:     AssignmentStatusPending,
+		assignedAt: time.Now().UTC(),
 	}, nil
 }
 func (a *Assignment) ID() uuid.UUID { return a.id }
@@ -60,11 +73,14 @@ func (a *Assignment) Items() []AssignmentItem {
 func (a *Assignment) Title() string {
 	return a.title
 }
-func (a *Assignment) Type() AssignmentType {
-	return a.typ
+func (a *Assignment) Purpose() AssignmentPurpose {
+	return a.purpose
 }
 func (a *Assignment) Status() AssignmentStatus {
 	return a.status
+}
+func (a *Assignment) AssignedAt() time.Time {
+	return a.assignedAt
 }
 func (a *Assignment) AddAnswers(anwsers []Answer) error {
 	mapAnsers := make(map[uuid.UUID]Answer)
@@ -98,7 +114,6 @@ func (a *Assignment) ApplyEvalResults(evalResults []EvaluationResult) ([]mistake
 		}
 	}
 	a.status = AssignmentStatusGraded
-
 	return mistakes, nil
 }
 func (a *Assignment) ListEvalReqs(itemIDs []uuid.UUID) []EvaluationRequest {
@@ -109,7 +124,13 @@ func (a *Assignment) ListEvalReqs(itemIDs []uuid.UUID) []EvaluationRequest {
 	var evalReqs []EvaluationRequest
 	for i := 0; i < len(a.items); i++ {
 		item := a.items[i]
+
 		if _, ok := mapID[item.ID()]; ok {
+			isValid, _ := item.IsValid()
+			if !isValid {
+				// item. = reason
+				continue
+			}
 			evalReqs = append(evalReqs, item.GenerateEvalRequest())
 		}
 	}
@@ -141,10 +162,11 @@ func NewNormalAssignmentFromLesson(
 		items = append(items, item)
 	}
 
-	return NewAssignment(studentID, title, AssignmentTypeNormal, items...)
+	return NewAssignment(studentID, title, AssignmentPurposeNormal{}, items...)
 }
 func NewRemediationAssignmentFromLesson(
 	studentID uuid.UUID,
+	mistakeID uuid.UUID,
 	title string,
 	lsn lesson.Lesson,
 ) (*Assignment, error) {
@@ -159,5 +181,5 @@ func NewRemediationAssignmentFromLesson(
 		items = append(items, item)
 	}
 
-	return NewAssignment(studentID, title, AssignmentTypeRemediation, items...)
+	return NewAssignment(studentID, title, AssignmentPurposeRemediation{mistakeID: mistakeID}, items...)
 }

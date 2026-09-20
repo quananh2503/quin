@@ -19,6 +19,15 @@ func NewMistakeGraph(studentID uuid.UUID) *MistakeGraph {
 		roots:     make([]*Mistake, 0),
 	}
 }
+func (g *MistakeGraph) ID() uuid.UUID {
+	return g.id
+}
+func (g *MistakeGraph) StudentID() uuid.UUID {
+	return g.studentID
+}
+func (g *MistakeGraph) Roots() []*Mistake {
+	return g.roots
+}
 
 // Hành vi 1: Thêm một lỗi mới vào cây
 // Nếu parentID == nil -> Đây là lỗi gốc, gắn vào roots.
@@ -41,6 +50,16 @@ func (g *MistakeGraph) RegisterMistake(parentID *uuid.UUID, topic, reason string
 	// Nhét trực tiếp vào mảng con của cha (Cấu trúc cây tự nhiên)
 	parentNode.children = append(parentNode.children, &newNode)
 	return &newNode, nil
+}
+func (g *MistakeGraph) StartRemediation(mistakeID uuid.UUID) error {
+	node := g.findNode(mistakeID)
+	if node == nil {
+		return errors.New("lỗi không tồn tại trong hệ thống")
+	}
+
+	// Ủy quyền cho chính nút đó tự kiểm tra luật đệ quy CanStartRemediation()!
+	return node.StartRemediation()
+
 }
 
 // Hành vi 2: Giải quyết một lỗi

@@ -72,11 +72,29 @@ func (m *Mistake) canReslove() bool {
 	return true
 }
 func (m *Mistake) Reslove() error {
+	m.status = MistakeStatusResolved
 	if !m.canReslove() {
+		m.status = MistakeStatusRemediating
 		return errors.New("không thể đóng lỗ hổng này vì các lỗ hổng tầng sâu hơn bên dưới chưa được giải quyết triệt để")
 	}
-	m.status = MistakeStatusResolved
+
 	now := time.Now().UTC()
 	m.resolvedAt = &now
 	return nil
+}
+func (m *Mistake) StartRemediation() error {
+	switch m.status {
+	case MistakeStatusDetected:
+		m.status = MistakeStatusRemediating
+		return nil
+
+	case MistakeStatusRemediating:
+		return nil
+
+	case MistakeStatusResolved:
+		return errors.New("lỗi đã được giải quyết")
+
+	default:
+		return errors.New("trạng thái lỗi không hợp lệ")
+	}
 }

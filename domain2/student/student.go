@@ -39,7 +39,21 @@ func (s *Student) CycleStartDay() int {
 func (s *Student) CreatedAt() time.Time {
 	return s.createdAt
 }
-
+func (s *Student) UpdateInfo(name string, cycleStartDay int) error {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		return errors.New("tên học sinh không được để trống")
+	}
+	if cycleStartDay < 1 || cycleStartDay > 31 {
+		return errors.New("ngày chu kỳ học phí phải từ ngày 1 đến ngày 31")
+	}
+	s.name = name
+	s.cycleStartDay = cycleStartDay
+	return nil
+}
+func (s *Student) StudentID() uuid.UUID {
+	return s.id
+}
 func NewStudent(name, class string, cycleStartDay int) (*Student, error) {
 	name = strings.TrimSpace(name)
 	if name == "" {

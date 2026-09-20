@@ -4,140 +4,96 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"meet-attendance-clean/domain2/assignment"
 	"meet-attendance-clean/domain2/lesson"
 	"meet-attendance-clean/domain2/mistake"
-	"strings"
+	"time"
 	"uuid"
 )
 
-type MistakeGraphRepo interface {
-	GetByStudentID(ctx context.Context, studentID uuid.UUID) (*mistake.MistakeGraph, error)
+type GraphMistakeRepo interface {
 	Save(ctx context.Context, graph *mistake.MistakeGraph) error
+	GetByStudentID(ctx context.Context, studentID uuid.UUID) (*mistake.MistakeGraph, error)
 }
-
-type RemediationAIGenerator interface {
-	GenerateRemediation(ctx context.Context, topic, reason string, ancestryContext string, model string, prompt string) (*lesson.Lesson, error)
-}
-type RemediationTaskRepo interface {
-	Save(ctx context.Context, task *mistake.RemediationTask) error
-	GetByAssinmentID(ctx context.Context, assignmentID uuid.UUID) (*mistake.RemediationTask, error)
-}
-
-type GenerateRemediationCommand struct {
-	StudentID uuid.UUID
-	MistakeID uuid.UUID
+type GenerateRemediationLessonCommand struct {
+	Title     string
 	Model     string
 	Prompt    string
+	StudentID uuid.UUID
+	MistakeID uuid.UUID
 }
 
 type GenerateRemediationLessonUsecase struct {
-	remediationTaskRepo RemediationTaskRepo
-	graphRepo           MistakeGraphRepo
-	assignmentRepo      AssignmentRepo
-	aiGenerator         RemediationAIGenerator
+	repo             LessonDraftRepo
+	generator        LessonGenerator
+	mistakeGraphRepo GraphMistakeRepo
 }
 
-func NewGenerateRemediationLessonUsecase(
-	remediationTaskRepo RemediationTaskRepo,
-	graphRepo MistakeGraphRepo,
-	assignmentRepo AssignmentRepo,
-	aiGen RemediationAIGenerator,
-) *GenerateRemediationLessonUsecase {
-	return &GenerateRemediationLessonUsecase{
-		remediationTaskRepo: remediationTaskRepo,
-		graphRepo:           graphRepo,
-		assignmentRepo:      assignmentRepo,
-		aiGenerator:         aiGen,
-	}
+func NewGenerateRemediationLessonUsecase(repo LessonDraftRepo, gen LessonGenerator, mistakeRepo GraphMistakeRepo) *GenerateRemediationLessonUsecase {
+	return &GenerateRemediationLessonUsecase{repo: repo, generator: gen, mistakeGraphRepo: mistakeRepo}
 }
 
-func (u *GenerateRemediationLessonUsecase) Create(ctx context.Context, cmd GenerateRemediationCommand) (uuid.UUID, error) {
-	// 1. Lấy cây phả hệ tri thức của học sinh (Aggregate Root: MistakeGraph)
-	graph, err := u.graphRepo.GetByStudentID(ctx, cmd.StudentID)
+func (u *GenerateRemediationLessonUsecase) Create(ctx context.Context, cmd GenerateRemediationLessonCommand) (uuid.UUID, error) {
+	if cmd.MistakeID == uuid.Nil() {
+		return uuid.Nil(), errors.New("mistake ID không được để trống")
+	}
+	if cmd.StudentID == uuid.Nil() {
+		return uuid.Nil(), errors.New("student ID không được để trống")
+	}
+
+	graph, err := u.mistakeGraphRepo.GetByStudentID(ctx, cmd.StudentID)
 	if err != nil {
-		return uuid.Nil(), fmt.Errorf("không tìm thấy hồ sơ lỗi của học sinh: %w", err)
+		return uuid.Nil(), fmt.Errorf("không thể lấy đồ thị lỗi: %w", err)
 	}
-
-	// 2. Lấy toàn bộ chuỗi lỗi từ gốc đến ngọn để AI hiểu vì sao học sinh sai
-	path, err := graph.GetAncestryPath(cmd.MistakeID)
+	mistakeContext, err := graph.GetAncestryPath(cmd.MistakeID)
 	if err != nil {
-		return uuid.Nil(), err
+		return uuid.Nil(), fmt.Errorf("không thể lấy ngữ cảnh lỗi: %w", err)
 	}
-	if len(path) == 0 {
-		return uuid.Nil(), errors.New("không tìm thấy lỗi sai trong phả hệ tri thức của học sinh")
+	if len(mistakeContext) == 0 {
+		return uuid.Nil(), errors.New("không tìm thấy ngữ cảnh lỗi")
+	}
+	coreMistake := mistakeContext[len(mistakeContext)-1]
+	items := []lesson.MistakeItem{}
+	for _, m := range mistakeContext {
+		items = append(items, lesson.MistakeItem{
+			Topic:  m.Topic(),
+			Reason: m.Reason(),
+		})
+	}
+	material := lesson.NewMistakeMaterial(cmd.StudentID, cmd.MistakeID, coreMistake.Topic(), coreMistake.Reason(), items)
+	if cmd.Title == "" {
+		cmd.Title = "Bài giảng khắc phục lỗi: " + coreMistake.Topic()
 	}
 
-	targetMistake := path[len(path)-1]
-	if targetMistake.Status() == mistake.MistakeStatusResolved {
-		return uuid.Nil(), errors.New("lỗ hổng này đã được khắc phục rồi, không cần tạo bài chữa")
+	draft := lesson.NewLessonDraft(cmd.Title, cmd.Model, cmd.Prompt, lesson.LessonDraftProcessing, material)
+
+	if err := u.repo.Save(ctx, draft); err != nil {
+		return uuid.Nil(), fmt.Errorf("không thể lưu Lesson Draft: %w", err)
 	}
 
-	// 3. Tạo Draft bài học
-	draftTitle := fmt.Sprintf("Bài chữa: %s", targetMistake.Topic())
-	draft := lesson.NewLessonDraft(draftTitle, cmd.Model, cmd.Prompt, lesson.LessonDraftProcessing)
-	if draft == nil {
-		return uuid.Nil(), errors.New("không tạo được bài học")
-	}
-	remediationTask, err := mistake.NewRemediationTask(targetMistake.ID(), cmd.StudentID, *draft)
-	if err != nil {
-		return uuid.Nil(), fmt.Errorf("không thể tạo tác vụ chữa lỗi: %w", err)
-	}
-	if err := u.remediationTaskRepo.Save(ctx, remediationTask); err != nil {
-		return uuid.Nil(), err
-	}
-	go u.processRemediationInBackground(remediationTask, graph, cmd.StudentID, targetMistake, path, cmd.Prompt, cmd.Model)
+	go u.processGenerationInBackground(draft, cmd.Title, cmd.Model, cmd.Prompt, material)
 
-	return remediationTask.ID(), nil
+	return draft.ID(), nil
 }
 
-func (u *GenerateRemediationLessonUsecase) processRemediationInBackground(
-	remediationTask *mistake.RemediationTask,
-	graph *mistake.MistakeGraph,
-	studentID uuid.UUID,
-	target *mistake.Mistake,
-	ancestry []*mistake.Mistake,
-	prompt string,
-	model string,
-) {
-	bgCtx := context.Background()
+func (u *GenerateRemediationLessonUsecase) processGenerationInBackground(draft *lesson.LessonDraft, title string, model string, prompt string, material lesson.StudyMaterial) {
 
-	// 1. Chuẩn bị ngữ cảnh lỗi từ phả hệ
-	ancestryContext := buildAncestryContextText(ancestry)
+	bgCtx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
+	defer cancel()
 
-	// 2. Gọi AI sinh bài học khắc phục
-	remediationLesson, err := u.aiGenerator.GenerateRemediation(bgCtx, target.Topic(), target.Reason(), ancestryContext, model, prompt)
+	var err error
+	defer func() {
+		if err != nil {
+			draft.ApplyError(err)
+			_ = u.repo.Save(bgCtx, draft)
+		}
+	}()
+
+	generatedLesson, err := u.generator.Generate(bgCtx, title, material, model, prompt)
 	if err != nil {
-		remediationTask.ApplyError(err)
+		err = fmt.Errorf("AI Grader lỗi khi tạo bài giảng: %w", err)
 		return
 	}
-	if remediationLesson == nil {
-		remediationTask.ApplyError(errors.New("AI không tạo bài chữa nào"))
-		return
-	}
-	remediationTask.ApplyLesson(*remediationLesson)
 
-	newAssignment, err := assignment.NewRemediationAssignmentFromLesson(remediationTask.StudentID(), remediationLesson.Title(), *remediationLesson)
-	// 4. Lưu lại cây lỗi và hoàn tất draft
-	remediationTask.MarkAsAssigned(newAssignment.ID())
-	err = u.assignmentRepo.Save(bgCtx, newAssignment)
-	if err != nil {
-		remediationTask.ApplyError(fmt.Errorf("không thể lưu assignment: %w", err))
-		return
-	}
-	err = u.graphRepo.Save(bgCtx, graph)
-	if err != nil {
-		remediationTask.ApplyError(fmt.Errorf("không thể lưu cây lỗi: %w", err))
-		return
-	}
-	err = u.remediationTaskRepo.Save(bgCtx, remediationTask)
-}
-
-func buildAncestryContextText(ancestry []*mistake.Mistake) string {
-	// Ghép chuỗi các lỗi trước đó để làm prompt cho AI
-	var sb strings.Builder
-	for i, m := range ancestry {
-		sb.WriteString(fmt.Sprintf("Tầng %d: Chủ đề '%s', Lý do sai: '%s'\n", i, m.Topic(), m.Reason()))
-	}
-	return sb.String()
+	draft.ApplyLesson(*generatedLesson)
+	err = u.repo.Save(bgCtx, draft)
 }

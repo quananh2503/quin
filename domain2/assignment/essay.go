@@ -24,6 +24,12 @@ func (a EssayAnswer) IsAnswer()         {}
 func (a EssayAnswer) TargetParts() []string {
 	return a.targetParts
 }
+func (a EssayAnswer) Text() string {
+	return a.text
+}
+func (a EssayAnswer) Data() [][]byte {
+	return a.data
+}
 
 // var _ Answer[exercise.EssayExercise] = &EssayAnswer{}
 
@@ -57,10 +63,11 @@ func NewSubEssayRes(label string, isCorrect bool, comment string) SubEssayRes {
 		comment:   comment,
 	}
 }
-func NewEssayEvalRes(itemID uuid.UUID, subItems []SubEssayRes) EssayEvalRes {
+func NewEssayEvalRes(itemID uuid.UUID, subItems []SubEssayRes, detectedMistakes []DetectedMistake) EssayEvalRes {
 	return EssayEvalRes{
-		itemID:   itemID,
-		subItems: subItems,
+		itemID:           itemID,
+		subItems:         subItems,
+		detectedMistakes: detectedMistakes,
 	}
 }
 
@@ -83,17 +90,27 @@ type subItem struct {
 	comment    string
 }
 type EssayAssigmentItem struct {
-	id       uuid.UUID
-	exercise exercise.EssayExercise
-	answer   *EssayAnswer
-	subItems []subItem
+	id          uuid.UUID
+	exercise    exercise.EssayExercise
+	answer      *EssayAnswer
+	subItems    []subItem
+	isEvaluated bool
 }
 
 func newEssayAssignmentItem(ex exercise.EssayExercise) EssayAssigmentItem {
+	var subItems []subItem
+	for _, sub := range ex.Parts() {
+		subItems = append(subItems, subItem{
+			label:      sub.Label(),
+			isSelected: false,
+			isCorrect:  false,
+			comment:    "",
+		})
+	}
 	return EssayAssigmentItem{
 		id:       uuid.New(),
 		exercise: ex,
-		// subItems: make([]subItem, len(ex.SubItems)),
+		subItems: subItems,
 	}
 }
 func (e *EssayAssigmentItem) Exercise() exercise.EssayExercise {
@@ -140,6 +157,8 @@ func (e *EssayAssigmentItem) OutputResult() string {
 	return fmt.Sprintf("Đúng: %d/%d ý", correct, selected)
 }
 func (e *EssayAssigmentItem) ApplyEvalResult(res EssayEvalRes) []mistake.Mistake {
+
+	e.isEvaluated = true
 	var mistakes []mistake.Mistake
 	for _, sub := range res.DetectedMistakes() {
 		mistakes = append(mistakes, mistake.NewMistake(sub.topic, sub.reason, e.id))
@@ -202,20 +221,33 @@ func (e *EssayAssigmentItem) Comment() string {
 	}
 	return finalComment
 }
+func (e *EssayAssigmentItem) IsValid() (bool, string) {
+	// if e.answer == nil {
+	// 	return false, "Chưa làm bài tự luận"
+	// }
+	// isValid, rs := e.answer.IsValid(e.exercise)
+	// if !isValid {
+	// 	return false, rs
+	// }
+	return true, ""
+}
+func (e *EssayAssigmentItem) IsEvaluated() bool {
+	return e.isEvaluated
+}
 
 var _ TypedAssignmentItem[exercise.EssayExercise, EssayAnswer, EssayEvalReq, EssayEvalRes] = &EssayAssigmentItem{}
 
-func NewEssayAnswer(itemID uuid.UUID, text string, data [][]byte, targetParts []string) (*EssayAnswer, error) {
+func NewEssayAnswer(itemID uuid.UUID, text string, data [][]byte, targetParts []string) (EssayAnswer, error) {
 	// if text == "" && len(data) == 0 {
 	// 	return nil, errors.New("bài làm tự luận không được để trống")
 	// }
 	for i := 0; i < len(targetParts); i++ {
 		targetParts[i] = strings.TrimSpace(targetParts[i])
 		if targetParts[i] == "" {
-			return nil, errors.New("phần đề cập (parts) cần có tên")
+			return EssayAnswer{}, errors.New("phần đề cập (parts) cần có tên")
 		}
 	}
-	return &EssayAnswer{
+	return EssayAnswer{
 		itemID:      itemID,
 		text:        text,
 		data:        data,

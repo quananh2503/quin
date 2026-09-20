@@ -8,6 +8,15 @@ import (
 	"uuid"
 )
 
+type AssignmentItemStatus string
+
+const (
+	AssignmentItemStatusNotEvaluated AssignmentItemStatus = "not_evaluated"
+	AssignmentItemStatusCorrect      AssignmentItemStatus = "correct"
+	AssignmentItemStatusIncorrect    AssignmentItemStatus = "incorrect"
+	AssignmentItemStatusInvalid      AssignmentItemStatus = "invalid"
+)
+
 type Answer interface {
 	ItemID() uuid.UUID
 	IsAnswer()
@@ -32,6 +41,8 @@ type AssignmentItem interface {
 	GenerateEvalRequest() EvaluationRequest
 	ApplyEvalResult(res EvaluationResult) ([]mistake.Mistake, error)
 	IsCorrect() bool
+	IsValid() (bool, string)
+	IsEvaluated() bool
 }
 
 type TypedAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult] interface {
@@ -42,7 +53,9 @@ type TypedAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, R
 	AddAnswer(raw A)
 	GenerateEvalRequest() Req
 	ApplyEvalResult(res Res) []mistake.Mistake
+	IsValid() (bool, string)
 	IsCorrect() bool
+	IsEvaluated() bool
 }
 type wrapperAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult, T TypedAssignmentItem[E, A, Req, Res]] struct {
 	inner T
@@ -88,6 +101,12 @@ func (w *wrapperAssignmentItem[E, A, Req, Res, T]) ApplyEvalResult(res Evaluatio
 func (w *wrapperAssignmentItem[E, A, Req, Res, T]) IsCorrect() bool {
 	return w.inner.IsCorrect()
 }
+func (w *wrapperAssignmentItem[E, A, Req, Res, T]) IsValid() (bool, string) {
+	return w.inner.IsValid()
+}
+func (w *wrapperAssignmentItem[E, A, Req, Res, T]) IsEvaluated() bool {
+	return w.inner.IsEvaluated()
+}
 
 // Tạo một file factory.go hoặc để chung trong assignment.go
 func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
@@ -96,7 +115,7 @@ func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
 	}
 
 	switch typedEx := ex.(type) {
-	case exercise.EssayExercise:
+	case *exercise.EssayExercise:
 		// Phải trả về pointer &EssayAssigmentItem
 		var subItems []subItem
 		for _, sub := range typedEx.Parts() {
@@ -115,7 +134,7 @@ func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
 		}
 		return newWrapItem(rawItem), nil
 
-	case exercise.MultipleChoiceExercise:
+	case *exercise.MultipleChoiceExercise:
 		// Phải trả về pointer &MCQAssignmentItem
 		rawItem := &MCQAssignmentItem{
 			id:        uuid.New(),
