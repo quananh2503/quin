@@ -33,5 +33,5 @@ func (u *UpdateInfoStudentUsecase) UpdateInfoStudent(ctx context.Context, cmd Up
 	if err != nil {
 		return err
 	}
-	return u.studentRepo.Save(ctx, *s)
+	return u.studentRepo.Save(ctx, s)
 }

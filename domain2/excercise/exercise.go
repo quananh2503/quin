@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"uuid"
 )
 
 type ExerciseType string
@@ -15,20 +14,19 @@ const (
 )
 
 type Exercise interface {
-	ID() uuid.UUID
 	Topic() string
 	Difficulty() string
 	Prompt() string
 	Type() ExerciseType
 }
 type exerciseBase struct {
-	id         uuid.UUID
+	// id         uuid.UUID
 	topic      string
 	difficulty string
 	prompt     string
 }
 
-func (e exerciseBase) ID() uuid.UUID      { return e.id }
+// func (e exerciseBase) ID() uuid.UUID      { return e.id }
 func (e exerciseBase) Topic() string      { return e.topic }
 func (e exerciseBase) Difficulty() string { return e.difficulty }
 func (e exerciseBase) Prompt() string     { return e.prompt }
@@ -108,33 +106,33 @@ func NewMultipleChoiceExercise(
 	options []MCOption,
 	answer string,
 	solution string,
-) (*MultipleChoiceExercise, error) {
+) (MultipleChoiceExercise, error) {
 
 	topic = strings.TrimSpace(topic)
 	if topic == "" {
-		return nil, errors.New("topic không được để trống")
+		return MultipleChoiceExercise{}, errors.New("topic không được để trống")
 	}
 
 	prompt = strings.TrimSpace(prompt)
 	if prompt == "" {
-		return nil, errors.New("đề bài (prompt) không được để trống")
+		return MultipleChoiceExercise{}, errors.New("đề bài (prompt) không được để trống")
 	}
 
 	if len(options) < 2 {
-		return nil, errors.New("câu hỏi trắc nghiệm phải có ít nhất 2 lựa chọn")
+		return MultipleChoiceExercise{}, errors.New("câu hỏi trắc nghiệm phải có ít nhất 2 lựa chọn")
 	}
 
 	// 3. Chuẩn hóa đáp án (Xóa khoảng trắng thừa và chuyển thành chữ HOA)
 	cleanAnswer := strings.TrimSpace(strings.ToUpper(answer))
 	if cleanAnswer == "" {
-		return nil, errors.New("đáp án (answer) không được để trống")
+		return MultipleChoiceExercise{}, errors.New("đáp án (answer) không được để trống")
 	}
 
 	// 4. Invariant: Kiểm tra chữ cái đáp án có nằm trong phạm vi của Options không
 	// Ví dụ: Có 4 options thì đáp án chỉ được phép là 'A', 'B', 'C', hoặc 'D'
 	firstChar := cleanAnswer[0]
 	if firstChar < 'A' || firstChar > 'Z' {
-		return nil, fmt.Errorf("đáp án phải bắt đầu bằng chữ cái (A-Z), nhận được: %s", cleanAnswer)
+		return MultipleChoiceExercise{}, fmt.Errorf("đáp án phải bắt đầu bằng chữ cái (A-Z), nhận được: %s", cleanAnswer)
 	}
 
 	// Tính chỉ số index từ ký tự: 'A' -> 0, 'B' -> 1, 'C' -> 2...
@@ -143,16 +141,16 @@ func NewMultipleChoiceExercise(
 	// 🛡️ CHẶN LOGIC CHUẨN XÁC: Index âm hoặc vượt quá số lượng options
 	if optionIndex < 0 || optionIndex >= len(options) {
 		maxAllowedLetter := string(rune('A' + len(options) - 1))
-		return nil, fmt.Errorf("đáp án '%s' không hợp lệ: câu hỏi có %d lựa chọn (chỉ chấp nhận từ A đến %s)", cleanAnswer, len(options), maxAllowedLetter)
+		return MultipleChoiceExercise{}, fmt.Errorf("đáp án '%s' không hợp lệ: câu hỏi có %d lựa chọn (chỉ chấp nhận từ A đến %s)", cleanAnswer, len(options), maxAllowedLetter)
 	}
 
 	// 5. Khởi tạo Entity an toàn 100%
-	return &MultipleChoiceExercise{
-		id:         uuid.New(),
+	return MultipleChoiceExercise{
+		// id:         uuid.New(),
 		topic:      topic,
 		difficulty: strings.TrimSpace(difficulty),
 		prompt:     prompt,
-		options:    options,
+		options:    append([]MCOption(nil), options...), // Copy slice để tránh bị thay đổi từ bên ngoài
 		answer:     cleanAnswer,
 		solution:   strings.TrimSpace(solution),
 	}, nil
@@ -163,50 +161,50 @@ func NewEssayExercise(
 	difficulty string,
 	prompt string,
 	parts []EssayPart,
-) (*EssayExercise, error) {
+) (EssayExercise, error) {
 
 	topic = strings.TrimSpace(topic)
 	if topic == "" {
-		return nil, errors.New("topic không được để trống")
+		return EssayExercise{}, errors.New("topic không được để trống")
 	}
 
 	prompt = strings.TrimSpace(prompt)
 	if prompt == "" {
-		return nil, errors.New("đề bài (prompt) không được để trống")
+		return EssayExercise{}, errors.New("đề bài (prompt) không được để trống")
 	}
 
 	if len(parts) == 0 {
-		return nil, errors.New("các phần đề cập (parts) không được để trống")
+		return EssayExercise{}, errors.New("các phần đề cập (parts) không được để trống")
 	}
-
+	newParts := append([]EssayPart(nil), parts...)
 	for i := 0; i < len(parts); i++ {
-		part := &parts[i]
+		part := &newParts[i]
 		part.label = strings.TrimSpace(part.label)
 		if part.label == "" {
-			return nil, errors.New("phần đề cập (parts) cần có tên")
+			return EssayExercise{}, errors.New("phần đề cập (parts) cần có tên")
 		}
 
 		part.question = strings.TrimSpace(part.question)
 		if part.question == "" {
-			return nil, errors.New("phần đề cập (parts) cần có câu hỏi")
+			return EssayExercise{}, errors.New("phần đề cập (parts) cần có câu hỏi")
 		}
 
 		part.solution = strings.TrimSpace(part.solution)
 		if part.solution == "" {
-			return nil, errors.New("phần đề cập (parts) cần có câu trả lời")
+			return EssayExercise{}, errors.New("phần đề cập (parts) cần có câu trả lời")
 		}
 
 		part.rubric = strings.TrimSpace(part.rubric)
 		if part.rubric == "" {
-			return nil, errors.New("phần đề cập (parts) cần có đáp án")
+			return EssayExercise{}, errors.New("phần đề cập (parts) cần có đáp án")
 		}
 	}
 
-	return &EssayExercise{
-		id:         uuid.New(),
+	return EssayExercise{
+		// id:         uuid.New(),
 		topic:      topic,
 		difficulty: strings.TrimSpace(difficulty),
 		prompt:     prompt,
-		parts:      parts,
+		parts:      newParts, // Copy slice để tránh bị thay đổi từ bên ngoài
 	}, nil
 }

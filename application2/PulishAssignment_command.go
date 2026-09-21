@@ -30,7 +30,7 @@ type WorkspacePublisherGateway interface {
 }
 type StudentRepo interface {
 	GetByID(ctx context.Context, id uuid.UUID) (*student.Student, error)
-	Save(ctx context.Context, stu student.Student) error
+	Save(ctx context.Context, stu *student.Student) error
 }
 
 type LessonRepo interface {

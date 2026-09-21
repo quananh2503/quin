@@ -37,6 +37,7 @@ type LessonSource interface {
 	isLessonSource()
 }
 type Lesson struct {
+	id        uuid.UUID
 	title     string
 	overview  string
 	sections  []Section
@@ -44,6 +45,9 @@ type Lesson struct {
 	material  StudyMaterial
 }
 
+func (l *Lesson) ID() uuid.UUID {
+	return l.id
+}
 func (l *Lesson) Material() StudyMaterial {
 	return l.material
 }
@@ -54,12 +58,40 @@ func (l *Lesson) Overview() string {
 	return l.overview
 }
 func (l *Lesson) Sections() []Section {
-	return l.sections
+	copied := make([]Section, len(l.sections))
+	for i := range l.sections {
+		copied[i] = Section{
+			SectionTitle:      l.sections[i].SectionTitle,
+			TransitionIntro:   l.sections[i].TransitionIntro,
+			DetailedContent:   l.sections[i].DetailedContent,
+			KeyTakeaway:       l.sections[i].KeyTakeaway,
+			StudentClozeNotes: append([]string(nil), l.sections[i].StudentClozeNotes...),
+			TeacherExamples:   append([]TeacherExample(nil), l.sections[i].TeacherExamples...),
+		}
+	}
+	return copied
 }
 func (l *Lesson) Exercises() []exercise.Exercise {
-	return l.exercises
+	var exs []exercise.Exercise
+	for _, ex := range l.exercises {
+		exs = append(exs, ex)
+	}
+	return exs
 }
-
+func cloneSections(sections []Section) []Section {
+	copied := make([]Section, len(sections))
+	for i := range sections {
+		copied[i] = Section{
+			SectionTitle:      sections[i].SectionTitle,
+			TransitionIntro:   sections[i].TransitionIntro,
+			DetailedContent:   sections[i].DetailedContent,
+			KeyTakeaway:       sections[i].KeyTakeaway,
+			StudentClozeNotes: append([]string(nil), sections[i].StudentClozeNotes...),
+			TeacherExamples:   append([]TeacherExample(nil), sections[i].TeacherExamples...),
+		}
+	}
+	return copied
+}
 func NewLesson(title string, overview string, sections []Section, exercises []exercise.Exercise, material StudyMaterial) (*Lesson, error) {
 	if len(title) == 0 {
 		title = "Không có tiêu đề"
@@ -68,12 +100,16 @@ func NewLesson(title string, overview string, sections []Section, exercises []ex
 	if len(exercises) == 0 {
 		return nil, ErrErcerciseEmpty
 	}
+	if material == nil {
+		return nil, errors.New("material không được để trống")
+	}
 
 	return &Lesson{
+		id:        uuid.New(),
 		title:     title,
 		overview:  overview,
-		sections:  sections,
-		exercises: exercises,
+		sections:  cloneSections(sections),
+		exercises: append([]exercise.Exercise(nil), exercises...),
 		material:  material,
 	}, nil
 }

@@ -4,18 +4,21 @@ import (
 	"errors"
 	"fmt"
 	exercise "meet-attendance-clean/domain2/excercise"
-	"meet-attendance-clean/domain2/mistake"
 	"uuid"
 )
 
-type AssignmentItemStatus string
+type EvaluationOutcome string
 
 const (
-	AssignmentItemStatusNotEvaluated AssignmentItemStatus = "not_evaluated"
-	AssignmentItemStatusCorrect      AssignmentItemStatus = "correct"
-	AssignmentItemStatusIncorrect    AssignmentItemStatus = "incorrect"
-	AssignmentItemStatusInvalid      AssignmentItemStatus = "invalid"
+	EvaluationCorrect          EvaluationOutcome = "correct"
+	EvaluationPartiallyCorrect EvaluationOutcome = "partially_correct"
+	EvaluationIncorrect        EvaluationOutcome = "incorrect"
 )
+
+type ItemEvaluation struct {
+	outcome EvaluationOutcome
+	comment string
+}
 
 type Answer interface {
 	ItemID() uuid.UUID
@@ -24,10 +27,7 @@ type Answer interface {
 type EvaluationRequest interface {
 	ItemID() uuid.UUID
 }
-type DetectedMistake struct {
-	topic  string
-	reason string
-}
+
 type EvaluationResult interface {
 	ItemID() uuid.UUID
 	DetectedMistakes() []DetectedMistake
@@ -39,7 +39,7 @@ type AssignmentItem interface {
 	Exercise() exercise.Exercise
 	AddAnswer(raw Answer) error
 	GenerateEvalRequest() EvaluationRequest
-	ApplyEvalResult(res EvaluationResult) ([]mistake.Mistake, error)
+	ApplyEvalResult(res EvaluationResult) ([]DetectedMistake, error)
 	IsCorrect() bool
 	IsValid() (bool, string)
 	IsEvaluated() bool
@@ -52,7 +52,7 @@ type TypedAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, R
 	Exercise() E
 	AddAnswer(raw A)
 	GenerateEvalRequest() Req
-	ApplyEvalResult(res Res) []mistake.Mistake
+	ApplyEvalResult(res Res) []DetectedMistake
 	IsValid() (bool, string)
 	IsCorrect() bool
 	IsEvaluated() bool
@@ -88,7 +88,7 @@ func (w *wrapperAssignmentItem[E, A, Req, Res, T]) AddAnswer(raw Answer) error {
 func (w *wrapperAssignmentItem[E, A, Req, Res, T]) GenerateEvalRequest() EvaluationRequest {
 	return w.inner.GenerateEvalRequest()
 }
-func (w *wrapperAssignmentItem[E, A, Req, Res, T]) ApplyEvalResult(res EvaluationResult) ([]mistake.Mistake, error) {
+func (w *wrapperAssignmentItem[E, A, Req, Res, T]) ApplyEvalResult(res EvaluationResult) ([]DetectedMistake, error) {
 	typed, ok := res.(Res)
 	if !ok {
 		return nil, fmt.Errorf("item %s yêu cầu đáp án kiểu %T, nhận được %T", w.inner.ID(), *new(Res), res)
@@ -115,7 +115,7 @@ func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
 	}
 
 	switch typedEx := ex.(type) {
-	case *exercise.EssayExercise:
+	case exercise.EssayExercise:
 		// Phải trả về pointer &EssayAssigmentItem
 		var subItems []subItem
 		for _, sub := range typedEx.Parts() {
@@ -134,12 +134,11 @@ func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
 		}
 		return newWrapItem(rawItem), nil
 
-	case *exercise.MultipleChoiceExercise:
+	case exercise.MultipleChoiceExercise:
 		// Phải trả về pointer &MCQAssignmentItem
 		rawItem := &MCQAssignmentItem{
-			id:        uuid.New(),
-			exercise:  typedEx,
-			isCorrect: false,
+			id:       uuid.New(),
+			exercise: typedEx,
 		}
 		return newWrapItem(rawItem), nil
 
@@ -149,3 +148,26 @@ func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
 }
 
 var _ AssignmentItem = &wrapperAssignmentItem[exercise.Exercise, Answer, EvaluationRequest, EvaluationResult, TypedAssignmentItem[exercise.Exercise, Answer, EvaluationRequest, EvaluationResult]]{}
+
+type DetectedMistake struct {
+	topic            string
+	reason           string
+	assignmentItemID uuid.UUID
+}
+
+func NewDetectedMistake(topic, reason string, assignmentItemID uuid.UUID) DetectedMistake {
+	return DetectedMistake{
+		topic:            topic,
+		reason:           reason,
+		assignmentItemID: assignmentItemID,
+	}
+}
+func (d DetectedMistake) Topic() string {
+	return d.topic
+}
+func (d DetectedMistake) Reason() string {
+	return d.reason
+}
+func (d DetectedMistake) AssignmentItemID() uuid.UUID {
+	return d.assignmentItemID
+}

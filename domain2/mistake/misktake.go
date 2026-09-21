@@ -37,9 +37,10 @@ func (m *Mistake) Reason() string {
 func (m *Mistake) AssignmentItemID() uuid.UUID {
 	return m.assignmentItemID
 }
-func (m *Mistake) Children() []*Mistake {
-	return m.children
-}
+
+//	func (m *Mistake) Children() []*Mistake {
+//		return append([]*Mistake(nil), m.children...) // Trả về bản sao để tránh bị thay đổi từ bên ngoài
+//	}
 func (m *Mistake) CreatedAt() time.Time {
 	return m.createdAt
 }
@@ -49,8 +50,8 @@ func (m *Mistake) ResolvedAt() *time.Time {
 func (m *Mistake) Status() MistakeStatus {
 	return m.status
 }
-func NewMistake(topic string, reason string, assignmentItemID uuid.UUID) Mistake {
-	return Mistake{
+func newMistake(topic string, reason string, assignmentItemID uuid.UUID) *Mistake {
+	return &Mistake{
 		id:               uuid.New(),
 		topic:            topic,
 		reason:           reason,

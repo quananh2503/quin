@@ -97,7 +97,7 @@ func (u *GradeAssignmentUsecase) Grade(ctx context.Context, cmd GradeAssignmentC
 	return nil
 }
 
-func (u *GradeAssignmentUsecase) handleMistakeGraph(ctx context.Context, a *assignment.Assignment, detectedMistakes []mistake.Mistake) error {
+func (u *GradeAssignmentUsecase) handleMistakeGraph(ctx context.Context, a *assignment.Assignment, detectedMistakes []assignment.DetectedMistake) error {
 	var remediationMistakeID *uuid.UUID
 
 	switch purpose := a.Purpose().(type) {

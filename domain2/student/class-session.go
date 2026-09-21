@@ -116,6 +116,6 @@ func ReconstituteClassSession(
 		studentID:  studentID,
 		startAt:    startTime,
 		endAt:      endTime,
-		attendance: attendance,
+		attendance: append([]AttendanceRecord(nil), attendance...), // Copy slice để tránh bị thay đổi từ bên ngoài
 	}
 }

@@ -84,7 +84,9 @@ func (u *GenerateRemediationLessonUsecase) processGenerationInBackground(draft *
 	defer func() {
 		if err != nil {
 			draft.ApplyError(err)
-			_ = u.repo.Save(bgCtx, draft)
+			errCtx, cancel := context.WithTimeout(context.Background(), 101*time.Second)
+			defer cancel()
+			_ = u.repo.Save(errCtx, draft)
 		}
 	}()
 

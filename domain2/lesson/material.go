@@ -51,13 +51,13 @@ type PDFMaterial struct {
 
 func (p PDFMaterial) Type() MaterialType { return MaterialPDF }
 func (p PDFMaterial) FilePath() string   { return p.filePath }
-func (p PDFMaterial) Pages() []int       { return p.pages }
+func (p PDFMaterial) Pages() []int       { return append([]int(nil), p.pages...) } // Trả về bản sao để tránh bị thay đổi từ bên ngoài
 
 func NewSlicedPDFMaterial(filepath string, pages []int) (PDFMaterial, error) {
 	if len(pages) == 0 {
 		return PDFMaterial{}, errors.New("dữ liệu PDF rỗng")
 	}
-	return PDFMaterial{filePath: filepath, pages: pages}, nil
+	return PDFMaterial{filePath: filepath, pages: append([]int(nil), pages...)}, nil
 }
 
 type MistakeItem struct {
@@ -78,7 +78,7 @@ func NewMistakeMaterial(studentID uuid.UUID, mistakeID uuid.UUID, topic string, 
 		studentID:      studentID,
 		topic:          topic,
 		reason:         reason,
-		mistakeContext: context,
+		mistakeContext: append([]MistakeItem(nil), context...), // Copy slice để tránh bị thay đổi từ bên ngoài
 	}
 }
 func (m MistakeMaterial) Type() MaterialType   { return MaterialMistake }

@@ -19,12 +19,12 @@ type SyncConfigRepo interface {
 // Kết quả mà Gateway trả về: Đã được Hạ tầng "rửa sạch" thành Domain Model
 type MeetingSyncResult struct {
 	Sessions    []student.ClassSession
-	NewStudents []student.Student // Học sinh mới tự sinh nếu phát hiện phòng học mới
+	NewStudents []*student.Student // Học sinh mới tự sinh nếu phát hiện phòng học mới
 }
 
 // MeetingProviderGateway: Tên khái quát, không dính chữ Google Meet
 type MeetingProviderGateway interface {
-	SyncMeetings(ctx context.Context, fromTime time.Time) (*MeetingSyncResult, error)
+	SyncMeetings(ctx context.Context, fromTime time.Time) (MeetingSyncResult, error)
 }
 
 type ClassSessionRepo interface {
@@ -32,7 +32,7 @@ type ClassSessionRepo interface {
 }
 
 type StudentBatchRepo interface {
-	SaveBatch(ctx context.Context, students []student.Student) error
+	SaveBatch(ctx context.Context, students []*student.Student) error
 }
 
 // ==========================================================

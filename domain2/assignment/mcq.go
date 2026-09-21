@@ -3,7 +3,6 @@ package assignment
 import (
 	"errors"
 	exercise "meet-attendance-clean/domain2/excercise"
-	"meet-attendance-clean/domain2/mistake"
 	"uuid"
 )
 
@@ -35,7 +34,7 @@ func (a MCQAnswer) WorkingText() string {
 	return a.workingText
 }
 func (a MCQAnswer) WorkingData() [][]byte {
-	return a.workingData
+	return cloneBytes2D(a.workingData)
 }
 
 type MCQEvalReq struct {
@@ -57,64 +56,74 @@ func NewMCQEvalRes(itemID uuid.UUID, comment string, detectedMistakes []Detected
 	return MCQEvalRes{
 		itemID:           itemID,
 		comment:          comment,
-		detectedMistakes: detectedMistakes,
+		detectedMistakes: append([]DetectedMistake(nil), detectedMistakes...),
 	}
 }
 func (e MCQEvalRes) ItemID() uuid.UUID { return e.itemID }
 func (e MCQEvalRes) DetectedMistakes() []DetectedMistake {
-	return e.detectedMistakes
+	return append([]DetectedMistake(nil), e.detectedMistakes...)
 }
 
 type MCQAssignmentItem struct {
-	id          uuid.UUID
-	exercise    exercise.MultipleChoiceExercise
-	answer      *MCQAnswer
-	comment     string
-	isCorrect   bool
-	isEvaluated bool
+	id         uuid.UUID
+	exercise   exercise.MultipleChoiceExercise
+	answer     *MCQAnswer
+	evaluation *ItemEvaluation
 }
 
 func (e *MCQAssignmentItem) OutputResult() string {
 	if e.answer == nil {
 		return "Chưa chọn đáp án"
 	}
-	isValid, rs := e.answer.IsValid(e.exercise)
-	if !isValid {
-		return rs
+	valid, reason := e.answer.IsValid(e.exercise)
+	if !valid {
+		return reason
 	}
-	if e.answer.selectedOption == e.exercise.Answer() {
+
+	if e.evaluation == nil {
+		return "Chưa chấm"
+	}
+
+	switch e.evaluation.outcome {
+	case EvaluationCorrect:
 		return "Đúng"
+	case EvaluationIncorrect:
+		return "Sai"
+	default:
+		return "Chưa chấm"
 	}
-	return "Sai"
 }
-func (e *MCQAssignmentItem) ApplyEvalResult(res MCQEvalRes) []mistake.Mistake {
+func (e *MCQAssignmentItem) ApplyEvalResult(res MCQEvalRes) []DetectedMistake {
 	if e.answer == nil {
 		return nil
 	}
-	if e.answer.selectedOption == "" {
-		e.isCorrect = false
-		e.comment = "Chưa chọn đáp án"
+	isValid, _ := e.answer.IsValid(e.exercise)
+	if !isValid {
 		return nil
 	}
-	e.isEvaluated = true
-	var mistakes []mistake.Mistake
+	var mistakes []DetectedMistake
 	if res.DetectedMistakes() != nil {
 		for _, m := range res.DetectedMistakes() {
-			mistakes = append(mistakes, mistake.NewMistake(m.topic, m.reason, e.id))
+			newMistake := NewDetectedMistake(m.topic, m.reason, e.id)
+			mistakes = append(mistakes, newMistake)
 		}
 	}
-
 	if e.answer.selectedOption != e.exercise.Answer() {
-		e.comment = res.comment
-		e.isCorrect = false
+
+		e.evaluation = &ItemEvaluation{
+			outcome: EvaluationIncorrect,
+			comment: res.comment,
+		}
 		return mistakes
 	}
-	e.isCorrect = true
-	e.comment = res.comment
+	e.evaluation = &ItemEvaluation{
+		outcome: EvaluationCorrect,
+		comment: res.comment,
+	}
 	return mistakes
 }
 
-func (e *MCQAssignmentItem) GenerateEvalRequest() MCQEvalReq {
+func (e *MCQAssignmentItem) GenerateEvalRequest() (MCQEvalReq, error) {
 	var selected string
 	var workText string
 	var workData [][]byte
@@ -122,18 +131,18 @@ func (e *MCQAssignmentItem) GenerateEvalRequest() MCQEvalReq {
 	if e.answer != nil {
 		selected = e.answer.selectedOption
 		workText = e.answer.workingText
-		workData = e.answer.workingData
+		workData = cloneBytes2D(e.answer.workingData)
 	}
-	isValid, rs := e.IsValid()
+	isValid, reason := e.IsValid()
 	if !isValid {
-		e.comment = rs
+		return MCQEvalReq{}, errors.New(reason)
 	}
 	return MCQEvalReq{
 		itemID:         e.id,
 		selectedOption: selected,
 		text:           workText,
 		data:           workData,
-	}
+	}, nil
 }
 func (e *MCQAssignmentItem) AddAnswer(anwser MCQAnswer) {
 	e.answer = &anwser
@@ -143,10 +152,10 @@ func (e *MCQAssignmentItem) Exercise() exercise.MultipleChoiceExercise {
 }
 func (e *MCQAssignmentItem) ID() uuid.UUID { return e.id }
 func (e *MCQAssignmentItem) Comment() string {
-	return e.comment
+	return e.evaluation.comment
 }
 func (e *MCQAssignmentItem) IsCorrect() bool {
-	return e.isCorrect
+	return e.evaluation != nil && e.evaluation.outcome == EvaluationCorrect
 }
 func (e *MCQAssignmentItem) IsValid() (bool, string) {
 	if e.answer == nil {
@@ -155,7 +164,7 @@ func (e *MCQAssignmentItem) IsValid() (bool, string) {
 	return e.answer.IsValid(e.exercise)
 }
 func (e *MCQAssignmentItem) IsEvaluated() bool {
-	return e.isEvaluated
+	return e.evaluation != nil
 }
 func NewMCQAnswer(itemID uuid.UUID, selectedOption string, text string, data [][]byte) (MCQAnswer, error) {
 	if itemID == uuid.Nil() {
@@ -166,7 +175,7 @@ func NewMCQAnswer(itemID uuid.UUID, selectedOption string, text string, data [][
 		itemID:         itemID,
 		selectedOption: selectedOption,
 		workingText:    text,
-		workingData:    data,
+		workingData:    cloneBytes2D(data),
 	}, nil
 }
 

@@ -3,7 +3,6 @@ package assignment
 import (
 	"errors"
 	"meet-attendance-clean/domain2/lesson"
-	"meet-attendance-clean/domain2/mistake"
 	"time"
 	"uuid"
 )
@@ -43,7 +42,7 @@ type Assignment struct {
 	assignedAt time.Time
 }
 
-func NewAssignment(studentID uuid.UUID, title string, purpose AssignmentPurpose, items ...AssignmentItem) (*Assignment, error) {
+func newAssignment(studentID uuid.UUID, title string, purpose AssignmentPurpose, items ...AssignmentItem) (*Assignment, error) {
 	if studentID == uuid.Nil() {
 		return nil, errors.New("student ID không được định nghĩa")
 	}
@@ -68,7 +67,11 @@ func (a *Assignment) StudentID() uuid.UUID {
 	return a.studentID
 }
 func (a *Assignment) Items() []AssignmentItem {
-	return a.items
+	items := make([]AssignmentItem, 0, len(a.items))
+	for _, item := range a.items {
+		items = append(items, item)
+	}
+	return items
 }
 func (a *Assignment) Title() string {
 	return a.title
@@ -97,12 +100,12 @@ func (a *Assignment) AddAnswers(anwsers []Answer) error {
 	}
 	return nil
 }
-func (a *Assignment) ApplyEvalResults(evalResults []EvaluationResult) ([]mistake.Mistake, error) {
+func (a *Assignment) ApplyEvalResults(evalResults []EvaluationResult) ([]DetectedMistake, error) {
 	mapEvalRes := make(map[uuid.UUID]EvaluationResult)
 	for _, evalRes := range evalResults {
 		mapEvalRes[evalRes.ItemID()] = evalRes
 	}
-	var mistakes []mistake.Mistake
+	var mistakes []DetectedMistake
 	for i := 0; i < len(a.items); i++ {
 		item := a.items[i]
 		if _, ok := mapEvalRes[item.ID()]; ok {
@@ -113,7 +116,9 @@ func (a *Assignment) ApplyEvalResults(evalResults []EvaluationResult) ([]mistake
 			mistakes = append(mistakes, newMistakes...)
 		}
 	}
-	a.status = AssignmentStatusGraded
+	if a.IsEvaluated() {
+		a.status = AssignmentStatusGraded
+	}
 	return mistakes, nil
 }
 func (a *Assignment) ListEvalReqs(itemIDs []uuid.UUID) []EvaluationRequest {
@@ -136,12 +141,25 @@ func (a *Assignment) ListEvalReqs(itemIDs []uuid.UUID) []EvaluationRequest {
 	}
 	return evalReqs
 }
+func (a *Assignment) IsEvaluated() bool {
+	for _, item := range a.items {
+		if !item.IsEvaluated() {
+			return false
+		}
+	}
+	return true
+}
 func (a *Assignment) IsCorrect() bool {
+	if !a.IsEvaluated() {
+		return false
+	}
+
 	for _, item := range a.items {
 		if !item.IsCorrect() {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -162,7 +180,7 @@ func NewNormalAssignmentFromLesson(
 		items = append(items, item)
 	}
 
-	return NewAssignment(studentID, title, AssignmentPurposeNormal{}, items...)
+	return newAssignment(studentID, title, AssignmentPurposeNormal{}, items...)
 }
 func NewRemediationAssignmentFromLesson(
 	studentID uuid.UUID,
@@ -181,5 +199,14 @@ func NewRemediationAssignmentFromLesson(
 		items = append(items, item)
 	}
 
-	return NewAssignment(studentID, title, AssignmentPurposeRemediation{mistakeID: mistakeID}, items...)
+	return newAssignment(studentID, title, AssignmentPurposeRemediation{mistakeID: mistakeID}, items...)
+}
+func cloneBytes2D(source [][]byte) [][]byte {
+	result := make([][]byte, len(source))
+
+	for i, b := range source {
+		result[i] = append([]byte(nil), b...)
+	}
+
+	return result
 }

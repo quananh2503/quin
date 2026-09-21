@@ -25,20 +25,21 @@ func (g *MistakeGraph) ID() uuid.UUID {
 func (g *MistakeGraph) StudentID() uuid.UUID {
 	return g.studentID
 }
-func (g *MistakeGraph) Roots() []*Mistake {
-	return g.roots
-}
+
+// func (g *MistakeGraph) Roots() []*Mistake {
+
+// }
 
 // Hành vi 1: Thêm một lỗi mới vào cây
 // Nếu parentID == nil -> Đây là lỗi gốc, gắn vào roots.
 // Nếu parentID != nil -> Tìm nút cha trên cây, và nhét vào children của cha!
-func (g *MistakeGraph) RegisterMistake(parentID *uuid.UUID, topic, reason string, evidenceRef uuid.UUID) (*Mistake, error) {
-	newNode := NewMistake(topic, reason, evidenceRef)
+func (g *MistakeGraph) RegisterMistake(parentID *uuid.UUID, topic, reason string, assignmentItemID uuid.UUID) (*Mistake, error) {
+	newNode := newMistake(topic, reason, assignmentItemID)
 
 	// Trường hợp 1: Lỗi gốc (Tầng 0)
 	if parentID == nil {
-		g.roots = append(g.roots, &newNode)
-		return &newNode, nil
+		g.roots = append(g.roots, newNode)
+		return newNode, nil
 	}
 
 	// Trường hợp 2: Lỗi con đẻ ra từ lỗi cha
@@ -48,8 +49,8 @@ func (g *MistakeGraph) RegisterMistake(parentID *uuid.UUID, topic, reason string
 	}
 
 	// Nhét trực tiếp vào mảng con của cha (Cấu trúc cây tự nhiên)
-	parentNode.children = append(parentNode.children, &newNode)
-	return &newNode, nil
+	parentNode.children = append(parentNode.children, newNode)
+	return newNode, nil
 }
 func (g *MistakeGraph) StartRemediation(mistakeID uuid.UUID) error {
 	node := g.findNode(mistakeID)
@@ -98,15 +99,15 @@ func searchTree(current *Mistake, id uuid.UUID) *Mistake {
 // func (m *Mistake)
 // Trong MistakeGraph:
 // Lấy toàn bộ chuỗi phả hệ từ Gốc đến Ngọn của một lỗi cụ thể
-func (g *MistakeGraph) GetAncestryPath(targetMistakeID uuid.UUID) ([]*Mistake, error) {
-	for _, root := range g.roots {
-		var path []*Mistake
-		if findPath(root, targetMistakeID, &path) {
-			return path, nil
-		}
-	}
-	return nil, errors.New("không tìm thấy lỗi sai trong phả hệ tri thức của học sinh")
-}
+// func (g *MistakeGraph) GetAncestryPath(targetMistakeID uuid.UUID) ([]*Mistake, error) {
+// 	for _, root := range g.roots {
+// 		var path []*Mistake
+// 		if findPath(root, targetMistakeID, &path) {
+// 			return path, nil
+// 		}
+// 	}
+// 	return nil, errors.New("không tìm thấy lỗi sai trong phả hệ tri thức của học sinh")
+// }
 
 // Thuật toán đệ quy tìm đường đi trên cây
 func findPath(current *Mistake, targetID uuid.UUID, path *[]*Mistake) bool {
@@ -128,4 +129,48 @@ func findPath(current *Mistake, targetID uuid.UUID, path *[]*Mistake) bool {
 	// 4. Backtrack: Nếu nhánh này không dẫn tới đích thì gỡ ra
 	*path = (*path)[:len(*path)-1]
 	return false
+}
+
+type MistakePathItem struct {
+	id     uuid.UUID
+	topic  string
+	reason string
+	status MistakeStatus
+}
+
+func (m MistakePathItem) ID() uuid.UUID         { return m.id }
+func (m MistakePathItem) Topic() string         { return m.topic }
+func (m MistakePathItem) Reason() string        { return m.reason }
+func (m MistakePathItem) Status() MistakeStatus { return m.status }
+func (g *MistakeGraph) GetAncestryPath(
+	targetID uuid.UUID,
+) ([]MistakePathItem, error) {
+	// tìm [] *Mistake bằng đệ quy như hiện tại
+
+	path, err := g.getAncestryPathInternal(targetID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Chuyển đổi [] *Mistake thành [] MistakePathItem
+	result := make([]MistakePathItem, len(path))
+	for i, node := range path {
+		result[i] = MistakePathItem{
+			id:     node.id,
+			topic:  node.topic,
+			reason: node.reason,
+			status: node.status,
+		}
+	}
+
+	return result, nil
+}
+func (g *MistakeGraph) getAncestryPathInternal(targetID uuid.UUID) ([]*Mistake, error) {
+	for _, root := range g.roots {
+		var path []*Mistake
+		if findPath(root, targetID, &path) {
+			return path, nil
+		}
+	}
+	return nil, errors.New("không tìm thấy lỗi sai trong phả hệ tri thức của học sinh")
 }
