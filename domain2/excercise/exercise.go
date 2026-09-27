@@ -18,18 +18,21 @@ type Exercise interface {
 	Difficulty() string
 	Prompt() string
 	Type() ExerciseType
+	Diagram() Diagram
 }
 type exerciseBase struct {
 	// id         uuid.UUID
 	topic      string
 	difficulty string
 	prompt     string
+	diagram    Diagram
 }
 
 // func (e exerciseBase) ID() uuid.UUID      { return e.id }
 func (e exerciseBase) Topic() string      { return e.topic }
 func (e exerciseBase) Difficulty() string { return e.difficulty }
 func (e exerciseBase) Prompt() string     { return e.prompt }
+func (e exerciseBase) Diagram() Diagram   { return e.diagram }
 
 type MultipleChoiceExercise struct {
 	exerciseBase
@@ -86,6 +89,10 @@ type EssayPart struct {
 	rubric   string
 }
 
+func NewEssayPart(label, question, solution, rubric string) EssayPart {
+	return EssayPart{label: label, question: question, solution: solution, rubric: rubric}
+}
+
 func (p EssayPart) Label() string {
 	return p.label
 }
@@ -106,6 +113,7 @@ func NewMultipleChoiceExercise(
 	options []MCOption,
 	answer string,
 	solution string,
+	diagram Diagram,
 ) (MultipleChoiceExercise, error) {
 
 	topic = strings.TrimSpace(topic)
@@ -152,6 +160,7 @@ func NewMultipleChoiceExercise(
 		prompt:     prompt,
 		options:    append([]MCOption(nil), options...), // Copy slice để tránh bị thay đổi từ bên ngoài
 		answer:     cleanAnswer,
+		diagram:    diagram,
 		solution:   strings.TrimSpace(solution),
 	}, nil
 }
@@ -161,6 +170,7 @@ func NewEssayExercise(
 	difficulty string,
 	prompt string,
 	parts []EssayPart,
+	diagram Diagram,
 ) (EssayExercise, error) {
 
 	topic = strings.TrimSpace(topic)
@@ -206,5 +216,6 @@ func NewEssayExercise(
 		difficulty: strings.TrimSpace(difficulty),
 		prompt:     prompt,
 		parts:      newParts, // Copy slice để tránh bị thay đổi từ bên ngoài
+		diagram:    diagram,
 	}, nil
 }

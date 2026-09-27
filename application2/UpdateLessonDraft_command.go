@@ -54,3 +54,19 @@ func (u *UpdateLessonDraftUsecase) Update(ctx context.Context, cmd UpdateLessonD
 	}
 	return nil
 }
+
+// func (u *UpdateLessonDraftUsecase) UpdateContent(ctx context.Context, draftID uuid.UUID, input LessonUpdate) error {
+// 	draft, err := u.repo.GetByID(ctx, draftID)
+// 	if err != nil {
+// 		return fmt.Errorf("không tìm thấy lesson draft: %w", err)
+// 	}
+// 	if draft == nil || draft.Lesson() == nil {
+// 		return errors.New("lesson draft chưa có nội dung để cập nhật")
+// 	}
+// 	value, err := BuildLesson(input, draft.Lesson().ID(), draft.Material())
+// 	if err != nil {
+// 		return fmt.Errorf("nội dung lesson không hợp lệ: %w", err)
+// 	}
+// 	draft.ReplaceLesson(*value)
+// 	return u.repo.Save(ctx, draft)
+// }

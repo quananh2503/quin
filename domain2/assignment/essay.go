@@ -132,16 +132,9 @@ func (e *EssayAssigmentItem) IsCorrect() bool {
 	return e.evaluation != nil && e.evaluation.outcome == EvaluationCorrect
 }
 func (e *EssayAssigmentItem) OutputResult() string {
-	if e.answer == nil {
-		return "Chưa làm bài tự luận"
-	}
+
 	if e.evaluation == nil {
 		return "Chưa chấm điểm"
-	}
-
-	isValid, rs := e.answer.IsValid(e.exercise)
-	if !isValid {
-		return rs
 	}
 	correct := 0
 	selected := 0
@@ -162,17 +155,23 @@ func (e *EssayAssigmentItem) ApplyEvalResult(res EssayEvalRes) []DetectedMistake
 	for _, sub := range res.DetectedMistakes() {
 		mistakes = append(mistakes, NewDetectedMistake(sub.topic, sub.reason, e.id))
 	}
+	mapLabel := make(map[string]SubEssayRes)
+	for _, sub := range res.subItems {
+		mapLabel[sub.label] = sub
+	}
 	for i := 0; i < len(e.subItems); i++ {
 		sub := &e.subItems[i]
-		if sub.isSelected {
-			for _, subGrade := range res.subItems {
-				if subGrade.label == sub.label {
-					sub.comment = subGrade.comment
-					sub.isCorrect = subGrade.isCorrect
-
-				}
-			}
+		if !sub.isSelected {
+			continue
 		}
+		if typedSub, ok := mapLabel[sub.label]; ok {
+			sub.isCorrect = typedSub.isCorrect
+			sub.comment = typedSub.comment
+		} else {
+			sub.isCorrect = false
+			sub.comment = "Chưa nhận được kêt quả từ AI"
+		}
+
 	}
 	correctCount := 0
 	totalCount := 0

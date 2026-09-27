@@ -122,6 +122,8 @@ func (a *Assignment) ApplyEvalResults(evalResults []EvaluationResult) ([]Detecte
 	return mistakes, nil
 }
 func (a *Assignment) ListEvalReqs(itemIDs []uuid.UUID) []EvaluationRequest {
+	isAll := len(itemIDs) == 0
+
 	mapID := make(map[uuid.UUID]bool)
 	for _, id := range itemIDs {
 		mapID[id] = true
@@ -130,13 +132,13 @@ func (a *Assignment) ListEvalReqs(itemIDs []uuid.UUID) []EvaluationRequest {
 	for i := 0; i < len(a.items); i++ {
 		item := a.items[i]
 
-		if _, ok := mapID[item.ID()]; ok {
-			isValid, _ := item.IsValid()
-			if !isValid {
-				// item. = reason
-				continue
+		_, ok := mapID[item.ID()]
+		if ok || isAll {
+			it := item.GenerateEvalRequest()
+			if it.ItemID() != uuid.Nil() {
+				evalReqs = append(evalReqs, it)
 			}
-			evalReqs = append(evalReqs, item.GenerateEvalRequest())
+
 		}
 	}
 	return evalReqs

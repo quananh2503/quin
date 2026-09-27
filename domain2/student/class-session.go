@@ -61,6 +61,20 @@ func NewClassSession(studentID uuid.UUID, startTime time.Time, endTime time.Time
 		attendance: make([]AttendanceRecord, 0),
 	}, nil
 }
+
+// NewClassSessionWithID creates a session whose stable identity was allocated by
+// the application boundary (for example, from an external meeting record).
+func NewClassSessionWithID(id, studentID uuid.UUID, startTime, endTime time.Time) (*ClassSession, error) {
+	if id == uuid.Nil() {
+		return nil, errors.New("class session ID không được để trống")
+	}
+	session, err := NewClassSession(studentID, startTime, endTime)
+	if err != nil {
+		return nil, err
+	}
+	session.id = id
+	return session, nil
+}
 func (s *ClassSession) AddAttendance(name string, firstJoinedAt time.Time, lastLeaveAt time.Time, durationMin int) error {
 	if strings.TrimSpace(name) == "" {
 		return errors.New("tên học sinh không được để trống")

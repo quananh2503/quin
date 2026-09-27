@@ -43,6 +43,7 @@ type AssignmentItem interface {
 	IsCorrect() bool
 	IsValid() (bool, string)
 	IsEvaluated() bool
+	State() ItemState
 }
 
 type TypedAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult] interface {
@@ -56,6 +57,7 @@ type TypedAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, R
 	IsValid() (bool, string)
 	IsCorrect() bool
 	IsEvaluated() bool
+	State() ItemState
 }
 type wrapperAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult, T TypedAssignmentItem[E, A, Req, Res]] struct {
 	inner T
@@ -106,6 +108,9 @@ func (w *wrapperAssignmentItem[E, A, Req, Res, T]) IsValid() (bool, string) {
 }
 func (w *wrapperAssignmentItem[E, A, Req, Res, T]) IsEvaluated() bool {
 	return w.inner.IsEvaluated()
+}
+func (w *wrapperAssignmentItem[E, A, Req, Res, T]) State() ItemState {
+	return w.inner.State()
 }
 
 // Tạo một file factory.go hoặc để chung trong assignment.go

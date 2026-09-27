@@ -26,7 +26,7 @@ type WorkSpaceGateway interface {
 }
 
 type Grader interface {
-	Evaluate(ctx context.Context, gradeItems []assignment.EvaluationRequest, pageInk []byte, prompt string, model string) ([]assignment.EvaluationResult, error)
+	Evaluate(ctx context.Context, gradeItems []assignment.EvaluationRequest, items []assignment.AssignmentItem, pageInk []byte, prompt string, model string) ([]assignment.EvaluationResult, error)
 }
 
 type GradeAssignmentCommand struct {
@@ -72,7 +72,7 @@ func (u *GradeAssignmentUsecase) Grade(ctx context.Context, cmd GradeAssignmentC
 		return errors.New("không có câu hỏi nào hợp lệ để chấm")
 	}
 
-	evaluations, err := u.grader.Evaluate(ctx, evalRequests, pageInk, cmd.Prompt, cmd.Model)
+	evaluations, err := u.grader.Evaluate(ctx, evalRequests, a.Items(), pageInk, cmd.Prompt, cmd.Model)
 	if err != nil {
 		return fmt.Errorf("không thể chấm bài bằng AI: %w", err)
 	}

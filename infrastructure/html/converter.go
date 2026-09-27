@@ -154,7 +154,7 @@ func (r *LessonRenderer) renderStudentLesson(body *strings.Builder, lesson *doma
 						body.WriteString(`<tr>`)
 					}
 					body.WriteString(fmt.Sprintf(`<td width="370" style="width:370px; padding:8pt 10pt; vertical-align:middle; background:#f8fafc; border:1px solid #cbd5e1;">`+
-						`<p data-id="exercise-%d-option-%s" data-tag="to-do" style="margin:0; color:#1e293b; font-size:15pt; line-height:1.45;">`+
+						`<p data-id="exercise-%d-option-%s" data-tag="to-do" style="margin:0; color:#1e293b; font-size:17pt; line-height:1.45;">`+
 						`<strong>%s.</strong> %s</p></td>`, ex.ID, letter, letter, formatMathInline(optionTextWithoutLetter(opt, letter))))
 					if optionIdx%2 == 1 || optionIdx == len(ex.Options)-1 {
 						if optionIdx%2 == 0 {

@@ -45,7 +45,7 @@ func (c *Client) EvaluateBatch(
 		return nil, errors.New("chưa cấu hình Gemini API Key")
 	}
 	if model = strings.TrimSpace(model); model == "" {
-		model = "gemini-2.5-flash"
+		model = "gemini-3.7-flash"
 	}
 
 	parts := make([]any, 0, 4+len(items)*2)
@@ -523,7 +523,7 @@ func lessonResponseJSONSchema() map[string]any {
 	}
 }
 
-func (c *Client) ListModels(ctx context.Context) ([]domain.AIModelInfo, error) {
+func (c *Client) ListModels(ctx context.Context) ([]application.AIModelInfo, error) {
 	if c.apiKey == "" {
 		return nil, errors.New("chưa cấu hình Gemini API Key")
 	}
@@ -557,10 +557,10 @@ func (c *Client) ListModels(ctx context.Context) ([]domain.AIModelInfo, error) {
 		return nil, err
 	}
 
-	var models []domain.AIModelInfo
+	var models []application.AIModelInfo
 	for _, m := range data.Models {
 		if strings.Contains(m.Name, "gemini") && isSupported(m.SupportedGenerationMethods, "generateContent") {
-			models = append(models, domain.AIModelInfo{
+			models = append(models, application.AIModelInfo{
 				ID:          strings.TrimPrefix(m.Name, "models/"),
 				DisplayName: m.DisplayName,
 				Description: m.Description,

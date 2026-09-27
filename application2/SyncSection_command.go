@@ -63,7 +63,7 @@ func NewSyncMeetingUsecase(
 func (u *SyncMeetingUsecase) Sync(ctx context.Context) error {
 	// BƯỚC 1: Tính toán thời điểm cần đồng bộ
 	syncFrom := u.determineSyncStartTime(ctx)
-
+	fmt.Printf("Bắt đầu đồng bộ phiên học từ %s", syncFrom.Format(time.RFC3339))
 	// BƯỚC 2: Gateway tự kéo Google Meet, tự lọc rác, tự map với bảng external_identity_mappings
 	// và trả về kết quả đã được gán StudentID (UUID) chuẩn mực!
 	result, err := u.meetGateway.SyncMeetings(ctx, syncFrom)

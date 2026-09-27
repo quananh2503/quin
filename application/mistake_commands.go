@@ -26,7 +26,7 @@ type GenerateRemediationCommand struct {
 	MistakeID           int    `json:"mistake_id"`            // ID của lỗi sai cần khắc phục
 	MultipleChoiceCount int    `json:"multiple_choice_count"` // Số lượng câu trắc nghiệm muốn tạo
 	EssayCount          int    `json:"essay_count"`           // Số lượng câu tự luận muốn tạo
-	Model               string `json:"model"`                 // Tên AI model (ví dụ: gemini-2.5-flash)
+	Model               string `json:"model"`                 // Tên AI model (ví dụ: gemini-3.7-flash)
 	CustomPrompt        string `json:"custom_prompt"`         // Lời dặn dò/prompt tùy chỉnh của giáo viên
 }
 

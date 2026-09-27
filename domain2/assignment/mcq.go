@@ -123,7 +123,7 @@ func (e *MCQAssignmentItem) ApplyEvalResult(res MCQEvalRes) []DetectedMistake {
 	return mistakes
 }
 
-func (e *MCQAssignmentItem) GenerateEvalRequest() (MCQEvalReq, error) {
+func (e *MCQAssignmentItem) GenerateEvalRequest() MCQEvalReq {
 	var selected string
 	var workText string
 	var workData [][]byte
@@ -135,14 +135,18 @@ func (e *MCQAssignmentItem) GenerateEvalRequest() (MCQEvalReq, error) {
 	}
 	isValid, reason := e.IsValid()
 	if !isValid {
-		return MCQEvalReq{}, errors.New(reason)
+		e.evaluation = &ItemEvaluation{
+			outcome: EvaluationIncorrect,
+			comment: reason,
+		}
+		return MCQEvalReq{}
 	}
 	return MCQEvalReq{
 		itemID:         e.id,
 		selectedOption: selected,
 		text:           workText,
 		data:           workData,
-	}, nil
+	}
 }
 func (e *MCQAssignmentItem) AddAnswer(anwser MCQAnswer) {
 	e.answer = &anwser
@@ -152,6 +156,9 @@ func (e *MCQAssignmentItem) Exercise() exercise.MultipleChoiceExercise {
 }
 func (e *MCQAssignmentItem) ID() uuid.UUID { return e.id }
 func (e *MCQAssignmentItem) Comment() string {
+	if e.evaluation == nil {
+		return ""
+	}
 	return e.evaluation.comment
 }
 func (e *MCQAssignmentItem) IsCorrect() bool {

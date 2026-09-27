@@ -92,7 +92,7 @@ func (u *GenerateRemediationLessonUsecase) processGenerationInBackground(draft *
 
 	generatedLesson, err := u.generator.Generate(bgCtx, title, material, model, prompt)
 	if err != nil {
-		err = fmt.Errorf("AI Grader lỗi khi tạo bài giảng: %w", err)
+		err = fmt.Errorf("Lỗi khi tạo bài giảng: %w", err)
 		return
 	}
 

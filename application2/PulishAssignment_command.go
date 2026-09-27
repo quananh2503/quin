@@ -19,8 +19,7 @@ import (
 type WorkspacePublisherGateway interface {
 	PublishAssignment(
 		ctx context.Context,
-		assignmentID uuid.UUID,
-		studentID uuid.UUID,
+		a *assignment.Assignment,
 		studentName string,
 		lsn lesson.Lesson,
 		studentChapterName string,
@@ -194,8 +193,7 @@ func (u *AssignLessonUsecase) publish(
 
 	if err := u.publisher.PublishAssignment(
 		ctx,
-		a.ID(),
-		stu.ID(),
+		a,
 		stu.Name(),
 		*lsn,
 		studentChapterName,
