@@ -60,20 +60,32 @@ type StudentDetailView struct {
 	Meetings             []MeetingView `json:"meetings"`
 }
 
-type TeacherExampleView struct {
-	ExampleNum                 int    `json:"example_num"`
-	Problem                    string `json:"problem"`
-	TeacherSolution            string `json:"teacher_solution"`
-	StudentFriendlyExplanation string `json:"student_friendly_explanation"`
-	CommonMistake              string `json:"common_mistake"`
+type BlockView struct {
+	Type        string            `json:"type"`
+	Body        string            `json:"body,omitempty"`
+	Ordered     bool              `json:"ordered,omitempty"`
+	Items       []string          `json:"items,omitempty"`
+	Math        string            `json:"math,omitempty"`
+	Title       string            `json:"title,omitempty"`
+	Problem     string            `json:"problem,omitempty"`
+	Solution    string            `json:"solution,omitempty"`
+	Explanation string            `json:"explanation,omitempty"`
+	SVG         string            `json:"svg,omitempty"`
+	Caption     string            `json:"caption,omitempty"`
+	CalloutKind string            `json:"callout_kind,omitempty"`
+	ClozeItems  [][]ClozePartView `json:"cloze_items,omitempty"`
+}
+type ClozePartView struct {
+	Type  string `json:"type"`
+	Value string `json:"value"`
+}
+type TopicView struct {
+	Title  string      `json:"title"`
+	Blocks []BlockView `json:"blocks"`
 }
 type SectionView struct {
-	SectionTitle      string               `json:"section_title"`
-	TransitionIntro   string               `json:"transition_intro"`
-	DetailedContent   string               `json:"detailed_content"`
-	KeyTakeaway       string               `json:"key_takeaway"`
-	StudentClozeNotes []string             `json:"student_cloze_notes"`
-	TeacherExamples   []TeacherExampleView `json:"teacher_examples"`
+	Title  string      `json:"title"`
+	Topics []TopicView `json:"topics"`
 }
 type OptionView struct {
 	Label   string `json:"label"`
@@ -86,14 +98,16 @@ type EssayPartView struct {
 	Rubric   string `json:"rubric"`
 }
 type ExerciseView struct {
-	Type        string          `json:"type"`
-	Topic       string          `json:"topic"`
-	Difficulty  string          `json:"difficulty"`
-	Question    string          `json:"question"`
-	Options     []OptionView    `json:"options"`
-	Answer      string          `json:"answer"`
-	Explanation string          `json:"explanation"`
-	Parts       []EssayPartView `json:"parts"`
+	Type           string          `json:"type"`
+	Topic          string          `json:"topic"`
+	Difficulty     string          `json:"difficulty"`
+	Question       string          `json:"question"`
+	DiagramType    string          `json:"diagram_type"`
+	DiagramContent string          `json:"diagram_content"`
+	Options        []OptionView    `json:"options"`
+	Answer         string          `json:"answer"`
+	Explanation    string          `json:"explanation"`
+	Parts          []EssayPartView `json:"parts"`
 }
 type LessonView struct {
 	ID        uuid.UUID      `json:"id"`

@@ -73,6 +73,8 @@ export namespace application2 {
 	    topic: string;
 	    difficulty: string;
 	    question: string;
+	    diagram_type: string;
+	    diagram_content: string;
 	    options: OptionView[];
 	    answer: string;
 	    explanation: string;
@@ -88,6 +90,8 @@ export namespace application2 {
 	        this.topic = source["topic"];
 	        this.difficulty = source["difficulty"];
 	        this.question = source["question"];
+	        this.diagram_type = source["diagram_type"];
+	        this.diagram_content = source["diagram_content"];
 	        this.options = this.convertValues(source["options"], OptionView);
 	        this.answer = source["answer"];
 	        this.explanation = source["explanation"];
@@ -263,6 +267,75 @@ export namespace application2 {
 		    return a;
 		}
 	}
+	export class ClozePartView {
+	    type: string;
+	    value: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ClozePartView(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.type = source["type"];
+	        this.value = source["value"];
+	    }
+	}
+	export class BlockView {
+	    type: string;
+	    body?: string;
+	    ordered?: boolean;
+	    items?: string[];
+	    math?: string;
+	    title?: string;
+	    problem?: string;
+	    solution?: string;
+	    explanation?: string;
+	    svg?: string;
+	    caption?: string;
+	    callout_kind?: string;
+	    cloze_items?: ClozePartView[][];
+	
+	    static createFrom(source: any = {}) {
+	        return new BlockView(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.type = source["type"];
+	        this.body = source["body"];
+	        this.ordered = source["ordered"];
+	        this.items = source["items"];
+	        this.math = source["math"];
+	        this.title = source["title"];
+	        this.problem = source["problem"];
+	        this.solution = source["solution"];
+	        this.explanation = source["explanation"];
+	        this.svg = source["svg"];
+	        this.caption = source["caption"];
+	        this.callout_kind = source["callout_kind"];
+	        this.cloze_items = this.convertValues(source["cloze_items"], ClozePartView);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	
 	export class StudentSummary {
 	    id: number[];
 	    name: string;
@@ -385,33 +458,41 @@ export namespace application2 {
 		    return a;
 		}
 	}
-	export class TeacherExampleView {
-	    example_num: number;
-	    problem: string;
-	    teacher_solution: string;
-	    student_friendly_explanation: string;
-	    common_mistake: string;
+	export class TopicView {
+	    title: string;
+	    blocks: BlockView[];
 	
 	    static createFrom(source: any = {}) {
-	        return new TeacherExampleView(source);
+	        return new TopicView(source);
 	    }
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.example_num = source["example_num"];
-	        this.problem = source["problem"];
-	        this.teacher_solution = source["teacher_solution"];
-	        this.student_friendly_explanation = source["student_friendly_explanation"];
-	        this.common_mistake = source["common_mistake"];
+	        this.title = source["title"];
+	        this.blocks = this.convertValues(source["blocks"], BlockView);
 	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice && a.map) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
 	}
 	export class SectionView {
-	    section_title: string;
-	    transition_intro: string;
-	    detailed_content: string;
-	    key_takeaway: string;
-	    student_cloze_notes: string[];
-	    teacher_examples: TeacherExampleView[];
+	    title: string;
+	    topics: TopicView[];
 	
 	    static createFrom(source: any = {}) {
 	        return new SectionView(source);
@@ -419,12 +500,8 @@ export namespace application2 {
 	
 	    constructor(source: any = {}) {
 	        if ('string' === typeof source) source = JSON.parse(source);
-	        this.section_title = source["section_title"];
-	        this.transition_intro = source["transition_intro"];
-	        this.detailed_content = source["detailed_content"];
-	        this.key_takeaway = source["key_takeaway"];
-	        this.student_cloze_notes = source["student_cloze_notes"];
-	        this.teacher_examples = this.convertValues(source["teacher_examples"], TeacherExampleView);
+	        this.title = source["title"];
+	        this.topics = this.convertValues(source["topics"], TopicView);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {

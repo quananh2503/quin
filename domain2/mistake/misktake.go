@@ -37,6 +37,11 @@ func (m *Mistake) Reason() string {
 func (m *Mistake) AssignmentItemID() uuid.UUID {
 	return m.assignmentItemID
 }
+func (m *Mistake) Children() []*Mistake {
+	copied := make([]*Mistake, len(m.children))
+	copy(copied, m.children)
+	return copied
+}
 
 //	func (m *Mistake) Children() []*Mistake {
 //		return append([]*Mistake(nil), m.children...) // Trả về bản sao để tránh bị thay đổi từ bên ngoài
@@ -61,6 +66,17 @@ func newMistake(topic string, reason string, assignmentItemID uuid.UUID) *Mistak
 		status:           MistakeStatusDetected,
 	}
 }
+func ReconstituteMistake(id uuid.UUID, topic, reason string, assignmentItemID uuid.UUID, status MistakeStatus, createdAt time.Time, resolvedAt *time.Time) *Mistake {
+	var copyResolved *time.Time
+	if resolvedAt != nil {
+		value := *resolvedAt
+		copyResolved = &value
+	}
+	return &Mistake{id: id, topic: topic, reason: reason, assignmentItemID: assignmentItemID, status: status, createdAt: createdAt, resolvedAt: copyResolved, children: make([]*Mistake, 0)}
+}
+
+func (m *Mistake) AppendChild(child *Mistake) { m.children = append(m.children, child) }
+
 func (m *Mistake) canReslove() bool {
 	if m.status != MistakeStatusResolved {
 		return false

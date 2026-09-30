@@ -17,8 +17,10 @@ import (
 
 	"meet-attendance-clean/application2"
 	"meet-attendance-clean/domain2/lesson"
-	"meet-attendance-clean/infrastructure/onenote"
+
+	// "meet-attendance-clean/infrastructure/onenote"
 	"meet-attendance-clean/infrastructure2/googlemeet"
+	"meet-attendance-clean/infrastructure2/onenote"
 )
 
 const pdfStreamAddress = "127.0.0.1:8765"

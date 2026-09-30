@@ -86,3 +86,9 @@ func (m MistakeMaterial) StudentID() uuid.UUID { return m.studentID }
 func (m MistakeMaterial) MistakeID() uuid.UUID {
 	return m.mistakeID
 }
+
+func (m MistakeMaterial) Topic() string  { return m.topic }
+func (m MistakeMaterial) Reason() string { return m.reason }
+func (m MistakeMaterial) Context() []MistakeItem {
+	return append([]MistakeItem(nil), m.mistakeContext...)
+}

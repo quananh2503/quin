@@ -15,11 +15,13 @@ import (
 
 	application2 "meet-attendance-clean/application2"
 	"meet-attendance-clean/config"
-	"meet-attendance-clean/infrastructure/onenote"
+
+	// "meet-attendance-clean/infrastructure/onenote"
 	database2 "meet-attendance-clean/infrastructure2/database"
 	gemini2 "meet-attendance-clean/infrastructure2/gemini"
 	googlemeet "meet-attendance-clean/infrastructure2/googlemeet"
 	"meet-attendance-clean/infrastructure2/html"
+	"meet-attendance-clean/infrastructure2/onenote"
 	onenote2 "meet-attendance-clean/infrastructure2/onenote"
 	"meet-attendance-clean/infrastructure2/pdf"
 	"meet-attendance-clean/infrastructure2/renderer"
@@ -89,9 +91,14 @@ func main() {
 	msCfg := loadMicrosoftConfig(embeddedMicrosoftCredentials)
 	msTokenPath := filepath.Join(dataDir, "token_microsoft.json")
 	googleTokenPath := filepath.Join(dataDir, "token.json")
+	imgRenderer := renderer.NewLocalRenderer()
+	htmlRenderer := html.NewRenderer(imgRenderer)
 
-	meetClient, _ := googlemeet.NewClient(embeddedGoogleCredentials, googleTokenPath, cfg.GoogleRedirectURL)
-	oneNoteClient := onenote.New(msCfg.ClientID, msCfg.ClientSecret, msCfg.RedirectURL, msTokenPath)
+	meetClient, err := googlemeet.NewClient(embeddedGoogleCredentials, googleTokenPath, cfg.GoogleRedirectURL)
+	if err != nil {
+		log.Fatalf("Lỗi khởi tạo Google Meet client: %v", err)
+	}
+	oneNoteClient := onenote.New(msCfg.ClientID, msCfg.ClientSecret, msCfg.RedirectURL, msTokenPath, database2.OneNoteLinks{Store: db}, database2.Assignments{Store: db}, htmlRenderer)
 
 	// 5. Wire toàn bộ Application Services (Dependency Injection)
 	services, err := buildApplicationServices(

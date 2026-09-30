@@ -20,12 +20,12 @@ func (r ReadStore) studentView(ctx context.Context, id uuid.UUID) (application2.
 		return application2.StudentView{}, err
 	}
 	view := application2.StudentView{ID: value.ID(), Name: value.Name(), Class: value.Class(), CycleStartDay: value.CycleStartDay(), CreatedAt: value.CreatedAt()}
-	_ = r.Store.DB.QueryRowContext(ctx, `SELECT meeting_code,space_name FROM v2_external_student_links WHERE student_id=? AND provider='google_meet_space' LIMIT 1`, id.String()).Scan(&view.MeetingCode, &view.SpaceName)
+	_ = r.Store.DB.QueryRowContext(ctx, `SELECT meeting_code,space_name FROM external_student_links WHERE student_id=? AND provider='google_meet_space' LIMIT 1`, id.String()).Scan(&view.MeetingCode, &view.SpaceName)
 	return view, nil
 }
 
 func (r ReadStore) ListStudentChoices(ctx context.Context) ([]application2.StudentView, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id FROM v2_students ORDER BY name COLLATE NOCASE`)
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id FROM students ORDER BY name COLLATE NOCASE`)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func (r ReadStore) StudentDetail(ctx context.Context, id uuid.UUID, filter appli
 }
 
 func (r ReadStore) meetings(ctx context.Context, studentID uuid.UUID, filter application2.MeetingFilter) ([]application2.MeetingView, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,start_at,end_at,attendance_json FROM v2_class_sessions WHERE student_id=? ORDER BY start_at DESC`, studentID.String())
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,start_at,end_at,attendance_json FROM class_sessions WHERE student_id=? ORDER BY start_at DESC`, studentID.String())
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func (r ReadStore) meetings(ctx context.Context, studentID uuid.UUID, filter app
 }
 
 func (r ReadStore) ListDrafts(ctx context.Context) ([]application2.DraftView, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id FROM v2_lesson_drafts ORDER BY created_at DESC`)
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id FROM lesson_drafts ORDER BY created_at DESC`)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +187,7 @@ func (r ReadStore) GetDraft(ctx context.Context, id uuid.UUID) (application2.Dra
 	if err != nil {
 		return application2.DraftView{}, err
 	}
-	view := application2.DraftView{ID: draft.ID(), Title: draft.Title(), Model: draft.Model(), CustomPrompt: draft.Prompt(), Status: string(draft.Status()), SourceType: string(draft.Material().Type()), CreatedAt: draft.CreatedAt(), UpdatedAt: draft.UpdatedAt(), LessonData: application2.LessonToView(draft.Lesson())}
+	view := application2.DraftView{ID: draft.ID(), Title: draft.Title().String(), Model: draft.Model(), CustomPrompt: draft.Prompt(), Status: string(draft.Status()), SourceType: string(draft.Material().Type()), CreatedAt: draft.CreatedAt(), UpdatedAt: draft.UpdatedAt(), LessonData: application2.LessonToView(draft.Lesson())}
 	if value := draft.ErrorString(); value != nil {
 		view.ErrorMessage = *value
 	}
@@ -198,7 +198,7 @@ func (r ReadStore) GetDraft(ctx context.Context, id uuid.UUID) (application2.Dra
 }
 
 func (r ReadStore) ListAssignments(ctx context.Context) ([]application2.AssignmentSummary, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id FROM v2_assignments ORDER BY assigned_at DESC`)
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id FROM assignments ORDER BY assigned_at DESC`)
 	if err != nil {
 		return nil, err
 	}
@@ -277,7 +277,7 @@ func (r ReadStore) GetAssignment(ctx context.Context, id uuid.UUID) (application
 }
 
 func (r ReadStore) ListMistakeGroups(ctx context.Context) ([]application2.StudentMistakeGroup, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT student_id FROM v2_mistake_graphs ORDER BY student_id`)
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT DISTINCT student_id FROM mistakes ORDER BY student_id`)
 	if err != nil {
 		return nil, err
 	}
@@ -325,19 +325,19 @@ func (r ReadStore) ListMistakeGroups(ctx context.Context) ([]application2.Studen
 	return groups, nil
 }
 
-func nodeView(node mistake.NodeState, sources map[uuid.UUID]uuid.UUID) application2.MistakeNodeView {
-	v := application2.MistakeNodeView{ID: node.ID, Topic: node.Topic, Reason: node.Reason, Status: string(node.Status), CreatedAt: node.CreatedAt, ResolvedAt: node.ResolvedAt, SourceItemID: node.AssignmentItemID, Children: make([]application2.MistakeNodeView, 0, len(node.Children))}
-	if id, ok := sources[node.AssignmentItemID]; ok {
-		v.SourceAssignmentID = &id
+func nodeView(node *mistake.Mistake, sources map[uuid.UUID]uuid.UUID) application2.MistakeNodeView {
+	view := application2.MistakeNodeView{ID: node.ID(), Topic: node.Topic(), Reason: node.Reason(), Status: string(node.Status()), CreatedAt: node.CreatedAt(), ResolvedAt: node.ResolvedAt(), SourceItemID: node.AssignmentItemID(), Children: make([]application2.MistakeNodeView, 0, len(node.Children()))}
+	if assignmentID, ok := sources[node.AssignmentItemID()]; ok {
+		view.SourceAssignmentID = &assignmentID
 	}
-	for _, child := range node.Children {
-		v.Children = append(v.Children, nodeView(child, sources))
+	for _, child := range node.Children() {
+		view.Children = append(view.Children, nodeView(child, sources))
 	}
-	return v
+	return view
 }
 
 func (r ReadStore) assignmentItemSources(ctx context.Context) (map[uuid.UUID]uuid.UUID, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,items_json FROM v2_assignments`)
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,items_json FROM assignments`)
 	if err != nil {
 		return nil, err
 	}
@@ -378,17 +378,12 @@ func (r ReadStore) assignmentItemSources(ctx context.Context) (map[uuid.UUID]uui
 // }
 
 func (r ReadStore) ListDocuments(ctx context.Context) ([]application2.Document, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,file_name,storage_path,page_count,created_at FROM v2_documents ORDER BY created_at DESC`)
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,file_name,storage_path,page_count,created_at FROM documents ORDER BY created_at DESC`)
 	if err != nil {
 		return nil, err
 	}
 	var result []application2.Document
 	for rows.Next() {
-		var raw string
-		if err := rows.Scan(&raw); err != nil {
-			rows.Close()
-			return nil, err
-		}
 		doc := application2.Document{}
 		if err := rows.Scan(&doc.ID, &doc.FileName, &doc.FilePath, &doc.PageCount, &doc.CreatedAt); err != nil {
 			rows.Close()

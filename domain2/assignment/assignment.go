@@ -62,6 +62,22 @@ func newAssignment(studentID uuid.UUID, title string, purpose AssignmentPurpose,
 		assignedAt: time.Now().UTC(),
 	}, nil
 }
+func ReconstituteAssignment(id, studentID uuid.UUID, title string, purpose AssignmentPurpose, status AssignmentStatus, assignedAt time.Time, items []AssignmentItem) (*Assignment, error) {
+	if id == uuid.Nil() || studentID == uuid.Nil() || title == "" || purpose == nil || assignedAt.IsZero() || len(items) == 0 {
+		return nil, errors.New("dữ liệu assignment lưu trữ không hợp lệ")
+	}
+	if status != AssignmentStatusPending && status != AssignmentStatusGraded && status != AssignmentStatusCompleted {
+		return nil, errors.New("trạng thái assignment lưu trữ không hợp lệ")
+	}
+	return &Assignment{id: id, studentID: studentID, title: title, purpose: purpose, status: status, assignedAt: assignedAt, items: append([]AssignmentItem(nil), items...)}, nil
+}
+func NewRemediationPurpose(mistakeID uuid.UUID) (AssignmentPurposeRemediation, error) {
+	if mistakeID == uuid.Nil() {
+		return AssignmentPurposeRemediation{}, errors.New("mistake ID không hợp lệ")
+	}
+	return AssignmentPurposeRemediation{mistakeID: mistakeID}, nil
+}
+
 func (a *Assignment) ID() uuid.UUID { return a.id }
 func (a *Assignment) StudentID() uuid.UUID {
 	return a.studentID

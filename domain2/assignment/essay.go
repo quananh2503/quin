@@ -3,7 +3,11 @@ package assignment
 import (
 	"errors"
 	"fmt"
-	exercise "meet-attendance-clean/domain2/excercise"
+	shareKernel "meet-attendance-clean/domain2/kernel"
+
+	// exercise "meet-attendance-clean/domain2/excercise"
+
+	// shareKernel "meet-attendance-clean/domain2/kernel"
 	"strings"
 	"uuid"
 )
@@ -15,7 +19,7 @@ type EssayAnswer struct {
 	targetParts []string
 }
 
-func (a EssayAnswer) IsValid(ex exercise.EssayExercise) (bool, string) {
+func (a EssayAnswer) IsValid(ex shareKernel.EssayExercise) (bool, string) {
 	return true, ""
 }
 func (a EssayAnswer) ItemID() uuid.UUID { return a.itemID }
@@ -55,6 +59,16 @@ type EssayEvalRes struct {
 	detectedMistakes []DetectedMistake
 }
 
+func (e SubEssayRes) Label() string {
+	return e.label
+}
+func (e SubEssayRes) IsCorrect() bool {
+	return e.isCorrect
+}
+func (e SubEssayRes) Comment() string {
+	return e.comment
+}
+
 func NewSubEssayRes(label string, isCorrect bool, comment string) SubEssayRes {
 	return SubEssayRes{
 		label:     label,
@@ -84,24 +98,37 @@ func (e EssayEvalRes) Comment() string {
 	return totalComment
 }
 
-type subItem struct {
+type SubItem struct {
 	label      string
 	isSelected bool
 	isCorrect  bool
 	comment    string
 }
+
+type EssaySubItem struct {
+	Label      string
+	IsSelected bool
+	IsCorrect  bool
+	Comment    string
+}
+
+func (s SubItem) Label() string    { return s.label }
+func (s SubItem) IsSelected() bool { return s.isSelected }
+func (s SubItem) IsCorrect() bool  { return s.isCorrect }
+func (s SubItem) Comment() string  { return s.comment }
+
 type EssayAssigmentItem struct {
 	id         uuid.UUID
-	exercise   exercise.EssayExercise
+	exercise   shareKernel.EssayExercise
 	answer     *EssayAnswer
-	subItems   []subItem
+	subItems   []SubItem
 	evaluation *ItemEvaluation
 }
 
-func newEssayAssignmentItem(ex exercise.EssayExercise) EssayAssigmentItem {
-	var subItems []subItem
+func newEssayAssignmentItem(ex shareKernel.EssayExercise) EssayAssigmentItem {
+	var subItems []SubItem
 	for _, sub := range ex.Parts() {
-		subItems = append(subItems, subItem{
+		subItems = append(subItems, SubItem{
 			label:      sub.Label(),
 			isSelected: false,
 			isCorrect:  false,
@@ -114,7 +141,7 @@ func newEssayAssignmentItem(ex exercise.EssayExercise) EssayAssigmentItem {
 		subItems: subItems,
 	}
 }
-func (e *EssayAssigmentItem) Exercise() exercise.EssayExercise {
+func (e *EssayAssigmentItem) Exercise() shareKernel.EssayExercise {
 	return e.exercise
 }
 func (e *EssayAssigmentItem) ID() uuid.UUID { return e.id }
@@ -264,8 +291,37 @@ func (e *EssayAssigmentItem) IsValid() (bool, string) {
 func (e *EssayAssigmentItem) IsEvaluated() bool {
 	return e.evaluation != nil
 }
+func (e *EssayAssigmentItem) Answer() *EssayAnswer {
+	if e.answer == nil {
+		return nil
+	}
+	cp := *e.answer
+	cp.data = cloneBytes2D(e.answer.data)
+	cp.targetParts = append([]string(nil), e.answer.targetParts...)
+	return &cp
+}
+func (e *EssayAssigmentItem) Evaluation() *ItemEvaluation {
+	if e.evaluation == nil {
+		return nil
+	}
+	cp := *e.evaluation
+	return &cp
+}
+func (e *EssayAssigmentItem) SubItems() []SubItem {
+	items := make([]SubItem, len(e.subItems))
+	copy(items, e.subItems)
+	return items
+}
 
-var _ TypedAssignmentItem[exercise.EssayExercise, EssayAnswer, EssayEvalReq, EssayEvalRes] = &EssayAssigmentItem{}
+func ReconstituteEssayItem(id uuid.UUID, ex shareKernel.EssayExercise, answer *EssayAnswer, saved []EssaySubItem, evaluation *ItemEvaluation) AssignmentItem {
+	subItems := make([]SubItem, len(saved))
+	for i, item := range saved {
+		subItems[i] = SubItem{label: item.Label, isSelected: item.IsSelected, isCorrect: item.IsCorrect, comment: item.Comment}
+	}
+	return newWrapItem(&EssayAssigmentItem{id: id, exercise: ex, answer: answer, subItems: subItems, evaluation: evaluation})
+}
+
+var _ TypedAssignmentItem[shareKernel.EssayExercise, EssayAnswer, EssayEvalReq, EssayEvalRes] = &EssayAssigmentItem{}
 
 func NewEssayAnswer(itemID uuid.UUID, text string, data [][]byte, targetParts []string) (EssayAnswer, error) {
 	// if text == "" && len(data) == 0 {

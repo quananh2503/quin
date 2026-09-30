@@ -2,7 +2,8 @@ package lesson
 
 import (
 	"errors"
-	exercise "meet-attendance-clean/domain2/excercise"
+	shareKernel "meet-attendance-clean/domain2/kernel"
+
 	"uuid"
 )
 
@@ -14,92 +15,80 @@ const (
 )
 
 var (
-	ErrErcerciseEmpty = errors.New("exercises is empty")
+	ErrExerciseEmpty = errors.New("danh sách bài tập không được để trống")
 )
 
-type TeacherExample struct {
-	ExampleNum                 int
-	Problem                    string
-	TeacherSolution            string
-	StudentFriendlyExplanation string
-	CommonMistake              string
-}
+// ============================================================
+// NGUỒN TẠO BÀI HỌC (LESSON SOURCE)
+// ============================================================
 
-type Section struct {
-	SectionTitle      string
-	TransitionIntro   string
-	DetailedContent   string
-	KeyTakeaway       string
-	StudentClozeNotes []string
-	TeacherExamples   []TeacherExample
-}
 type LessonSource interface {
 	isLessonSource()
 }
+
+type LessonSourceYouTube struct {
+	url string
+}
+
+func (LessonSourceYouTube) isLessonSource() {}
+
+type LessonSourcePDF struct {
+	path  string
+	pages []int
+}
+
+func (LessonSourcePDF) isLessonSource() {}
+
+type LessonSourceMistake struct {
+	mistakeID uuid.UUID
+}
+
+func (LessonSourceMistake) isLessonSource() {}
+
+// ============================================================
+// BÀI HỌC (LESSON ENTITY)
+// ============================================================
+
 type Lesson struct {
 	id        uuid.UUID
-	title     string
-	overview  string
-	sections  []Section
-	exercises []exercise.Exercise
+	title     shareKernel.Content
+	overview  shareKernel.Content
+	sections  []Section              // Nằm ngay trong package lesson
+	exercises []shareKernel.Exercise // Import từ package exercise
 	material  StudyMaterial
 }
 
-func (l *Lesson) ID() uuid.UUID {
-	return l.id
+func (l *Lesson) ID() uuid.UUID                 { return l.id }
+func (l *Lesson) Title() shareKernel.Content    { return l.title }
+func (l *Lesson) Overview() shareKernel.Content { return l.overview }
+func (l *Lesson) Material() StudyMaterial       { return l.material }
+func (l *Lesson) Sections() []Section           { return cloneSections(l.sections) }
+func (l *Lesson) Exercises() []shareKernel.Exercise {
+	return append([]shareKernel.Exercise(nil), l.exercises...)
 }
-func (l *Lesson) Material() StudyMaterial {
-	return l.material
-}
-func (l *Lesson) Title() string {
-	return l.title
-}
-func (l *Lesson) Overview() string {
-	return l.overview
-}
-func (l *Lesson) Sections() []Section {
-	copied := make([]Section, len(l.sections))
-	for i := range l.sections {
-		copied[i] = Section{
-			SectionTitle:      l.sections[i].SectionTitle,
-			TransitionIntro:   l.sections[i].TransitionIntro,
-			DetailedContent:   l.sections[i].DetailedContent,
-			KeyTakeaway:       l.sections[i].KeyTakeaway,
-			StudentClozeNotes: append([]string(nil), l.sections[i].StudentClozeNotes...),
-			TeacherExamples:   append([]TeacherExample(nil), l.sections[i].TeacherExamples...),
-		}
-	}
-	return copied
-}
-func (l *Lesson) Exercises() []exercise.Exercise {
-	var exs []exercise.Exercise
-	for _, ex := range l.exercises {
-		exs = append(exs, ex)
-	}
-	return exs
-}
+
 func cloneSections(sections []Section) []Section {
 	copied := make([]Section, len(sections))
-	for i := range sections {
-		copied[i] = Section{
-			SectionTitle:      sections[i].SectionTitle,
-			TransitionIntro:   sections[i].TransitionIntro,
-			DetailedContent:   sections[i].DetailedContent,
-			KeyTakeaway:       sections[i].KeyTakeaway,
-			StudentClozeNotes: append([]string(nil), sections[i].StudentClozeNotes...),
-			TeacherExamples:   append([]TeacherExample(nil), sections[i].TeacherExamples...),
-		}
-	}
+	copy(copied, sections)
 	return copied
 }
-func NewLesson(title string, overview string, sections []Section, exercises []exercise.Exercise, material StudyMaterial) (*Lesson, error) {
-	if len(title) == 0 {
-		title = "Không có tiêu đề"
+
+func NewLesson(
+	title shareKernel.Content,
+	overview shareKernel.Content,
+	sections []Section,
+	exercises []shareKernel.Exercise,
+	material StudyMaterial,
+) (*Lesson, error) {
+
+	if title.IsEmpty() {
+		title = shareKernel.NewContent(shareKernel.InlinePart{Type: shareKernel.InlineText, Value: "Không có tiêu đề"})
 	}
 
 	if len(exercises) == 0 {
-		return nil, ErrErcerciseEmpty
+		return nil, ErrExerciseEmpty
 	}
+
 	if material == nil {
 		return nil, errors.New("material không được để trống")
 	}
@@ -109,18 +98,14 @@ func NewLesson(title string, overview string, sections []Section, exercises []ex
 		title:     title,
 		overview:  overview,
 		sections:  cloneSections(sections),
-		exercises: append([]exercise.Exercise(nil), exercises...),
+		exercises: append([]shareKernel.Exercise(nil), exercises...),
 		material:  material,
 	}, nil
 }
 
-type LessonSourceYouTube struct {
-	url string
-}
-type LessonSourcePDF struct {
-	path  string
-	pages []int
-}
-type LessonSourceMistake struct {
-	mistakeID uuid.UUID
+func ReconstituteLesson(id uuid.UUID, title, overview shareKernel.Content, sections []Section, exercises []shareKernel.Exercise, material StudyMaterial) (*Lesson, error) {
+	if id == uuid.Nil() || material == nil || len(exercises) == 0 {
+		return nil, errors.New("dữ liệu lesson lưu trữ không hợp lệ")
+	}
+	return &Lesson{id: id, title: title, overview: overview, sections: cloneSections(sections), exercises: append([]shareKernel.Exercise(nil), exercises...), material: material}, nil
 }

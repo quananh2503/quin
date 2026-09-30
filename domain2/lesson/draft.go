@@ -1,6 +1,8 @@
 package lesson
 
 import (
+	"errors"
+	shareKernel "meet-attendance-clean/domain2/kernel"
 	"time"
 	"uuid"
 )
@@ -15,7 +17,7 @@ const (
 
 type LessonDraft struct {
 	id          uuid.UUID
-	title       string
+	title       shareKernel.Content
 	model       string
 	prompt      string
 	status      LessonDraftStatus
@@ -29,7 +31,7 @@ type LessonDraft struct {
 func NewLessonDraft(title string, model string, prompt string, status LessonDraftStatus, material StudyMaterial) *LessonDraft {
 	return &LessonDraft{
 		id:        uuid.New(),
-		title:     title,
+		title:     shareKernel.NewContent(shareKernel.InlinePart{Type: shareKernel.InlineText, Value: title}),
 		model:     model,
 		prompt:    prompt,
 		status:    status,
@@ -37,6 +39,26 @@ func NewLessonDraft(title string, model string, prompt string, status LessonDraf
 		createdAt: time.Now().UTC(),
 	}
 }
+func ReconstituteLessonDraft(id uuid.UUID, title shareKernel.Content, model, prompt string, status LessonDraftStatus, material StudyMaterial, createdAt time.Time, updatedAt *time.Time, errorString *string, content *Lesson) (*LessonDraft, error) {
+	if id == uuid.Nil() || createdAt.IsZero() || material == nil {
+		return nil, errors.New("dữ liệu lesson draft lưu trữ không hợp lệ")
+	}
+	if status != LessonDraftProcessing && status != LessonDraftCompleted && status != LessonDraftFailed {
+		return nil, errors.New("trạng thái lesson draft lưu trữ không hợp lệ")
+	}
+	d := &LessonDraft{id: id, title: title, model: model, prompt: prompt, status: status, meterial: material, createdAt: createdAt}
+	if updatedAt != nil {
+		v := *updatedAt
+		d.updatedAt = &v
+	}
+	if errorString != nil {
+		v := *errorString
+		d.errorString = &v
+	}
+	d.lesson = content
+	return d, nil
+}
+
 func (d *LessonDraft) ApplyLesson(lesson Lesson) {
 	d.title = lesson.title
 	d.status = LessonDraftCompleted
@@ -68,7 +90,7 @@ func (d *LessonDraft) ErrorString() *string {
 func (d *LessonDraft) ID() uuid.UUID {
 	return d.id
 }
-func (d *LessonDraft) Title() string {
+func (d *LessonDraft) Title() shareKernel.Content {
 	return d.title
 }
 func (d *LessonDraft) Model() string {

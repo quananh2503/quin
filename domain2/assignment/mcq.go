@@ -2,7 +2,8 @@ package assignment
 
 import (
 	"errors"
-	exercise "meet-attendance-clean/domain2/excercise"
+	// exercise "meet-attendance-clean/domain2/excercise"
+	shareKernel "meet-attendance-clean/domain2/kernel"
 	"uuid"
 )
 
@@ -16,7 +17,7 @@ type MCQAnswer struct {
 func (a MCQAnswer) ItemID() uuid.UUID { return a.itemID }
 func (a MCQAnswer) IsAnswer()         {}
 
-func (a MCQAnswer) IsValid(ex exercise.MultipleChoiceExercise) (bool, string) {
+func (a MCQAnswer) IsValid(ex shareKernel.MultipleChoiceExercise) (bool, string) {
 	if a.selectedOption == "" {
 		return false, "Chưa chọn đáp án trắc nghiệm"
 	}
@@ -59,6 +60,10 @@ func NewMCQEvalRes(itemID uuid.UUID, comment string, detectedMistakes []Detected
 		detectedMistakes: append([]DetectedMistake(nil), detectedMistakes...),
 	}
 }
+func (e MCQEvalRes) Comment() string {
+	return e.comment
+}
+
 func (e MCQEvalRes) ItemID() uuid.UUID { return e.itemID }
 func (e MCQEvalRes) DetectedMistakes() []DetectedMistake {
 	return append([]DetectedMistake(nil), e.detectedMistakes...)
@@ -66,7 +71,7 @@ func (e MCQEvalRes) DetectedMistakes() []DetectedMistake {
 
 type MCQAssignmentItem struct {
 	id         uuid.UUID
-	exercise   exercise.MultipleChoiceExercise
+	exercise   shareKernel.MultipleChoiceExercise
 	answer     *MCQAnswer
 	evaluation *ItemEvaluation
 }
@@ -151,7 +156,7 @@ func (e *MCQAssignmentItem) GenerateEvalRequest() MCQEvalReq {
 func (e *MCQAssignmentItem) AddAnswer(anwser MCQAnswer) {
 	e.answer = &anwser
 }
-func (e *MCQAssignmentItem) Exercise() exercise.MultipleChoiceExercise {
+func (e *MCQAssignmentItem) Exercise() shareKernel.MultipleChoiceExercise {
 	return e.exercise
 }
 func (e *MCQAssignmentItem) ID() uuid.UUID { return e.id }
@@ -173,6 +178,26 @@ func (e *MCQAssignmentItem) IsValid() (bool, string) {
 func (e *MCQAssignmentItem) IsEvaluated() bool {
 	return e.evaluation != nil
 }
+func (e *MCQAssignmentItem) Answer() *MCQAnswer {
+	if e.answer == nil {
+		return nil
+	}
+	return &MCQAnswer{
+		itemID:         e.answer.itemID,
+		selectedOption: e.answer.selectedOption,
+		workingText:    e.answer.workingText,
+		workingData:    cloneBytes2D(e.answer.workingData),
+	}
+}
+func (e *MCQAssignmentItem) Evaluation() *ItemEvaluation {
+	if e.evaluation == nil {
+		return nil
+	}
+	return &ItemEvaluation{
+		outcome: e.evaluation.outcome,
+		comment: e.evaluation.comment,
+	}
+}
 func NewMCQAnswer(itemID uuid.UUID, selectedOption string, text string, data [][]byte) (MCQAnswer, error) {
 	if itemID == uuid.Nil() {
 		return MCQAnswer{}, errors.New("itemID không hợp lệ")
@@ -186,4 +211,4 @@ func NewMCQAnswer(itemID uuid.UUID, selectedOption string, text string, data [][
 	}, nil
 }
 
-var _ TypedAssignmentItem[exercise.MultipleChoiceExercise, MCQAnswer, MCQEvalReq, MCQEvalRes] = &MCQAssignmentItem{}
+var _ TypedAssignmentItem[shareKernel.MultipleChoiceExercise, MCQAnswer, MCQEvalReq, MCQEvalRes] = &MCQAssignmentItem{}

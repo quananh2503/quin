@@ -18,3 +18,9 @@ config/microsoft-oauth.json
 
 # Snapshot tạm bài làm OneNote để đối chiếu ảnh/text trước khi gửi Gemini
 /debug/onenote-answer-snapshots/
+# bỏ qua các file ảnh 
+*.png
+# bỏ qua các file package json và các file ko cần thiết của frontned
+*.json
+*.lock
+eslintcache

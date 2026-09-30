@@ -13,7 +13,3 @@ func (e EssayEvalReq) TargetParts() []string {
 	}
 	return parts
 }
-
-func (e SubEssayRes) Label() string   { return e.label }
-func (e SubEssayRes) IsCorrect() bool { return e.isCorrect }
-func (e SubEssayRes) Comment() string { return e.comment }

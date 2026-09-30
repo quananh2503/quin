@@ -11,6 +11,7 @@ import (
 
 	"meet-attendance-clean/application2"
 	"meet-attendance-clean/domain2/assignment"
+	sharekernel "meet-attendance-clean/domain2/kernel"
 	"meet-attendance-clean/domain2/lesson"
 	"meet-attendance-clean/domain2/mistake"
 	"meet-attendance-clean/domain2/student"
@@ -25,14 +26,14 @@ type Graphs struct{ Store *SQLite }
 type Documents struct{ Store *SQLite }
 
 func (r Drafts) RecoverInterrupted(ctx context.Context) error {
-	_, err := r.Store.DB.ExecContext(ctx, `UPDATE v2_lesson_drafts SET status='failed',updated_at=?,error_text=? WHERE status='processing'`, timeText(time.Now().UTC()), "tác vụ bị gián đoạn khi ứng dụng dừng")
+	_, err := r.Store.DB.ExecContext(ctx, `UPDATE lesson_drafts SET status='failed',updated_at=?,error_text=? WHERE status='processing'`, timeText(time.Now().UTC()), "tác vụ bị gián đoạn khi ứng dụng dừng")
 	return err
 }
 
 func (r Students) GetByID(ctx context.Context, id uuid.UUID) (*student.Student, error) {
 	var name, class, created string
 	var cycle int
-	err := r.Store.DB.QueryRowContext(ctx, `SELECT name,class,cycle_start_day,created_at FROM v2_students WHERE id=?`, id.String()).Scan(&name, &class, &cycle, &created)
+	err := r.Store.DB.QueryRowContext(ctx, `SELECT name,class,cycle_start_day,created_at FROM students WHERE id=?`, id.String()).Scan(&name, &class, &cycle, &created)
 	if err != nil {
 		return nil, missing(err, "student")
 	}
@@ -47,7 +48,7 @@ func (r Students) Save(ctx context.Context, value *student.Student) error {
 	if value == nil {
 		return errors.New("student không được nil")
 	}
-	_, err := r.Store.DB.ExecContext(ctx, `INSERT INTO v2_students(id,name,class,cycle_start_day,created_at) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,class=excluded.class,cycle_start_day=excluded.cycle_start_day`, value.ID().String(), value.Name(), value.Class(), value.CycleStartDay(), timeText(value.CreatedAt()))
+	_, err := r.Store.DB.ExecContext(ctx, `INSERT INTO students(id,name,class,cycle_start_day,created_at) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,class=excluded.class,cycle_start_day=excluded.cycle_start_day`, value.ID().String(), value.Name(), value.Class(), value.CycleStartDay(), timeText(value.CreatedAt()))
 	return err
 }
 
@@ -61,7 +62,7 @@ func (r Students) SaveBatch(ctx context.Context, values []*student.Student) erro
 		if value == nil {
 			return errors.New("student batch chứa nil")
 		}
-		if _, err := tx.ExecContext(ctx, `INSERT INTO v2_students(id,name,class,cycle_start_day,created_at) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,class=excluded.class,cycle_start_day=excluded.cycle_start_day`, value.ID().String(), value.Name(), value.Class(), value.CycleStartDay(), timeText(value.CreatedAt())); err != nil {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO students(id,name,class,cycle_start_day,created_at) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,class=excluded.class,cycle_start_day=excluded.cycle_start_day`, value.ID().String(), value.Name(), value.Class(), value.CycleStartDay(), timeText(value.CreatedAt())); err != nil {
 			return err
 		}
 	}
@@ -90,7 +91,7 @@ func (r Sessions) SaveBatch(ctx context.Context, values []student.ClassSession) 
 		if err != nil {
 			return err
 		}
-		if _, err := tx.ExecContext(ctx, `INSERT INTO v2_class_sessions(id,student_id,start_at,end_at,attendance_json) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET attendance_json=excluded.attendance_json`, session.ID().String(), session.StudentID().String(), timeText(session.StartTime()), timeText(session.EndTime()), string(encoded)); err != nil {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO class_sessions(id,student_id,start_at,end_at,attendance_json) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET attendance_json=excluded.attendance_json`, session.ID().String(), session.StudentID().String(), timeText(session.StartTime()), timeText(session.EndTime()), string(encoded)); err != nil {
 			return err
 		}
 	}
@@ -115,7 +116,15 @@ func (r Drafts) Save(ctx context.Context, value *lesson.LessonDraft) error {
 		if err != nil {
 			return err
 		}
-		lessonJSON = string(encoded)
+		raw, err := json.Marshal(encoded)
+		if err != nil {
+			return err
+		}
+		lessonJSON = string(raw)
+	}
+	titleJSON, err := json.Marshal(encodeContent(value.Title()))
+	if err != nil {
+		return err
 	}
 	var errorText any
 	if value.ErrorString() != nil {
@@ -126,12 +135,12 @@ func (r Drafts) Save(ctx context.Context, value *lesson.LessonDraft) error {
 		return err
 	}
 	defer tx.Rollback()
-	_, err = tx.ExecContext(ctx, `INSERT INTO v2_lesson_drafts(id,title,model,prompt,status,material_json,lesson_json,created_at,updated_at,error_text) VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,model=excluded.model,prompt=excluded.prompt,status=excluded.status,material_json=excluded.material_json,lesson_json=excluded.lesson_json,updated_at=excluded.updated_at,error_text=excluded.error_text`, value.ID().String(), value.Title(), value.Model(), value.Prompt(), string(value.Status()), string(materialJSON), lessonJSON, timeText(value.CreatedAt()), nullableTime(value.UpdatedAt()), errorText)
+	_, err = tx.ExecContext(ctx, `INSERT INTO lesson_drafts(id,title,model,prompt,status,material_json,lesson_json,created_at,updated_at,error_text) VALUES(?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,model=excluded.model,prompt=excluded.prompt,status=excluded.status,material_json=excluded.material_json,lesson_json=excluded.lesson_json,updated_at=excluded.updated_at,error_text=excluded.error_text`, value.ID().String(), string(titleJSON), value.Model(), value.Prompt(), string(value.Status()), string(materialJSON), lessonJSON, timeText(value.CreatedAt()), nullableTime(value.UpdatedAt()), errorText)
 	if err != nil {
 		return err
 	}
 	if lessonJSON != nil {
-		if _, err := tx.ExecContext(ctx, `INSERT INTO v2_lessons(id,draft_id,lesson_json) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET lesson_json=excluded.lesson_json`, value.Lesson().ID().String(), value.ID().String(), lessonJSON); err != nil {
+		if _, err := tx.ExecContext(ctx, `INSERT INTO lessons(id,draft_id,lesson_json) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET lesson_json=excluded.lesson_json`, value.Lesson().ID().String(), value.ID().String(), lessonJSON); err != nil {
 			return err
 		}
 	}
@@ -139,20 +148,50 @@ func (r Drafts) Save(ctx context.Context, value *lesson.LessonDraft) error {
 }
 
 func (r Drafts) GetByID(ctx context.Context, id uuid.UUID) (*lesson.LessonDraft, error) {
-	var title, model, prompt, status, materialJSON, created string
+	query := `
+		SELECT title, model, prompt, status, material_json, lesson_json, created_at, updated_at, error_text 
+		FROM lesson_drafts 
+		WHERE id = ?
+	`
+
+	var titleRaw, model, prompt, status, materialJSON, created string
 	var lessonJSON, updated, errorText sql.NullString
-	err := r.Store.DB.QueryRowContext(ctx, `SELECT title,model,prompt,status,material_json,lesson_json,created_at,updated_at,error_text FROM v2_lesson_drafts WHERE id=?`, id.String()).Scan(&title, &model, &prompt, &status, &materialJSON, &lessonJSON, &created, &updated, &errorText)
+
+	err := r.Store.DB.QueryRowContext(ctx, query, id.String()).Scan(
+		&titleRaw,
+		&model,
+		&prompt,
+		&status,
+		&materialJSON,
+		&lessonJSON,
+		&created,
+		&updated,
+		&errorText,
+	)
 	if err != nil {
 		return nil, missing(err, "lesson draft")
 	}
+
+	// 1. Phục hồi Title thành sharekernel.Content (Tương thích cả JSON lẫn text thường)
+	var titleRec contentRecord
+	var title sharekernel.Content
+	if err := json.Unmarshal([]byte(titleRaw), &titleRec); err == nil && len(titleRec.InlineParts) > 0 {
+		title = decodeContent(titleRec)
+	} else {
+		title = sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: titleRaw})
+	}
+
+	// 2. Phục hồi Material
 	var materialData materialRecord
 	if err := json.Unmarshal([]byte(materialJSON), &materialData); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unmarshal material_json: %w", err)
 	}
 	material, err := decodeMaterial(materialData)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("decode material: %w", err)
 	}
+
+	// 3. Phục hồi thời gian
 	createdAt, err := parseTime(created)
 	if err != nil {
 		return nil, err
@@ -165,23 +204,38 @@ func (r Drafts) GetByID(ctx context.Context, id uuid.UUID) (*lesson.LessonDraft,
 		}
 		updatedAt = &v
 	}
+
+	// 4. Phục hồi Error text nếu có
 	var cause *string
 	if errorText.Valid {
 		cause = &errorText.String
 	}
+
+	// 5. Phục hồi nội dung Lesson nếu đã tạo xong
 	var content *lesson.Lesson
-	if lessonJSON.Valid {
+	if lessonJSON.Valid && len(lessonJSON.String) > 0 {
 		content, err = decodeLesson([]byte(lessonJSON.String))
 		if err != nil {
 			return nil, fmt.Errorf("đọc nội dung lesson draft: %w", err)
 		}
 	}
-	return lesson.ReconstituteLessonDraft(id, title, model, prompt, lesson.LessonDraftStatus(status), material, createdAt, updatedAt, cause, content)
-}
 
+	return lesson.ReconstituteLessonDraft(
+		id,
+		title,
+		model,
+		prompt,
+		lesson.LessonDraftStatus(status),
+		material,
+		createdAt,
+		updatedAt,
+		cause,
+		content,
+	)
+}
 func (r Lessons) GetByID(ctx context.Context, id uuid.UUID) (*lesson.Lesson, error) {
 	var raw string
-	err := r.Store.DB.QueryRowContext(ctx, `SELECT lesson_json FROM v2_lessons WHERE id=?`, id.String()).Scan(&raw)
+	err := r.Store.DB.QueryRowContext(ctx, `SELECT lesson_json FROM lessons WHERE id=?`, id.String()).Scan(&raw)
 	if err != nil {
 		return nil, missing(err, "lesson")
 	}
@@ -206,14 +260,14 @@ func (r Assignments) Save(ctx context.Context, value *assignment.Assignment) err
 	default:
 		return errors.New("assignment purpose không hợp lệ")
 	}
-	_, err = r.Store.DB.ExecContext(ctx, `INSERT INTO v2_assignments(id,student_id,title,purpose,origin_mistake_id,status,assigned_at,items_json) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,purpose=excluded.purpose,origin_mistake_id=excluded.origin_mistake_id,status=excluded.status,items_json=excluded.items_json`, value.ID().String(), value.StudentID().String(), value.Title(), purpose, mistakeID, string(value.Status()), timeText(value.AssignedAt()), string(items))
+	_, err = r.Store.DB.ExecContext(ctx, `INSERT INTO assignments(id,student_id,title,purpose,origin_mistake_id,status,assigned_at,items_json) VALUES(?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET title=excluded.title,purpose=excluded.purpose,origin_mistake_id=excluded.origin_mistake_id,status=excluded.status,items_json=excluded.items_json`, value.ID().String(), value.StudentID().String(), value.Title(), purpose, mistakeID, string(value.Status()), timeText(value.AssignedAt()), string(items))
 	return err
 }
 
 func (r Assignments) GetByID(ctx context.Context, id uuid.UUID) (*assignment.Assignment, error) {
 	var studentRaw, title, purposeRaw, statusRaw, assignedRaw, itemsRaw string
 	var mistakeRaw sql.NullString
-	err := r.Store.DB.QueryRowContext(ctx, `SELECT student_id,title,purpose,origin_mistake_id,status,assigned_at,items_json FROM v2_assignments WHERE id=?`, id.String()).Scan(&studentRaw, &title, &purposeRaw, &mistakeRaw, &statusRaw, &assignedRaw, &itemsRaw)
+	err := r.Store.DB.QueryRowContext(ctx, `SELECT student_id,title,purpose,origin_mistake_id,status,assigned_at,items_json FROM assignments WHERE id=?`, id.String()).Scan(&studentRaw, &title, &purposeRaw, &mistakeRaw, &statusRaw, &assignedRaw, &itemsRaw)
 	if err != nil {
 		return nil, missing(err, "assignment")
 	}
@@ -255,32 +309,123 @@ func (r Graphs) Save(ctx context.Context, value *mistake.MistakeGraph) error {
 	if value == nil {
 		return errors.New("mistake graph không được nil")
 	}
-	encoded, err := json.Marshal(value.Roots())
+	records, err := encodeMistakeGraph(value)
 	if err != nil {
 		return err
 	}
-	_, err = r.Store.DB.ExecContext(ctx, `INSERT INTO v2_mistake_graphs(student_id,graph_id,roots_json) VALUES(?,?,?) ON CONFLICT(student_id) DO UPDATE SET roots_json=excluded.roots_json`, value.StudentID().String(), value.ID().String(), string(encoded))
-	return err
+	tx, err := r.Store.DB.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+	if _, err = tx.ExecContext(ctx, `DELETE FROM mistakes WHERE student_id=?`, value.StudentID().String()); err != nil {
+		return err
+	}
+	for _, record := range records {
+		var parentID any
+		if record.ParentID != nil {
+			parentID = record.ParentID.String()
+		}
+		if _, err = tx.ExecContext(ctx, `INSERT INTO mistakes(id,student_id,parent_id,topic,reason,assignment_item_id,status,created_at,resolved_at) VALUES(?,?,?,?,?,?,?,?,?)`, record.ID.String(), record.StudentID.String(), parentID, record.Topic, record.Reason, record.AssignmentItemID.String(), record.Status, timeText(record.CreatedAt), nullableTime(record.ResolvedAt)); err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }
 
 func (r Graphs) GetByStudentID(ctx context.Context, studentID uuid.UUID) (*mistake.MistakeGraph, error) {
-	var idRaw, rootsRaw string
-	err := r.Store.DB.QueryRowContext(ctx, `SELECT graph_id,roots_json FROM v2_mistake_graphs WHERE student_id=?`, studentID.String()).Scan(&idRaw, &rootsRaw)
-	if errors.Is(err, sql.ErrNoRows) {
+	query := `
+		SELECT id, parent_id, topic, reason, assignment_item_id, status, created_at, resolved_at 
+		FROM mistakes 
+		WHERE student_id = ? 
+		ORDER BY created_at ASC
+	`
+
+	rows, err := r.Store.DB.QueryContext(ctx, query, studentID.String())
+	if err != nil {
+		return nil, fmt.Errorf("truy vấn danh sách mistakes: %w", err)
+	}
+	defer rows.Close()
+
+	var records []mistakeRecord
+
+	for rows.Next() {
+		var (
+			idStr, topic, reason, itemIDStr, status, createdStr string
+			parentIDStr, resolvedStr                            sql.NullString
+		)
+
+		err := rows.Scan(
+			&idStr,
+			&parentIDStr,
+			&topic,
+			&reason,
+			&itemIDStr,
+			&status,
+			&createdStr,
+			&resolvedStr,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scan dòng mistake: %w", err)
+		}
+
+		id, err := parseID(idStr)
+		if err != nil {
+			return nil, err
+		}
+		itemID, err := parseID(itemIDStr)
+		if err != nil {
+			return nil, err
+		}
+		createdAt, err := parseTime(createdStr)
+		if err != nil {
+			return nil, err
+		}
+
+		// Xử lý parent_id (có thể NULL nếu là nút gốc)
+		var parentID *uuid.UUID
+		if parentIDStr.Valid && parentIDStr.String != "" {
+			pID, err := parseID(parentIDStr.String)
+			if err != nil {
+				return nil, err
+			}
+			parentID = &pID
+		}
+
+		// Xử lý resolved_at (có thể NULL nếu chưa giải quyết)
+		var resolvedAt *time.Time
+		if resolvedStr.Valid && resolvedStr.String != "" {
+			resTime, err := parseTime(resolvedStr.String)
+			if err != nil {
+				return nil, err
+			}
+			resolvedAt = &resTime
+		}
+
+		records = append(records, mistakeRecord{
+			ID:               id,
+			StudentID:        studentID,
+			ParentID:         parentID,
+			Topic:            topic,
+			Reason:           reason,
+			AssignmentItemID: itemID,
+			Status:           status,
+			CreatedAt:        createdAt,
+			ResolvedAt:       resolvedAt,
+		})
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	// Nếu học sinh chưa từng có lỗi nào trong DB -> Khởi tạo một Graph mới tinh
+	if len(records) == 0 {
 		return mistake.NewMistakeGraph(studentID), nil
 	}
-	if err != nil {
-		return nil, err
-	}
-	id, err := parseID(idRaw)
-	if err != nil {
-		return nil, err
-	}
-	var roots []mistake.NodeState
-	if err := json.Unmarshal([]byte(rootsRaw), &roots); err != nil {
-		return nil, err
-	}
-	return mistake.ReconstituteGraph(id, studentID, roots)
+
+	// Dựng lại cây từ danh sách dòng phẳng bằng thuật toán Map 2 lượt
+	return decodeMistakeGraph(studentID, records)
 }
 
 func (r Documents) Save(ctx context.Context, value *application2.Document) error {
@@ -289,7 +434,7 @@ func (r Documents) Save(ctx context.Context, value *application2.Document) error
 	}
 
 	_, err := r.Store.DB.ExecContext(ctx,
-		`INSERT INTO v2_documents(id,file_name,storage_path,page_count,created_at) 
+		`INSERT INTO documents(id,file_name,storage_path,page_count,created_at) 
 		VALUES(?,?,?,?,?)`, value.ID.String(), value.FileName, value.FilePath, value.PageCount, timeText(value.CreatedAt))
 	return err
 }
@@ -297,7 +442,7 @@ func (r Documents) Save(ctx context.Context, value *application2.Document) error
 func (r Documents) GetByID(ctx context.Context, id uuid.UUID) (*application2.Document, error) {
 	var fileName, storagePath, createdRaw string
 	var count int
-	err := r.Store.DB.QueryRowContext(ctx, `SELECT file_name,storage_path,page_count,created_at FROM v2_documents WHERE id=?`, id.String()).Scan(&fileName, &storagePath, &count, &createdRaw)
+	err := r.Store.DB.QueryRowContext(ctx, `SELECT file_name,storage_path,page_count,created_at FROM documents WHERE id=?`, id.String()).Scan(&fileName, &storagePath, &count, &createdRaw)
 	if err != nil {
 		return nil, missing(err, "document")
 	}
@@ -315,7 +460,7 @@ func (r Documents) GetByID(ctx context.Context, id uuid.UUID) (*application2.Doc
 }
 
 func (r Documents) List(ctx context.Context) ([]application2.Document, error) {
-	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,file_name,storage_path,page_count,created_at FROM v2_documents ORDER BY created_at DESC`)
+	rows, err := r.Store.DB.QueryContext(ctx, `SELECT id,file_name,storage_path,page_count,created_at FROM documents ORDER BY created_at DESC`)
 	if err != nil {
 		return nil, err
 	}

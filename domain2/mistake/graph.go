@@ -7,23 +7,27 @@ import (
 
 // AGGREGATE ROOT: Toàn bộ hồ sơ lỗ hổng kiến thức của một học sinh
 type MistakeGraph struct {
-	id        uuid.UUID
 	studentID uuid.UUID
 	roots     []*Mistake // Danh sách các lỗi gốc (Depth 0)
 }
 
 func NewMistakeGraph(studentID uuid.UUID) *MistakeGraph {
 	return &MistakeGraph{
-		id:        uuid.New(),
 		studentID: studentID,
 		roots:     make([]*Mistake, 0),
 	}
 }
-func (g *MistakeGraph) ID() uuid.UUID {
-	return g.id
+func ReconstituteMistakeGraph(studentID uuid.UUID, roots []*Mistake) *MistakeGraph {
+	return &MistakeGraph{studentID: studentID, roots: append([]*Mistake(nil), roots...)}
 }
+
 func (g *MistakeGraph) StudentID() uuid.UUID {
 	return g.studentID
+}
+func (g *MistakeGraph) Roots() []*Mistake {
+	copied := make([]*Mistake, len(g.roots))
+	copy(copied, g.roots)
+	return copied
 }
 
 // func (g *MistakeGraph) Roots() []*Mistake {

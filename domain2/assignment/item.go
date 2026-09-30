@@ -3,7 +3,12 @@ package assignment
 import (
 	"errors"
 	"fmt"
-	exercise "meet-attendance-clean/domain2/excercise"
+
+	// exercise "meet-attendance-clean/domain2/excercise"
+
+	// exercise "meet-attendance-clean/domain2/excercise"
+	// exercise "meet-attendance-clean/domain2/excercise"
+	shareKernel "meet-attendance-clean/domain2/kernel"
 	"uuid"
 )
 
@@ -18,6 +23,23 @@ const (
 type ItemEvaluation struct {
 	outcome EvaluationOutcome
 	comment string
+}
+
+func NewItemEvaluation(outcome EvaluationOutcome, comment string) ItemEvaluation {
+	return ItemEvaluation{
+		outcome: outcome,
+		comment: comment,
+	}
+}
+
+func ReconstituteEvaluation(outcome EvaluationOutcome, comment string) *ItemEvaluation {
+	return &ItemEvaluation{outcome: outcome, comment: comment}
+}
+func (e ItemEvaluation) Outcome() EvaluationOutcome {
+	return e.outcome
+}
+func (e ItemEvaluation) Comment() string {
+	return e.comment
 }
 
 type Answer interface {
@@ -36,17 +58,18 @@ type AssignmentItem interface {
 	ID() uuid.UUID
 	OutputResult() string
 	Comment() string
-	Exercise() exercise.Exercise
+	Exercise() shareKernel.Exercise
 	AddAnswer(raw Answer) error
 	GenerateEvalRequest() EvaluationRequest
 	ApplyEvalResult(res EvaluationResult) ([]DetectedMistake, error)
 	IsCorrect() bool
 	IsValid() (bool, string)
 	IsEvaluated() bool
-	State() ItemState
+	Inner() any
+	// State() ItemState
 }
 
-type TypedAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult] interface {
+type TypedAssignmentItem[E shareKernel.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult] interface {
 	ID() uuid.UUID
 	OutputResult() string
 	Comment() string
@@ -57,13 +80,13 @@ type TypedAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, R
 	IsValid() (bool, string)
 	IsCorrect() bool
 	IsEvaluated() bool
-	State() ItemState
+	// State() ItemState
 }
-type wrapperAssignmentItem[E exercise.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult, T TypedAssignmentItem[E, A, Req, Res]] struct {
+type wrapperAssignmentItem[E shareKernel.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult, T TypedAssignmentItem[E, A, Req, Res]] struct {
 	inner T
 }
 
-func newWrapItem[E exercise.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult, T TypedAssignmentItem[E, A, Req, Res]](item T) *wrapperAssignmentItem[E, A, Req, Res, T] {
+func newWrapItem[E shareKernel.Exercise, A Answer, Req EvaluationRequest, Res EvaluationResult, T TypedAssignmentItem[E, A, Req, Res]](item T) *wrapperAssignmentItem[E, A, Req, Res, T] {
 	return &wrapperAssignmentItem[E, A, Req, Res, T]{
 		inner: item,
 	}
@@ -73,7 +96,7 @@ func (w *wrapperAssignmentItem[E, A, Req, Res, T]) OutputResult() string {
 	return w.inner.OutputResult()
 }
 func (w *wrapperAssignmentItem[E, A, Req, Res, T]) Comment() string { return w.inner.Comment() }
-func (w *wrapperAssignmentItem[E, A, Req, Res, T]) Exercise() exercise.Exercise {
+func (w *wrapperAssignmentItem[E, A, Req, Res, T]) Exercise() shareKernel.Exercise {
 	return w.inner.Exercise()
 }
 func (w *wrapperAssignmentItem[E, A, Req, Res, T]) AddAnswer(raw Answer) error {
@@ -109,22 +132,26 @@ func (w *wrapperAssignmentItem[E, A, Req, Res, T]) IsValid() (bool, string) {
 func (w *wrapperAssignmentItem[E, A, Req, Res, T]) IsEvaluated() bool {
 	return w.inner.IsEvaluated()
 }
-func (w *wrapperAssignmentItem[E, A, Req, Res, T]) State() ItemState {
-	return w.inner.State()
+func (w *wrapperAssignmentItem[E, A, Req, Res, T]) Inner() any {
+	return w.inner
 }
 
+// func (w *wrapperAssignmentItem[E, A, Req, Res, T]) State() ItemState {
+// 	return w.inner.State()
+// }
+
 // Tạo một file factory.go hoặc để chung trong assignment.go
-func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
+func NewAssignmentItem(ex shareKernel.Exercise) (AssignmentItem, error) {
 	if ex == nil {
 		return nil, errors.New("không thể tạo item từ exercise nil")
 	}
 
 	switch typedEx := ex.(type) {
-	case exercise.EssayExercise:
+	case shareKernel.EssayExercise:
 		// Phải trả về pointer &EssayAssigmentItem
-		var subItems []subItem
+		var subItems []SubItem
 		for _, sub := range typedEx.Parts() {
-			subItems = append(subItems, subItem{
+			subItems = append(subItems, SubItem{
 				label:      sub.Label(),
 				isSelected: false,
 				isCorrect:  false,
@@ -139,7 +166,7 @@ func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
 		}
 		return newWrapItem(rawItem), nil
 
-	case exercise.MultipleChoiceExercise:
+	case shareKernel.MultipleChoiceExercise:
 		// Phải trả về pointer &MCQAssignmentItem
 		rawItem := &MCQAssignmentItem{
 			id:       uuid.New(),
@@ -152,7 +179,12 @@ func NewAssignmentItem(ex exercise.Exercise) (AssignmentItem, error) {
 	}
 }
 
-var _ AssignmentItem = &wrapperAssignmentItem[exercise.Exercise, Answer, EvaluationRequest, EvaluationResult, TypedAssignmentItem[exercise.Exercise, Answer, EvaluationRequest, EvaluationResult]]{}
+// ReconstituteMCQItem restores the persisted state without allocating a new ID.
+func ReconstituteMCQItem(id uuid.UUID, ex shareKernel.MultipleChoiceExercise, answer *MCQAnswer, evaluation *ItemEvaluation) AssignmentItem {
+	return newWrapItem(&MCQAssignmentItem{id: id, exercise: ex, answer: answer, evaluation: evaluation})
+}
+
+var _ AssignmentItem = &wrapperAssignmentItem[shareKernel.Exercise, Answer, EvaluationRequest, EvaluationResult, TypedAssignmentItem[shareKernel.Exercise, Answer, EvaluationRequest, EvaluationResult]]{}
 
 type DetectedMistake struct {
 	topic            string

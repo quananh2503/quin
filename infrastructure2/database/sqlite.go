@@ -34,10 +34,6 @@ func Open(path string) (*SQLite, error) {
 		db.Close()
 		return nil, fmt.Errorf("khởi tạo schema v2: %w", err)
 	}
-	if err := migrateLegacyStudents(db); err != nil {
-		db.Close()
-		return nil, fmt.Errorf("chuyển dữ liệu students sang schema v2: %w", err)
-	}
 	return &SQLite{DB: db}, nil
 }
 
@@ -57,7 +53,7 @@ func migrateLegacyStudents(db *sql.DB) error {
 			return err
 		}
 		id := legacyUUID("student", className)
-		if _, err := db.Exec(`INSERT INTO v2_students(id,name,class,cycle_start_day,created_at) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,class=excluded.class,cycle_start_day=excluded.cycle_start_day`, id.String(), name, className, cycle, timeText(time.Now().UTC())); err != nil {
+		if _, err := db.Exec(`INSERT INTO students(id,name,class,cycle_start_day,created_at) VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=excluded.name,class=excluded.class,cycle_start_day=excluded.cycle_start_day`, id.String(), name, className, cycle, timeText(time.Now().UTC())); err != nil {
 			return err
 		}
 	}
@@ -109,7 +105,7 @@ func missing(err error, entity string) error {
 
 func (s *SQLite) GetLastSyncTime(ctx context.Context) (*time.Time, error) {
 	var raw string
-	err := s.DB.QueryRowContext(ctx, `SELECT value FROM v2_settings WHERE key='last_meet_sync'`).Scan(&raw)
+	err := s.DB.QueryRowContext(ctx, `SELECT value FROM settings WHERE key='last_meet_sync'`).Scan(&raw)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
@@ -121,6 +117,6 @@ func (s *SQLite) GetLastSyncTime(ctx context.Context) (*time.Time, error) {
 }
 
 func (s *SQLite) UpdateLastSyncTime(ctx context.Context, value time.Time) error {
-	_, err := s.DB.ExecContext(ctx, `INSERT INTO v2_settings(key,value) VALUES('last_meet_sync',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value`, timeText(value))
+	_, err := s.DB.ExecContext(ctx, `INSERT INTO settings(key,value) VALUES('last_meet_sync',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value`, timeText(value))
 	return err
 }
