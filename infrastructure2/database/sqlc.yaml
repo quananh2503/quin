@@ -1,0 +1,16 @@
+version: "2"
+sql:
+  - schema: "schema.sql"
+    queries: "queries.sql"
+    engine: "sqlite"
+    gen:
+      go:
+        package: "dbgen"
+        out: "dbgen"
+        # Tạo thêm json tag cho các struct sinh ra (tiện debug/log)
+        emit_json_tags: true
+        # Sinh interface Querier (để dễ mock khi viết Unit Test)
+        emit_interface: true
+        # Giữ false để dùng sql.NullString chuẩn như code Repository đang viết
+        emit_pointers_for_null_types: false
+        emit_prepared_queries: false

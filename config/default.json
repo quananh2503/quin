@@ -2,5 +2,5 @@
   "address": "127.0.0.1:9000",
   "google_redirect_url": "http://localhost:9000/oauth2callback",
   "meet_lookback_months": 3,
-  "gemini_model": "gemini-3.5-flash"
+  "gemini_model": "gemini-3.7-flash"
 }

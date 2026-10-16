@@ -1,0 +1,117 @@
+package mistake
+
+import (
+	"errors"
+	"time"
+	"uuid"
+)
+
+type MistakeStatus string
+
+const (
+	MistakeStatusDetected    MistakeStatus = "DETECTED"    // Mới phát hiện
+	MistakeStatusRemediating MistakeStatus = "REMEDIATING" // Đang làm bài chữa
+	MistakeStatusResolved    MistakeStatus = "RESOLVED"    // Đã giải quyết xong
+)
+
+type Mistake struct {
+	id               uuid.UUID
+	topic            string
+	reason           string
+	assignmentItemID uuid.UUID
+	children         []*Mistake
+	createdAt        time.Time
+	resolvedAt       *time.Time
+	status           MistakeStatus
+}
+
+func (m *Mistake) ID() uuid.UUID {
+	return m.id
+}
+func (m *Mistake) Topic() string {
+	return m.topic
+}
+func (m *Mistake) Reason() string {
+	return m.reason
+}
+func (m *Mistake) AssignmentItemID() uuid.UUID {
+	return m.assignmentItemID
+}
+func (m *Mistake) Children() []*Mistake {
+	copied := make([]*Mistake, len(m.children))
+	copy(copied, m.children)
+	return copied
+}
+
+//	func (m *Mistake) Children() []*Mistake {
+//		return append([]*Mistake(nil), m.children...) // Trả về bản sao để tránh bị thay đổi từ bên ngoài
+//	}
+func (m *Mistake) CreatedAt() time.Time {
+	return m.createdAt
+}
+func (m *Mistake) ResolvedAt() *time.Time {
+	return m.resolvedAt
+}
+func (m *Mistake) Status() MistakeStatus {
+	return m.status
+}
+func newMistake(topic string, reason string, assignmentItemID uuid.UUID) *Mistake {
+	return &Mistake{
+		id:               uuid.New(),
+		topic:            topic,
+		reason:           reason,
+		assignmentItemID: assignmentItemID,
+		children:         make([]*Mistake, 0),
+		createdAt:        time.Now().UTC(),
+		status:           MistakeStatusDetected,
+	}
+}
+func ReconstituteMistake(id uuid.UUID, topic, reason string, assignmentItemID uuid.UUID, status MistakeStatus, createdAt time.Time, resolvedAt *time.Time) *Mistake {
+	var copyResolved *time.Time
+	if resolvedAt != nil {
+		value := *resolvedAt
+		copyResolved = &value
+	}
+	return &Mistake{id: id, topic: topic, reason: reason, assignmentItemID: assignmentItemID, status: status, createdAt: createdAt, resolvedAt: copyResolved, children: make([]*Mistake, 0)}
+}
+
+func (m *Mistake) AppendChild(child *Mistake) { m.children = append(m.children, child) }
+
+func (m *Mistake) canReslove() bool {
+	if m.status != MistakeStatusResolved {
+		return false
+	}
+	for _, child := range m.children {
+		if !child.canReslove() {
+			return false
+		}
+	}
+	return true
+}
+func (m *Mistake) Reslove() error {
+	m.status = MistakeStatusResolved
+	if !m.canReslove() {
+		m.status = MistakeStatusRemediating
+		return errors.New("không thể đóng lỗ hổng này vì các lỗ hổng tầng sâu hơn bên dưới chưa được giải quyết triệt để")
+	}
+
+	now := time.Now().UTC()
+	m.resolvedAt = &now
+	return nil
+}
+func (m *Mistake) StartRemediation() error {
+	switch m.status {
+	case MistakeStatusDetected:
+		m.status = MistakeStatusRemediating
+		return nil
+
+	case MistakeStatusRemediating:
+		return nil
+
+	case MistakeStatusResolved:
+		return errors.New("lỗi đã được giải quyết")
+
+	default:
+		return errors.New("trạng thái lỗi không hợp lệ")
+	}
+}
