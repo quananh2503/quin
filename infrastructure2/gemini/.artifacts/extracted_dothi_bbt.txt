@@ -1,0 +1,164 @@
+Dưới đây là trích xuất chi tiết **5 bài toán có đồ thị tiêu biểu** và **3 bài toán có bảng biến thiên (BBT) tiêu biểu** từ đề thi trong tài liệu:
+
+---
+
+### PHẦN 1: 5 BÀI TOÁN CÓ ĐỒ THỊ TIÊU BIỂU
+
+---
+
+#### [ĐỒ THỊ 1] - Đồ thị hàm số bậc 3 (Tính đơn điệu từ đồ thị)
+* **Nguồn:** Câu 2 (Trang 1)
+* **Đề bài nguyên văn:**
+  Cho đồ thị hàm số $y = f(x)$ như hình vẽ. Khẳng định nào sau đây là đúng?
+  A. Hàm số đồng biến trên khoảng $(1; 4)$.
+  B. Hàm số đồng biến trên khoảng $(-3; 2)$.
+  C. Hàm số đồng biến trên khoảng $(-3; 3)$.
+  D. Hàm số đồng biến trên khoảng $(0; 2)$.
+* **Dạng hàm số:** Hàm đa thức bậc ba $y = ax^3 + bx^2 + cx + d$ ($a < 0$).
+* **Tọa độ các điểm đặc biệt trên đồ thị:**
+  - Điểm cực tiểu: $(-1; 1)$.
+  - Điểm cực đại: $(2; 4)$.
+  - Giao điểm với trục hoành $Ox$: Điểm $(3; 0)$.
+  - Điểm khác biểu diễn trên hệ trục: $x = -3$, $x = -1$, $x = 0$, $x = 2$, $x = 3$.
+* **Đáp án đúng:** **D** (Hàm số đồng biến trên $(-1; 2)$, do đó đồng biến trên $(0; 2)$).
+
+---
+
+#### [ĐỒ THỊ 2] - Đồ thị nhận diện hàm số bậc 3
+* **Nguồn:** Câu 5 (Trang 1)
+* **Đề bài nguyên văn:**
+  Đồ thị hàm số nào dưới đây có dạng như đường cong trong hình dưới?
+  A. $y = -x^3 + 3x + 1$.
+  B. $y = x^3 - 3x^2 + 1$.
+  C. $y = \frac{3 - x}{x - 2}$.
+  D. $y = \frac{x^2 + 1}{x + 2}$.
+* **Dạng và phương trình hàm số:** 
+  - Hàm bậc 3 có hệ số $a > 0$: $y = x^3 - 3x^2 + 1$.
+* **Tọa độ các điểm đặc biệt trên đồ thị:**
+  - Điểm cực đại: $(0; 1)$ (cắt trục tung tại điểm có tung độ bằng $1$).
+  - Điểm cực tiểu: $(2; -3)$.
+  - Nhánh vô cực: Khi $x \to +\infty$ thì $y \to +\infty$; khi $x \to -\infty$ thì $y \to -\infty$.
+* **Đáp án đúng:** **B**.
+
+---
+
+#### [ĐỒ THỊ 3] - Đồ thị hàm phân thức bậc hai / bậc nhất (Xác định tiệm cận)
+* **Nguồn:** Câu 4 (Trang 1)
+* **Đề bài nguyên văn:**
+  Cho đồ thị hàm số $y = \frac{x^2 - 2x + 3}{x - 1}$ có đồ thị như hình vẽ. Phương trình đường tiệm cận đứng và phương trình đường tiệm cận xiên của đồ thị đã cho là:
+  A. $x = 1;\ y = x - 1$.
+  B. $x = 1;\ y = x + 1$.
+  C. $x = -1;\ y = x - 1$.
+  D. $x = 1;\ y = 2x - 2$.
+* **Dạng và phương trình hàm số:**
+  - Hàm phân thức bậc hai / bậc nhất: $y = \frac{x^2 - 2x + 3}{x - 1} = x - 1 + \frac{2}{x - 1}$.
+* **Tọa độ các điểm đặc biệt và đường tiệm cận:**
+  - Tiệm cận đứng: $x = 1$.
+  - Tiệm cận xiên: $y = x - 1$.
+  - Giao điểm của tiệm cận xiên với $Oy$: $(0; -1)$; với $Ox$: $(1; 0)$.
+  - Tâm đối xứng (giao 2 tiệm cận): $I(1; 0)$.
+* **Đáp án đúng:** **A**.
+
+---
+
+#### [ĐỒ THỊ 4] - Đồ thị hàm phân thức bậc hai / bậc nhất (Xét dấu các hệ số)
+* **Nguồn:** Câu 28 (Trang 4)
+* **Đề bài nguyên văn:**
+  Cho đồ thị hàm số $y = \frac{ax^2 + bx + c}{x + d}$ có đồ thị như hình vẽ. Trong các số $a, b, c, d$ có bao nhiêu số có giá trị dương?
+  A. 1.
+  B. 2.
+  C. 3.
+  D. 4.
+* **Dạng hàm số:** Phân thức bậc hai trên bậc nhất $y = \frac{ax^2 + bx + c}{x + d}$.
+* **Tọa độ các điểm đặc biệt và tính chất trên đồ thị:**
+  - Tiệm cận đứng: $x = 2 \Rightarrow -d = 2 \Rightarrow d = -2 < 0$.
+  - Giao điểm với trục tung $Oy$: Điểm $(0; \frac{c}{d})$ nằm phía dưới trục hoành $\Rightarrow \frac{c}{d} < 0 \Rightarrow c > 0$ (vì $d < 0$).
+  - Tiệm cận xiên: Đi lên từ trái sang phải $\Rightarrow$ hệ số góc $a > 0$.
+  - Hai điểm cực trị nằm về phía bên phải trục tung ($x_1 > 0, x_2 > 0 \Rightarrow x_1 x_2 = \frac{bd - c}{a} > 0 \Rightarrow b < 0$).
+  - Giao tiệm cận xiên với trục tung tại $(0; -1)$ và trục hoành tại $(1; 0)$.
+* **Đáp án đúng:** **B** (Có 2 số dương là $a$ và $c$).
+
+---
+
+#### [ĐỒ THỊ 5] - Đồ thị hàm phân phối chuẩn Gauss & Parabol bậc hai (Ứng dụng thực tế)
+* **Nguồn:** Câu 36 (Trang 11 - phần lời giải tự luận)
+* **Đề bài nguyên văn:**
+  Cho hàm số phân phối chuẩn đã chuẩn hóa $f(x) = e^{-\frac{x^2}{2\sigma^2}}$ và hàm số bậc hai $h(x) = -\frac{x^2}{2\sigma^2} + 1$. Vẽ đồ thị hai hàm số trên cùng hệ trục tọa độ và so sánh giá trị.
+* **Dạng và phương trình hàm số:**
+  1. Đường cong phân phối chuẩn (dạng chuông Gauss đối xứng): $y = e^{-\frac{x^2}{2\sigma^2}}$.
+  2. Parabol bậc hai có bề lõm quay xuống: $y = -\frac{x^2}{2\sigma^2} + 1$.
+* **Tọa độ các điểm đặc biệt trên đồ thị:**
+  - Điểm tiếp xúc/chung đỉnh của hai đồ thị: Điểm cực đại $(0; 1)$ trên trục $Oy$.
+  - Đường tiệm cận ngang của hàm $y = e^{-\frac{x^2}{2\sigma^2}}$: Trục hoành $y = 0$ (khi $x \to \pm\infty$).
+  - Parabol $y = -\frac{x^2}{2\sigma^2} + 1$ cắt trục hoành tại hai điểm đối xứng $x = \pm\sigma\sqrt{2}$.
+* **Mối tương quan:** Đồ thị đường cong Gauss luôn nằm phía trên Parabol, tiếp xúc nhau tại đỉnh $(0; 1)$.
+
+---
+
+### PHẦN 2: 3 BÀI TOÁN CÓ BẢNG BIẾN THIÊN (BBT) TIÊU BIỂU
+
+---
+
+#### [BBT 1] - BBT hàm phân thức có điểm gián đoạn (Dạng $\frac{\text{Bậc 2}}{\text{Bậc 1}}$)
+* **Nguồn:** Câu 1 (Trang 1)
+* **Đề bài nguyên văn:**
+  Cho hàm số $y = f(x)$ có bảng biến thiên như sau:
+  Hàm số đã cho nghịch biến trên khoảng nào sau đây?
+  A. $(-1; 2)$.
+  B. $(-1; +\infty)$.
+  C. $(-4; 2)$.
+  D. $(2; +\infty)$.
+* **Cấu trúc dữ liệu trong BBT:**
+  - **Dòng $x$:** Gồm các mốc $-\infty \quad -4 \quad -1 \quad 2 \quad +\infty$.
+  - **Dòng $y'$:** 
+    - Tại $x = -4$ và $x = 2$: $y' = 0$.
+    - Tại $x = -1$: Đạo hàm không xác định (ký hiệu $||$).
+    - Dấu: $(-\infty; -4) \to (+)$; $(-4; -1) \to (-)$; $(-1; 2) \to (-)$; $(2; +\infty) \to (+)$.
+  - **Dòng $y$:**
+    - Tăng từ $-\infty$ lên cực đại $-11$ (tại $x = -4$), sau đó giảm xuống $-\infty$ (khi $x \to -1^-$).
+    - Tại $x = -1$: Gián đoạn không xác định (ký hiệu $||$).
+    - Giảm từ $+\infty$ (khi $x \to -1^+$) xuống cực tiểu $1$ (tại $x = 2$), sau đó tăng lên $+\infty$.
+* **Đáp án đúng:** **A** (Hàm số nghịch biến trên $(-4; -1)$ và $(-1; 2)$).
+
+---
+
+#### [BBT 2] - BBT hàm số bậc 4 trùng phương (Có 3 điểm cực trị)
+* **Nguồn:** Câu 3 (Trang 1)
+* **Đề bài nguyên văn:**
+  Cho hàm số $y = f(x)$ có bảng biến thiên như hình vẽ. Giá trị cực tiểu của hàm số là:
+  A. 0.
+  B. $-3$.
+  C. 1.
+  D. $-1$.
+* **Cấu trúc dữ liệu trong BBT:**
+  - **Dòng $x$:** Gồm các mốc $-\infty \quad -1 \quad 0 \quad 1 \quad +\infty$.
+  - **Dòng $f'(x)$:**
+    - Bằng $0$ tại các điểm $x = -1,\ 0,\ 1$.
+    - Dấu: $(-\infty; -1) \to (-)$; $(-1; 0) \to (+)$; $(0; 1) \to (-)$; $(1; +\infty) \to (+)$.
+  - **Dòng $f(x)$:**
+    - Giảm từ $+\infty$ xuống giá trị cực tiểu $-3$ tại $x = -1$.
+    - Tăng từ $-3$ lên giá trị cực đại $0$ tại $x = 0$.
+    - Giảm từ $0$ xuống giá trị cực tiểu $-3$ tại $x = 1$.
+    - Tăng từ $-3$ lên $+\infty$ khi $x \to +\infty$.
+* **Đáp án đúng:** **B** (Giá trị cực tiểu là $y_{CT} = -3$).
+
+---
+
+#### [BBT 3] - BBT hàm phân thức bậc nhất / bậc nhất (Tiệm cận đứng và ngang)
+* **Nguồn:** Câu 18 (Trang 3)
+* **Đề bài nguyên văn:**
+  Quan sát bảng biến thiên và cho biết bảng biến thiên đó là của hàm số nào:
+  A. $y = \frac{-2x + 1}{x + 3}$.
+  B. $y = \frac{-2x + 1}{x - 3}$.
+  C. $y = \frac{2x - 1}{x + 3}$.
+  D. $y = \frac{2x - 1}{x - 3}$.
+* **Cấu trúc dữ liệu trong BBT:**
+  - **Dòng $x$:** Gồm các mốc $-\infty \quad\quad 3 \quad\quad +\infty$.
+  - **Dòng $y'$:**
+    - Tại $x = 3$: Không xác định (ký hiệu hai vạch $||$).
+    - Dấu $y'$: Luôn mang dấu âm $(-)$ trên cả hai khoảng $(-\infty; 3)$ và $(3; +\infty)$.
+  - **Dòng $y$:**
+    - Trên $(-\infty; 3)$: Hàm số giảm từ giá trị tiệm cận ngang $y = 2$ xuống $-\infty$ khi $x \to 3^-$.
+    - Tại $x = 3$: Ký hiệu hai vạch $||$ (tiệm cận đứng).
+    - Trên $(3; +\infty)$: Hàm số giảm từ $+\infty$ (khi $x \to 3^+$) xuống giá trị tiệm cận ngang $y = 2$.
+* **Đáp án đúng:** **D** (Hàm số $y = \frac{2x - 1}{x - 3}$ có tiệm cận đứng $x = 3$, tiệm cận ngang $y = 2$, đạo hàm $y' = \frac{-5}{(x - 3)^2} < 0$).

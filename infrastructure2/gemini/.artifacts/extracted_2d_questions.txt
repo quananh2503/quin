@@ -1,0 +1,82 @@
+=================================================================
+DANH SÁCH 10 BÀI TOÁN HÌNH HỌC 2D (5 BÀI LỚP 8 + 5 BÀI LỚP 9)
+Trích xuất từ thư mục pdfs/tests/
+=================================================================
+
+### PHẦN 1: 5 BÀI HÌNH HỌC LỚP 8 (Tứ giác, Hình thang, Hình bình hành, Hình chữ nhật, Tam giác đồng dạng)
+
+Dưới đây là 5 bài toán hình học tự luận đầu tiên được trích xuất chính xác và đầy đủ từ tài liệu:
+
+---
+BÀI 1 (LỚP 8):
+Cho hình bình hành $ABCD$ có $BC = 2AB$ và $\widehat{A} = 60^\circ$. Gọi $E, F$ theo thứ tự là trung điểm của $BC$ và $AD$.  
+a) Tứ giác $ECDF$ là hình gì?  
+b) Tứ giác $ABED$ là hình gì? Vì sao?  
+c) Tính số đo của góc $\widehat{AED}$.
+
+---
+BÀI 2 (LỚP 8):
+Cho $\Delta ABC$. Gọi $M, N$ lần lượt là trung điểm của $BC, AC$. Gọi $H$ là điểm đối xứng của $N$ qua $M$.  
+a) Chứng minh tứ giác $BNCH$ và $ABHN$ là hình bình hành.  
+b) $\Delta ABC$ thỏa mãn điều kiện gì thì tứ giác $BNCH$ là hình chữ nhật.
+
+---
+BÀI 3 (LỚP 8):
+Cho tứ giác $ABCD$. Gọi $O$ là giao điểm của 2 đường chéo (không vuông góc), $I$ và $K$ lần lượt là trung điểm của $BC$ và $CD$. Gọi $M$ và $N$ theo thứ tự là điểm đối xứng của điểm $O$ qua tâm $I$ và $K$.  
+a) Chứng minh rằng tứ giác $BMND$ là hình bình hành.  
+b) Với điều kiện nào của hai đường chéo $AC$ và $BD$ thì tứ giác $BMND$ là hình chữ nhật.  
+c) Chứng minh 3 điểm $M, C, N$ thẳng hàng.
+
+---
+BÀI 4 (LỚP 8):
+Cho hình bình hành $ABCD$. Gọi $E$ và $F$ lần lượt là trung điểm của $AD$ và $BC$. Đường chéo $AC$ cắt các đoạn thẳng $BE$ và $DF$ theo thứ tự tại $P$ và $Q$.  
+a) Chứng minh tứ giác $BEDF$ là hình bình hành.  
+b) Chứng minh $AP = PQ = QC$.  
+c) Gọi $R$ là trung điểm của $BP$. Chứng minh tứ giác $ARQE$ là hình bình hành.
+
+---
+BÀI 5 (LỚP 8):
+Cho tứ giác $ABCD$. Gọi $M, N, P, Q$ lần lượt là trung điểm của $AB, BC, CD, DA$.  
+a) Tứ giác $MNPQ$ là hình gì? Vì sao?  
+b) Tìm điều kiện của tứ giác $ABCD$ để tứ giác $MNPQ$ là hình vuông?  
+c) Với điều kiện câu b) hãy tính tỉ số diện tích của tứ giác $ABCD$ và $MNPQ$.
+
+---
+
+BÀI 1 (LỚP 9):
+Cho tam giác $ABC$ nhọn $(AB < AC)$ nội tiếp đường tròn $(O)$. Hai đường cao $BE$ và $CF$ của tam giác $ABC$ cắt nhau tại điểm $H$. Gọi $K$ là trung điểm $BC$.
+- **a)** Chứng minh $\Delta AEF$ đồng dạng $\Delta ABC$.
+- **b)** Chứng minh đường thẳng $OA$ vuông góc với đường thẳng $EF$.
+- **c)** Đường phân giác góc $FHB$ cắt $AB$ và $AC$ lần lượt tại $M$ và $N$. Gọi $I$ là trung điểm của $MN$, $J$ là trung điểm của $AH$. Chứng minh tứ giác $AFHI$ nội tiếp và ba điểm $I, J, K$ thẳng hàng.
+
+---
+
+### BÀI 2 (LỚP 9):
+Cho đường tròn $(O)$, dây $CD$ cố định. Gọi $B$ là điểm chính giữa cung nhỏ $CD$, kẻ đường kính $AB$ cắt $CD$ tại $I$. Lấy điểm $H$ bất kỳ trên cung lớn $CD$, $HB$ cắt $CD$ tại $E$. Đường thẳng $AH$ cắt đường thẳng $CD$ tại $P$.
+- **a)** Chứng minh: Tứ giác $PHIB$ nội tiếp.
+- **b)** Chứng minh: $AH.AP = AI.AB$.
+- **c)** Gọi $K$ là giao điểm của đường thẳng $AE$ và $BP$. Kẻ $KM \perp AB$ cắt $AB$ tại $M$, cắt đường tròn $(O)$ tại $N$. Chứng minh $N, I, H$ thẳng hàng.
+
+---
+
+### BÀI 3 (LỚP 9):
+Cho đường tròn tâm $(O)$ và dây $BC$ cố định không đi qua $O$. Trên cung lớn $BC$ lấy điểm $A$ sao cho $AB < AC$. Kẻ đường kính $AK$, $E$ là hình chiếu của $C$ trên $AK$. $M$ là trung điểm của $BC$.
+- **a)** Chứng minh bốn điểm $C, E, M, O$ cùng thuộc một đường tròn.
+- **b)** Kẻ $AD \perp BC$ tại $D$. Chứng minh $AD.AK = AB.AC$ và $\Delta MDE$ cân.
+- **c)** Gọi $F$ là hình chiếu của $B$ trên $AK$. Chứng minh khi $A$ di chuyển trên cung lớn $BC$ thì tâm đường tròn ngoại tiếp $\Delta DEF$ là 1 điểm cố định.
+
+---
+
+### BÀI 4 (LỚP 9):
+Tứ giác $ABCD$ nội tiếp đường tròn tâm $O$ đường kính $AD$. Hai đường chéo $AC, BD$ cắt nhau tại $E$. Từ $E$ kẻ $EF$ vuông góc với $AD$ ($F \in AD$). Đường thẳng $CF$ cắt đường tròn tại điểm thứ hai là $M$. Giao điểm của $BD$ và $CF$ là $N$. Chứng minh:
+- **a)** $CEFD$ là tứ giác nội tiếp.
+- **b)** $FA$ là tia phân giác của $\widehat{BFM}$.
+- **c)** $BE.DN = EN.BD$.
+
+---
+
+### BÀI 5 (LỚP 9):
+Trên nửa đường tròn $(O; R)$ đường kính $BC$, lấy điểm $A$ sao cho $BA = R$.
+- **a)** Chứng minh tam giác $ABC$ vuông tại $A$ và tính số đo các góc $B, C$ của tam giác vuông $ABC$.
+- **b)** Qua $B$ kẻ tiếp tuyến với nửa đường tròn $(O)$, nó cắt tia $CA$ tại $D$. Qua $D$ kẻ tiếp tuyến $DE$ với nửa đường tròn $(O)$ ($E$ là tiếp điểm). Gọi $I$ là giao điểm của $OD$ và $BE$. Chứng minh rằng $OD \perp BE$ và $DI.DO = DA.DC$.
+- **c)** Kẻ $EH$ vuông góc với $BC$ tại $H$. $EH$ cắt $CD$ tại $G$. Chứng minh $IG$ song song với $BC$.

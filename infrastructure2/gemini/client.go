@@ -29,6 +29,7 @@ type PDFProcessor interface {
 
 type Client struct {
 	client *genai.Client
+	pool   *KeyPool
 	pdf    PDFProcessor
 }
 
@@ -47,10 +48,42 @@ func New(ctx context.Context, key string, pdf PDFProcessor) (*Client, error) {
 		return nil, fmt.Errorf("khởi tạo Google GenAI SDK thất bại: %w", err)
 	}
 
+	pool, err := NewKeyPool(ctx, []string{key})
+	if err != nil {
+		return nil, fmt.Errorf("khởi tạo KeyPool thất bại: %w", err)
+	}
+
 	return &Client{
 		client: client,
+		pool:   pool,
 		pdf:    pdf,
 	}, nil
+}
+
+func NewWithPool(ctx context.Context, apiKeys []string, pdf PDFProcessor) (*Client, error) {
+	pool, err := NewKeyPool(ctx, apiKeys)
+	if err != nil {
+		return nil, fmt.Errorf("khởi tạo KeyPool thất bại: %w", err)
+	}
+
+	var firstClient *genai.Client
+	if len(pool.slots) > 0 {
+		firstClient = pool.slots[0].client
+	}
+
+	return &Client{
+		client: firstClient,
+		pool:   pool,
+		pdf:    pdf,
+	}, nil
+}
+
+func (c *Client) KeyPool() *KeyPool {
+	return c.pool
+}
+
+func (c *Client) SetKeyPool(pool *KeyPool) {
+	c.pool = pool
 }
 
 func (c *Client) Close() error {

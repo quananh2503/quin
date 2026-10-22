@@ -1,0 +1,218 @@
+package gemini
+
+import (
+	"context"
+	"fmt"
+	"math/rand"
+	"strings"
+	"sync"
+	"sync/atomic"
+	"time"
+
+	"google.golang.org/genai"
+)
+
+type KeySlot struct {
+	index    int
+	client   *genai.Client
+	mu       sync.Mutex
+	lastCall time.Time
+	disabled bool
+}
+
+func (s *KeySlot) Index() int {
+	return s.index
+}
+
+func (s *KeySlot) Client() *genai.Client {
+	return s.client
+}
+
+func (s *KeySlot) IsDisabled() bool {
+	return s.disabled
+}
+
+type KeyPool struct {
+	slots        []*KeySlot
+	counter      uint64
+	staggerDelay time.Duration // Khoảng nghỉ ngắn trên cùng 1 key để đợi Prefill Cache ấm
+}
+
+// Khởi tạo Pool từ danh sách các API Keys (ví dụ: 5 keys)
+func NewKeyPool(ctx context.Context, apiKeys []string) (*KeyPool, error) {
+	var slots []*KeySlot
+	seen := make(map[string]bool)
+	for _, k := range apiKeys {
+		k = strings.TrimSpace(k)
+		if k == "" || seen[k] {
+			continue
+		}
+		seen[k] = true
+		cli, err := genai.NewClient(ctx, &genai.ClientConfig{
+			APIKey:  k,
+			Backend: genai.BackendGeminiAPI,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("khởi tạo key #%d lỗi: %w", len(slots)+1, err)
+		}
+		slots = append(slots, &KeySlot{
+			index:  len(slots) + 1,
+			client: cli,
+		})
+	}
+	if len(slots) == 0 {
+		return nil, fmt.Errorf("không có API Key hợp lệ nào trong Pool")
+	}
+	return &KeyPool{
+		slots:        slots,
+		staggerDelay: 1800 * time.Millisecond, // Cách nhịp 1.8s trên cùng 1 Key để ăn trọn Implicit Cache
+	}, nil
+}
+
+func (p *KeyPool) Slots() []*KeySlot {
+	return p.slots
+}
+
+func (p *KeyPool) Size() int {
+	return len(p.slots)
+}
+
+func (p *KeyPool) ActiveCount() int {
+	count := 0
+	for _, s := range p.slots {
+		if !s.disabled {
+			count++
+		}
+	}
+	return count
+}
+
+// isKeyDeniedError: Nhận diện lỗi từ chối quyền (403, 401) để tự động failover và loại key
+func isKeyDeniedError(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := strings.ToLower(err.Error())
+	return strings.Contains(msg, "403") ||
+		strings.Contains(msg, "permission_denied") ||
+		strings.Contains(msg, "401") ||
+		strings.Contains(msg, "unauthenticated") ||
+		strings.Contains(msg, "api_key_invalid")
+}
+
+// isTransientError: Nhận diện các mã lỗi tạm thời có thể retry được
+func isTransientError(err error) bool {
+	if err == nil {
+		return false
+	}
+	msg := strings.ToLower(err.Error())
+	return strings.Contains(msg, "429") ||
+		strings.Contains(msg, "resource_exhausted") ||
+		strings.Contains(msg, "503") ||
+		strings.Contains(msg, "500") ||
+		strings.Contains(msg, "unavailable") ||
+		strings.Contains(msg, "overloaded") ||
+		strings.Contains(msg, "internal") ||
+		strings.Contains(msg, "deadline_exceeded")
+}
+
+// GenerateContent: Tự động phân tải Round-Robin qua các Keys + Failover sang Key khác nếu gặp 429 hoặc 403
+func (p *KeyPool) GenerateContent(
+	ctx context.Context,
+	modelName string,
+	contents []*genai.Content,
+	config *genai.GenerateContentConfig,
+	maxRetries int,
+) (*genai.GenerateContentResponse, error) {
+	numSlots := len(p.slots)
+	if numSlots == 0 {
+		return nil, fmt.Errorf("key pool rỗng, không có key nào")
+	}
+
+	baseDelay := 2 * time.Second
+
+	// Đảm bảo số lần retry đủ để duyệt qua toàn bộ các key còn sống ít nhất 3 vòng
+	effectiveRetries := maxRetries
+	activeCount := p.ActiveCount()
+	if activeCount > 0 && effectiveRetries < activeCount*3 {
+		effectiveRetries = activeCount * 3
+	}
+
+	for attempt := 0; attempt <= effectiveRetries; attempt++ {
+		slotIdx := int(atomic.AddUint64(&p.counter, 1)-1) % numSlots
+		slot := p.slots[slotIdx]
+
+		// Nếu slot này bị disabled, tự động nhảy tới slot active kế tiếp
+		if slot.disabled {
+			found := false
+			for offset := 1; offset < numSlots; offset++ {
+				candIdx := (slotIdx + offset) % numSlots
+				if !p.slots[candIdx].disabled {
+					slot = p.slots[candIdx]
+					found = true
+					break
+				}
+			}
+			if !found {
+				return nil, fmt.Errorf("toàn bộ API Key trong Pool đều đã bị khóa hoặc hết quyền (403/401)")
+			}
+		}
+
+		// Điều nhịp trên từng Key đơn lẻ để tránh bắn trùng mili-giây gây trượt Cache
+		slot.mu.Lock()
+		elapsed := time.Since(slot.lastCall)
+		if elapsed < p.staggerDelay {
+			wait := p.staggerDelay - elapsed
+			slot.mu.Unlock()
+			select {
+			case <-time.After(wait):
+			case <-ctx.Done():
+				return nil, ctx.Err()
+			}
+			slot.mu.Lock()
+		}
+		slot.lastCall = time.Now()
+		slot.mu.Unlock()
+
+		resp, err := slot.client.Models.GenerateContent(ctx, modelName, contents, config)
+		if err == nil {
+			return resp, nil
+		}
+
+		// Nếu Key hiện tại bị 403/401 -> Loại vĩnh viễn key này khỏi pool và thử ngay key khác (không tốn attempt)
+		if isKeyDeniedError(err) {
+			slot.disabled = true
+			LogPhase("KEY-POOL", "\033[31m[Key #%d bị từ chối 403/401] Tự động loại khỏi Pool và chuyển ngay sang Key kế tiếp...\033[0m", slot.index)
+			attempt-- // Không tính hao hụt lượt retry
+			continue
+		}
+
+		if !isTransientError(err) || attempt == effectiveRetries {
+			return nil, fmt.Errorf("[Key #%d] lỗi không thể phục hồi: %w", slot.index, err)
+		}
+
+		// Tính thời gian chờ nếu bị 429: backoff theo từng vòng quay của active keys
+		divisor := p.ActiveCount()
+		if divisor <= 0 {
+			divisor = 1
+		}
+		round := attempt / divisor
+		backoff := baseDelay * time.Duration(1<<round)
+		if backoff > 10*time.Second {
+			backoff = 10 * time.Second
+		}
+		jitter := time.Duration(rand.Intn(500)) * time.Millisecond
+		sleepTime := backoff + jitter
+
+		LogPhase("KEY-POOL", "\033[33m[Key #%d chạm ngưỡng 429/503] Đang chuyển hướng sang Key kế tiếp sau %v... (Thử lần %d/%d)\033[0m",
+			slot.index, sleepTime, attempt+1, effectiveRetries)
+
+		select {
+		case <-time.After(sleepTime):
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		}
+	}
+
+	return nil, fmt.Errorf("đã thử qua toàn bộ Pool (%d lần) nhưng vẫn thất bại", effectiveRetries)
+}

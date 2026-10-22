@@ -6,6 +6,14 @@
 /config/google-oauth.json
 /config/gemini-key.txt
 /key.txt
+/key1.txt
+/key2.txt
+/key3.txt
+/key4.txt
+/key5.txt
+**/key*.txt
+**/.env
+infrastructure2/gemini/*.txt
 /meet-attendance
 /meet-attendance.exe
 # Bỏ qua thư mục build / binary

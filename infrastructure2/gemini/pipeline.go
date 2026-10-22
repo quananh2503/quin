@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -19,9 +18,10 @@ import (
 )
 
 var (
-	plannerSchema *genai.Schema
-	workerSchema  *genai.Schema
-	repairSchema  *genai.Schema
+	plannerSchema      *genai.Schema
+	deltaPlannerSchema *genai.Schema
+	workerSchema       *genai.Schema
+	repairSchema       *genai.Schema
 )
 
 func init() {
@@ -34,6 +34,12 @@ func init() {
 	pData, _ := json.Marshal(pSch)
 	plannerSchema = &genai.Schema{}
 	_ = json.Unmarshal(pData, plannerSchema)
+
+	// 1b. Schema cho Delta Planner
+	dpSch := r.Reflect(&DeltaTopicResponse{})
+	dpData, _ := json.Marshal(dpSch)
+	deltaPlannerSchema = &genai.Schema{}
+	_ = json.Unmarshal(dpData, deltaPlannerSchema)
 
 	// 2. Schema cho Worker
 	wSch := r.Reflect(&WorkerResult{})
@@ -48,20 +54,149 @@ func init() {
 	_ = json.Unmarshal(rData, repairSchema)
 }
 
+func WorkerSchema() *genai.Schema {
+	return workerSchema
+}
+
 // -----------------------------------------------------------------------------
 // BỘ PARSER VÀ SANITIZER LATEX SANG MITEX
 // -----------------------------------------------------------------------------
 var (
 	blockMathRegex  = regexp.MustCompile(`(?s)\$\$([^\$]+)\$\$`)
-	inlineMathRegex = regexp.MustCompile(`\$([^\$]+)\$`)
+	inlineMathRegex = regexp.MustCompile(`\$([^\$\r\n]+)\$`)
 
-	// Bắt các lệnh LaTeX trong chuỗi JSON thô chỉ có 1 dấu gạch chéo để escape thành 2 dấu
-	unescapedLatexRegex = regexp.MustCompile(`(?m)(^|[^\\])\\((?:frac|vec|sqrt|neq|bar|to|cdot|perp|alpha|beta|gamma|leq|geq|approx|times|left|right|begin|end|text|mathbf)\b)`)
+	// Bắt MỌI dấu backslash đơn (\) đứng trước từ khóa LaTeX (từ 2 chữ cái trở lên)
+	// để không bao giờ bị trùng với \t, \b, \f, \n, \r đơn lẻ của JSON
+	unescapedLatexGenericRegex = regexp.MustCompile(`(^|[^\\])\\([a-zA-Z]{2,})`)
+
+	// Xử lý bảo vệ các lệnh LaTeX 1 chữ cái nếu có đứng trước ngoặc nhọn (như \d{x}, \b{x}) bằng cách escape dấu backslash
+	singleCharCmdRegex = regexp.MustCompile(`(^|[^\\])\\([a-zA-Z])\{`)
+
+	// Chuẩn hóa \overline{AB} hoặc \overrightarrow{AB} về \vec{AB} cho đồng nhất với MiTeX (chỉ áp dụng cho đoạn thẳng có hướng 2-3 chữ cái in hoa/phẩy)
+	normalizeVecRegex = regexp.MustCompile(`\\\\(?:overline|overrightarrow)\{([A-Z][']?[A-Z][']?)\}`)
+
+	// Khắc phục lỗi gõ nhầm backslash trước biến số đơn đứng trước lệnh LaTeX (như \a\sqrt{3} -> a\sqrt{3})
+	typoVarBackslashRegex = regexp.MustCompile(`(^|[^\\])\\([a-zA-Z])\s*\\([a-zA-Z]{2,})`)
+
+	// Khắc phục lỗi AI gõ backslash trước tên đỉnh hoặc tên đa giác (như \AOB -> AOB, \ABCD -> ABCD)
+	uppercasePolyRegex = regexp.MustCompile(`\\([A-Z]{2,})\b`)
+
+	// Khắc phục lỗi gõ nhầm backslash trước biến số đơn lẻ trong toán (như \F_1 -> F_1, \a \sqrt -> a \sqrt)
+	singleLetterMathRegex = regexp.MustCompile(`(^|[^\\])\\([a-zA-Z])([^a-zA-Z{]|$)`)
 )
 
 // SanitizeRawJSONLaTeX bảo vệ các lệnh LaTeX không bị Go JSON parser nuốt thành mã điều khiển
 func SanitizeRawJSONLaTeX(raw string) string {
-	return unescapedLatexRegex.ReplaceAllString(raw, `$1\\$2`)
+	raw = strings.TrimSpace(raw)
+	if strings.HasPrefix(raw, "```") {
+		if idx := strings.Index(raw, "\n"); idx != -1 {
+			raw = raw[idx+1:]
+		}
+		if idx := strings.LastIndex(raw, "```"); idx != -1 {
+			raw = raw[:idx]
+		}
+		raw = strings.TrimSpace(raw)
+	}
+
+	// Trích xuất chính xác khối JSON nằm giữa cặp ngoặc { ... } hoặc [ ... ]
+	startBrace := strings.Index(raw, "{")
+	startBracket := strings.Index(raw, "[")
+	if startBrace != -1 && (startBracket == -1 || startBrace < startBracket) {
+		endBrace := strings.LastIndex(raw, "}")
+		if endBrace > startBrace {
+			raw = raw[startBrace : endBrace+1]
+		}
+	} else if startBracket != -1 {
+		endBracket := strings.LastIndex(raw, "]")
+		if endBracket > startBracket {
+			raw = raw[startBracket : endBracket+1]
+		}
+	}
+
+	// 1. Chạy 2 lần liên tiếp để xử lý cả trường hợp 2 lệnh sát nhau như \text\vec hoặc lồng nhau \text{\vec
+	escaped := unescapedLatexGenericRegex.ReplaceAllString(raw, `$1\\$2`)
+	escaped = unescapedLatexGenericRegex.ReplaceAllString(escaped, `$1\\$2`)
+
+	// 2. Bảo vệ các lệnh LaTeX 1 chữ cái nếu có (như \d{x}, \b{x}) bằng cách escape thành \\$2{
+	escaped = singleCharCmdRegex.ReplaceAllString(escaped, `$1\\$2{`)
+
+	// 3. Tự động đổi \\overline{AB} và \\overrightarrow{AB} thành \\vec{AB} (chỉ khi là đoạn thẳng có hướng 2-3 chữ in hoa)
+	escaped = normalizeVecRegex.ReplaceAllString(escaped, `\\vec{$1}`)
+
+	// 4. Khắc phục lỗi JSON nuốt mất backslash thành mã điều khiển ASCII: \r\rightarrow -> \x0Dightarrow, \n\neq -> \x0Aeq
+	escaped = strings.ReplaceAll(escaped, "\x0Dightarrow", `\\rightarrow`)
+	escaped = strings.ReplaceAll(escaped, "\x0Aeq ", `\\neq `)
+	escaped = strings.ReplaceAll(escaped, "\x0Aeq", `\\neq `)
+	escaped = strings.ReplaceAll(escaped, "\x0Deftrightarrow", `\\Leftrightarrow`)
+	escaped = strings.ReplaceAll(escaped, "\x0DRightarrow", `\\Rightarrow`)
+
+	return escaped
+}
+
+// RepairTruncatedJSON tự động đóng ngoặc và hoàn chỉnh chuỗi JSON bị ngắt cụt do chạm trần token
+func RepairTruncatedJSON(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return raw
+	}
+
+	inString := false
+	var escaped bool
+
+	for i := 0; i < len(raw); i++ {
+		c := raw[i]
+		if c == '\\' && inString {
+			escaped = !escaped
+			continue
+		}
+		if c == '"' && !escaped {
+			inString = !inString
+		}
+		escaped = false
+	}
+
+	if inString {
+		raw += `"`
+	}
+
+	var stack []rune
+	inString = false
+	escaped = false
+
+	for _, r := range raw {
+		if r == '\\' && inString {
+			escaped = !escaped
+			continue
+		}
+		if r == '"' && !escaped {
+			inString = !inString
+		}
+		if !inString {
+			if r == '{' || r == '[' {
+				stack = append(stack, r)
+			} else if r == '}' {
+				if len(stack) > 0 && stack[len(stack)-1] == '{' {
+					stack = stack[:len(stack)-1]
+				}
+			} else if r == ']' {
+				if len(stack) > 0 && stack[len(stack)-1] == '[' {
+					stack = stack[:len(stack)-1]
+				}
+			}
+		}
+		escaped = false
+	}
+
+	var closer strings.Builder
+	for i := len(stack) - 1; i >= 0; i-- {
+		if stack[i] == '{' {
+			closer.WriteString("}")
+		} else if stack[i] == '[' {
+			closer.WriteString("]")
+		}
+	}
+
+	return raw + closer.String()
 }
 
 func LaTeXToMiTeX(content string) string {
@@ -70,14 +205,10 @@ func LaTeXToMiTeX(content string) string {
 		return ""
 	}
 
-	// Vá nhanh nếu số lượng $ bị lẻ
-	if strings.Count(content, "$")%2 != 0 {
-		if strings.HasSuffix(content, ".") {
-			content = strings.TrimSuffix(content, ".") + "$."
-		} else {
-			content = content + "$"
-		}
-	}
+	// Chuẩn hóa ký tự xuống dòng thực tế (tránh dính \n dạng chữ thô do AI sinh ra)
+	content = strings.ReplaceAll(content, `\r\n`, "\n")
+	content = strings.ReplaceAll(content, `\n`, "\n")
+	content = strings.ReplaceAll(content, `\r`, "\n")
 
 	// 1. Chuyển $$...$$ sang block mitex
 	content = blockMathRegex.ReplaceAllStringFunc(content, func(m string) string {
@@ -85,10 +216,45 @@ func LaTeXToMiTeX(content string) string {
 		return fmt.Sprintf("\n#align(center)[#mitex(`%s`)]\n", strings.TrimSpace(latex))
 	})
 
-	// 2. Chuyển $...$ sang inline mi(`...`)
+	// 2. Vá nhanh từng dòng độc lập nếu số lượng $ trên dòng đó bị lẻ (đảm bảo $ không bao giờ tràn qua dòng mới)
+	lines := strings.Split(content, "\n")
+	for i, line := range lines {
+		if strings.Count(line, "$")%2 != 0 {
+			lines[i] = line + "$"
+		}
+	}
+	content = strings.Join(lines, "\n")
+
+	// 3. Chuyển $...$ nội dòng sang inline mi(`...`)
 	content = inlineMathRegex.ReplaceAllStringFunc(content, func(m string) string {
 		latex := strings.Trim(m, "$")
-		return fmt.Sprintf(" #mi(`%s`) ", strings.TrimSpace(latex))
+		latex = strings.TrimSpace(latex)
+		if latex == "" {
+			return ""
+		}
+		// Làm sạch triệt để mọi dấu xuống dòng vô tình lọt vào chuỗi inline math
+		latex = strings.ReplaceAll(latex, "\n", " ")
+		latex = strings.ReplaceAll(latex, "\r", " ")
+
+		// Xóa bỏ \[ và \] nếu bị lọt vào inline math $ ... $
+		latex = strings.ReplaceAll(latex, `\[`, "")
+		latex = strings.ReplaceAll(latex, `\]`, "")
+
+		// Chuyển \... (lỗi phổ biến khi AI gõ ba chấm trong LaTeX) về \dots
+		latex = strings.ReplaceAll(latex, `\...`, `\dots `)
+		latex = strings.ReplaceAll(latex, `\..`, `\dots `)
+
+		// Khắc phục lỗi gõ nhầm backslash trước biến số đơn đứng trước lệnh LaTeX: \a\sqrt{3} -> a\sqrt{3}
+		latex = typoVarBackslashRegex.ReplaceAllString(latex, `$1$2\\$3`)
+
+		// Khắc phục lỗi AI gõ nhầm backslash trước tên đỉnh hoặc đa giác: \ABCD -> ABCD, \MNP -> MNP
+		latex = uppercasePolyRegex.ReplaceAllString(latex, `$1`)
+
+		// Khắc phục lỗi gõ nhầm backslash trước biến số đơn lẻ: \F_1 -> F_1, \x_0 -> x_0
+		latex = singleLetterMathRegex.ReplaceAllString(latex, `$1$2$3`)
+		latex = singleLetterMathRegex.ReplaceAllString(latex, `$1$2$3`)
+
+		return fmt.Sprintf(" #mi(`%s`) ", latex)
 	})
 
 	// Escape các ký tự đặc biệt Typst nếu còn sót ngoài toán
@@ -96,10 +262,23 @@ func LaTeXToMiTeX(content string) string {
 	return content
 }
 
+// FormatFinalNumber chuẩn hóa con số kết quả cuối cùng (hỗ trợ cả số thuần và biểu thức toán/vectơ)
+func FormatFinalNumber(fn string) string {
+	fn = strings.TrimSpace(fn)
+	if fn == "" {
+		return ""
+	}
+	// Nếu chứa lệnh LaTeX (\sqrt, \vec, \frac...) hoặc toán tử mũ/chỉ số mà chưa bọc $, tự bọc $
+	if !strings.Contains(fn, "$") && (strings.Contains(fn, `\`) || strings.Contains(fn, "^") || strings.Contains(fn, "_")) {
+		fn = "$" + fn + "$"
+	}
+	return LaTeXToMiTeX(fn)
+}
+
 // -----------------------------------------------------------------------------
 // AUDITOR: CHỈ BẮT LỖI HỎNG THỰC SỰ (ASCII RÁC, LỆCH $, LATEX TRẦN)
 // -----------------------------------------------------------------------------
-var leakedLatexCmdRegex = regexp.MustCompile(`\\(?:frac|vec|sqrt|neq|bar|to|cdot|perp|alpha|beta|leq|geq)\b`)
+var leakedLatexCmdRegex = regexp.MustCompile(`\\(?:frac|forall|vec|overrightarrow|overline|widehat|sqrt|neq|nabla|bar|beta|begin|binom|to|times|text|tan|theta|triangle|right|rightarrow|rho|cdot|perp|alpha|gamma|delta|Delta|varphi|pi|omega|leq|geq|approx|left|end|mathbf|mathrm|mathbb|mathcal|cos|sin|cot|log|ln|lim|sum|int|infty|pm|mp|cap|cup|subset|supset|in|notin|emptyset|Rightarrow|Leftrightarrow|iff|implies|angle|parallel)\b`)
 
 func AuditMathField(text string) (bool, string) {
 	trimmed := strings.TrimSpace(text)
@@ -131,137 +310,117 @@ func AuditMathField(text string) (bool, string) {
 	return true, ""
 }
 
-// Helper: Nhận diện các mã lỗi tạm thời có thể retry được
-func isTransientError(err error) bool {
-	if err == nil {
-		return false
+// Helper lấy KeyPool từ Client
+func (c *Client) getPool(ctx context.Context) (*KeyPool, error) {
+	if c.pool != nil && len(c.pool.slots) > 0 {
+		return c.pool, nil
 	}
-	msg := strings.ToLower(err.Error())
-	return strings.Contains(msg, "429") ||
-		strings.Contains(msg, "resource_exhausted") ||
-		strings.Contains(msg, "503") ||
-		strings.Contains(msg, "unavailable") ||
-		strings.Contains(msg, "overloaded") ||
-		strings.Contains(msg, "internal") ||
-		strings.Contains(msg, "deadline_exceeded")
+	if c.client != nil {
+		return &KeyPool{
+			slots: []*KeySlot{
+				{index: 1, client: c.client},
+			},
+			staggerDelay: 1800 * time.Millisecond,
+		}, nil
+	}
+	return nil, fmt.Errorf("không có API client hoặc KeyPool nào")
 }
 
-// generateWithRetry: Hàm bọc gọi Gemini có cơ chế Exponential Backoff + Jitter
-func (c *Client) generateWithRetry(
+// -----------------------------------------------------------------------------
+// TẦNG 0: BUILD SHARED PDF PREFIX (IMPLICIT CACHE CHO GEMMA 4)
+// -----------------------------------------------------------------------------
+
+// BuildSharedPDFPrefixParts đóng gói cố định các file PDF ở đầu mảng Parts để kích hoạt Implicit Prefix Caching
+func BuildSharedPDFPrefixParts(docs []PDFDocumentInput) []*genai.Part {
+	var parts []*genai.Part
+	// LƯU Ý QUAN TRỌNG CHO GEMMA 4:
+	// Đặt toàn bộ các Blob PDF nối tiếp nhau ở ngay đầu mảng Parts (trước mọi Text)
+	// để Vision/PDF Encoder của Gemma 4 tạo 1 khối KV-Cache liền mạch.
+	for _, doc := range docs {
+		parts = append(parts, &genai.Part{
+			InlineData: &genai.Blob{
+				MIMEType: "application/pdf",
+				Data:     doc.Data,
+			},
+		})
+	}
+
+	// Sau khi kết thúc toàn bộ các Blob PDF mới thêm 1 Part Text định danh thứ tự tài liệu
+	var manifest strings.Builder
+	manifest.WriteString("DANH MỤC CÁC FILE PDF ĐÍNH KÈM THEO THỨ TỰ Ở TRÊN:\n")
+	for idx, doc := range docs {
+		manifest.WriteString(fmt.Sprintf("- Tài liệu thứ %d: Mã [%s] | Tên file: \"%s\" | Vai trò: %s\n",
+			idx+1, doc.DocID, doc.FileName, doc.RoleHint))
+	}
+	parts = append(parts, &genai.Part{Text: manifest.String()})
+	return parts
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 1: MASTER SYNTHESIZER & PLANNER (MULTI-PDF SYNTHESIS)
+// -----------------------------------------------------------------------------
+
+func (c *Client) ExecutePhase1_Planner(
 	ctx context.Context,
 	modelName string,
-	contents []*genai.Content,
-	config *genai.GenerateContentConfig,
-	maxRetries int,
-) (*genai.GenerateContentResponse, error) {
-	baseDelay := 2 * time.Second
-
-	for attempt := 0; attempt <= maxRetries; attempt++ {
-		resp, err := c.client.Models.GenerateContent(ctx, modelName, contents, config)
-		if err == nil {
-			return resp, nil
-		}
-
-		// Nếu lỗi không phải lỗi quá tải/tạm thời hoặc đã hết số lần retry -> Trả lỗi luôn
-		if !isTransientError(err) || attempt == maxRetries {
-			return nil, err
-		}
-
-		// Tính thời gian chờ: 2s -> 4s -> 8s... kèm random jitter (0-800ms)
-		backoff := baseDelay * time.Duration(1<<attempt)
-		jitter := time.Duration(rand.Intn(800)) * time.Millisecond
-		sleepTime := backoff + jitter
-
-		LogPhase("RETRY", "\033[33m[Quá tải/429] Lần thử %d thất bại. Đang chờ %v trước khi thử lại... (Lỗi: %v)\033[0m",
-			attempt+1, sleepTime, err)
-
-		select {
-		case <-time.After(sleepTime):
-		case <-ctx.Done():
-			return nil, ctx.Err()
-		}
-	}
-
-	return nil, fmt.Errorf("đã thử %d lần nhưng vẫn thất bại", maxRetries)
-}
-
-// -----------------------------------------------------------------------------
-// PHASE 1: MASTER PLANNER
-// -----------------------------------------------------------------------------
-// -----------------------------------------------------------------------------
-// PHASE 1: MASTER PLANNER (CHIỀU CHUỘNG FLASH-LITE VỚI DUAL-THINKING & SCRATCHPAD)
-// -----------------------------------------------------------------------------
-func (c *Client) ExecutePhase1_Planner(ctx context.Context, modelName string, pdfBytes []byte, customPrompt string) (*LessonPlan, error) {
+	docs []PDFDocumentInput,
+	customPrompt string,
+) (*LessonPlan, error) {
 	start := time.Now()
-	LogPhase("PHASE 1", "Master Planner đang đọc toàn bộ PDF để phân tích Dạng toán...")
+	LogPhase("PHASE 1", "Master Planner đang đọc đồng thời %d file PDF để tổng hợp và phân dạng...", len(docs))
 
-	prompt := fmt.Sprintf(`TÀI LIỆU CẦN PHÂN TÍCH: Toàn bộ file PDF giáo trình đính kèm.
-
-BẠN LÀ: Chuyên gia Sư phạm hàng đầu về "Trị mất gốc" và Thiết kế Phiếu học tập Vi kỹ năng (Micro-skills Scaffolding).
-
-ĐỐI TƯỢNG HỌC SINH:
-- Học sinh có học lực YẾU, MẤT GỐC, tiếp thu chậm, rất dễ bị ngợp và sợ hãi nếu gặp nhiều công thức cùng lúc.
-- Triết lý giảng dạy: "LÀM CHẬM, LÀM KỸ, CHẮC CHẮN SẼ HIỂU" - Học sinh cần luyện phản xạ cơ bắp/thao tác tay lặp đi lặp lại trên từng công thức đơn lẻ trước khi ghép nối.
-
-NHIỆM VỤ CỐT LÕI:
-Thiết lập BẢN ĐỒ DẠNG TOÁN VI KỸ NĂNG (Atomic Skill Map).
-Bóc tách toàn bộ tài liệu thành các dạng bài tập SIÊU NHỎ, TUYỆT ĐỐI KHÔNG GỘP BÀI.
-
-TIÊU CHÍ CHẺ DẠNG TOÁN CHO HỌC SINH YẾU (BẮT BUỘC TUÂN THỦ):
-1. NGUYÊN TẮC "MỘT THAO TÁC NÃO" (SINGLE COGNITIVE LOAD):
-   - Mỗi dạng toán chỉ được rèn luyện ĐÚNG 1 CÔNG THỨC hoặc 1 QUY TẮC DUY NHẤT.
-   - Nếu một bài toán yêu cầu kết hợp từ 2 bước tư duy trở lên -> BẮT BUỘC TÁCH THÀNH 2 DẠNG RIÊNG BIỆT để học sinh luyện từng bước một.
-
-2. CÁC VÍ DỤ VỀ CÁCH CHẺ NHỎ KỸ NĂNG (THAM KHẢO PHONG CÁCH CHẺ DẠNG):
-   - THAY VÌ GỘP: "Khái niệm và các phép toán cộng trừ vectơ"
-     -> PHẢI CHẺ THÀNH:
-        * Dạng: Nhận diện vectơ bằng nhau, vectơ đối trên hình hộp/hình chóp (chỉ nhìn hình nhận diện chiều mũi tên).
-        * Dạng: Rút gọn tổng vectơ bằng quy tắc 3 điểm nối đuôi (chỉ luyện bài tập điền chữ cái AB + BC = AC).
-        * Dạng: Quy tắc trừ chung gốc và kỹ thuật đổi dấu trừ thành cộng lật ngược vectơ.
-        * Dạng: Áp dụng quy tắc hình bình hành và quy tắc hình hộp (bài tập điền khuyết từng bước).
-   - THAY VÌ GỘP: "Tọa độ vectơ trong không gian Oxyz"
-     -> PHẢI CHẺ THÀNH:
-        * Dạng: Tính tọa độ vectơ bằng quy tắc nhẩm "Ngọn trừ Gốc" (lắp ghép các con số).
-        * Dạng: Tính tọa độ trung điểm và trọng tâm tam giác (cộng chia đôi, cộng chia ba).
-        * Dạng: Tích vô hướng và góc giữa hai vectơ (tính từng bước hoành nhân hoành, tung nhân tung...).
-        * Dạng: Ứng dụng thực tế đơn giản (Bài toán rada máy bay, chuyển động theo vectơ).
-
-QUY TRÌNH 2 BƯỚC THỰC HIỆN:
-1. BƯỚC 1 (NHÁP TẠI "pedagogical_scratchpad"):
-   - Quét từng bài học trong sách, phân tích xem học sinh yếu hay vấp ở thao tác nào để bẻ nhỏ thành các vi kỹ năng.
-   👉 [ĐIỂM CHẠM 1]: TÍNH TOÁN PHÂN ĐOẠN TRANG CẮT FILE LIÊN TỤC:
-     * Nháp luôn khoảng trang cho từng dạng để gom cả lý thuyết VÀ toàn bộ bài tập luyện tập sau nó.
-     * Tự nháp dãy số trang liên tục không lỗ hổng, ví dụ: "Dạng 1: [1 -> ...], Dạng 2: [... -> ...], ..., Dạng cuối: [... -> Trang cuối]".
-
-2. BƯỚC 2 (XUẤT "topics"):
-   - Xuất toàn bộ danh sách các dạng vi kỹ năng đã bóc tách. Số lượng dạng sẽ tự nhiên tăng lên (khoảng 7 đến 10 dạng) tùy theo độ dài kiến thức của chương mà không cần gán cứng con số.
-   - Định vị start_page và end_page bao phủ liên tục 100%% các trang tài liệu.
-
-YÊU CẦU ĐẶT Ở CUỐI:
-- Đặt tên dạng toán thật gần gũi, mô tả rõ hành động thao tác (VD: "Lắp ghép tọa độ", "Quy tắc nối đuôi 3 điểm", "Nhẩm ngọn trừ gốc...").
-- TUYỆT ĐỐI KHÔNG đặt tên dạng theo bài học lớn SGK như "Bài 6: Vectơ trong không gian" hay "Ôn tập chương".
-- QUY TẮC PHỦ KÍN 100%% SỐ TRANG (NGUYÊN TẮC CẮT BÁNH MÌ LIÊN TỤC):
-   - Dạng 1 BẮT BUỘC bắt đầu từ trang 1.
-   - Số trang phải nối tiếp nhau liên tục: start_page của dạng sau phải liền kề với end_page của dạng trước (không được để trống bất kỳ trang bài tập nào ở giữa).
-   - Dạng cuối cùng BẮT BUỘC phải kết thúc ở đúng trang cuối cùng của tài liệu . Các bài tập ôn tập cuối chương phải được gom vào dạng kỹ năng tương ứng gần nó nhất.
-Yêu cầu riêng của giáo viên: %s`, strings.TrimSpace(customPrompt))
-
-	parts := []*genai.Part{
-		{InlineData: &genai.Blob{MIMEType: "application/pdf", Data: pdfBytes}},
-		{Text: prompt},
+	pool, err := c.getPool(ctx)
+	if err != nil {
+		return nil, err
 	}
+
+	prefixParts := BuildSharedPDFPrefixParts(docs)
+
+	prompt := fmt.Sprintf(`BẠN LÀ: Chuyên gia Sư phạm Toán học THPT và Thiết kế Giáo án theo Chương trình GDPT 2018.
+
+NHIỆM VỤ: Phân tích %d tài liệu học tập đính kèm theo phương pháp BOTTOM-UP (Quét từ bài tập suy ra dạng) để lập danh sách ĐẦY ĐỦ TẤT CẢ CÁC DẠNG TOÁN chuyên sâu.
+
+======================================================================
+QUY TẮC SỐ 1: QUÉT HẠT MỊN THEO CỤM Ở "question_catalog" (KIỂM SOÁT TOKEN)
+======================================================================
+- Quét lần lượt từng phần của mọi file PDF: Lý thuyết/Ví dụ (VD1, VD2...), Trắc nghiệm 4 lựa chọn (C1, C2...), Trắc nghiệm Đúng/Sai (D1, D2...), Trả lời ngắn/Tự luận (E1, E2...).
+- Trong "question_catalog", gom các câu có CÙNG MỤC TIÊU VÀ PHƯƠNG PHÁP vào từng cụm (mỗi cụm từ 3 đến 8 mã câu, ví dụ: ["C1", "C2", "C3", "C4", "C5"], ["D1", "D2", "D3", "D4"], ["E5", "E6", "E7", "E8"]).
+- CẤM ghi dải gộp kiểu ["C1..C56"] hay ["E1..E24"] (phải liệt kê rõ từng mã câu trong mảng).
+- Với câu hỏi Đúng/Sai, dùng mã câu gốc D1, D2, D3... TUYỆT ĐỐI KHÔNG chẻ nhỏ thành D1a, D1b, D1c, D1d vì làm tràn giới hạn token.
+- Toàn bộ "question_catalog" nên nằm gọn trong khoảng 12 đến 16 cụm để dành đủ hơn 5.000 token cho "topics".
+
+======================================================================
+QUY TẮC SỐ 2: TIÊU CHÍ TÁCH DẠNG TOÁN CHUYÊN SÂU (ANTI-LUMPING RULES)
+======================================================================
+Hai câu hỏi BẮT BUỘC phải tách thành 2 DẠNG TOÁN ("topics") RIÊNG BIỆT nếu chúng khác nhau ở BẤT KỲ tiêu chí nào sau đây:
+1. KHÁC ĐỐI TƯỢNG ĐÍCH ("target_output"):
+   - Ví dụ: Cần tìm hai đại lượng hoặc giải quyết hai yêu cầu toán học khác nhau (như tính góc vs tính khoảng cách; tìm tập xác định vs tìm cực trị; chứng minh đẳng thức vs tìm tham số m...).
+2. KHÁC MÔ HÌNH / PHƯƠNG PHÁP / CẤU HÌNH ĐẶC TRƯNG ("core_method"):
+   - Ví dụ: Cùng một phép toán nhưng áp dụng trên cấu hình đặc biệt, dạng hàm số đặc thù hoặc có hệ thức giải nhanh riêng thì mỗi cấu hình/dạng thức đặc trưng PHẢI LÀ 1 DẠNG RIÊNG.
+3. KHÁC BỐI CẢNH ỨNG DỤNG:
+   - Các bài toán thực tế (Vật lý, Hóa học, Sinh học, Kinh tế) và các bài toán Cực trị / Tối ưu hóa (Max/Min) BẮT BUỘC phải tách thành các Dạng riêng biệt ở cuối bài.
+4. GIỚI HẠN QUY MÔ MỖI DẠNG (CHỐNG GOM GỘP LƯỜI BIẾNG):
+   - Mỗi Topic chỉ được chứa tối đa 8–10 mã câu hỏi trong "assigned_question_ids".
+   - Nếu một nhóm có trên 10 câu hỏi, BẮT BUỘC chẻ nhỏ thành 2 dạng theo mức độ nhận thức (Cơ bản vs Vận dụng) hoặc theo cấu hình/dạng toán con.
+5. BAO PHỦ VÉT CẠN CẢ CÂU HỎI ĐÚNG/SAI (D...) VÀ TRẢ LỜI NGẮN (E...):
+   - Không được bỏ sót bất kỳ câu nào ở cuối file PDF. Mọi mã câu trong "question_catalog" đều phải xuất hiện trong "assigned_question_ids" của ít nhất 1 Topic.
+
+Yêu cầu riêng của giáo viên: %s`, len(docs), strings.TrimSpace(customPrompt))
+
+	// Ghép Prefix cố định + Prompt của Phase 1
+	parts := append(append([]*genai.Part{}, prefixParts...), &genai.Part{Text: prompt})
 
 	config := &genai.GenerateContentConfig{
+		Temperature:      genai.Ptr[float32](0.2), // Nhiệt độ thấp để phân trang và gom nhóm chính xác
+		MaxOutputTokens:  8192,
 		ResponseMIMEType: "application/json",
 		ResponseSchema:   plannerSchema,
-		// ThinkingConfig:   &genai.ThinkingConfig{
-		// 	// Đặt Medium kết hợp với trường pedagogical_scratchpad là điểm ngọt tối ưu nhất
-		// 	// (Nếu muốn thử max suy luận, bạn có thể đổi thành genai.ThinkingLevelHigh)
-		// 	// ThinkingLevel: genai.ThinkingLevelMedium,
-		// },
+		ThinkingConfig: &genai.ThinkingConfig{
+			ThinkingLevel: genai.ThinkingLevelMinimal,
+		},
 	}
 
-	resp, err := c.generateWithRetry(ctx, modelName, []*genai.Content{{Parts: parts}}, config, 4)
+	resp, err := pool.GenerateContent(ctx, modelName, []*genai.Content{{Parts: parts}}, config, 4)
 	if err != nil {
 		return nil, fmt.Errorf("lỗi gọi Planner: %w", err)
 	}
@@ -270,128 +429,376 @@ Yêu cầu riêng của giáo viên: %s`, strings.TrimSpace(customPrompt))
 	LogTokenUsage("PHASE 1", resp.UsageMetadata)
 
 	var plan LessonPlan
-	cleanJSON := strings.TrimSpace(resp.Text())
+	cleanJSON := SanitizeRawJSONLaTeX(strings.TrimSpace(resp.Text()))
 	if err := json.Unmarshal([]byte(cleanJSON), &plan); err != nil {
-		return nil, fmt.Errorf("unmarshal Planner thất bại: %w (Raw: %s)", err, cleanJSON)
+		repaired := RepairTruncatedJSON(cleanJSON)
+		if errRep := json.Unmarshal([]byte(repaired), &plan); errRep == nil && len(plan.Topics) > 0 {
+			LogPhase("PHASE 1", "\033[32m  ↳ [JSON HEALER] Đã tự động cứu hộ chuỗi JSON của Planner thành công!\033[0m")
+		} else {
+			return nil, fmt.Errorf("unmarshal Planner thất bại: %w (Raw: %s)", err, cleanJSON)
+		}
 	}
 
+	LogPhase("PHASE 1", "📋 Danh mục câu hỏi hạt mịn: %d mục catalog", len(plan.QuestionCatalog))
 	_ = SaveArtifact("phase1_plan.json", plan)
-	LogPhase("PHASE 1", "Đã lưu kế hoạch vào .artifacts/phase1_plan.json (%d dạng toán)", len(plan.Topics))
+	LogPhase("PHASE 1", "Đã lưu kế hoạch ban đầu vào %s/phase1_plan.json (%d dạng toán)", ArtifactDir, len(plan.Topics))
 
-	// Log ra nội dung nháp để bạn kiểm tra trí tuệ của AI
-	if plan.PedagogicalScratchpad != "" {
-		LogPhase("PHASE 1", "🧠 Bản nháp tư duy sư phạm của AI:\n%s", plan.PedagogicalScratchpad)
+	// KIỂM ĐỊNH TẬP HỢP TỰ ĐỘNG BẰNG GO (DETERMINISTIC COVERAGE GATE)
+	unassignedIDs, overloadedTopics := AuditPlanIssues(&plan)
+
+	if len(unassignedIDs) > 0 || len(overloadedTopics) > 0 {
+		LogPhase("PHASE 1", "\033[33m[COVERAGE GATE] Phát hiện %d mã câu chưa phân dạng và %d dạng bị gộp quá tải. Kích hoạt Delta-Planner...\033[0m",
+			len(unassignedIDs), len(overloadedTopics))
+
+		deltaTopics, errDelta := c.runDeltaPlanner(ctx, modelName, prefixParts, &plan, unassignedIDs, overloadedTopics)
+		if errDelta != nil {
+			LogPhase("PHASE 1", "\033[31m[CẢNH BÁO] Delta-Planner lỗi: %v (Tiếp tục với kế hoạch ban đầu)\033[0m", errDelta)
+		} else if len(deltaTopics) > 0 {
+			// Nếu có Topic bị quá tải đã được tách nhỏ, loại bỏ Topic gộp cũ và thay bằng các Topic chi tiết mới
+			if len(overloadedTopics) > 0 {
+				overloadedMap := make(map[string]bool)
+				for _, ot := range overloadedTopics {
+					overloadedMap[ot.TopicID] = true
+				}
+				var filtered []Topic
+				for _, existing := range plan.Topics {
+					if !overloadedMap[existing.TopicID] {
+						filtered = append(filtered, existing)
+					}
+				}
+				plan.Topics = filtered
+			}
+
+			// Nối các dạng toán mới bổ sung và đánh lại số thứ tự dang_1..dang_N
+			plan.Topics = append(plan.Topics, deltaTopics...)
+			for idx := range plan.Topics {
+				plan.Topics[idx].TopicID = fmt.Sprintf("dang_%d", idx+1)
+			}
+			LogPhase("PHASE 1", "\033[32m✅ Delta-Planner đã bổ sung/tách thành công! Tổng số dạng toán hiện tại: %d dạng.\033[0m", len(plan.Topics))
+			_ = SaveArtifact("phase1_plan.json", plan)
+		}
 	}
 
 	return &plan, nil
 }
 
-// -----------------------------------------------------------------------------
-// PHASE 2: PARALLEL WORKERS VỚI CƠ CHẾ SELF-VERIFICATION PROTOCOL
-// -----------------------------------------------------------------------------
-func (c *Client) ExecutePhase2_Workers(ctx context.Context, modelName string, pdfPath string, plan *LessonPlan) ([]WorkerResult, error) {
-	start := time.Now()
-	LogPhase("PHASE 2", "Khởi động Workers song song cho %d dạng toán...", len(plan.Topics))
+var questionIDPattern = regexp.MustCompile(`(?i)^([A-Za-z]+)(\d+)([A-Za-z]?)$`)
 
+// AuditPlanIssues kiểm tra toán học trên LessonPlan để tìm:
+// 1. Các mã câu hỏi có trong Catalog hoặc bị thủng lỗ trong dãy số (VD: có E1, E24 nhưng thiếu E5..E19) chưa được gán vào Topic nào.
+// 2. Các Topic bị "gom gộp lười biếng" (chứa > 12 câu hỏi trong 1 Topic).
+func AuditPlanIssues(plan *LessonPlan) (unassignedIDs []string, overloadedTopics []Topic) {
+	catalogSet := make(map[string]string) // questionID -> mô tả ngắn từ catalog
+	prefixMaxNum := make(map[string]int)  // "C" -> 56, "D" -> 10, "E" -> 24
+
+	for _, item := range plan.QuestionCatalog {
+		for _, qid := range item.QuestionIDs {
+			qid = strings.TrimSpace(strings.ToUpper(qid))
+			if qid == "" {
+				continue
+			}
+			catalogSet[qid] = fmt.Sprintf("[%s] %s (%s)", item.DocID, item.TargetOutput, item.CoreMethod)
+			if m := questionIDPattern.FindStringSubmatch(qid); len(m) >= 3 {
+				prefix := strings.ToUpper(m[1])
+				num, _ := strconv.Atoi(m[2])
+				if num > prefixMaxNum[prefix] && num <= 200 {
+					prefixMaxNum[prefix] = num
+				}
+			}
+		}
+	}
+
+	// Tập hợp tất cả các mã câu hỏi đã được phân vào các Topics
+	assignedSet := make(map[string]bool)
+	baseAssigned := make(map[string]bool) // Hỗ trợ cả khi gán D1 hoặc D1a
+	for _, t := range plan.Topics {
+		for _, qid := range t.AssignedQuestionIDs {
+			qid = strings.TrimSpace(strings.ToUpper(qid))
+			assignedSet[qid] = true
+			if m := questionIDPattern.FindStringSubmatch(qid); len(m) >= 3 {
+				prefix := strings.ToUpper(m[1])
+				num, _ := strconv.Atoi(m[2])
+				if num > prefixMaxNum[prefix] && num <= 200 {
+					prefixMaxNum[prefix] = num
+				}
+				baseID := fmt.Sprintf("%s%d", prefix, num)
+				baseAssigned[baseID] = true
+			}
+		}
+		// Phát hiện Topic bị gom gộp lười biếng (ôm quá 12 câu hỏi)
+		if len(t.AssignedQuestionIDs) > 12 {
+			overloadedTopics = append(overloadedTopics, t)
+		}
+	}
+
+	// 1. Kiểm tra các câu có trong QuestionCatalog nhưng quên đưa vào Topics
+	seenMissing := make(map[string]bool)
+	for qid, desc := range catalogSet {
+		isCovered := assignedSet[qid]
+		if !isCovered {
+			if m := questionIDPattern.FindStringSubmatch(qid); len(m) >= 3 {
+				baseID := fmt.Sprintf("%s%s", strings.ToUpper(m[1]), m[2])
+				if baseAssigned[baseID] {
+					isCovered = true
+				}
+			}
+		}
+		if !isCovered && !seenMissing[qid] {
+			seenMissing[qid] = true
+			unassignedIDs = append(unassignedIDs, fmt.Sprintf("%s (%s)", qid, desc))
+		}
+	}
+
+	// 2. Phát hiện lỗ hổng dãy số tự nhiên (VD: thấy C1 và C56 nhưng thiếu C9, C13, E5..E19)
+	for prefix, maxN := range prefixMaxNum {
+		if maxN < 3 {
+			continue
+		}
+		for n := 1; n <= maxN; n++ {
+			candidateID := fmt.Sprintf("%s%d", prefix, n)
+			if !assignedSet[candidateID] && !baseAssigned[candidateID] && !seenMissing[candidateID] {
+				seenMissing[candidateID] = true
+				unassignedIDs = append(unassignedIDs, candidateID)
+			}
+		}
+	}
+
+	return unassignedIDs, overloadedTopics
+}
+
+func (c *Client) runDeltaPlanner(
+	ctx context.Context,
+	modelName string,
+	prefixParts []*genai.Part,
+	currentPlan *LessonPlan,
+	unassignedIDs []string,
+	overloadedTopics []Topic,
+) ([]Topic, error) {
+	pool, err := c.getPool(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	var existingTitles []string
+	for _, t := range currentPlan.Topics {
+		existingTitles = append(existingTitles, fmt.Sprintf("- %s (Đích: %s)", t.Title, t.TargetOutput))
+	}
+
+	var overloadDesc []string
+	for _, ot := range overloadedTopics {
+		overloadDesc = append(overloadDesc, fmt.Sprintf("- Dạng '%s' đang ôm tới %d câu (%v) -> BẮT BUỘC tách nhỏ thành 2-3 dạng chuyên sâu riêng biệt!",
+			ot.Title, len(ot.AssignedQuestionIDs), ot.AssignedQuestionIDs))
+	}
+
+	deltaPrompt := fmt.Sprintf(`KIỂM ĐỊNH ĐỘ BAO PHỦ PHÁT HIỆN BẠN ĐANG BỎ SÓT HOẶC GOM GỘP QUÁ TẢI CÁC CÂU HỎI SAU:
+
+1. CÁC DẠNG ĐÃ CÓ:
+%s
+
+2. CÁC MÃ CÂU HỎI TRONG TÀI LIỆU ĐANG BỊ BỎ SÓT (CHƯA ĐƯỢC TẠO DẠNG TOÁN):
+%v
+
+3. CÁC DẠNG ĐANG BỊ GOM GỘP QUÁ TẢI (CẦN CHẺ NHỎ):
+%s
+
+NHIỆM VỤ:
+- Hãy đọc kỹ nội dung các mã câu hỏi bị bỏ sót ở mục (2) và các câu trong mục (3) từ file PDF đính kèm.
+- Tạo các Dạng toán ("additional_topics") chuyên sâu mới để bao phủ 100%%%% các câu hỏi này (Ví dụ: nếu các câu hỏi có đối tượng đích hoặc phương pháp giải khác nhau thì tạo dạng riêng biệt, không gộp chung vào dạng cơ bản).
+- Mỗi dạng mới phải ghi rõ TargetOutput, CoreMethod, AssignedQuestionIDs, Variants và SourceRefs.`,
+		strings.Join(existingTitles, "\n"),
+		unassignedIDs,
+		strings.Join(overloadDesc, "\n"),
+	)
+
+	parts := append(append([]*genai.Part{}, prefixParts...), &genai.Part{Text: deltaPrompt})
+	config := &genai.GenerateContentConfig{
+		Temperature:      genai.Ptr[float32](0.2),
+		MaxOutputTokens:  8192,
+		ResponseMIMEType: "application/json",
+		ResponseSchema:   deltaPlannerSchema,
+		ThinkingConfig: &genai.ThinkingConfig{
+			ThinkingLevel: genai.ThinkingLevelMinimal,
+		},
+	}
+
+	resp, err := pool.GenerateContent(ctx, modelName, []*genai.Content{{Parts: parts}}, config, 3)
+	if err != nil {
+		return nil, err
+	}
+
+	cleanJSON := SanitizeRawJSONLaTeX(strings.TrimSpace(resp.Text()))
+	var deltaRes DeltaTopicResponse
+	if err := json.Unmarshal([]byte(cleanJSON), &deltaRes); err != nil {
+		repaired := RepairTruncatedJSON(cleanJSON)
+		if errRep := json.Unmarshal([]byte(repaired), &deltaRes); errRep == nil && len(deltaRes.AdditionalTopics) > 0 {
+			LogPhase("PHASE 1", "\033[32m  ↳ [JSON HEALER] Đã tự động cứu hộ chuỗi JSON của Delta-Planner!\033[0m")
+		} else {
+			return nil, err
+		}
+	}
+	return deltaRes.AdditionalTopics, nil
+}
+
+// -----------------------------------------------------------------------------
+// PHASE 2: VIRTUAL-SLICE WORKERS (FULL-PDF IMPLICIT CACHE)
+// -----------------------------------------------------------------------------
+
+func (c *Client) ExecutePhase2_Workers(
+	ctx context.Context,
+	modelName string,
+	docs []PDFDocumentInput,
+	plan *LessonPlan,
+) ([]WorkerResult, error) {
+	start := time.Now()
+	LogPhase("PHASE 2", "Khởi động %d Workers qua Pool API Keys (Chế độ Full-PDF Implicit Cache)...", len(plan.Topics))
+
+	pool, err := c.getPool(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Tạo sẵn Prefix 1 lần duy nhất cho toàn bộ Workers
+	prefixParts := BuildSharedPDFPrefixParts(docs)
 	results := make([]WorkerResult, len(plan.Topics))
 	var g errgroup.Group
+
+	// Bounded Concurrency: Tăng gấp đôi số workers chạy đồng thời để hoàn tất siêu tốc
+	maxWorkers := pool.ActiveCount() * 4
+	if maxWorkers < 6 {
+		maxWorkers = 6
+	}
+	sem := make(chan struct{}, maxWorkers)
 
 	for idx, topic := range plan.Topics {
 		i := idx
 		t := topic
 		g.Go(func() error {
+			sem <- struct{}{}
+			defer func() { <-sem }()
+
+			// 1. Kiểm tra cache worker nếu đã hoàn thành hợp lệ trước đó (tiết kiệm token & tăng tốc)
+			var cachedWorker WorkerResult
+			if err := LoadArtifact(fmt.Sprintf("phase2_worker_%s.json", t.TopicID), &cachedWorker); err == nil && len(cachedWorker.Drills) >= 4 && len(cachedWorker.ShortAnswers) >= 2 && len(cachedWorker.Examples) >= 1 && cachedWorker.Title == t.Title {
+				LogPhase(fmt.Sprintf("WORKER-%d", i+1), "\033[32m[CACHE HIT] Đã nạp dạng '%s' từ artifact có sẵn\033[0m", t.Title)
+				results[i] = cachedWorker
+				return nil
+			}
+
 			wStart := time.Now()
 
-			startPage := t.StartPage
-			endPage := t.EndPage
-			if startPage <= 0 {
-				startPage = 1
-			}
-			if endPage < startPage {
-				endPage = startPage
+			// Format chỉ dẫn tham chiếu chéo từ các file PDF cho Worker này
+			var refBuilder strings.Builder
+			for _, ref := range t.SourceRefs {
+				refBuilder.WriteString(fmt.Sprintf("  * %s\n", ref))
 			}
 
-			LogPhase(fmt.Sprintf("WORKER-%d", i+1), "Cắt trang [%d -> %d] cho dạng: %s", startPage, endPage, t.Title)
-
-			var pageNums []int
-			for p := startPage; p <= endPage; p++ {
-				pageNums = append(pageNums, p)
+			var variantBuilder strings.Builder
+			for vIdx, vStr := range t.Variants {
+				variantBuilder.WriteString(fmt.Sprintf("  - Biến thể %d: %s\n", vIdx+1, vStr))
 			}
 
-			chunkBytes, err := c.pdf.ExtractPages(ctx, pdfPath, pageNums)
-			if err != nil {
-				return fmt.Errorf("cắt trang dạng %s lỗi: %w", t.TopicID, err)
-			}
-			wPrompt := fmt.Sprintf(`TÀI LIỆU ĐÍNH KÈM: %d trang PDF bài học (từ trang %d đến trang %d).
+			LogPhase(fmt.Sprintf("WORKER-%d", i+1), "Đang biên soạn dạng: %s", t.Title)
 
-CHỦ ĐỀ DẠNG TOÁN: "%s"
-THAO TÁC CỐT LÕI CẦN RÈN LUYỆN: "%s"
+			wPrompt := fmt.Sprintf(`NHIỆM VỤ BIÊN SOẠN CHI TIẾT CHO 1 DẠNG TOÁN (TẬP TRUNG TỰ LUẬN & TRẢ LỜI NGẮN):
+- CHỦ ĐỀ DẠNG TOÁN: "%s"
+- MỨC ĐỘ: %s
+- PHƯƠNG PHÁP GIẢI CỐT LÕI: "%s"
+- DANH SÁCH CÁC BIẾN THỂ CẦN BAO PHỦ:
+%s
 
-BẠN LÀ: Giáo viên chuyên dạy học sinh MẤT GỐC / HỌC LỰC YẾU.
-TRIẾT LÝ DẠY HỌC: "LÀM CHẬM, LÀM KỸ, LẶP ĐI LẶP LẠI SẼ THÀNH PHẢN XẠ".
+VÙNG DỮ LIỆU THAM CHIẾU TỪ CÁC FILE PDF (CHỈ ĐỊNH CÁC VÍ DỤ VÀ CÂU HỎI TƯƠNG ỨNG):
+%s
+
+TRIẾT LÝ BIÊN SOẠN: BÀI BẢN, CHUẨN XÁC, PHÂN BẬC TƯ DUY, TẬP TRUNG RÈN LUYỆN TAY NGHỀ VÀ PHẢN XẠ TỰ LUẬN.
 
 HƯỚNG DẪN BIÊN SOẠN THEO THỨ TỰ (BẮT BUỘC TUÂN THỦ):
+1. "pedagogical_scratchpad": BÀN NHÁP SƯ PHẠM VÀ TOÁN: BẮT BUỘC nháp số liệu và kiểm tra nghiệm các bài toán tự luận và trả lời ngắn để đảm bảo bài toán có nghiệm và giải được trước khi ra đề bài. Nếu có hình vẽ hoặc đồ thị, hãy nháp rõ các thông số (đỉnh, điểm phụ, hàm số, mốc tọa độ) trước khi khai báo vào "visual".
+2. "theory_points" & "callout_tip" & "cloze_formula":
+   - Lý thuyết cô đọng, chính xác, nêu rõ điều kiện áp dụng.
+   - Mẹo giải nhanh / khẩu quyết thực chiến dễ nhớ.
+   - 1 câu công thức cốt lõi có chỗ trống '...' để điền.
+3. "short_answers" (CÂU HỎI TỰ LUẬN TRẢ LỜI NGẮN - BẮT BUỘC TỪ 2 ĐẾN 3 CÂU TÍNH TOÁN CỤ THỂ):
+   - Đề bài yêu cầu tính toán ra một giá trị số cụ thể (độ dài vectơ, số đo góc, tích vô hướng, tỉ số diện tích/thể tích, tham số m...).
+   - BẮT BUỘC viết lời giải chi tiết "solution" tính toán từng bước để tìm ra con số TRƯỚC, sau đó mới điền kết quả vào "final_number" (VD: '60', '4.41', '1.5'). Không được đoán mò.
+4. "examples" (VÍ DỤ GIẢI MẪU - TỪ 1 ĐẾN 2 VÍ DỤ ĐIỂN HÌNH):
+   - Phải giữ đầy đủ ngữ cảnh và giả thiết của bài toán.
+   - Lời giải mẫu chi tiết "cầm tay chỉ việc" từng bước biến đổi chuẩn mực.
+   - CẨM NANG HÌNH MINH HỌA "visual" TOÁN K-12 (Nếu ví dụ hoặc bài tập tự luận có hình minh họa):
+     * Hình không gian 3D & Khối tròn xoay: "visual_type": "geo_tetrahedron", "geo_cube", "geo_prism_tri", "geo_pyramid_quad", "geo_pyramid_tri", "geo_cone", "geo_cylinder", "geo_sphere", "geo_oxyz". Khai báo "vertex_labels", "derived_points" (midpoint, centroid, ratio), "highlight_vectors".
+     * Hoặc "crop_pdf" kèm "source_doc_id", "source_page" (để lấy trích đoạn đồ thị, bảng biến thiên, hình vẽ gốc từ PDF). Hoặc "none" nếu không cần hình.
+5. "drills" (BÀI TẬP TỰ LUẬN RÈN PHẢN XẠ - BẮT BUỘC ĐỦ 4 BÀI TẬP TỰ LUẬN ĐỘC LẬP THEO BẬC THANG):
+   - Học sinh cần luyện tập tay nghề nên BẮT BUỘC biên soạn ĐỦ 4 BÀI TẬP TỰ LUẬN ĐỘC LẬP:
+     + Bài 1 (level: "MauChuan", title: "Bài 1 (Chuẩn mẫu)"): Bài toán cơ bản áp dụng trực tiếp công thức/phương pháp của dạng.
+     + Bài 2 (level: "TuongTu100", title: "Bài 2 (Tương tự 100%%)"): CÙNG DẠNG, CÙNG CÁCH LÀM với Bài 1 (tương tự 100%% về phương pháp), chỉ đổi số liệu hoặc đối tượng tương đương để học sinh tự làm cho quen tay và thành thạo.
+     + Bài 3 (level: "BienTheNhe", title: "Bài 3 (Biến thể nhẹ)"): Đổi điểm/đối tượng trung gian hoặc cài thêm 1 bước đệm nhỏ để củng cố kỹ năng.
+     + Bài 4 (level: "VanDung", title: "Bài 4 (Vận dụng)"): Nâng cao hơn một bậc (kết hợp 2 bước biến đổi hoặc bài toán thực tế).
+   - Mỗi bài tập tập trung thẳng vào giải toán, lời giải súc tích (dưới 8 dòng). Có thể có 1-2 ý con (a, b) trong "parts" hoặc là bài toán trực tiếp có "solution".
+   - BẮT BUỘC tuân thủ và sử dụng triệt để giả thiết trong đề bài "prompt", các công thức định nghĩa và định lý tương ứng của chủ đề.
+   - Lời giải "solution" ngắn gọn, súc tích, đi thẳng vào các bước biến đổi toán khẳng định.
 
-1. "theory_points" & "callout_tip": 
-   - Lý thuyết thật ngắn gọn. Khẩu quyết dễ nhớ - mẹo làm bài cho học sinh áp dụng, có thể là mẹo bấm máy tính casio (VD: "Nối đuôi bỏ chữ giữa", "Ngọn trừ gốc").
+QUY TẮC BẮT BUỘC CHỐNG LẶP VÔ HẠN (ANTI-LOOPING):
+- TUYỆT ĐỐI KHÔNG viết các câu tự vấn, tự cãi lại mình hay độc thoại trong lời giải: "không", "sai", "thực tế là", "hãy dùng cách khác", "let's assume".
+- Chỉ xuất một lời giải duy nhất, khẳng định, chính xác. Nếu một biến đổi đã xong thì dừng lại, không lặp lại biểu thức cũ.
 
-2. "mcqs" (KHỞI ĐỘNG NHẬN BIẾT - 2 CÂU):
-   - Đưa trắc nghiệm lên đầu làm phần khởi động nhẹ nhàng.
-   - MỨC ĐỘ: CỰC KỲ CƠ BẢN. Chỉ hỏi nhận diện công thức hoặc tính nhẩm 1 bước trực tiếp để học sinh kiểm tra xem mình đã hiểu mặt chữ lý thuyết chưa.
-
-3. "examples" (VÍ DỤ MẪU):
-   - 1 ví dụ giải mẫu chi tiết "cầm tay chỉ việc".
-
-4. "drills" (BÀI TẬP THỰC HÀNH LẶP LẠI - RẤT QUAN TRỌNG):
-   - TUYỆT ĐỐI KHÔNG ra 4 ý là 4 dạng toán khác nhau!
-   - BẮT BUỘC 4 đến 5 ý con (a, b, c, d, e) phải CHẠY CHUNG ĐÚNG 1 KHUÔN MẪU THAO TÁC (chỉ đổi tên chữ cái hoặc đổi số liệu, hoặc dạng điền khuyết từng bước) để học sinh làm đi làm lại cho quen tay.
-   * VÍ DỤ VỀ BÀI TẬP LẶP LẠI (THAM KHẢO):
-     + Dạng nối đuôi: Ý a rút gọn $\vec{XY} + \vec{YZ}$; Ý b rút gọn $\vec{MN} + \vec{NP} + \vec{PQ}$; Ý c rút gọn $\vec{AB} + \vec{BC} + \vec{CD}$...
-     + Dạng ngọn trừ gốc: Cho điểm $A, B, C, D$. Ý a tính $\vec{AB}$; Ý b tính $\vec{BC}$; Ý c tính $\vec{CD}$; Ý d tính $\vec{DA}$...
-     + Dạng điền khuyết: Từng bước 1, 2, 3 điền vào chỗ trống để hoàn thành chứng minh.
-
-CÁC RÀNG BUỘC CÚ PHÁP BẮT BUỘC:
+CÁC RÀNG BUỘC CÚ PHÁP TOÁN BẮT BUỘC:
 1. MỌI biến số, tọa độ, điểm, công thức toán BẮT BUỘC bọc trong cặp dấu $ ... $.
-2. VECTƠ: Bắt buộc dùng cú pháp chuẩn $\vec{AB}$, $\vec{a}$, $\vec{0}$. TUYỆT ĐỐI KHÔNG dùng \b hay \bar.
-3. JSON ESCAPE: Mọi lệnh LaTeX phải có 2 dấu gạch chéo ngược: "\\vec{...}", "\\frac{1}{2}", "\\sqrt{...}".`,
-				len(pageNums), startPage, endPage, t.Title, t.CoreConcept)
+2. CÔNG THỨC TOÁN CHUẨN: Nếu bài toán có vectơ, BẮT BUỘC dùng cú pháp chuẩn $\vec{AB}$, $\vec{a}$, $\vec{0}$ (TUYỆT ĐỐI KHÔNG dùng \overline hay \b). Dùng \frac{}{}, \sqrt{}, \sin, \cos, \int, \lim đúng cú pháp LaTeX.
+3. JSON ESCAPE: Mọi lệnh LaTeX trong chuỗi JSON phải có 2 dấu gạch chéo ngược: "\\frac{1}{2}", "\\sqrt{...}", "\\vec{...}".`,
+				t.Title, t.Difficulty, t.CoreConcept, variantBuilder.String(), refBuilder.String())
 
-			parts := []*genai.Part{
-				{InlineData: &genai.Blob{MIMEType: "application/pdf", Data: chunkBytes}},
-				{Text: wPrompt},
-			}
+			// Ghép cùng một bộ prefixParts ở đầu + wPrompt ở cuối -> Trúng Prefix Cache!
+			parts := append(append([]*genai.Part{}, prefixParts...), &genai.Part{Text: wPrompt})
 
 			config := &genai.GenerateContentConfig{
+				Temperature:      genai.Ptr[float32](0.3),
+				MaxOutputTokens:  8192,
 				ResponseMIMEType: "application/json",
 				ResponseSchema:   workerSchema,
-				// ThinkingConfig: &genai.ThinkingConfig{
-				// 	ThinkingLevel: genai.ThinkingLevelLow,
-				// },
+				ThinkingConfig: &genai.ThinkingConfig{
+					ThinkingLevel: genai.ThinkingLevelMinimal,
+				},
 			}
 
-			resp, err := c.client.Models.GenerateContent(ctx, modelName, []*genai.Content{{Parts: parts}}, config)
-			if err != nil {
-				return fmt.Errorf("worker %s lỗi: %w", t.TopicID, err)
-			}
-
-			// Chống nuốt gạch chéo trước khi Unmarshal
-			sanitizedJSON := SanitizeRawJSONLaTeX(strings.TrimSpace(resp.Text()))
-
+			// Gọi qua KeyPool (tự động điều phối qua các API Keys + Retry/Failover + Retry nếu JSON bị đứt đoạn)
 			var wResult WorkerResult
-			if err := json.Unmarshal([]byte(sanitizedJSON), &wResult); err != nil {
-				return fmt.Errorf("worker %s unmarshal lỗi: %w", t.TopicID, err)
+			var lastErr error
+			tokensOut := 0
+
+			for attempt := 1; attempt <= 2; attempt++ {
+				resp, err := pool.GenerateContent(ctx, modelName, []*genai.Content{{Parts: parts}}, config, 5)
+				if err != nil {
+					return fmt.Errorf("worker %s lỗi: %w", t.TopicID, err)
+				}
+
+				if resp.UsageMetadata != nil {
+					tokensOut = int(resp.UsageMetadata.CandidatesTokenCount)
+				}
+
+				sanitizedJSON := SanitizeRawJSONLaTeX(strings.TrimSpace(resp.Text()))
+				if err := json.Unmarshal([]byte(sanitizedJSON), &wResult); err != nil {
+					// Thử tự động cứu hộ nếu JSON bị đứt đoạn cuối do token limit
+					healedJSON := RepairTruncatedJSON(sanitizedJSON)
+					if errHeal := json.Unmarshal([]byte(healedJSON), &wResult); errHeal == nil {
+						LogPhase(fmt.Sprintf("WORKER-%d", i+1), "\033[32m  ↳ [JSON HEALER] Đã tự động cứu hộ và vá thành công chuỗi JSON bị ngắt cụt!\033[0m")
+						lastErr = nil
+						break
+					}
+					lastErr = fmt.Errorf("worker %s unmarshal lỗi: %w (Raw: %s)", t.TopicID, err, sanitizedJSON)
+					LogPhase(fmt.Sprintf("WORKER-%d", i+1), "\033[33mCảnh báo: Parse JSON lỗi ở lần thử %d/2 (Tokens: %d), đang thử lại...\033[0m", attempt, tokensOut)
+					continue
+				}
+				lastErr = nil
+				break
+			}
+			if lastErr != nil {
+				return lastErr
 			}
 
 			wResult.TopicID = t.TopicID
 			wResult.Title = t.Title
 			results[i] = wResult
 
-			tokensOut := 0
-			if resp.UsageMetadata != nil {
-				tokensOut = int(resp.UsageMetadata.CandidatesTokenCount)
-			}
-
-			LogPhase(fmt.Sprintf("WORKER-%d", i+1), "Hoàn thành sau %v (Tokens: %d)", time.Since(wStart), tokensOut)
+			LogPhase(fmt.Sprintf("WORKER-%d", i+1), "Hoàn thành sau %v (Tokens Out: %d)", time.Since(wStart), tokensOut)
 			_ = SaveArtifact(fmt.Sprintf("phase2_worker_%s.json", t.TopicID), wResult)
 			return nil
 		})
@@ -409,19 +816,377 @@ CÁC RÀNG BUỘC CÚ PHÁP BẮT BUỘC:
 // -----------------------------------------------------------------------------
 // PHASE 3: TYPST CODE BUILDER (CHUẨN FONT LINUX/WSL, KHÔNG WARNING)
 // -----------------------------------------------------------------------------
+
+func formatTypstArray(items []string) string {
+	if len(items) == 0 {
+		return "()"
+	}
+	if len(items) == 1 {
+		return "(" + items[0] + ",)"
+	}
+	return "(" + strings.Join(items, ", ") + ")"
+}
+
+func formatLabels(labels []string, defaultLabels []string) string {
+	useLabels := make([]string, len(defaultLabels))
+	copy(useLabels, defaultLabels)
+	for i := 0; i < len(labels) && i < len(useLabels); i++ {
+		trimmed := strings.TrimSpace(labels[i])
+		if trimmed != "" {
+			useLabels[i] = trimmed
+		}
+	}
+	var quoted []string
+	for _, l := range useLabels {
+		quoted = append(quoted, fmt.Sprintf("%q", l))
+	}
+	return formatTypstArray(quoted)
+}
+
+func formatDerivedPoints(derivedPoints []DerivedPoint, baseLabels []string, highlightVectors []string, shape string) string {
+	knownMap := make(map[string]bool)
+	for _, l := range baseLabels {
+		knownMap[l] = true
+	}
+
+	var derivedItems []string
+	for _, dp := range derivedPoints {
+		dpName := strings.TrimSpace(dp.Name)
+		if dpName == "" {
+			continue
+		}
+		knownMap[dpName] = true
+		dpType := strings.TrimSpace(dp.Type)
+		if dpType == "" {
+			dpType = "midpoint"
+		}
+		var ofQuoted []string
+		for _, o := range dp.Of {
+			ofQuoted = append(ofQuoted, fmt.Sprintf("%q", strings.TrimSpace(o)))
+		}
+		ofStr := formatTypstArray(ofQuoted)
+
+		kVal := dp.Ratio
+		if kVal == 0 {
+			kVal = 0.5
+		}
+		derivedItems = append(derivedItems, fmt.Sprintf("(name: %q, type: %q, of: %s, k: %g)", dpName, dpType, ofStr, kVal))
+	}
+
+	return formatTypstArray(derivedItems)
+}
+
+func formatLines(lines []LineSpec) string {
+	var items []string
+	for _, l := range lines {
+		f := strings.TrimSpace(l.From)
+		t := strings.TrimSpace(l.To)
+		if f == "" || t == "" {
+			continue
+		}
+		style := strings.TrimSpace(l.Style)
+		if style == "" {
+			style = "solid"
+		}
+		col := strings.TrimSpace(l.Color)
+		colStr := "black"
+		if col != "" {
+			if strings.HasPrefix(col, "#") {
+				colStr = fmt.Sprintf("rgb(%q)", col)
+			} else {
+				colStr = col
+			}
+		}
+		items = append(items, fmt.Sprintf("(from: %q, to: %q, style: %q, color: %s)", f, t, style, colStr))
+	}
+	return formatTypstArray(items)
+}
+
+func formatVectors(vectors []string) string {
+	var items []string
+	for _, hv := range vectors {
+		parts := strings.Split(hv, "->")
+		if len(parts) == 2 {
+			p1 := strings.TrimSpace(parts[0])
+			p2 := strings.TrimSpace(parts[1])
+			if p1 != "" && p2 != "" {
+				items = append(items, fmt.Sprintf("(%q, %q)", p1, p2))
+			}
+		}
+	}
+	return formatTypstArray(items)
+}
+
+func formatPolygons(polygons []PolygonSpec) string {
+	var items []string
+	for _, p := range polygons {
+		if len(p.Points) < 3 {
+			continue
+		}
+		var ptsQuoted []string
+		for _, pt := range p.Points {
+			pt = strings.TrimSpace(pt)
+			if pt != "" {
+				ptsQuoted = append(ptsQuoted, fmt.Sprintf("%q", pt))
+			}
+		}
+		ptsStr := formatTypstArray(ptsQuoted)
+		fill := strings.TrimSpace(p.Fill)
+		if fill == "" {
+			fill = "#93c5fd40"
+		}
+		items = append(items, fmt.Sprintf("(pts: %s, fill: rgb(%q))", ptsStr, fill))
+	}
+	return formatTypstArray(items)
+}
+
+func formatCircles(circles []CircleSpec) string {
+	var items []string
+	for _, c := range circles {
+		if len(c.Through) > 0 {
+			var thruQuoted []string
+			for _, pt := range c.Through {
+				pt = strings.TrimSpace(pt)
+				if pt != "" {
+					thruQuoted = append(thruQuoted, fmt.Sprintf("%q", pt))
+				}
+			}
+			items = append(items, fmt.Sprintf("(through: %s)", formatTypstArray(thruQuoted)))
+		} else if c.Center != "" {
+			rVal := c.Radius
+			if rVal <= 0 {
+				rVal = 2.0
+			}
+			items = append(items, fmt.Sprintf("(center: %q, radius: %g)", c.Center, rVal))
+		}
+	}
+	return formatTypstArray(items)
+}
+
+func renderGeo3DCall(v *VisualSpec, funcName string, defaultLabels []string) string {
+	labelsStr := formatLabels(v.VertexLabels, defaultLabels)
+	baseLabels := defaultLabels
+	if len(v.VertexLabels) > 0 {
+		baseLabels = v.VertexLabels
+	}
+	derivedStr := formatDerivedPoints(v.DerivedPoints, baseLabels, v.HighlightVectors, v.VisualType)
+	linesStr := "()"
+	vecStr := formatVectors(v.HighlightVectors)
+	polyStr := "()"
+
+	return fmt.Sprintf("\n  #align(center)[#%s(labels: %s, derived: %s, lines: %s, vectors: %s, polygons: %s)]\n",
+		funcName, labelsStr, derivedStr, linesStr, vecStr, polyStr)
+}
+
+func renderPlotTypst(g *PlotSpec) string {
+	if g == nil {
+		return ""
+	}
+	xMin := -3.0
+	xMax := 4.0
+	if len(g.XRange) >= 2 {
+		xMin = g.XRange[0]
+		xMax = g.XRange[1]
+	}
+	yMin := -4.0
+	yMax := 5.0
+	if len(g.YRange) >= 2 {
+		yMin = g.YRange[0]
+		yMax = g.YRange[1]
+	}
+	xStep := g.XStep
+	if xStep <= 0 {
+		xStep = 1.0
+	}
+	yStep := g.YStep
+	if yStep <= 0 {
+		yStep = 1.0
+	}
+
+	var plotAdds []string
+
+	for _, c := range g.Curves {
+		dMin := xMin + 0.2
+		dMax := xMax - 0.2
+		if len(c.Domain) >= 2 {
+			dMin = c.Domain[0]
+			dMax = c.Domain[1]
+		}
+		col := c.Color
+		if col == "" {
+			col = "#2563eb"
+		}
+		plotAdds = append(plotAdds, fmt.Sprintf(`plot.add(domain: (%.2f, %.2f), %s, style: (stroke: 1.2pt + rgb(%q)))`,
+			dMin, dMax, c.Expression, col))
+	}
+
+	for _, as := range g.Asymptotes {
+		col := as.Color
+		if col == "" {
+			col = "#dc2626"
+		}
+		if as.Type == "vertical" {
+			plotAdds = append(plotAdds, fmt.Sprintf(`plot.add-vline(%v, min: %.1f, max: %.1f, style: (stroke: (dash: "dashed", paint: rgb(%q))))`,
+				as.At, yMin, yMax, col))
+		} else if as.Type == "horizontal" {
+			plotAdds = append(plotAdds, fmt.Sprintf(`plot.add-hline(%v, min: %.1f, max: %.1f, style: (stroke: (dash: "dashed", paint: rgb(%q))))`,
+				as.At, xMin, xMax, col))
+		} else if as.Type == "oblique" && as.Expression != "" {
+			dMin := xMin
+			dMax := xMax
+			if len(as.Domain) >= 2 {
+				dMin = as.Domain[0]
+				dMax = as.Domain[1]
+			}
+			plotAdds = append(plotAdds, fmt.Sprintf(`plot.add(domain: (%.2f, %.2f), %s, style: (stroke: (dash: "dashed", paint: rgb(%q))))`,
+				dMin, dMax, as.Expression, col))
+		}
+	}
+
+	if len(g.SpecialPoints) > 0 {
+		var ptCoords []string
+		for _, p := range g.SpecialPoints {
+			ptCoords = append(ptCoords, fmt.Sprintf("(%.2f, %.2f)", p.X, p.Y))
+		}
+		plotAdds = append(plotAdds, fmt.Sprintf(`plot.add((%s,), style: (stroke: none), mark: "o", mark-size: 0.12)`,
+			strings.Join(ptCoords, ", ")))
+	}
+
+	body := strings.Join(plotAdds, "\n        ")
+
+	return fmt.Sprintf("\n  #align(center)[#cetz-v3.canvas({\n      import cetz-v3.draw: *\n      plot.plot(\n        size: (5.2, 3.6),\n        axis-style: \"school-book\",\n        x-tick-step: %.1f, y-tick-step: %.1f,\n        x-label: $x$, y-label: $y$,\n        x-min: %.1f, x-max: %.1f, y-min: %.1f, y-max: %.1f,\n        {\n        %s\n        }\n      )\n    })]\n", xStep, yStep, xMin, xMax, yMin, yMax, body)
+}
+
+func renderTabvarTypst(t *TabvarSpec) string {
+	if t == nil {
+		return ""
+	}
+	var domainParts []string
+	for _, d := range t.Domain {
+		if strings.HasPrefix(d, "$") {
+			domainParts = append(domainParts, d)
+		} else {
+			domainParts = append(domainParts, "$"+d+"$")
+		}
+	}
+	domainStr := formatTypstArray(domainParts)
+
+	var primeRowParts []string
+	if len(t.YPrimeSigns) > 0 {
+		firstSign := t.YPrimeSigns[0]
+		primeRowParts = append(primeRowParts, "$"+firstSign+"$")
+
+		for i := 1; i < len(t.YPrimeSigns)-1; i += 2 {
+			boundaryMark := t.YPrimeSigns[i]
+			nextSign := t.YPrimeSigns[i+1]
+			primeRowParts = append(primeRowParts, fmt.Sprintf(`(%q, $%s$)`, boundaryMark, nextSign))
+		}
+	}
+	primeRowStr := formatTypstArray(primeRowParts)
+
+	var yRowParts []string
+	for _, yr := range t.YRows {
+		if yr.DoubleBar {
+			leftVal := yr.Left
+			if leftVal == "" {
+				leftVal = "-oo"
+			}
+			rightVal := yr.Right
+			if rightVal == "" {
+				rightVal = "+oo"
+			}
+			yRowParts = append(yRowParts, fmt.Sprintf(`(bottom, top, "||", $%s$, $%s$)`, leftVal, rightVal))
+		} else {
+			pos := yr.Pos
+			if pos == "" {
+				pos = "bottom"
+			}
+			val := yr.Val
+			if val == "" {
+				val = "0"
+			}
+			yRowParts = append(yRowParts, fmt.Sprintf(`(%s, $%s$)`, pos, val))
+		}
+	}
+	yRowStr := "(\n        " + strings.Join(yRowParts, ",\n        ") + ",\n      )"
+
+	variableName := t.Variable
+	if variableName == "" {
+		variableName = "x"
+	}
+
+	return fmt.Sprintf("\n  #align(center)[#tabvar(\n    variable: $%s$,\n    label: (\n      ([$y'$], \"s\"),\n      ([$y$], \"v\"),\n    ),\n    domain: %s,\n    nocadre: true,\n    line-style: (stroke: none),\n    arrow-mark: (end: \">\"),\n    arrow-style: (stroke: 0.8pt + black),\n    table-style: (stroke: 0.6pt + black),\n    contents: (\n      %s,\n      %s\n    ),\n  )]\n", variableName, domainStr, primeRowStr, yRowStr)
+}
+
+func renderVisualSpec(v *VisualSpec) string {
+	if v == nil || v.VisualType == "" || v.VisualType == "none" {
+		return ""
+	}
+	switch v.VisualType {
+	case "geo_cube", "geo_parallelepiped":
+		return renderGeo3DCall(v, "draw-cube", []string{"A", "B", "C", "D", "A'", "B'", "C'", "D'"})
+	case "geo_tetrahedron":
+		return renderGeo3DCall(v, "draw-tetrahedron", []string{"A", "B", "C", "D"})
+	case "geo_prism_tri":
+		return renderGeo3DCall(v, "draw-prism-tri", []string{"A", "B", "C", "A'", "B'", "C'"})
+	case "geo_pyramid_quad":
+		return renderGeo3DCall(v, "draw-pyramid-quad", []string{"S", "A", "B", "C", "D"})
+	case "geo_pyramid_tri":
+		return renderGeo3DCall(v, "draw-pyramid-tri", []string{"S", "A", "B", "C"})
+	case "geo_cone":
+		return "\n  #align(center)[#draw-cone()]\n"
+	case "geo_cylinder":
+		return "\n  #align(center)[#draw-cylinder()]\n"
+	case "geo_sphere":
+		return "\n  #align(center)[#draw-sphere()]\n"
+	case "geo_oxyz":
+		return "\n  #align(center)[#draw-oxyz()]\n"
+	case "crop_pdf":
+		imgPath := filepath.Join(ArtifactDir, fmt.Sprintf("crop_%s_p%d.png", v.SourceDocID, v.SourcePage))
+		if _, err := os.Stat(imgPath); err == nil {
+			return fmt.Sprintf("\n  #align(center)[#image(%q, width: 65%%)]\n", filepath.ToSlash(imgPath))
+		}
+		return ""
+	default:
+		return ""
+	}
+}
+
 func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResult) (string, error) {
 	LogPhase("PHASE 3", "Bắt đầu lắp ghép JSON từ Workers sang Typst code...")
+
+	// Đảm bảo archetypes.typ luôn sẵn sàng cạnh file Typst xuất ra
+	archetypeDst := filepath.Join(ArtifactDir, "archetypes.typ")
+	if _, err := os.Stat(archetypeDst); os.IsNotExist(err) {
+		candidates := []string{
+			filepath.Join("infrastructure2", "gemini", "archetypes.typ"),
+			"archetypes.typ",
+			filepath.Join("..", "archetypes.typ"),
+		}
+		for _, cPath := range candidates {
+			if data, err := os.ReadFile(cPath); err == nil {
+				_ = os.WriteFile(archetypeDst, data, 0644)
+				break
+			}
+		}
+	}
 
 	var sb strings.Builder
 	anchorCount := 0
 
-	// Prelude: Import MiTeX 0.2.7
-	sb.WriteString(`#import "@preview/mitex:0.2.7": mitex, mi` + "\n\n")
+	// Prelude: Import MiTeX, CeTZ, cetz-plot, vartable, and archetypes
+	sb.WriteString(`#import "@preview/mitex:0.2.7": mitex, mi` + "\n")
+	sb.WriteString(`#import "@preview/cetz:0.3.3"` + "\n")
+	sb.WriteString(`#import "@preview/cetz:0.3.3" as cetz-v3` + "\n")
+	sb.WriteString(`#import "@preview/cetz-plot:0.1.1": plot, chart` + "\n")
+	sb.WriteString(`#import "@preview/vartable:0.2.4": tabvar` + "\n")
+	sb.WriteString(`#import "archetypes.typ": *` + "\n\n")
 	sb.WriteString(`#let IS_TEACHER = sys.inputs.at("teacher", default: "true") == "true"` + "\n\n")
 	sb.WriteString(`#set page(paper: "a4", margin: (x: 1.8cm, top: 1.6cm, bottom: 1.8cm))` + "\n")
-	// Chuẩn hóa font Linux/WSL (tránh unknown font warning)
-	sb.WriteString(`#set text(font: ("DejaVu Sans", "Liberation Sans"), size: 10pt, lang: "vi")` + "\n")
+	// Chuẩn hóa font đa nền tảng Windows + Linux/WSL (tránh unknown font warning)
+	sb.WriteString(`#set text(font: ("Arial", "Segoe UI", "DejaVu Sans", "Liberation Sans"), size: 10pt, lang: "vi")` + "\n")
 	sb.WriteString(`#set par(justify: true, leading: 0.72em)` + "\n\n")
+
 
 	// Macros Card
 	sb.WriteString(`#let card(title: none, body) = block(fill: rgb("#f8fafc"), stroke: 1pt + rgb("#cbd5e1"), radius: 6pt, inset: 10pt, width: 100%, [
@@ -442,12 +1207,12 @@ func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResu
   #text(size: 9.5pt, style: "italic", fill: rgb("#475569"))[%s]
 ]
 #v(6pt)
-`, plan.LessonTitle, plan.Overview))
+`, LaTeXToMiTeX(plan.LessonTitle), LaTeXToMiTeX(plan.Overview)))
 
 	// Duyệt qua từng Dạng toán
 	for idx, w := range workers {
 		sb.WriteString(fmt.Sprintf("\n// ==================== DẠNG %d: %s ====================\n", idx+1, w.Title))
-		sb.WriteString(fmt.Sprintf("#v(8pt)\n#text(size: 13pt, weight: \"bold\", fill: rgb(\"#1e3a8a\"))[Dạng %d. %s]\n#v(3pt)\n", idx+1, w.Title))
+		sb.WriteString(fmt.Sprintf("#v(8pt)\n#text(size: 13pt, weight: \"bold\", fill: rgb(\"#1e3a8a\"))[Dạng %d. %s]\n#v(3pt)\n", idx+1, LaTeXToMiTeX(w.Title)))
 
 		// 1. Lý thuyết & Ghi nhớ
 		sb.WriteString(`#card(title: "I. Lý thuyết & Ghi nhớ")[
@@ -472,48 +1237,52 @@ func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResu
 		}
 		sb.WriteString("]\n#v(4pt)\n")
 
-		// 2. 👉 DỜI TRẮC NGHIỆM LÊN THÀNH "II. Khởi động nhanh"
-		if len(w.MCQs) > 0 {
-			sb.WriteString(`#card(title: "II. Khởi động nhanh (Nhận biết cơ bản)")[
+		// 2. Câu hỏi tự luận trả lời ngắn (Điền số kết quả)
+		if len(w.ShortAnswers) > 0 {
+			sb.WriteString(`#card(title: "II. Câu hỏi tự luận trả lời ngắn (Điền số kết quả)")[
 `)
-			for mIdx, mc := range w.MCQs {
+			for sIdx, sa := range w.ShortAnswers {
 				sb.WriteString("  #block(width: 100%, breakable: false)[\n")
-				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|mcq|%d|prompt\n", w.TopicID, mIdx))
-				sb.WriteString(fmt.Sprintf("    *Câu %d.* %s\n    #v(2pt)\n    #grid(columns: (1fr, 1fr), row-gutter: 4pt,\n", mIdx+1, LaTeXToMiTeX(mc.Prompt)))
+				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|short_answer|%d|prompt\n", w.TopicID, sIdx))
+				sb.WriteString(fmt.Sprintf("    *Câu %d.* %s\n", sIdx+1, LaTeXToMiTeX(sa.Prompt)))
 				anchorCount++
 
-				for oIdx, opt := range mc.Options {
-					sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|mcq|%d|opt|%d\n", w.TopicID, mIdx, oIdx))
-					sb.WriteString(fmt.Sprintf("      [%s],\n", LaTeXToMiTeX(opt)))
-					anchorCount++
-				}
-				sb.WriteString("    )\n")
-
-				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|mcq|%d|solution\n", w.TopicID, mIdx))
+				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|short_answer|%d|final_number\n", w.TopicID, sIdx))
 				sb.WriteString(fmt.Sprintf(`    #if IS_TEACHER [
       #v(2pt)
-      #text(weight: "bold", fill: rgb("#15803d"))[Đáp án: %s] - %s
+      #text(weight: "bold", fill: rgb("#15803d"))[Đáp số: %s]
+`, FormatFinalNumber(sa.FinalNumber)))
+				anchorCount++
+
+				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|short_answer|%d|solution\n", w.TopicID, sIdx))
+				sb.WriteString(fmt.Sprintf(`      \ #text(fill: rgb("#334155"))[Lời giải: %s]
     ] else [
       #v(3pt)
-      #table(columns: (35pt, 35pt, 35pt, 35pt), align: center + horizon, [*A*], [*B*], [*C*], [*D*])
+      #align(right)[#rect(stroke: 1pt + rgb("#0369a1"), radius: 3pt, inset: (x: 12pt, y: 6pt))[
+        #text(size: 9pt, weight: "bold", fill: rgb("#0369a1"))[Đáp số: ..............]
+      ]]
     ]
   ]
   #v(6pt)
-`, mc.CorrectAnswer, LaTeXToMiTeX(mc.Solution)))
+`, LaTeXToMiTeX(sa.Solution)))
 				anchorCount++
 			}
 			sb.WriteString("]\n#v(4pt)\n")
 		}
 
-		// 3. Ví dụ minh họa
+		// 3. Ví dụ minh họa giải mẫu
 		if len(w.Examples) > 0 {
-			sb.WriteString(`#card(title: "III. Ví dụ minh họa")[
+			sb.WriteString(`#card(title: "III. Ví dụ minh họa giải mẫu")[
 `)
 			for eIdx, ex := range w.Examples {
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|example|%d|problem\n", w.TopicID, eIdx))
 				sb.WriteString(fmt.Sprintf(`  #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[%s:] %s
-`, ex.Title, LaTeXToMiTeX(ex.Problem)))
+`, LaTeXToMiTeX(ex.Title), LaTeXToMiTeX(ex.Problem)))
+
+				if visualCode := renderVisualSpec(ex.Visual); visualCode != "" {
+					sb.WriteString("    " + visualCode)
+				}
 
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|example|%d|solution\n", w.TopicID, eIdx))
 				sb.WriteString(fmt.Sprintf(`    #if IS_TEACHER [
@@ -525,34 +1294,36 @@ func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResu
 			sb.WriteString("]\n#v(4pt)\n")
 		}
 
-		// 4. 👉 BÀI TẬP THỰC HÀNH LẶP LẠI (DRILLS) Ở CUỐI PHIẾU
+		// 4. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)
 		if len(w.Drills) > 0 {
-			sb.WriteString(`#card(title: "IV. Bài tập thực hành lặp lại (Rèn phản xạ cơ bắp)")[
+			sb.WriteString(`#card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 `)
 			for dIdx, dr := range w.Drills {
+				titleStr := strings.TrimSpace(dr.Title)
+				if titleStr == "" {
+					titleStr = fmt.Sprintf("Bài %d", dIdx+1)
+				}
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|prompt\n", w.TopicID, dIdx))
-				sb.WriteString(fmt.Sprintf("  %s\n", LaTeXToMiTeX(dr.Prompt)))
+				sb.WriteString(fmt.Sprintf("  *%s.* %s\n", LaTeXToMiTeX(titleStr), LaTeXToMiTeX(dr.Prompt)))
 				anchorCount++
 
-				for _, part := range dr.Parts {
-					sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|part|%s|question\n", w.TopicID, dIdx, part.Label))
-					sb.WriteString(fmt.Sprintf("  - *%s)* %s\n", part.Label, LaTeXToMiTeX(part.Question)))
-
-					sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|part|%s|solution\n", w.TopicID, dIdx, part.Label))
-					sb.WriteString(fmt.Sprintf(`    #if IS_TEACHER [
-      #text(fill: rgb("#15803d"))[→ Lời giải: %s (Barem: %s)] \
-    ]`+"\n", LaTeXToMiTeX(part.Solution), LaTeXToMiTeX(part.Rubric)))
-					anchorCount += 2
+				if visualCode := renderVisualSpec(dr.Visual); visualCode != "" {
+					sb.WriteString("  " + visualCode)
 				}
-				sb.WriteString(`    #if not IS_TEACHER [
-      #block(stroke: (paint: rgb("#94a3b8"), dash: "dashed"), inset: 6pt, height: 45pt, width: 100%)[
+
+				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|solution\n", w.TopicID, dIdx))
+				sb.WriteString(fmt.Sprintf(`    #if IS_TEACHER [
+      #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: %s] \
+    ] else [
+      #v(2pt)
+      #block(stroke: (paint: rgb("#94a3b8"), dash: "dashed"), inset: 6pt, height: 50pt, width: 100%%)[
         #text(size: 8.5pt, fill: rgb("#94a3b8"))[✍️ Bài làm:]
       ]
-    ]` + "\n")
+    ]`+"\n", LaTeXToMiTeX(dr.Solution)))
+				anchorCount++
 			}
 			sb.WriteString("]\n#v(6pt)\n")
 		}
-
 	}
 
 	typstMarkup := sb.String()
@@ -584,7 +1355,7 @@ func compileTypst(ctx context.Context, typPath, pdfPath string, isTeacher bool) 
 	if isTeacher {
 		val = "true"
 	}
-	cmd := exec.CommandContext(ctx, "typst", "compile", "--input", "teacher="+val, typPath, pdfPath)
+	cmd := exec.CommandContext(ctx, "typst", "compile", "--root", ".", "--input", "teacher="+val, typPath, pdfPath)
 	out, err := cmd.CombinedOutput()
 	return string(out), err
 }
@@ -616,22 +1387,81 @@ func collectAuditViolations(workers []WorkerResult) []RepairItemRequest {
 
 		for dIdx, dr := range w.Drills {
 			check(fmt.Sprintf("%s|drill|%d|prompt", w.TopicID, dIdx), "Đề bài Drill", dr.Prompt)
-			for _, p := range dr.Parts {
-				check(fmt.Sprintf("%s|drill|%d|part|%s|question", w.TopicID, dIdx, p.Label), "Drill "+p.Label+" Đề bài", p.Question)
-				check(fmt.Sprintf("%s|drill|%d|part|%s|solution", w.TopicID, dIdx, p.Label), "Drill "+p.Label+" Lời giải", p.Solution)
-			}
+			check(fmt.Sprintf("%s|drill|%d|solution", w.TopicID, dIdx), "Lời giải Drill", dr.Solution)
 		}
 
-		for mIdx, mc := range w.MCQs {
-			check(fmt.Sprintf("%s|mcq|%d|prompt", w.TopicID, mIdx), fmt.Sprintf("MCQ %d Đề bài", mIdx+1), mc.Prompt)
-			for oIdx, opt := range mc.Options {
-				check(fmt.Sprintf("%s|mcq|%d|opt|%d", w.TopicID, mIdx, oIdx), fmt.Sprintf("MCQ %d Lựa chọn", mIdx+1), opt)
-			}
-			check(fmt.Sprintf("%s|mcq|%d|solution", w.TopicID, mIdx), fmt.Sprintf("MCQ %d Lời giải", mIdx+1), mc.Solution)
+		for sIdx, sa := range w.ShortAnswers {
+			check(fmt.Sprintf("%s|short_answer|%d|prompt", w.TopicID, sIdx), fmt.Sprintf("Trả lời ngắn %d Đề bài", sIdx+1), sa.Prompt)
+			check(fmt.Sprintf("%s|short_answer|%d|final_number", w.TopicID, sIdx), fmt.Sprintf("Trả lời ngắn %d Đáp số", sIdx+1), sa.FinalNumber)
+			check(fmt.Sprintf("%s|short_answer|%d|solution", w.TopicID, sIdx), fmt.Sprintf("Trả lời ngắn %d Lời giải", sIdx+1), sa.Solution)
 		}
 	}
 
 	return items
+}
+
+func disableVisualAtAnchor(workers []WorkerResult, anchorID string) bool {
+	parts := strings.Split(anchorID, "|")
+	if len(parts) < 2 {
+		return false
+	}
+	topicID := parts[0]
+	kind := parts[1]
+
+	for i := range workers {
+		if workers[i].TopicID == topicID {
+			switch kind {
+			case "drill":
+				if len(parts) >= 3 {
+					dIdx, err := strconv.Atoi(parts[2])
+					if err == nil && dIdx < len(workers[i].Drills) {
+						workers[i].Drills[dIdx].Visual = nil
+						return true
+					}
+				}
+			case "example":
+				if len(parts) >= 3 {
+					eIdx, err := strconv.Atoi(parts[2])
+					if err == nil && eIdx < len(workers[i].Examples) {
+						workers[i].Examples[eIdx].Visual = nil
+						return true
+					}
+				}
+			}
+		}
+	}
+	return false
+}
+
+func disableAllVisuals(workers []WorkerResult) {
+	for i := range workers {
+		for j := range workers[i].Examples {
+			workers[i].Examples[j].Visual = nil
+		}
+		for j := range workers[i].Drills {
+			workers[i].Drills[j].Visual = nil
+		}
+	}
+}
+
+func sanitizeAnchorContent(workers []WorkerResult, anchorID string) {
+	req := extractRepairContext(workers, anchorID)
+	if req == nil {
+		return
+	}
+	fixed := req.BrokenContent
+	// 1. Cân bằng dấu $
+	count := strings.Count(fixed, "$")
+	if count%2 != 0 {
+		fixed += "$"
+	}
+	// 2. Escape ký tự # nếu đứng ngoài toán
+	fixed = strings.ReplaceAll(fixed, "#", `\#`)
+	// 3. Chuẩn hóa đoạn thẳng có hướng 2-3 chữ cái in hoa về \vec (giữ nguyên số phức liên hợp \overline{z}, số trung bình \overline{x})
+	directedSegRegex := regexp.MustCompile(`\\(?:overline|overrightarrow)\{([A-Z][']?[A-Z][']?)\}`)
+	fixed = directedSegRegex.ReplaceAllString(fixed, `\vec{$1}`)
+
+	applyFixedBatch(workers, []RepairedItemResponse{{AnchorID: anchorID, FixedContent: fixed}})
 }
 
 func (c *Client) ExecutePhase4_CompilePDF(ctx context.Context, repairModel string, plan *LessonPlan, workers []WorkerResult) (string, string, error) {
@@ -679,6 +1509,7 @@ func (c *Client) ExecutePhase4_CompilePDF(ctx context.Context, repairModel strin
 	maxRetries := 4
 	var finalOut string
 	var finalErr error
+	failedAttempts := make(map[string]int)
 
 	for attempt := 1; attempt <= maxRetries; attempt++ {
 		// Lắp ráp mã Typst
@@ -705,19 +1536,54 @@ func (c *Client) ExecutePhase4_CompilePDF(ctx context.Context, repairModel strin
 		}
 
 		// Nếu có lỗi biên dịch từ Typst
-		LogPhase("PHASE 4", "\033[31m[LỖI BIÊN DỊCH TYPST (Lần %d)] Phát hiện lỗi cú pháp! Bắt đầu dò tìm @ANCHOR...\033[0m", attempt)
+		LogPhase("PHASE 4", "\033[31m[LỖI BIÊN DỊCH TYPST (Lần %d)] Phát hiện lỗi cú pháp! Bắt đầu phân loại và xử lý...\033[0m", attempt)
 		LogPhase("PHASE 4", "Typst stderr:\n%s", outGV)
 
 		lines := strings.Split(markup, "\n")
+
+		// CIRCUIT BREAKER 1: PHÂN LOẠI LỖI DO HÌNH VẼ / ĐỒ THỊ CETZ / TABVAR HAY DO CÚ PHÁP TOÁN LATEX/MITEX
+		isDrawingError := strings.Contains(outGV, "draw-") ||
+			strings.Contains(outGV, "cetz") ||
+			strings.Contains(outGV, "pts.at") ||
+			strings.Contains(outGV, "plot") ||
+			strings.Contains(outGV, "tabvar") ||
+			strings.Contains(outGV, "vartable")
+
+		if isDrawingError {
+			LogPhase("PHASE 4", "\033[33m[CIRCUIT BREAKER] Phát hiện lỗi hình vẽ CeTZ/Typst! Tự động ngắt visual mà KHÔNG gọi Gemini...\033[0m")
+			disabledCount := 0
+			for _, m := range typstErrorRegex.FindAllStringSubmatch(outGV, -1) {
+				errLine, _ := strconv.Atoi(m[1])
+				anchorID := findNearestAnchor(lines, errLine-1)
+				if anchorID != "" {
+					if disableVisualAtAnchor(workers, anchorID) {
+						LogPhase("PHASE 4", "\033[33m  ↳ Đã vô hiệu hóa visual tại anchor: %s\033[0m", anchorID)
+						disabledCount++
+					}
+				}
+			}
+			if disabledCount == 0 {
+				LogPhase("PHASE 4", "\033[33m  ↳ Tự động tắt visual trên tất cả các Worker để bảo toàn tiến trình biên dịch...\033[0m")
+				disableAllVisuals(workers)
+			}
+			_ = SaveArtifact("phase2_all_results.json", workers)
+			continue // Biên dịch lại ngay lập tức trong 0.05s mà KHÔNG gọi Gemini Repair Agent
+		}
+
+		// NẾU LÀ LỖI CÚ PHÁP TOÁN: Quét tất cả các dòng báo lỗi của Typst để tìm @ANCHOR
 		seenAnchors := make(map[string]bool)
 		var compilerErrorItems []RepairItemRequest
 
-		// Quét tất cả các dòng báo lỗi của Typst
 		for _, m := range typstErrorRegex.FindAllStringSubmatch(outGV, -1) {
 			errLine, _ := strconv.Atoi(m[1])
 			anchorID := findNearestAnchor(lines, errLine-1)
 			if anchorID != "" && !seenAnchors[anchorID] {
 				seenAnchors[anchorID] = true
+				if failedAttempts[anchorID] >= 2 {
+					LogPhase("PHASE 4", "\033[33m[CIRCUIT BREAKER] Anchor %s bị kẹt lặp sửa đổi. Tự động áp dụng sanitize dự phòng...\033[0m", anchorID)
+					sanitizeAnchorContent(workers, anchorID)
+					continue
+				}
 				if reqItem := extractRepairContext(workers, anchorID); reqItem != nil {
 					compilerErrorItems = append(compilerErrorItems, *reqItem)
 				}
@@ -725,6 +1591,10 @@ func (c *Client) ExecutePhase4_CompilePDF(ctx context.Context, repairModel strin
 		}
 
 		if len(compilerErrorItems) == 0 {
+			if len(seenAnchors) > 0 {
+				// Các anchor bị lỗi đều đã được xử lý qua fallback sanitize
+				continue
+			}
 			return "", "", fmt.Errorf("biên dịch Typst thất bại và không trích xuất được Anchor nào: %w (Log: %s)", errGV, outGV)
 		}
 
@@ -747,6 +1617,14 @@ func (c *Client) ExecutePhase4_CompilePDF(ctx context.Context, repairModel strin
 			for _, bi := range compilerErrorItems {
 				if bi.AnchorID == item.AnchorID {
 					origContent = bi.BrokenContent
+					// CIRCUIT BREAKER 2: KIỂM TRA LŨY ĐẲNG (IDEMPOTENCY)
+					if strings.TrimSpace(item.FixedContent) == strings.TrimSpace(origContent) {
+						failedAttempts[item.AnchorID]++
+						LogPhase("PHASE 4", "\033[33m  ↳ [CẢNH BÁO IDEMPOTENCY] Anchor %s: AI trả về kết quả không đổi (Lần %d)!\033[0m", item.AnchorID, failedAttempts[item.AnchorID])
+						if failedAttempts[item.AnchorID] >= 2 {
+							sanitizeAnchorContent(workers, item.AnchorID)
+						}
+					}
 					break
 				}
 			}
@@ -777,6 +1655,7 @@ func (c *Client) ExecutePhase4_CompilePDF(ctx context.Context, repairModel strin
 // -----------------------------------------------------------------------------
 // HELPER: EXTRACT VÀ APPLY VÀO RAM QUA ANCHOR CHÍNH XÁC
 // -----------------------------------------------------------------------------
+
 func extractRepairContext(workers []WorkerResult, anchorID string) *RepairItemRequest {
 	parts := strings.Split(anchorID, "|")
 	if len(parts) < 2 {
@@ -841,67 +1720,48 @@ func extractRepairContext(workers []WorkerResult, anchorID string) *RepairItemRe
 			}
 		}
 	case "drill":
-		if len(parts) >= 4 && parts[3] == "prompt" {
+		if len(parts) >= 4 {
 			dIdx, _ := strconv.Atoi(parts[2])
+			sub := parts[3]
 			if dIdx < len(targetWorker.Drills) {
-				return &RepairItemRequest{
-					AnchorID:      anchorID,
-					ContextPrompt: fmt.Sprintf("Đề bài tổng quát Drill %d (%s)", dIdx+1, targetWorker.Title),
-					BrokenContent: targetWorker.Drills[dIdx].Prompt,
-				}
-			}
-		} else if len(parts) >= 6 && parts[3] == "part" {
-			dIdx, _ := strconv.Atoi(parts[2])
-			label := parts[4]
-			field := parts[5]
-			if dIdx < len(targetWorker.Drills) {
-				for _, p := range targetWorker.Drills[dIdx].Parts {
-					if p.Label == label {
-						if field == "question" {
-							return &RepairItemRequest{
-								AnchorID:      anchorID,
-								ContextPrompt: fmt.Sprintf("Drill %d Ý (%s) - Câu hỏi", dIdx+1, label),
-								BrokenContent: p.Question,
-							}
-						} else if field == "solution" {
-							return &RepairItemRequest{
-								AnchorID:      anchorID,
-								ContextPrompt: fmt.Sprintf("Drill %d Ý (%s) - Lời giải", dIdx+1, label),
-								BrokenContent: p.Solution,
-							}
-						}
+				if sub == "prompt" {
+					return &RepairItemRequest{
+						AnchorID:      anchorID,
+						ContextPrompt: fmt.Sprintf("Đề bài Drill %d (%s)", dIdx+1, targetWorker.Title),
+						BrokenContent: targetWorker.Drills[dIdx].Prompt,
+					}
+				} else if sub == "solution" {
+					return &RepairItemRequest{
+						AnchorID:      anchorID,
+						ContextPrompt: fmt.Sprintf("Lời giải Drill %d: %s", dIdx+1, targetWorker.Drills[dIdx].Prompt),
+						BrokenContent: targetWorker.Drills[dIdx].Solution,
 					}
 				}
 			}
 		}
-	case "mcq":
+	case "short_answer":
 		if len(parts) >= 4 {
-			mIdx, _ := strconv.Atoi(parts[2])
+			sIdx, _ := strconv.Atoi(parts[2])
 			sub := parts[3]
-			if mIdx < len(targetWorker.MCQs) {
+			if sIdx < len(targetWorker.ShortAnswers) {
 				switch sub {
 				case "prompt":
 					return &RepairItemRequest{
 						AnchorID:      anchorID,
-						ContextPrompt: fmt.Sprintf("Trắc nghiệm Câu %d - Đề bài", mIdx+1),
-						BrokenContent: targetWorker.MCQs[mIdx].Prompt,
+						ContextPrompt: fmt.Sprintf("Trả lời ngắn Câu %d - Đề bài", sIdx+1),
+						BrokenContent: targetWorker.ShortAnswers[sIdx].Prompt,
 					}
-				case "opt":
-					if len(parts) >= 5 {
-						oIdx, _ := strconv.Atoi(parts[4])
-						if oIdx < len(targetWorker.MCQs[mIdx].Options) {
-							return &RepairItemRequest{
-								AnchorID:      anchorID,
-								ContextPrompt: fmt.Sprintf("Trắc nghiệm Câu %d - Lựa chọn số %d", mIdx+1, oIdx+1),
-								BrokenContent: targetWorker.MCQs[mIdx].Options[oIdx],
-							}
-						}
+				case "final_number":
+					return &RepairItemRequest{
+						AnchorID:      anchorID,
+						ContextPrompt: fmt.Sprintf("Trả lời ngắn Câu %d - Đáp số", sIdx+1),
+						BrokenContent: targetWorker.ShortAnswers[sIdx].FinalNumber,
 					}
 				case "solution":
 					return &RepairItemRequest{
 						AnchorID:      anchorID,
-						ContextPrompt: fmt.Sprintf("Trắc nghiệm Câu %d - Lời giải chi tiết", mIdx+1),
-						BrokenContent: targetWorker.MCQs[mIdx].Solution,
+						ContextPrompt: fmt.Sprintf("Trả lời ngắn Câu %d - Lời giải chi tiết", sIdx+1),
+						BrokenContent: targetWorker.ShortAnswers[sIdx].Solution,
 					}
 				}
 			}
@@ -946,44 +1806,29 @@ func applyFixedBatch(workers []WorkerResult, fixedItems []RepairedItemResponse) 
 						}
 					}
 				case "drill":
-					if len(parts) >= 4 && parts[3] == "prompt" {
+					if len(parts) >= 4 {
 						dIdx, _ := strconv.Atoi(parts[2])
+						sub := parts[3]
 						if dIdx < len(workers[i].Drills) {
-							workers[i].Drills[dIdx].Prompt = item.FixedContent
-						}
-					} else if len(parts) >= 6 && parts[3] == "part" {
-						dIdx, _ := strconv.Atoi(parts[2])
-						label := parts[4]
-						field := parts[5]
-						if dIdx < len(workers[i].Drills) {
-							for pIdx := range workers[i].Drills[dIdx].Parts {
-								if workers[i].Drills[dIdx].Parts[pIdx].Label == label {
-									if field == "question" {
-										workers[i].Drills[dIdx].Parts[pIdx].Question = item.FixedContent
-									} else if field == "solution" {
-										workers[i].Drills[dIdx].Parts[pIdx].Solution = item.FixedContent
-									}
-								}
+							if sub == "prompt" {
+								workers[i].Drills[dIdx].Prompt = item.FixedContent
+							} else if sub == "solution" {
+								workers[i].Drills[dIdx].Solution = item.FixedContent
 							}
 						}
 					}
-				case "mcq":
+				case "short_answer":
 					if len(parts) >= 4 {
-						mIdx, _ := strconv.Atoi(parts[2])
+						sIdx, _ := strconv.Atoi(parts[2])
 						sub := parts[3]
-						if mIdx < len(workers[i].MCQs) {
+						if sIdx < len(workers[i].ShortAnswers) {
 							switch sub {
 							case "prompt":
-								workers[i].MCQs[mIdx].Prompt = item.FixedContent
-							case "opt":
-								if len(parts) >= 5 {
-									oIdx, _ := strconv.Atoi(parts[4])
-									if oIdx < len(workers[i].MCQs[mIdx].Options) {
-										workers[i].MCQs[mIdx].Options[oIdx] = item.FixedContent
-									}
-								}
+								workers[i].ShortAnswers[sIdx].Prompt = item.FixedContent
+							case "final_number":
+								workers[i].ShortAnswers[sIdx].FinalNumber = item.FixedContent
 							case "solution":
-								workers[i].MCQs[mIdx].Solution = item.FixedContent
+								workers[i].ShortAnswers[sIdx].Solution = item.FixedContent
 							}
 						}
 					}
@@ -995,6 +1840,11 @@ func applyFixedBatch(workers []WorkerResult, fixedItems []RepairedItemResponse) 
 }
 
 func (c *Client) callBatchRepairAgent(ctx context.Context, modelName string, items []RepairItemRequest) ([]RepairedItemResponse, error) {
+	pool, err := c.getPool(ctx)
+	if err != nil {
+		return nil, err
+	}
+
 	reqData, _ := json.MarshalIndent(RepairBatchRequest{Items: items}, "", "  ")
 
 	prompt := fmt.Sprintf(`Bạn là Chuyên gia Cú pháp Toán học LaTeX.
@@ -1003,29 +1853,32 @@ Dưới đây là danh sách các mục bị lỗi hiển thị công thức to�
 NHIỆM VỤ:
 1. Phục hồi và sửa lại cú pháp trong "broken_content" thành cú pháp LaTeX chuẩn.
 2. MỌI CÔNG THỨC TOÁN, VECTƠ, PHÂN SỐ, BIẾN SỐ BẮT BUỘC ĐƯỢC BỌC TRONG CẶP DẤU $...$.
-3. KÝ HIỆU VECTƠ: Bắt buộc dùng \vec{...} (VD: $\vec{AB}$, $\vec{a}$, $\vec{b}$). TUYỆT ĐỐI KHÔNG dùng \b{...} hay \bar{...}.
+3. KÝ HIỆU VECTƠ: Bắt buộc dùng \vec{...} (VD: $\vec{AB}$, $\vec{a}$, $\vec{b}$). TUYỆT ĐỐI KHÔNG dùng \overline{...}, \b{...} hay \bar{...}.
 4. ĐỐI VỚI DẤU PHẨY ĐỈNH (VD: AD', AA'): Dùng $\vec{AD}'$ hoặc $\vec{AD'}$, TUYỆT ĐỐI KHÔNG dùng \{AA}'.
 5. Giữ nguyên vẹn toàn bộ câu chữ tiếng Việt tự nhiên và ngữ nghĩa ban đầu.
+6. CHỈ xuất kết quả dưới dạng JSON hợp lệ theo schema. TUYỆT ĐỐI KHÔNG viết thêm bất kỳ bình luận, ghi chú hay độc thoại phụ nào (như "Note:", "I will...").
 
 Danh sách cần sửa:
 %s`, string(reqData))
 
 	config := &genai.GenerateContentConfig{
+		Temperature:      genai.Ptr[float32](0.3),
+		MaxOutputTokens:  8192,
 		ResponseMIMEType: "application/json",
 		ResponseSchema:   repairSchema,
 	}
 
 	startReq := time.Now()
-	resp, err := c.client.Models.GenerateContent(ctx, modelName, []*genai.Content{{Parts: []*genai.Part{{Text: prompt}}}}, config)
+	resp, err := pool.GenerateContent(ctx, modelName, []*genai.Content{{Parts: []*genai.Part{{Text: prompt}}}}, config, 4)
 	if err != nil {
 		return nil, err
 	}
 	LogPhase("PHASE 4", "Gemini Repair Agent phản hồi sau %v", time.Since(startReq))
 
-	rawText := strings.TrimSpace(resp.Text())
+	cleanJSON := SanitizeRawJSONLaTeX(strings.TrimSpace(resp.Text()))
 	var res RepairBatchResponse
-	if err := json.Unmarshal([]byte(rawText), &res); err != nil {
-		return nil, fmt.Errorf("unmarshal Repair Agent thất bại: %w (Raw: %s)", err, rawText)
+	if err := json.Unmarshal([]byte(cleanJSON), &res); err != nil {
+		return nil, fmt.Errorf("unmarshal Repair Agent thất bại: %w (Raw: %s)", err, cleanJSON)
 	}
 	return res.RepairedItems, nil
 }
