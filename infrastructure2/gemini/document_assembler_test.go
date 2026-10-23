@@ -32,7 +32,7 @@ func Test_DefaultDocumentAssembler_Assemble(t *testing.T) {
 				{Title: "Ví dụ 1", Problem: "Cho tứ diện $ABCD$...", Solution: "Áp dụng định nghĩa..."},
 			},
 			Drills: []gemini.DrillExercise{
-				{Title: "Bài 1", Prompt: "Cho hình hộp $ABCD.A'B'C'D'$...", Solution: "Lời giải chi tiết..."},
+				{Title: "Bài 1 (Chuẩn mẫu)", Prompt: "Cho hình hộp $ABCD.A'B'C'D'$...", Solution: "Lời giải chi tiết..."},
 			},
 		},
 	}
@@ -51,6 +51,9 @@ func Test_DefaultDocumentAssembler_Assemble(t *testing.T) {
 	}
 	if !strings.Contains(res.Markup, "Quy tắc cộng và trừ vectơ") {
 		t.Errorf("Markup thiếu tên dạng toán")
+	}
+	if !strings.Contains(res.Markup, "#if IS_TEACHER [*Bài 1 (Chuẩn mẫu).*] else [*Bài 1.*]") {
+		t.Errorf("Markup thiếu logic phân tách tiêu đề bài tập cho Giáo viên và Học sinh")
 	}
 
 	// 2. Kiểm tra SlotRegistry đã đăng ký đầy đủ các con trỏ

@@ -93,9 +93,9 @@ TRIẾT LÝ SƯ PHẠM CỐT LÕI (BẮT BUỘC TUÂN THỦ NGHIÊM NGẶT):
    - Mọi phép thử, nháp số liệu hay kiểm tra biểu thức đều thực hiện hoàn toàn trong "pedagogical_scratchpad".
    - Lời giải "solution" là bản trình bày sư phạm mẫu mực cuối cùng: đi thẳng vào các bước giải khẳng định, mạch lạc, súc tích từ giả thiết đến kết quả, không viết các ghi chú sửa đề hay nháp trong lời giải.
 
-5. PHẠM VI KIẾN THỨC CỦA DẠNG:
-   - Với các dạng toán thuộc mạch Hình học thuần túy (trước khi học Hệ tọa độ Oxyz), các bài tập và ví dụ sử dụng quy tắc hình học không gian (quy tắc 3 điểm, hình bình hành, hình hộp, chèn điểm, định nghĩa tích vô hướng thuần túy), không đưa tọa độ số (x;y;z) vào đề bài.
-   - Với các dạng toán ứng dụng thực tế không gian (Vật lý, Đời sống), ưu tiên các mô hình 3 chiều (hệ dây treo cân bằng trong không gian, phản lực chân bàn, tổng hợp lực không gian 3 chiều).
+5. NGUYÊN TẮC BẢO TOÀN PHẠM VI KIẾN THỨC CỦA DẠNG:
+   - Bài tập và ví dụ của dạng nào chỉ sử dụng đúng công cụ, công thức và phương pháp đã được định nghĩa trong lý thuyết của dạng đó.
+   - Tuyệt đối không tự ý đưa vào các công cụ hay quy ước thuộc về các dạng bài/chuyên đề khác chưa được học để tránh làm rối tư duy của học sinh.
 
 HƯỚNG DẪN TRÌNH BÀY CÔNG THỨC TOÁN LATEX TỔNG QUÁT:
 - Toàn bộ công thức toán, biểu thức, biến số, tọa độ, ký hiệu hình học hoặc đại số BẮT BUỘC kẹp trong cặp dấu $.
@@ -103,23 +103,22 @@ HƯỚNG DẪN TRÌNH BÀY CÔNG THỨC TOÁN LATEX TỔNG QUÁT:
 
 CẤU TRÚC DỮ LIỆU BẮT BUỘC BIÊN SOẠN:
 1. "pedagogical_scratchpad": BÀN NHÁP SƯ PHẠM VÀ TOÁN HỌC: BẮT BUỘC đặt bút giải thử biểu thức và kiểm tra tính toán trước. Đảm bảo bài toán rút gọn ra kết quả đẹp hoặc bài toán chứng minh đúng đắn 100%% TRƯỚC KHI viết vào "prompt".
-2. "theory_points": 2-3 gạch đầu dòng lý thuyết tối giản, cô đọng, tập trung chính xác vào công thức và phương pháp của dạng này - toán kẹp trong $.
+2. "theory_points": Các gạch đầu dòng lý thuyết tối giản, cô đọng, tập trung chính xác vào công thức và phương pháp của dạng này - toán kẹp trong $.
 3. "callout_tip": 1 mẹo nhớ nhanh, dấu hiệu nhận biết hoặc khẩu quyết thực chiến dễ thuộc.
 4. "cloze_formula": 1 câu công thức cốt lõi có chỗ trống '...' để học sinh tự điền khuyết.
 5. "short_answers": 2-3 câu hỏi tự luận ngắn tính ra một giá trị số cụ thể (kèm lời giải chi tiết và đáp số).
-6. "examples" (TỪ 3 ĐẾN 5 VÍ DỤ MINH HỌA GIẢI MẪU CHI TIẾT):
-   - Số lượng ví dụ linh động từ 3 đến 5 ví dụ tùy theo số lượng công thức trong lý thuyết.
-   - TIÊN QUYẾT: Phủ trọn vẹn 100%% các công thức trong "theory_points" (mỗi công thức có ít nhất 1 ví dụ áp dụng trực tiếp).
-   - Tiếp theo là các ví dụ biến thể nhẹ hoặc ví dụ củng cố cách trình bày từng bước "cầm tay chỉ việc".
-7. "drills" (TỪ 4 ĐẾN 6 BÀI TẬP TỰ LUYỆN TƯƠNG TỰ ĐỂ RÈN LUYỆN):
-   - Số lượng linh động từ 4 đến 6 bài tập tự luyện.
-   - Bao quát toàn bộ các công thức đã học, sắp xếp theo mô thức lặp lại:
+6. "examples" (VÍ DỤ MINH HỌA GIẢI MẪU CHI TIẾT - TỐI THIỂU 4 VÍ DỤ, TĂNG THEO LÝ THUYẾT):
+   - TIÊN QUYẾT: Lấy lý thuyết làm kim chỉ nam, phủ trọn vẹn 100%% các công thức và tính chất trong "theory_points" (mỗi công thức/tính chất bắt buộc có ít nhất 1 ví dụ áp dụng trực tiếp).
+   - Tối thiểu 4 ví dụ. Nếu phần lý thuyết có nhiều hơn 4 công thức hoặc nhiều biến thể quan trọng, số lượng ví dụ BẮT BUỘC PHẢI TĂNG LÊN tương ứng để không bỏ sót bất kỳ công thức nào.
+   - Đi kèm các ví dụ biến thể nhẹ củng cố cách trình bày từng bước "cầm tay chỉ việc".
+7. "drills" (BÀI TẬP TỰ LUYỆN TƯƠNG TỰ ĐỂ RÈN PHẢN XẠ - TỐI THIỂU 4 BÀI, TĂNG THEO LÝ THUYẾT):
+   - Tối thiểu 4 bài tập tự luyện tương tự, tăng lên tương ứng nếu dạng có nhiều công thức/biến thể.
+   - Bao quát toàn bộ các công thức đã nêu trong lý thuyết và ví dụ, sắp xếp theo mô thức lặp lại rèn luyện phản xạ cơ bắp:
      + Bài 1 (level: "MauChuan"): Áp dụng trực tiếp công thức/thuật toán của Ví dụ 1.
-     + Bài 2 (level: "TuongTu100"): Tương tự 100%% với Bài 1, chỉ đổi số liệu để học sinh tự làm quen tay.
-     + Bài 3 (level: "TuongTu100"): Tiếp tục bài tương tự cho công thức thứ hai để học sinh bấm máy thành thạo.
+     + Bài 2 (level: "TuongTu100"): Tương tự 100%% với Bài 1, chỉ đổi số liệu để học sinh tự làm lại quen tay.
+     + Bài 3 (level: "TuongTu100"): Tiếp tục bài tương tự cho công thức tiếp theo để học sinh tính toán thành thạo.
      + Bài 4 (level: "BienTheNhe"): Biến thể nhẹ (đổi chiều câu hỏi xuôi - ngược, đổi biến), giữ nguyên phương pháp.
-     + Bài 5 (level: "BienTheNhe" hoặc "CungCo" - nếu có): Biến thể nhẹ củng cố kỹ năng, bám sát lý thuyết.
-     + Bài 6 (level: "CungCo" - nếu có): Luyện củng cố tốc độ và độ chuẩn xác.
+     + Các bài tiếp theo (level: "BienTheNhe" hoặc "CungCo" - nếu có): Mở rộng củng cố tốc độ, độ chuẩn xác và phản xạ lặp lại.
    - Lời giải "solution": Từng bước mạch lạc, súc tích, đi thẳng vào các bước giải khẳng định.`,
 				t.Title, t.Difficulty, t.CoreConcept, variantBuilder.String())
 

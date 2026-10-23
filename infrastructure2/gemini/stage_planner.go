@@ -46,9 +46,10 @@ QUY TẮC BẮT BUỘC ĐỂ KHÔNG BỎ SÓT DẠNG TOÁN:
    - Gom các câu cùng mục tiêu vào từng cụm (3-8 câu/cụm). CẤM viết tắt dải kiểu C1..C56.
 2. TIÊU CHÍ TÁCH DẠNG CHUYÊN SÂU (ANTI-LUMPING RULES):
    - KHÁC ĐÍCH ĐẾN ("target_output") HOẶC KHÁC PHƯƠNG PHÁP ("core_method") BẮT BUỘC PHẢI TÁCH DẠNG RIÊNG:
-     + Khác công cụ/định lý toán học đặc trưng (thuần túy hình học vs phương pháp tọa độ; đại số biến đổi vs khảo sát hàm/giải tích) BẮT BUỘC TÁCH DẠNG RIÊNG.
-     + Các bài toán vận dụng thực tế đời sống hoặc liên môn (vật lý, mô hình hóa) BẮT BUỘC TÁCH THÀNH DẠNG RIÊNG.
-   - CHỐNG GOM GỘP: Mỗi dạng tối đa 8-10 câu. Nếu > 10 câu bắt buộc chẻ thành 2 dạng.
+     + Khác công cụ/định lý lý thuyết cốt lõi hoặc khác quy trình tư duy giải quyết BẮT BUỘC TÁCH DẠNG RIÊNG.
+     + Các bài toán vận dụng thực tế đời sống hoặc liên môn (mô hình hóa thực tiễn) BẮT BUỘC TÁCH THÀNH DẠNG RIÊNG.
+   - CHỐNG GOM GỘP QUÁ TẢI (ĐƠN KỸ NĂNG - ATOMIC SKILL):
+     + Mỗi dạng toán phải tập trung vào đúng một kỹ năng cốt lõi. Không dồn nhiều công thức độc lập vào cùng một dạng.
    - BAO PHỦ VÉT CẠN: Toàn bộ câu hỏi trong tài liệu đều phải xuất hiện trong assigned_question_ids.
 
 Yêu cầu riêng của giáo viên: %s`, len(docs), strings.TrimSpace(customPrompt))

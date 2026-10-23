@@ -49,12 +49,12 @@ func (r *DefaultPlanReviewerStage) Review(ctx context.Context, plan *LessonPlan,
 
 KẾT QUẢ KIỂM ĐỊNH GIÁO ÁN PHÁT HIỆN CÁC VẤN ĐỀ SAU:
 - Các câu hỏi chưa được phân dạng: %v
-- Các dạng toán bị gom gộp quá tải (> 10 câu): %s
+- Các dạng toán bị gom gộp quá tải (chứa quá nhiều câu hỏi thuộc nhiều kỹ năng/công thức khác nhau): %s
 - Các dạng toán bị trùng lặp tiêu đề: %s
 
 NHIỆM VỤ:
 1. Phân tích các câu hỏi chưa được phân dạng và dạng bị quá tải để tạo thêm các Dạng toán mới (additional_topics).
-2. Tách nhỏ dạng bị quá tải thành các dạng đơn mục tiêu (TargetOutput cụ thể, tối đa 8-10 câu).
+2. Tách nhỏ dạng bị quá tải thành các dạng đơn mục tiêu (TargetOutput cụ thể, tập trung vào 1 kỹ năng cốt lõi).
 3. Đảm bảo mọi câu hỏi bị sót đều được phân vào dạng toán phù hợp.
 4. Trả về đúng JSON theo schema DeltaTopicResponse.`,
 		report.UnassignedIDs,

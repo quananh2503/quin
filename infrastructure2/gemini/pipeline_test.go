@@ -35,7 +35,15 @@ func (m *mockPDFProcessor) PageCount(ctx context.Context, filePath string) (int,
 // Tự động quét và nạp toàn bộ 5 API Keys từ các file key1.txt -> key5.txt hoặc key.txt
 func loadAPIKeys() []string {
 	var keys []string
-	keyFiles := []string{"key1.txt", "key2.txt", "key3.txt", "key4.txt", "key5.txt", "key.txt"}
+	keyFiles := []string{
+		"key1.txt", "key2.txt", "key3.txt", "key4.txt", "key5.txt", "key.txt",
+		filepath.Join("infrastructure2", "gemini", "key1.txt"),
+		filepath.Join("infrastructure2", "gemini", "key2.txt"),
+		filepath.Join("infrastructure2", "gemini", "key3.txt"),
+		filepath.Join("infrastructure2", "gemini", "key4.txt"),
+		filepath.Join("infrastructure2", "gemini", "key5.txt"),
+		filepath.Join("infrastructure2", "gemini", "key.txt"),
+	}
 	seen := make(map[string]bool)
 
 	for _, kf := range keyFiles {

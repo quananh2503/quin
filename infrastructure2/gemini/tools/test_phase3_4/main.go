@@ -17,9 +17,12 @@ func loadAPIKeys() []string {
 	var keys []string
 	keyFiles := []string{
 		filepath.Join("infrastructure2", "gemini", "key1.txt"),
+		filepath.Join("infrastructure2", "gemini", "key2.txt"),
 		filepath.Join("infrastructure2", "gemini", "key3.txt"),
 		filepath.Join("infrastructure2", "gemini", "key4.txt"),
-		"key1.txt", "key3.txt", "key4.txt",
+		filepath.Join("infrastructure2", "gemini", "key5.txt"),
+		filepath.Join("infrastructure2", "gemini", "key.txt"),
+		"key1.txt", "key2.txt", "key3.txt", "key4.txt", "key5.txt", "key.txt",
 	}
 	seen := make(map[string]bool)
 	for _, kf := range keyFiles {

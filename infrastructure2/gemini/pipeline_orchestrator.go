@@ -83,9 +83,9 @@ func (p *DefaultLessonPipeline) Execute(ctx context.Context, req PipelineRequest
 		fmt.Printf("✅ [Stage 1.5: Reviewer] Hoàn tất kiểm định! Danh mục chuẩn: %d dạng toán.\n", len(plan.Topics))
 	}
 
-	// Giai đoạn 1.75: Chuốt và sắp xếp dạng toán theo tiến trình sư phạm (Flash Lite)
+	// Giai đoạn 1.75: Chuốt và sắp xếp dạng toán theo tiến trình sư phạm (Gemini 3.5 Flash)
 	if p.polisher != nil {
-		fmt.Println("👉 [Stage 1.75: Polisher] Đang sắp xếp dạng toán theo tiến trình sư phạm (Flash Lite)...")
+		fmt.Println("👉 [Stage 1.75: Polisher] Đang sắp xếp dạng toán theo tiến trình sư phạm (Gemini 3.5 Flash)...")
 		polishedPlan, errPol := p.polisher.Polish(ctx, plan)
 		if errPol == nil && polishedPlan != nil {
 			plan = polishedPlan
@@ -152,10 +152,16 @@ func NewStandardLessonPipeline(ctx context.Context, apiKeys []string, modelName 
 
 	assembler := NewDefaultDocumentAssembler()
 	validator := NewDefaultMathValidator()
+
+	polisherModel := "gemini-3.5-flash"
+	polisherLLM := NewGeminiLLMProvider(pool, polisherModel)
+	polisher := NewDefaultPlanPolisherStage(polisherLLM, polisherModel).
+		WithFallback(ModelGemma4_31B, ModelGemma4_26B_A4B)
+
 	repairModel := "gemini-3.5-flash-lite"
 	repairLLM := NewGeminiLLMProvider(pool, repairModel)
-	polisher := NewDefaultPlanPolisherStage(repairLLM, repairModel)
 	repairer := NewDefaultBatchRepairer(repairLLM, repairModel)
+
 	qualityGate := NewDefaultQualityGateStage(assembler, compiler, repairer, validator)
 
 	pipeline := NewDefaultLessonPipeline(planner, author, visual, qualityGate)

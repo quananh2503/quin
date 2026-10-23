@@ -919,9 +919,9 @@ func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResu
 			sb.WriteString("]\n#v(4pt)\n")
 		}
 
-		// 4. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)
+		// 4. Bài tập tự luyện
 		if len(w.Drills) > 0 {
-			sb.WriteString(`#card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
+			sb.WriteString(`#card(title: "IV. Bài tập tự luyện")[
 `)
 			for dIdx, dr := range w.Drills {
 				titleStr := strings.TrimSpace(dr.Title)
@@ -929,7 +929,9 @@ func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResu
 					titleStr = fmt.Sprintf("Bài %d", dIdx+1)
 				}
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|prompt\n", w.TopicID, dIdx))
-				sb.WriteString(fmt.Sprintf("  *%s.* %s\n", LaTeXToMiTeX(titleStr), LaTeXToMiTeX(dr.Prompt)))
+				teacherTitle := LaTeXToMiTeX(strings.TrimSuffix(titleStr, "."))
+				studentTitle := fmt.Sprintf("Bài %d", dIdx+1)
+				sb.WriteString(fmt.Sprintf("  #if IS_TEACHER [*%s.*] else [*%s.*] %s\n", teacherTitle, studentTitle, LaTeXToMiTeX(dr.Prompt)))
 				anchorCount++
 
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|solution\n", w.TopicID, dIdx))

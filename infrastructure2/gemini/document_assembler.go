@@ -143,9 +143,9 @@ func (a *DefaultDocumentAssembler) Assemble(plan *LessonPlan, workers []WorkerRe
 			appendLine(`#v(4pt)`, "")
 		}
 
-		// Section IV: Bài tập tự luận rèn tư duy & luyện phản xạ (4 bài bậc thang)
+		// Section IV: Bài tập tự luyện
 		if len(w.Drills) > 0 {
-			appendLine(`#card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[`, "")
+			appendLine(`#card(title: "IV. Bài tập tự luyện")[`, "")
 			for dIdx := range w.Drills {
 				dr := &w.Drills[dIdx]
 				titleStr := strings.TrimSpace(dr.Title)
@@ -158,7 +158,9 @@ func (a *DefaultDocumentAssembler) Assemble(plan *LessonPlan, workers []WorkerRe
 				registry.Register(promptSlot, fmt.Sprintf("Drill %d (%s) - Đề bài", dIdx+1, titleStr), &dr.Prompt)
 				registry.Register(solSlot, fmt.Sprintf("Drill %d (%s) - Lời giải", dIdx+1, titleStr), &dr.Solution)
 
-				appendLine(fmt.Sprintf("  *%s.* %s", LaTeXToMiTeX(titleStr), LaTeXToMiTeX(dr.Prompt)), promptSlot)
+				teacherTitle := LaTeXToMiTeX(strings.TrimSuffix(titleStr, "."))
+				studentTitle := fmt.Sprintf("Bài %d", dIdx+1)
+				appendLine(fmt.Sprintf("  #if IS_TEACHER [*%s.*] else [*%s.*] %s", teacherTitle, studentTitle, LaTeXToMiTeX(dr.Prompt)), promptSlot)
 				appendLine(fmt.Sprintf("    #if IS_TEACHER [\n      #v(2pt) #text(fill: rgb(\"#15803d\"))[→ Lời giải: %s] \\\n    ] else [\n      #v(2pt)\n      #block(stroke: (paint: rgb(\"#94a3b8\"), dash: \"dashed\"), inset: 6pt, height: 50pt, width: 100%%)[\n        #text(size: 8.5pt, fill: rgb(\"#94a3b8\"))[✍️ Bài làm:]\n      ]\n    ]", LaTeXToMiTeX(dr.Solution)), solSlot)
 			}
 			appendLine(`]`, "")
