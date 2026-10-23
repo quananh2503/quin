@@ -205,11 +205,6 @@ func LaTeXToMiTeX(content string) string {
 		return ""
 	}
 
-	// Chuẩn hóa ký tự xuống dòng thực tế (tránh dính \n dạng chữ thô do AI sinh ra)
-	content = strings.ReplaceAll(content, `\r\n`, "\n")
-	content = strings.ReplaceAll(content, `\n`, "\n")
-	content = strings.ReplaceAll(content, `\r`, "\n")
-
 	// 1. Chuyển $$...$$ sang block mitex
 	content = blockMathRegex.ReplaceAllStringFunc(content, func(m string) string {
 		latex := strings.Trim(m, "$")
@@ -232,27 +227,8 @@ func LaTeXToMiTeX(content string) string {
 		if latex == "" {
 			return ""
 		}
-		// Làm sạch triệt để mọi dấu xuống dòng vô tình lọt vào chuỗi inline math
+		// Làm sạch triệt để dấu xuống dòng vô tình lọt vào chuỗi inline math
 		latex = strings.ReplaceAll(latex, "\n", " ")
-		latex = strings.ReplaceAll(latex, "\r", " ")
-
-		// Xóa bỏ \[ và \] nếu bị lọt vào inline math $ ... $
-		latex = strings.ReplaceAll(latex, `\[`, "")
-		latex = strings.ReplaceAll(latex, `\]`, "")
-
-		// Chuyển \... (lỗi phổ biến khi AI gõ ba chấm trong LaTeX) về \dots
-		latex = strings.ReplaceAll(latex, `\...`, `\dots `)
-		latex = strings.ReplaceAll(latex, `\..`, `\dots `)
-
-		// Khắc phục lỗi gõ nhầm backslash trước biến số đơn đứng trước lệnh LaTeX: \a\sqrt{3} -> a\sqrt{3}
-		latex = typoVarBackslashRegex.ReplaceAllString(latex, `$1$2\\$3`)
-
-		// Khắc phục lỗi AI gõ nhầm backslash trước tên đỉnh hoặc đa giác: \ABCD -> ABCD, \MNP -> MNP
-		latex = uppercasePolyRegex.ReplaceAllString(latex, `$1`)
-
-		// Khắc phục lỗi gõ nhầm backslash trước biến số đơn lẻ: \F_1 -> F_1, \x_0 -> x_0
-		latex = singleLetterMathRegex.ReplaceAllString(latex, `$1$2$3`)
-		latex = singleLetterMathRegex.ReplaceAllString(latex, `$1$2$3`)
 
 		return fmt.Sprintf(" #mi(`%s`) ", latex)
 	})
@@ -697,9 +673,7 @@ func (c *Client) ExecutePhase2_Workers(
 				variantBuilder.WriteString(fmt.Sprintf("  - Biến thể %d: %s\n", vIdx+1, vStr))
 			}
 
-			LogPhase(fmt.Sprintf("WORKER-%d", i+1), "Đang biên soạn dạng: %s", t.Title)
-
-			wPrompt := fmt.Sprintf(`NHIỆM VỤ BIÊN SOẠN CHI TIẾT CHO 1 DẠNG TOÁN (TẬP TRUNG TỰ LUẬN & TRẢ LỜI NGẮN):
+			wPrompt := fmt.Sprintf(`NHIỆM VỤ BIÊN SOẠN BÀI GIẢNG CHO 1 DẠNG TOÁN:
 - CHỦ ĐỀ DẠNG TOÁN: "%s"
 - MỨC ĐỘ: %s
 - PHƯƠNG PHÁP GIẢI CỐT LÕI: "%s"
@@ -709,40 +683,51 @@ func (c *Client) ExecutePhase2_Workers(
 VÙNG DỮ LIỆU THAM CHIẾU TỪ CÁC FILE PDF (CHỈ ĐỊNH CÁC VÍ DỤ VÀ CÂU HỎI TƯƠNG ỨNG):
 %s
 
-TRIẾT LÝ BIÊN SOẠN: BÀI BẢN, CHUẨN XÁC, PHÂN BẬC TƯ DUY, TẬP TRUNG RÈN LUYỆN TAY NGHỀ VÀ PHẢN XẠ TỰ LUẬN.
+TRIẾT LÝ SƯ PHẠM CỐT LÕI (BẮT BUỘC TUÂN THỦ NGHIÊM NGẶT):
+1. LÝ THUYẾT LÀ KIM CHỈ NAM LÀM CHUẨN:
+   - Toàn bộ ví dụ giải mẫu và bài tập tự luyện BẮT BUỘC phải bám sát trực tiếp vào các gạch đầu dòng lý thuyết ("theory_points"), công thức cốt lõi và mẹo nhớ ("callout_tip") của dạng này.
+   - Bất kể dạng toán ở mức cơ bản hay vận dụng cao, TUYỆT ĐỐI KHÔNG ra đề bài đánh đố, gài bẫy xa rời phần lý thuyết cốt lõi đã nêu. Đề bài chỉ dùng đúng các công thức và bước biến đổi đã được định nghĩa trong lý thuyết của dạng.
 
-HƯỚNG DẪN BIÊN SOẠN THEO THỨ TỰ (BẮT BUỘC TUÂN THỦ):
-1. "pedagogical_scratchpad": BÀN NHÁP SƯ PHẠM VÀ TOÁN: BẮT BUỘC nháp số liệu và kiểm tra nghiệm các bài toán tự luận và trả lời ngắn để đảm bảo bài toán có nghiệm và giải được trước khi ra đề bài. Nếu có hình vẽ hoặc đồ thị, hãy nháp rõ các thông số (đỉnh, điểm phụ, hàm số, mốc tọa độ) trước khi khai báo vào "visual".
-2. "theory_points" & "callout_tip" & "cloze_formula":
-   - Lý thuyết cô đọng, chính xác, nêu rõ điều kiện áp dụng.
-   - Mẹo giải nhanh / khẩu quyết thực chiến dễ nhớ.
-   - 1 câu công thức cốt lõi có chỗ trống '...' để điền.
-3. "short_answers" (CÂU HỎI TỰ LUẬN TRẢ LỜI NGẮN - BẮT BUỘC TỪ 2 ĐẾN 3 CÂU TÍNH TOÁN CỤ THỂ):
-   - Đề bài yêu cầu tính toán ra một giá trị số cụ thể (độ dài vectơ, số đo góc, tích vô hướng, tỉ số diện tích/thể tích, tham số m...).
-   - BẮT BUỘC viết lời giải chi tiết "solution" tính toán từng bước để tìm ra con số TRƯỚC, sau đó mới điền kết quả vào "final_number" (VD: '60', '4.41', '1.5'). Không được đoán mò.
-4. "examples" (VÍ DỤ GIẢI MẪU - TỪ 1 ĐẾN 2 VÍ DỤ ĐIỂN HÌNH):
-   - Phải giữ đầy đủ ngữ cảnh và giả thiết của bài toán.
-   - Lời giải mẫu chi tiết "cầm tay chỉ việc" từng bước biến đổi chuẩn mực.
-   - CẨM NANG HÌNH MINH HỌA "visual" TOÁN K-12 (Nếu ví dụ hoặc bài tập tự luận có hình minh họa):
-     * Hình không gian 3D & Khối tròn xoay: "visual_type": "geo_tetrahedron", "geo_cube", "geo_prism_tri", "geo_pyramid_quad", "geo_pyramid_tri", "geo_cone", "geo_cylinder", "geo_sphere", "geo_oxyz". Khai báo "vertex_labels", "derived_points" (midpoint, centroid, ratio), "highlight_vectors".
-     * Hoặc "crop_pdf" kèm "source_doc_id", "source_page" (để lấy trích đoạn đồ thị, bảng biến thiên, hình vẽ gốc từ PDF). Hoặc "none" nếu không cần hình.
-5. "drills" (BÀI TẬP TỰ LUẬN RÈN PHẢN XẠ - BẮT BUỘC ĐỦ 4 BÀI TẬP TỰ LUẬN ĐỘC LẬP THEO BẬC THANG):
-   - Học sinh cần luyện tập tay nghề nên BẮT BUỘC biên soạn ĐỦ 4 BÀI TẬP TỰ LUẬN ĐỘC LẬP:
-     + Bài 1 (level: "MauChuan", title: "Bài 1 (Chuẩn mẫu)"): Bài toán cơ bản áp dụng trực tiếp công thức/phương pháp của dạng.
-     + Bài 2 (level: "TuongTu100", title: "Bài 2 (Tương tự 100%%)"): CÙNG DẠNG, CÙNG CÁCH LÀM với Bài 1 (tương tự 100%% về phương pháp), chỉ đổi số liệu hoặc đối tượng tương đương để học sinh tự làm cho quen tay và thành thạo.
-     + Bài 3 (level: "BienTheNhe", title: "Bài 3 (Biến thể nhẹ)"): Đổi điểm/đối tượng trung gian hoặc cài thêm 1 bước đệm nhỏ để củng cố kỹ năng.
-     + Bài 4 (level: "VanDung", title: "Bài 4 (Vận dụng)"): Nâng cao hơn một bậc (kết hợp 2 bước biến đổi hoặc bài toán thực tế).
-   - Mỗi bài tập tập trung thẳng vào giải toán, lời giải súc tích (dưới 8 dòng). Có thể có 1-2 ý con (a, b) trong "parts" hoặc là bài toán trực tiếp có "solution".
-   - BẮT BUỘC tuân thủ và sử dụng triệt để giả thiết trong đề bài "prompt", các công thức định nghĩa và định lý tương ứng của chủ đề.
-   - Lời giải "solution" ngắn gọn, súc tích, đi thẳng vào các bước biến đổi toán khẳng định.
+2. NGUYÊN TẮC BAO QUÁT TOÀN BỘ CÔNG THỨC (100%% FORMULA COVERAGE):
+   - Nếu phần lý thuyết có K công thức / tính chất, thì cả phần Ví dụ và phần Bài tập BẮT BUỘC phải bao quát đầy đủ cả K công thức / tính chất đó (mỗi công thức đều có ít nhất một bài áp dụng).
 
-QUY TẮC BẮT BUỘC CHỐNG LẶP VÔ HẠN (ANTI-LOOPING):
-- TUYỆT ĐỐI KHÔNG viết các câu tự vấn, tự cãi lại mình hay độc thoại trong lời giải: "không", "sai", "thực tế là", "hãy dùng cách khác", "let's assume".
-- Chỉ xuất một lời giải duy nhất, khẳng định, chính xác. Nếu một biến đổi đã xong thì dừng lại, không lặp lại biểu thức cũ.
+3. NGUYÊN TẮC RÈN LUYỆN ĐẲNG CẤU & LẶP LẠI PHẢN XẠ (ISOMORPHIC & REPETITIVE PRACTICE):
+   - Học sinh cần luyện đi luyện lại cùng một bước làm, cùng một thuật toán, cùng một công thức biến đổi nhiều lần để tạo thành phản xạ cơ bắp và nhớ sâu vào tiềm thức.
+   - Các bài tập tự luyện phải có tính tương tự cao với ví dụ mẫu, chỉ biến thể nhẹ có kiểm soát: đổi số liệu, đổi tên điểm/biến số, biến đổi đại số tương đương, hoặc đổi chiều câu hỏi xuôi - ngược đơn giản.
+
+4. TÍNH NHẤT QUÁN GIỮA ĐỀ BÀI VÀ LỜI GIẢI:
+   - Đề bài "prompt" hỏi điều gì thì Lời giải "solution" tập trung giải quyết chính xác và duy nhất bài toán đã nêu trong "prompt".
+   - Mọi phép thử, nháp số liệu hay kiểm tra biểu thức đều thực hiện hoàn toàn trong "pedagogical_scratchpad".
+   - Lời giải "solution" là bản trình bày sư phạm mẫu mực cuối cùng: đi thẳng vào các bước giải khẳng định, mạch lạc, súc tích từ giả thiết đến kết quả, không viết các ghi chú sửa đề hay nháp trong lời giải.
+
+5. PHẠM VI KIẾN THỨC CỦA DẠNG:
+   - Với các dạng toán thuộc mạch Hình học thuần túy (trước khi học Hệ tọa độ Oxyz), các bài tập và ví dụ sử dụng quy tắc hình học không gian (quy tắc 3 điểm, hình bình hành, hình hộp, chèn điểm, định nghĩa tích vô hướng thuần túy), không đưa tọa độ số (x;y;z) vào đề bài.
+   - Với các dạng toán ứng dụng thực tế không gian (Vật lý, Đời sống), ưu tiên các mô hình 3 chiều (hệ dây treo cân bằng trong không gian, phản lực chân bàn, tổng hợp lực không gian 3 chiều).
+
+CẤU TRÚC DỮ LIỆU BẮT BUỘC BIÊN SOẠN:
+1. "pedagogical_scratchpad": BÀN NHÁP SƯ PHẠM VÀ TOÁN HỌC: BẮT BUỘC đặt bút giải thử biểu thức và kiểm tra tính toán trước. Đảm bảo bài toán rút gọn ra kết quả đẹp hoặc bài toán chứng minh đúng đắn 100%% TRƯỚC KHI viết vào "prompt".
+2. "theory_points": 2-3 gạch đầu dòng lý thuyết tối giản, cô đọng, tập trung chính xác vào công thức và phương pháp của dạng này - toán kẹp trong $.
+3. "callout_tip": 1 mẹo nhớ nhanh, dấu hiệu nhận biết hoặc khẩu quyết thực chiến dễ thuộc.
+4. "cloze_formula": 1 câu công thức cốt lõi có chỗ trống '...' để học sinh tự điền khuyết.
+5. "short_answers": 2-3 câu hỏi tự luận ngắn tính ra một giá trị số cụ thể (kèm lời giải chi tiết và đáp số).
+6. "examples" (TỪ 3 ĐẾN 5 VÍ DỤ MINH HỌA GIẢI MẪU CHI TIẾT):
+   - Số lượng ví dụ linh động từ 3 đến 5 ví dụ tùy theo số lượng công thức trong lý thuyết.
+   - TIÊN QUYẾT: Phủ trọn vẹn 100%% các công thức trong "theory_points" (mỗi công thức có ít nhất 1 ví dụ áp dụng trực tiếp).
+   - Tiếp theo là các ví dụ biến thể nhẹ hoặc ví dụ củng cố cách trình bày từng bước "cầm tay chỉ việc".
+7. "drills" (TỪ 4 ĐẾN 6 BÀI TẬP TỰ LUYỆN TƯƠNG TỰ ĐỂ RÈN LUYỆN):
+   - Số lượng linh động từ 4 đến 6 bài tập tự luyện.
+   - Bao quát toàn bộ các công thức đã học, sắp xếp theo mô thức lặp lại:
+     + Bài 1 (level: "MauChuan"): Áp dụng trực tiếp công thức/thuật toán của Ví dụ 1.
+     + Bài 2 (level: "TuongTu100"): Tương tự 100%% với Bài 1, chỉ đổi số liệu để học sinh tự làm quen tay.
+     + Bài 3 (level: "TuongTu100"): Tiếp tục bài tương tự cho công thức thứ hai để học sinh bấm máy thành thạo.
+     + Bài 4 (level: "BienTheNhe"): Biến thể nhẹ (đổi chiều câu hỏi xuôi - ngược, đổi biến), giữ nguyên phương pháp.
+     + Bài 5 (level: "BienTheNhe" hoặc "CungCo" - nếu có): Biến thể nhẹ củng cố kỹ năng, bám sát lý thuyết.
+     + Bài 6 (level: "CungCo" - nếu có): Luyện củng cố tốc độ và độ chuẩn xác.
+   - Lời giải "solution": Từng bước mạch lạc, súc tích, đi thẳng vào các bước giải khẳng định.
 
 CÁC RÀNG BUỘC CÚ PHÁP TOÁN BẮT BUỘC:
 1. MỌI biến số, tọa độ, điểm, công thức toán BẮT BUỘC bọc trong cặp dấu $ ... $.
-2. CÔNG THỨC TOÁN CHUẨN: Nếu bài toán có vectơ, BẮT BUỘC dùng cú pháp chuẩn $\vec{AB}$, $\vec{a}$, $\vec{0}$ (TUYỆT ĐỐI KHÔNG dùng \overline hay \b). Dùng \frac{}{}, \sqrt{}, \sin, \cos, \int, \lim đúng cú pháp LaTeX.
+2. CÔNG THỨC TOÁN CHUẨN: Dùng cú pháp LaTeX chuẩn xác cho mọi môn học: \frac{a}{b}, \sqrt{x}, \vec{u}, \sin, \cos, \lim, \int (nếu có).
 3. JSON ESCAPE: Mọi lệnh LaTeX trong chuỗi JSON phải có 2 dấu gạch chéo ngược: "\\frac{1}{2}", "\\sqrt{...}", "\\vec{...}".`,
 				t.Title, t.Difficulty, t.CoreConcept, variantBuilder.String(), refBuilder.String())
 
@@ -817,370 +802,14 @@ CÁC RÀNG BUỘC CÚ PHÁP TOÁN BẮT BUỘC:
 // PHASE 3: TYPST CODE BUILDER (CHUẨN FONT LINUX/WSL, KHÔNG WARNING)
 // -----------------------------------------------------------------------------
 
-func formatTypstArray(items []string) string {
-	if len(items) == 0 {
-		return "()"
-	}
-	if len(items) == 1 {
-		return "(" + items[0] + ",)"
-	}
-	return "(" + strings.Join(items, ", ") + ")"
-}
-
-func formatLabels(labels []string, defaultLabels []string) string {
-	useLabels := make([]string, len(defaultLabels))
-	copy(useLabels, defaultLabels)
-	for i := 0; i < len(labels) && i < len(useLabels); i++ {
-		trimmed := strings.TrimSpace(labels[i])
-		if trimmed != "" {
-			useLabels[i] = trimmed
-		}
-	}
-	var quoted []string
-	for _, l := range useLabels {
-		quoted = append(quoted, fmt.Sprintf("%q", l))
-	}
-	return formatTypstArray(quoted)
-}
-
-func formatDerivedPoints(derivedPoints []DerivedPoint, baseLabels []string, highlightVectors []string, shape string) string {
-	knownMap := make(map[string]bool)
-	for _, l := range baseLabels {
-		knownMap[l] = true
-	}
-
-	var derivedItems []string
-	for _, dp := range derivedPoints {
-		dpName := strings.TrimSpace(dp.Name)
-		if dpName == "" {
-			continue
-		}
-		knownMap[dpName] = true
-		dpType := strings.TrimSpace(dp.Type)
-		if dpType == "" {
-			dpType = "midpoint"
-		}
-		var ofQuoted []string
-		for _, o := range dp.Of {
-			ofQuoted = append(ofQuoted, fmt.Sprintf("%q", strings.TrimSpace(o)))
-		}
-		ofStr := formatTypstArray(ofQuoted)
-
-		kVal := dp.Ratio
-		if kVal == 0 {
-			kVal = 0.5
-		}
-		derivedItems = append(derivedItems, fmt.Sprintf("(name: %q, type: %q, of: %s, k: %g)", dpName, dpType, ofStr, kVal))
-	}
-
-	return formatTypstArray(derivedItems)
-}
-
-func formatLines(lines []LineSpec) string {
-	var items []string
-	for _, l := range lines {
-		f := strings.TrimSpace(l.From)
-		t := strings.TrimSpace(l.To)
-		if f == "" || t == "" {
-			continue
-		}
-		style := strings.TrimSpace(l.Style)
-		if style == "" {
-			style = "solid"
-		}
-		col := strings.TrimSpace(l.Color)
-		colStr := "black"
-		if col != "" {
-			if strings.HasPrefix(col, "#") {
-				colStr = fmt.Sprintf("rgb(%q)", col)
-			} else {
-				colStr = col
-			}
-		}
-		items = append(items, fmt.Sprintf("(from: %q, to: %q, style: %q, color: %s)", f, t, style, colStr))
-	}
-	return formatTypstArray(items)
-}
-
-func formatVectors(vectors []string) string {
-	var items []string
-	for _, hv := range vectors {
-		parts := strings.Split(hv, "->")
-		if len(parts) == 2 {
-			p1 := strings.TrimSpace(parts[0])
-			p2 := strings.TrimSpace(parts[1])
-			if p1 != "" && p2 != "" {
-				items = append(items, fmt.Sprintf("(%q, %q)", p1, p2))
-			}
-		}
-	}
-	return formatTypstArray(items)
-}
-
-func formatPolygons(polygons []PolygonSpec) string {
-	var items []string
-	for _, p := range polygons {
-		if len(p.Points) < 3 {
-			continue
-		}
-		var ptsQuoted []string
-		for _, pt := range p.Points {
-			pt = strings.TrimSpace(pt)
-			if pt != "" {
-				ptsQuoted = append(ptsQuoted, fmt.Sprintf("%q", pt))
-			}
-		}
-		ptsStr := formatTypstArray(ptsQuoted)
-		fill := strings.TrimSpace(p.Fill)
-		if fill == "" {
-			fill = "#93c5fd40"
-		}
-		items = append(items, fmt.Sprintf("(pts: %s, fill: rgb(%q))", ptsStr, fill))
-	}
-	return formatTypstArray(items)
-}
-
-func formatCircles(circles []CircleSpec) string {
-	var items []string
-	for _, c := range circles {
-		if len(c.Through) > 0 {
-			var thruQuoted []string
-			for _, pt := range c.Through {
-				pt = strings.TrimSpace(pt)
-				if pt != "" {
-					thruQuoted = append(thruQuoted, fmt.Sprintf("%q", pt))
-				}
-			}
-			items = append(items, fmt.Sprintf("(through: %s)", formatTypstArray(thruQuoted)))
-		} else if c.Center != "" {
-			rVal := c.Radius
-			if rVal <= 0 {
-				rVal = 2.0
-			}
-			items = append(items, fmt.Sprintf("(center: %q, radius: %g)", c.Center, rVal))
-		}
-	}
-	return formatTypstArray(items)
-}
-
-func renderGeo3DCall(v *VisualSpec, funcName string, defaultLabels []string) string {
-	labelsStr := formatLabels(v.VertexLabels, defaultLabels)
-	baseLabels := defaultLabels
-	if len(v.VertexLabels) > 0 {
-		baseLabels = v.VertexLabels
-	}
-	derivedStr := formatDerivedPoints(v.DerivedPoints, baseLabels, v.HighlightVectors, v.VisualType)
-	linesStr := "()"
-	vecStr := formatVectors(v.HighlightVectors)
-	polyStr := "()"
-
-	return fmt.Sprintf("\n  #align(center)[#%s(labels: %s, derived: %s, lines: %s, vectors: %s, polygons: %s)]\n",
-		funcName, labelsStr, derivedStr, linesStr, vecStr, polyStr)
-}
-
-func renderPlotTypst(g *PlotSpec) string {
-	if g == nil {
-		return ""
-	}
-	xMin := -3.0
-	xMax := 4.0
-	if len(g.XRange) >= 2 {
-		xMin = g.XRange[0]
-		xMax = g.XRange[1]
-	}
-	yMin := -4.0
-	yMax := 5.0
-	if len(g.YRange) >= 2 {
-		yMin = g.YRange[0]
-		yMax = g.YRange[1]
-	}
-	xStep := g.XStep
-	if xStep <= 0 {
-		xStep = 1.0
-	}
-	yStep := g.YStep
-	if yStep <= 0 {
-		yStep = 1.0
-	}
-
-	var plotAdds []string
-
-	for _, c := range g.Curves {
-		dMin := xMin + 0.2
-		dMax := xMax - 0.2
-		if len(c.Domain) >= 2 {
-			dMin = c.Domain[0]
-			dMax = c.Domain[1]
-		}
-		col := c.Color
-		if col == "" {
-			col = "#2563eb"
-		}
-		plotAdds = append(plotAdds, fmt.Sprintf(`plot.add(domain: (%.2f, %.2f), %s, style: (stroke: 1.2pt + rgb(%q)))`,
-			dMin, dMax, c.Expression, col))
-	}
-
-	for _, as := range g.Asymptotes {
-		col := as.Color
-		if col == "" {
-			col = "#dc2626"
-		}
-		if as.Type == "vertical" {
-			plotAdds = append(plotAdds, fmt.Sprintf(`plot.add-vline(%v, min: %.1f, max: %.1f, style: (stroke: (dash: "dashed", paint: rgb(%q))))`,
-				as.At, yMin, yMax, col))
-		} else if as.Type == "horizontal" {
-			plotAdds = append(plotAdds, fmt.Sprintf(`plot.add-hline(%v, min: %.1f, max: %.1f, style: (stroke: (dash: "dashed", paint: rgb(%q))))`,
-				as.At, xMin, xMax, col))
-		} else if as.Type == "oblique" && as.Expression != "" {
-			dMin := xMin
-			dMax := xMax
-			if len(as.Domain) >= 2 {
-				dMin = as.Domain[0]
-				dMax = as.Domain[1]
-			}
-			plotAdds = append(plotAdds, fmt.Sprintf(`plot.add(domain: (%.2f, %.2f), %s, style: (stroke: (dash: "dashed", paint: rgb(%q))))`,
-				dMin, dMax, as.Expression, col))
-		}
-	}
-
-	if len(g.SpecialPoints) > 0 {
-		var ptCoords []string
-		for _, p := range g.SpecialPoints {
-			ptCoords = append(ptCoords, fmt.Sprintf("(%.2f, %.2f)", p.X, p.Y))
-		}
-		plotAdds = append(plotAdds, fmt.Sprintf(`plot.add((%s,), style: (stroke: none), mark: "o", mark-size: 0.12)`,
-			strings.Join(ptCoords, ", ")))
-	}
-
-	body := strings.Join(plotAdds, "\n        ")
-
-	return fmt.Sprintf("\n  #align(center)[#cetz-v3.canvas({\n      import cetz-v3.draw: *\n      plot.plot(\n        size: (5.2, 3.6),\n        axis-style: \"school-book\",\n        x-tick-step: %.1f, y-tick-step: %.1f,\n        x-label: $x$, y-label: $y$,\n        x-min: %.1f, x-max: %.1f, y-min: %.1f, y-max: %.1f,\n        {\n        %s\n        }\n      )\n    })]\n", xStep, yStep, xMin, xMax, yMin, yMax, body)
-}
-
-func renderTabvarTypst(t *TabvarSpec) string {
-	if t == nil {
-		return ""
-	}
-	var domainParts []string
-	for _, d := range t.Domain {
-		if strings.HasPrefix(d, "$") {
-			domainParts = append(domainParts, d)
-		} else {
-			domainParts = append(domainParts, "$"+d+"$")
-		}
-	}
-	domainStr := formatTypstArray(domainParts)
-
-	var primeRowParts []string
-	if len(t.YPrimeSigns) > 0 {
-		firstSign := t.YPrimeSigns[0]
-		primeRowParts = append(primeRowParts, "$"+firstSign+"$")
-
-		for i := 1; i < len(t.YPrimeSigns)-1; i += 2 {
-			boundaryMark := t.YPrimeSigns[i]
-			nextSign := t.YPrimeSigns[i+1]
-			primeRowParts = append(primeRowParts, fmt.Sprintf(`(%q, $%s$)`, boundaryMark, nextSign))
-		}
-	}
-	primeRowStr := formatTypstArray(primeRowParts)
-
-	var yRowParts []string
-	for _, yr := range t.YRows {
-		if yr.DoubleBar {
-			leftVal := yr.Left
-			if leftVal == "" {
-				leftVal = "-oo"
-			}
-			rightVal := yr.Right
-			if rightVal == "" {
-				rightVal = "+oo"
-			}
-			yRowParts = append(yRowParts, fmt.Sprintf(`(bottom, top, "||", $%s$, $%s$)`, leftVal, rightVal))
-		} else {
-			pos := yr.Pos
-			if pos == "" {
-				pos = "bottom"
-			}
-			val := yr.Val
-			if val == "" {
-				val = "0"
-			}
-			yRowParts = append(yRowParts, fmt.Sprintf(`(%s, $%s$)`, pos, val))
-		}
-	}
-	yRowStr := "(\n        " + strings.Join(yRowParts, ",\n        ") + ",\n      )"
-
-	variableName := t.Variable
-	if variableName == "" {
-		variableName = "x"
-	}
-
-	return fmt.Sprintf("\n  #align(center)[#tabvar(\n    variable: $%s$,\n    label: (\n      ([$y'$], \"s\"),\n      ([$y$], \"v\"),\n    ),\n    domain: %s,\n    nocadre: true,\n    line-style: (stroke: none),\n    arrow-mark: (end: \">\"),\n    arrow-style: (stroke: 0.8pt + black),\n    table-style: (stroke: 0.6pt + black),\n    contents: (\n      %s,\n      %s\n    ),\n  )]\n", variableName, domainStr, primeRowStr, yRowStr)
-}
-
-func renderVisualSpec(v *VisualSpec) string {
-	if v == nil || v.VisualType == "" || v.VisualType == "none" {
-		return ""
-	}
-	switch v.VisualType {
-	case "geo_cube", "geo_parallelepiped":
-		return renderGeo3DCall(v, "draw-cube", []string{"A", "B", "C", "D", "A'", "B'", "C'", "D'"})
-	case "geo_tetrahedron":
-		return renderGeo3DCall(v, "draw-tetrahedron", []string{"A", "B", "C", "D"})
-	case "geo_prism_tri":
-		return renderGeo3DCall(v, "draw-prism-tri", []string{"A", "B", "C", "A'", "B'", "C'"})
-	case "geo_pyramid_quad":
-		return renderGeo3DCall(v, "draw-pyramid-quad", []string{"S", "A", "B", "C", "D"})
-	case "geo_pyramid_tri":
-		return renderGeo3DCall(v, "draw-pyramid-tri", []string{"S", "A", "B", "C"})
-	case "geo_cone":
-		return "\n  #align(center)[#draw-cone()]\n"
-	case "geo_cylinder":
-		return "\n  #align(center)[#draw-cylinder()]\n"
-	case "geo_sphere":
-		return "\n  #align(center)[#draw-sphere()]\n"
-	case "geo_oxyz":
-		return "\n  #align(center)[#draw-oxyz()]\n"
-	case "crop_pdf":
-		imgPath := filepath.Join(ArtifactDir, fmt.Sprintf("crop_%s_p%d.png", v.SourceDocID, v.SourcePage))
-		if _, err := os.Stat(imgPath); err == nil {
-			return fmt.Sprintf("\n  #align(center)[#image(%q, width: 65%%)]\n", filepath.ToSlash(imgPath))
-		}
-		return ""
-	default:
-		return ""
-	}
-}
-
 func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResult) (string, error) {
 	LogPhase("PHASE 3", "Bắt đầu lắp ghép JSON từ Workers sang Typst code...")
-
-	// Đảm bảo archetypes.typ luôn sẵn sàng cạnh file Typst xuất ra
-	archetypeDst := filepath.Join(ArtifactDir, "archetypes.typ")
-	if _, err := os.Stat(archetypeDst); os.IsNotExist(err) {
-		candidates := []string{
-			filepath.Join("infrastructure2", "gemini", "archetypes.typ"),
-			"archetypes.typ",
-			filepath.Join("..", "archetypes.typ"),
-		}
-		for _, cPath := range candidates {
-			if data, err := os.ReadFile(cPath); err == nil {
-				_ = os.WriteFile(archetypeDst, data, 0644)
-				break
-			}
-		}
-	}
 
 	var sb strings.Builder
 	anchorCount := 0
 
-	// Prelude: Import MiTeX, CeTZ, cetz-plot, vartable, and archetypes
-	sb.WriteString(`#import "@preview/mitex:0.2.7": mitex, mi` + "\n")
-	sb.WriteString(`#import "@preview/cetz:0.3.3"` + "\n")
-	sb.WriteString(`#import "@preview/cetz:0.3.3" as cetz-v3` + "\n")
-	sb.WriteString(`#import "@preview/cetz-plot:0.1.1": plot, chart` + "\n")
-	sb.WriteString(`#import "@preview/vartable:0.2.4": tabvar` + "\n")
-	sb.WriteString(`#import "archetypes.typ": *` + "\n\n")
+	// Prelude: Import MiTeX
+	sb.WriteString(`#import "@preview/mitex:0.2.7": mitex, mi` + "\n\n")
 	sb.WriteString(`#let IS_TEACHER = sys.inputs.at("teacher", default: "true") == "true"` + "\n\n")
 	sb.WriteString(`#set page(paper: "a4", margin: (x: 1.8cm, top: 1.6cm, bottom: 1.8cm))` + "\n")
 	// Chuẩn hóa font đa nền tảng Windows + Linux/WSL (tránh unknown font warning)
@@ -1280,10 +909,6 @@ func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResu
     #text(weight: "bold", fill: rgb("#0369a1"))[%s:] %s
 `, LaTeXToMiTeX(ex.Title), LaTeXToMiTeX(ex.Problem)))
 
-				if visualCode := renderVisualSpec(ex.Visual); visualCode != "" {
-					sb.WriteString("    " + visualCode)
-				}
-
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|example|%d|solution\n", w.TopicID, eIdx))
 				sb.WriteString(fmt.Sprintf(`    #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] %s
@@ -1306,10 +931,6 @@ func (c *Client) ExecutePhase3_BuildTypst(plan *LessonPlan, workers []WorkerResu
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|prompt\n", w.TopicID, dIdx))
 				sb.WriteString(fmt.Sprintf("  *%s.* %s\n", LaTeXToMiTeX(titleStr), LaTeXToMiTeX(dr.Prompt)))
 				anchorCount++
-
-				if visualCode := renderVisualSpec(dr.Visual); visualCode != "" {
-					sb.WriteString("  " + visualCode)
-				}
 
 				sb.WriteString(fmt.Sprintf("// @ANCHOR:%s|drill|%d|solution\n", w.TopicID, dIdx))
 				sb.WriteString(fmt.Sprintf(`    #if IS_TEACHER [
@@ -1398,50 +1019,6 @@ func collectAuditViolations(workers []WorkerResult) []RepairItemRequest {
 	}
 
 	return items
-}
-
-func disableVisualAtAnchor(workers []WorkerResult, anchorID string) bool {
-	parts := strings.Split(anchorID, "|")
-	if len(parts) < 2 {
-		return false
-	}
-	topicID := parts[0]
-	kind := parts[1]
-
-	for i := range workers {
-		if workers[i].TopicID == topicID {
-			switch kind {
-			case "drill":
-				if len(parts) >= 3 {
-					dIdx, err := strconv.Atoi(parts[2])
-					if err == nil && dIdx < len(workers[i].Drills) {
-						workers[i].Drills[dIdx].Visual = nil
-						return true
-					}
-				}
-			case "example":
-				if len(parts) >= 3 {
-					eIdx, err := strconv.Atoi(parts[2])
-					if err == nil && eIdx < len(workers[i].Examples) {
-						workers[i].Examples[eIdx].Visual = nil
-						return true
-					}
-				}
-			}
-		}
-	}
-	return false
-}
-
-func disableAllVisuals(workers []WorkerResult) {
-	for i := range workers {
-		for j := range workers[i].Examples {
-			workers[i].Examples[j].Visual = nil
-		}
-		for j := range workers[i].Drills {
-			workers[i].Drills[j].Visual = nil
-		}
-	}
 }
 
 func sanitizeAnchorContent(workers []WorkerResult, anchorID string) {
@@ -1540,35 +1117,6 @@ func (c *Client) ExecutePhase4_CompilePDF(ctx context.Context, repairModel strin
 		LogPhase("PHASE 4", "Typst stderr:\n%s", outGV)
 
 		lines := strings.Split(markup, "\n")
-
-		// CIRCUIT BREAKER 1: PHÂN LOẠI LỖI DO HÌNH VẼ / ĐỒ THỊ CETZ / TABVAR HAY DO CÚ PHÁP TOÁN LATEX/MITEX
-		isDrawingError := strings.Contains(outGV, "draw-") ||
-			strings.Contains(outGV, "cetz") ||
-			strings.Contains(outGV, "pts.at") ||
-			strings.Contains(outGV, "plot") ||
-			strings.Contains(outGV, "tabvar") ||
-			strings.Contains(outGV, "vartable")
-
-		if isDrawingError {
-			LogPhase("PHASE 4", "\033[33m[CIRCUIT BREAKER] Phát hiện lỗi hình vẽ CeTZ/Typst! Tự động ngắt visual mà KHÔNG gọi Gemini...\033[0m")
-			disabledCount := 0
-			for _, m := range typstErrorRegex.FindAllStringSubmatch(outGV, -1) {
-				errLine, _ := strconv.Atoi(m[1])
-				anchorID := findNearestAnchor(lines, errLine-1)
-				if anchorID != "" {
-					if disableVisualAtAnchor(workers, anchorID) {
-						LogPhase("PHASE 4", "\033[33m  ↳ Đã vô hiệu hóa visual tại anchor: %s\033[0m", anchorID)
-						disabledCount++
-					}
-				}
-			}
-			if disabledCount == 0 {
-				LogPhase("PHASE 4", "\033[33m  ↳ Tự động tắt visual trên tất cả các Worker để bảo toàn tiến trình biên dịch...\033[0m")
-				disableAllVisuals(workers)
-			}
-			_ = SaveArtifact("phase2_all_results.json", workers)
-			continue // Biên dịch lại ngay lập tức trong 0.05s mà KHÔNG gọi Gemini Repair Agent
-		}
 
 		// NẾU LÀ LỖI CÚ PHÁP TOÁN: Quét tất cả các dòng báo lỗi của Typst để tìm @ANCHOR
 		seenAnchors := make(map[string]bool)

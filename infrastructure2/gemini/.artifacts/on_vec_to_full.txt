@@ -1,0 +1,974 @@
+=== PAGE 1 ===
+Trang 1 
+PHẦN C. BÀI TẬP TRẮC NGHIỆM 
+Dành cho đối tượng học sinh trung bình 
+Câu 1. Cho tứ diện 
+ABCD . Hỏi có bao nhiêu vectơ khác vectơ 
+0
+  mà mỗi vectơ có điểm đầu, điểm cuối 
+là hai đỉnh của tứ diện 
+ABCD ? 
+A. 
+12 . B. 
+4 . C. 
+10 . D. 
+8 . 
+Câu 2. Cho hình lập phương 
+. ' ' ' 'ABCD A B C D . Mệnh đề nào sau đây sai? 
+A. 
+''AB AD AA AC  
+ . B. 
+AC AB AD
+ . 
+C. 
+AB CD
+ . D. 
+AB CD
+ . 
+Câu 3. Cho hình tứ diện 
+ABCD  có trọng tâm 
+G . Mệnh đề nào sau đây sai? 
+A. 
+0GA GB GC GD   
+ . B. 
+ 
+1
+4OG OA OB OC OD   
+ . 
+C. 
+ 
+2
+3AG AB AC AD  
+ . D. 
+ 
+1
+4AG AB AC AD  
+ . 
+Câu 4. Cho tứ diện
+ABCD , gọi 
+I , 
+J  lần lượt là trung điểm của 
+AB  và 
+CD ; Đẳng thức nào sai? 
+A. 
+ 
+1
+2IJ AC BD
+ . B. 
+ 
+1
+2IJ AD BC
+ . 
+C. 
+ 
+1
+2IJ DC AD BD  
+ . D. 
+ 
+1
+2IJ AB CD
+ . 
+Câu 5. Cho tứ diện 
+ABCD . Mệnh đề nào dưới đây là mệnh đề đúng? 
+A. 
+BC AB DA DC
+ . B. 
+AC AD BD BC  
+ . 
+C. 
+AB AC DB DC  
+ . D. 
+AB AD CD BC  
+ . 
+Câu 6. Cho hình hộp 
+. ' ' ' 'ABCD A B C D . Chọn đẳng thức vectơ đúng: 
+A. 
+''AC AB AB AD  
+ . B. 
+''DB DA DD DC  
+ . 
+C. 
+'AC AC AB AD  
+ . D. 
+'DB DA DD DC  
+ . 
+Câu 7. Cho hình hộp
+.ABCD A B C D    . Biểu thức nào sau đây đúng: 
+A. 
+' ' ' 'A D A B A C
+ . B. 
+''AB AB AA AD  
+ . 
+C. 
+''AC AB AA AD  
+ . D. 
+''AD AB AD AC  
+ . 
+Câu 8. Cho tứ diện
+ABCD . Gọi 
+,MN lần lượt là trung đi ểm của AD và
+BC . Khẳng định nào sau đây 
+sai? 
+A. 
+AB CD CB AD  
+ . B. 
+2MN AB DC
+ . 
+C. 
+2AD MN AB AC  
+ . D. 
+2MN AB AC AD  
+ . 
+Câu 9. Cho hình chóp 
+.S ABCD có đáy 
+ABCD là hình bình hành. Khẳng định nào sau đây đúng? 
+A. 
+SA SD SB SC  
+ . B. 
+0SA SB SC SD   
+ . 
+C. 
+SA SC SB SD  
+ . D. 
+SA SB SC SD  
+ . 
+Câu 10. Cho hình lăng trụ tam giác 
+.ABC A B C   . Vectơ nào sau đây là vectơ chỉ phương của đường thẳng
+AB
+? 
+A. 
+AB
+ . B. 
+AC
+ . C. 
+AC
+ . D. 
+AB
+ . 
+Câu 11. Cho hình chóp
+.S ABC , gọi 
+G  là trọng tâm tam giác
+ABC . Ta có 
+A. 
+SA SB SC SG  
+ . B. 
+2SA SB SC SG  
+ . 
+=== PAGE 2 ===
+2 
+ 
+C. 
+3SA SB SC SG  
+ . D. 
+4SA SB SC SG  
+ . 
+Câu 12. Cho tứ diện 
+ABCD . Gọi 
+,IJ  lần lượt là trung điểm của 
+AB  và 
+CD , 
+G  là trung điểm của 
+IJ . 
+Cho các đẳng thức sau, đẳng thức nào đúng? 
+A. 
+0GA GB GC GD   
+ . B. 
+2IJGA GB GC GD   
+ . 
+C. 
+GA GB GC GD JI   
+ . D. 
+2GA GB GC GD JI   
+ . 
+Câu 13. Cho hình lăng trụ tam giác 
+ABCA B C   . Đặt 
+, , ,AA a AB b AC c BC d   
+ . Trong các bi ểu 
+thức véctơ sau đây, biểu thức nào đúng. 
+A. 
+a b c d  
+ . B. 
+a b c
+ . C. 
+0a b c d   
+ . D. 
+0b c d  
+ . 
+Câu 14. Trong không gian cho điểm 
+O  và bốn điểm 
+, , ,A B C D  không thẳng hàng. Điều kiện cần và đủ 
+để 
+, , ,A B C D  tạo thành hình bình hành là: 
+A. 
+0OA OB OC OD   
+ . B. 
+OA OC OB OD  
+ . 
+C. 
+11
+22OA OB OC OD  
+ . D. 
+11
+22OA OC OB OD  
+ . 
+Câu 15. Cho hình hộp chữ nhật 
+. ' ' ' 'ABCD A B C D . Khi đó, vectơ bằng vectơ 
+AB
+  là vectơ nào dưới đây? 
+A. 
+''DC
+ . B. 
+BA
+ . C. 
+CD
+ . D. 
+''BA
+ . 
+Câu 16. Cho hình l ập phương 
+1 1 1 1.ABCD A B C D . Gọi 
+O  là tâm c ủa hình l ập phương. Ch ọn đẳng thức 
+đúng? 
+A. 
+ 1
+1
+3AO AB AD AA  
+ . B. 
+ 1
+1
+2AO AB AD AA  
+ . 
+C. 
+ 1
+1
+4AO AB AD AA  
+ . D. 
+ 1
+2
+3AO AB AD AA  
+ . 
+Câu 17. Cho tứ diện 
+ABCD . Gọi 
+G  là trọng tâm tam giác 
+.ABC  Tìm giá trị của 
+k  thích hợp điền vào 
+đẳng thức vectơ: 
+DA DB DC kDG  
+  
+A. 
+2.k   B. 
+3.k   C. 
+1
+2k  . D. 
+1
+3k  . 
+Câu 18. Cho hình hộp 
+1 1 1 1.ABCD A B C D  với tâm 
+O . Chọn đẳng thức sai. 
+A. 
+11AB AA AD DD  
+ . B. 
+11AC AB AD AA  
+ . 
+C. 
+11 0AB BC CD D A   
+ . D. 
+1 1 1 1AB BC CC AD D O OC    
+ . 
+Câu 19. Cho hình chóp
+.S ABCD  có đáy 
+ABCD  là hình bình hành. Đặt 
+SA a
+ ; 
+SB b
+ ; 
+SC c
+ ; 
+SD d
+. Khẳng định nào sau đây đúng? 
+A. 
+0a b c d   
+ . B. 
+a b c d  
+ . C. 
+a d b c  
+ . D. 
+a c d b  
+ . 
+Câu 20. Cho tứ diện
+ABCD . Gọi 
+, PQ  là trung điểm của 
+AB  và 
+CD . Chọn khẳng định đúng? 
+A. 
+ 
+1
+2PQ BC AD
+ . B. 
+ 
+1
+2PQ BC AD
+ . 
+C. 
+PQ BC AD
+ . D. 
+ 
+1
+4PQ BC AD
+ . 
+=== PAGE 3 ===
+3 
+ 
+Câu 21. Cho tứ diện 
+ABCD . Gọi 
+M  và 
+N  lần lượt là trung đi ểm của 
+AB  và 
+CD . Tìm giá tr ị của 
+k  
+thích hợp điền vào đẳng thức vectơ: 
+ MN k AC BD
+  
+A. 
+2.k   B. 
+1 .2k   C. 
+1.3k   D. 
+3.k   
+Câu 30. Cho tứ diện 
+ABCD . Gọi 
+M , 
+N  lần lượt là trung điểm của 
+AB , 
+CD  và 
+G  là trung điểm của 
+MN
+. Trong các khẳng định sau, khẳng định nào sai? 
+A. 
+0GM GN
+ . B. 
+4MA MB MC MD MG   
+ . 
+C. 
+GA GB GC GD  
+ . D. 
+0GA GB GC GD   
+ . 
+Câu 31. Cho tứ diện 
+ABCD  và điểm 
+G  thỏa mãn 
+0GA GB GC GD   
+  (
+G  là trọng tâm của tứ diện). 
+Gọi 
+0G  là giao điểm của 
+GA  và mp 
+ BCD . Trong các khẳng định sau, khẳng định nào đúng? 
+A. 
+02GA G G
+ . B. 
+04GA G G
+ . C. 
+03GA G G
+ . D. 
+02GA G G
+ . 
+Câu 32. Cho tứ diện đều 
+ABCD ,
+M  và 
+N theo thứ tự là trung điểm của cạnh 
+AB  và 
+CD . Mệnh đề nào 
+sau đây sai?. 
+A. 
+AC BD AD BC  
+ . B. 
+ 
+1
+2MN AD BC
+ . 
+C. 
+4AC BD AD BC NM   
+ . D. 
+40MC MD MN  
+ . 
+Câu 51. Cho hình chóp 
+.S ABC  có 
+2BC a , các cạnh còn lại đều bằng 
+a . Góc giữa hai vectơ 
+SB
+  và 
+AC
+ bằng 
+A. 
+60 . B. 
+120 . C. 
+30 . D. 
+90 . 
+Câu 52. Cho tứ diện 
+ABCD  có 
+60CAB DAB O , 
+AB AD AC  (tham khảo như hình vẽ bên). 
+ 
+Gọi 
+  là góc giữa hai vecto 
+AB
+  và 
+CD
+ . Chọm mệnh đề đúng? 
+A. 
+60O  . B. 
+1cos 4  . C. 
+90O  . D. 
+3cos 4  . 
+Câu 53. Cho hình lập phương 
+.ABCD A B C D    . Tính 
+ os ,c BD A C 
+  
+A. 
+ os , 0c BD A C  
+ . B. 
+ os , 1c BD A C  
+ . 
+C. 
+ 
+1os , 2c BD A C  
+ . D. 
+ 
+2os , 2c BD A C  
+ . 
+
+=== PAGE 4 ===
+4 
+ 
+Câu 54. Cho tứ diện 
+ABCD  có hai mặt 
+ABC  và 
+ABD  là các tam giác đều. Tính góc giữa hai vecto
+AB
+  
+và 
+CD
+ . 
+A. 
+90 . B. 
+30 . C. 
+120 . D. 
+60 . 
+Câu 55. Cho tứ diện đều 
+ABCD  có cạnh bằng 
+a . Giá trị tích vô hướng 
+AB AB CA
+  bằng 
+A. 
+2
+2
+a . B. 
+2 2
+2
+a . C. 
+2 3
+2
+a . D. 
+23
+2
+a . 
+Câu 56. Cho hình chóp 
+.S ABC  có 
+AB AC , 
+SAC SAB . Tính số đo của góc giữa hai vecto 
+SA
+  và 
+.BC
+  
+A. 
+45 . B. 
+60 . C. 
+30 . D. 
+90 . 
+PHẦN D. TRẮC NGHIỆM ĐÚNG SAI 
+Câu 1. Cho hình hộp 
+.ABCD A B C D    . Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
+' ' ' 'BD D D B D BB  
+    
+b) 
+' ' 0AC BA DB C D   
+    
+c) 
+' ' 0AC BA DB C D   
+    
+d) 
+' ' ' 'AB B C DD AC  
+    
+Câu 2. Cho hình hộp 
+1 1 1 1.ABCD A B C D . Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
+11 2AC AC AC
+    
+b) 
+1 1 1 20AC CA C C  
+    
+c) 
+11CA AC CC
+    
+d) 
+1 1 1AC CD A D
+    
+Câu 3. Cho hình lập phương 
+.ABCD A B C D    . Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
+DC DC DD
+    
+b) 
+AB C D
+    
+c) 
+A B CD 
+    
+d) 
+AB AD AA AC  
+    
+Câu 4. Cho hình hộp 
+.ABCD A B C D    . Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
+AB AB AA AD    
+    
+b) 
+AC AB AD AA  
+    
+c) 
+AB DC
+    
+d) 
+DB DC DA
+    
+Câu 5. Cho hình lập phương 
+' ' ' '.ABCD A B C D , có cạnh 
+a . Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
+2'. 'AD CC a
+    
+b) 
+2'. 'AD AB a
+    
+c) 
+'. ' 0AB CD 
+    
+d) 
+'3AC a
+    
+Câu 6. Cho hình tứ diện 
+ABCD . Gọi 
+M , 
+N  lần lượt là trung điểm của 
+AB  và 
+CD , 
+I  là trung điểm 
+của đoạn 
+MN . Các mệnh đề sau đúng hay sai? 
+=== PAGE 5 ===
+5 
+ 
+Mệnh đề Đúng Sai 
+a) 
+ 
+1
+2MN AD CB
+    
+b) 
+ 
+1
+2AN AC AD
+    
+c) 
+0MA MB
+    
+d) 
+0IA IB IC ID   
+    
+Câu 7. Cho hình hộp 
+. ' ' ' 'ABCD A B C D với tâm O. Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
++ ' + '.AB AA AD DD
+    
+b) 
+' + + '.AC AB AD AA
+    
+c) 
+' '+ ' '.AB BC CC AD D O OC   
+    
+d) 
+' ' ' ' =0.AB BC C D D A  
+    
+Câu 8. Cho tứ diện 
+ABCD  có 
+,MN  lần lượt là trung điểm các cạnh 
+AC  và 
+.BD  Gọi 
+G  là trung điểm 
+của đoạn thẳng 
+.MN  Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
+2GA GC GM
+    
+b) 
+GB GD MN
+    
+c) 
+0GA GB GC GD   
+    
+d) 
+2NM AB CD
+    
+Câu 9. Cho hình chóp S.ABCD, có đáy ABCD là hình bình hành. Các mệnh đề sau đúng hay sai? 
+Mệnh đề Đúng Sai 
+a) 
+AB AC AD
+    
+b) 
+SB SD SA SC  
+    
+c) 
+SA SD SB SC  
+    
+d) 
+0AB BC CD DA   
+    
+Câu 10. Cho hình chóp 
+.S ABCD  có đáy 
+ABCD  là hình bình hành tâm 
+O . Các mệnh đề sau đúng hay 
+sai? 
+Mệnh đề Đúng Sai 
+a) 
+4SA SB SC SD SO   
+ .   
+b) 
+0SA SB SC SD   
+    
+c) 
+0SA SB SC SD   
+    
+d) 
+0OA OB OC OD   
+    
+ 
+PHẦN E. TRẢ LỜI NGẮN 
+Câu 1. Trọng lực 
+P
+  là lực hấp dẫn do Trái Đất tác dụng lên một vật được tính bởi công thức 
+P mg
+ , 
+trong đó 
+m  là khối lượng của vật (đơn vị: kg), 
+g
+  là vectơ gia tốc rơi tự do, có hướng đi xuống 
+và có độ lớn 
+29,8  /g m s . Xác định hướng và độ lớn của trọng lực (đơn vị: N) tác dụng lên quả 
+bóng có khối lượng 450 gam. 
+ 
+Trả lời:………………. 
+
+=== PAGE 6 ===
+6 
+ 
+Câu 2. Trong điện trường đều, lực tĩnh điện 
+F
+  (đơn vị: N) tác dụng lên điện tích điểm có điện tích 
+q  
+(đơn vị: 
+C ) được tính theo công th ức 
+F q E
+ , trong đó 
+E
+  là cường độ điện trường (đơn vị: 
+N/C). Tính độ lớn của lực tĩnh điện tác d ụng lên đi ện tích điểm khi 
+910qC   và độ lớn điện 
+trường 
+510   /E N C  (Hình). 
+ 
+Trả lời:………………. 
+Câu 3. Ta đã biết trọng tâm của tứ diện 
+ABCD  là một điểm 
+I  thoả mãn 
+3AI IG
+ , ở đó 
+G  là trọng 
+tâm của tam giác 
+BCD . Áp dụng tính chất trên để tính khoảng cách từ trọng tâm của một khối 
+rubik (đồng chất) hình tứ diện đều đến một mặt của nó, biết rằng chiều cao của khối rubik là 
+8 cm
+. 
+ 
+Trả lời:………………. 
+Câu 4. Ba lực 
+1 2 3,,F F F
+  cùng tác động vào một vật có phương đôi một vuông góc và có độ lớn lần lượt 
+là 
+2 ;3 ;4N N N . Tính độ lớn hợp lực của ba lực đã cho. 
+ 
+Trả lời:………………. 
+Câu 5. Cho tứ diện đều 
+ABCD  cạnh 
+.a  Gọi 
+M  là trung điểm của 
+.BC  Tính 
+ cos ,AB DM
+  
+Trả lời:………………. 
+Câu 6. Cho tứ diện 
+ABCD  có 
+, 60 , 90AB AC AD BAC BAD CAD       . Gọi 
+I và 
+J  lần lượt là 
+trung điểm của 
+AB và 
+CD . Góc giữa cặp véc tơ 
+,AB IJ
+  bằng bao nhiêu độ? 
+Trả lời:………………. 
+
+=== PAGE 7 ===
+7 
+ 
+Câu 7. Cho hình chóp 
+.S ABCD  có đáy 
+ABCD  là hình chữ nhật tâm 
+O ; 
+2AD a ; 
+AB a ; các cạnh 
+bên bằng nhau và bằng 
+a . Gọi 
+E  là trung điểm của cạnh 
+SD . Khi đó góc giữa hai vector 
+SA
+ ; 
+OE
+ bằng bao nhiêu độ: 
+Trả lời:………………. 
+Câu 8. Cho hình l ập phương
+.ABCD A B C D    , bi ết: 
+42AN AB k AA AD   
+  
+ k
+ ; 
+23AM AB AA AD   
+. Giá trị 
+k  thích hợp để 
+AN AM
+  là: 
+    
+Trả lời:………………. 
+Câu 9. Cho tứ diện đều 
+ABCD  có cạnh bằng 
+a . Gọi 
+,MN lần lượt là trung đi ểm các c ạnh 
+,AB CD . 
+Tính 
+ cos ,AC MN
+  
+Trả lời:………………. 
+Câu 10. Cho hình chóp  có các cạnh , ,  đôi một vuông góc và . Gọi  
+là trung điểm của . Khi đó góc giữa hai vecto 
+;SI BC
+  
+Trả lời:………………. 
+Câu 11. Cho hình hộp 
+1 1 1 1.ABCD A B C D  có 
+12;GG lần lượt là trọng tâm tam giác 
+1BDA  và 
+11CB D . Biết 
+1 1 2AC aAG bAG
+. Tính 
+ab  
+Trả lời:………………. 
+Câu 12. Cho hình chóp 
+.S ABCD  có đáy là hình chữ nhật với đáy 
+ABCD  là hình chữ nhật với 
+AB a , 
+2AD a
+. Ba cạnh 
+,,SA AB AD  đôi một vuông góc và 
+2SA a . Gọi 
+I  là trung điểm của 
+SD
+. Tính 
+ cos ,AI SC   
+Trả lời:………………. 
+Câu 13. Cho hình chóp 
+.S ABC  với 
+3, 4, 5SA SB SC   . Một mặt phẳng 
+  thay đổi luôn đi qua trọng 
+tâm của 
+.S ABC  cắt các c ạnh 
+,,SA SB SC tại các điểm 
+1 1 1,,A B C . Tìm giá tr ị nhỏ nhất của biểu 
+thức 
+2 2 2
+1 1 1
+1 1 1P SA SB SC . 
+Trả lời:………………. 
+Câu 14. Cho tứ diện 
+ABCD  có 
+AC BD a , 
+2AB CD a , 
+6AD BC a . Khi đó góc gi ữa hai 
+đường thẳng 
+AD  và 
+BC  bằng bao nhiêu độ 
+Trả lời:………………. 
+Câu 15. Cho hình chóp 
+.S ABCD  có 
+SA a , 
+2SB a , 
+3SC a , 
+60ASB BSC   , 
+90CSA . Gọi 
+  
+là góc giữa hai đường thẳng 
+SA  và 
+BC . Tính 
+cos . 
+Trả lời:………………. 
+Câu 16. Cho hình lăng tr ụ tam giác đ ều 
+.ABC A B C    có 
+AB a  và 
+2AA a . Khi đó góc gi ữa hai 
+đường thẳng 
+AB  và 
+BC  bằng bao nhiêu độ 
+Trả lời:………………. 
+Câu 17. Cho hình lập phương 
+.ABCD A B C D    . Gọi 
+M , 
+N  lần lượt là trung điểm của 
+AD , 
+.BB  Cosin 
+của góc hợp bởi 
+MN  và 
+'AC  bằng 
+Trả lời:………………. 
+.S ABC
+SA
+SB
+SC
+SA SB SC
+I
+AB
+=== PAGE 8 ===
+8 
+ 
+Câu 18. Cho hình chóp 
+.S ABCD  có đáy là hình chữ nhật, 
+2AB a , 
+BC a . Hình chiếu vuông góc 
+H  
+của đỉnh 
+S  trên mặt phẳng đáy là trung điểm của cạnh 
+AB , góc giữa đường thẳng 
+SC  và mặt 
+phẳng đáy bằng 
+060 . Tính cosin góc giữa hai đường thẳng 
+SB  và 
+AC  
+Trả lời:………………. 
+Câu 19. Cho hình lăng trụ 
+.ABC A B C    có đáy 
+ABC  là tam giác đều cạnh 
+a , tam giác 
+A BC  đều nằm 
+trong mặt phẳng vuông góc với 
+ ABC . 
+M  là trung điểm cạnh 
+CC . Tính cosin góc 
+  giữa hai 
+đường thẳng 
+AA  và 
+BM . 
+Trả lời:………………. 
+Câu 20. Cho hình lập phương
+.ABCD A B C D    , gọi 
+N  là điểm thỏa 
+' 2 'C N NB
+ , 
+M  là trung điểm của 
+''AD
+, 
+I  là giao điểm của 
+'AN  và 
+'BM . Biết 
+'AI aAA bAB cAD  
+ . Tính 
+abc  
+Trả lời:………………. 
+Câu 21. Cho hình chóp 
+.S ABCD  đáy là hình bình hành, g ọi 
+M  và 
+N  là các đi ểm th ỏa mãn 
+0MD MS
+, 
+20NB NC
+ . Mặt phẳng 
+ AMN  cắt 
+SC  tại 
+P . Tính tỉ số 
+SP
+SC . 
+ 
+Câu 22. Cho hình chóp 
+.S ABCD  có đáy là hình vuông cạnh 
+a , cạnh bên 
+SA  vuông góc với đáy, 
+SA a
+. Gọi 
+M  là trung điểm của 
+SB . Khi đó góc giữa 
+AM  và
+BD  bằng bao nhiêu độ? 
+Trả lời:………………. 
+Câu 23. Cho tứ diện đều 
+ABCD  cạnh 
+a . Tính cosin góc giữa hai đường thẳng 
+AB  và 
+CI , với 
+I  là trung 
+điểm của 
+AD . 
+Trả lời:………………. 
+Câu 24. Một chất điểm 
+A  nằm trên mặt phẳng nằm ngang 
+() , chịu tác động bởi ba lực 
+1 2 3,,F F F
+ . Các 
+lực 
+12,FF
+  có giá n ằm trong 
+()  và 
+ 12, 135FF 
+ , còn l ực 
+3F
+  có giá vuông góc v ới 
+()  và 
+hướng lên trên. Xác định hợp lực của các lực 
+1 2 3,,F F F
+ , biết rằng độ lớn của ba lực đó lần lượt là 
+20 N
+, 
+15 N  và 
+10 N . 
+ 
+Trả lời:………………. 
+PM
+N
+B
+D
+A
+C
+S
+

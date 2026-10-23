@@ -1,9 +1,4 @@
 #import "@preview/mitex:0.2.7": mitex, mi
-#import "@preview/cetz:0.3.3"
-#import "@preview/cetz:0.3.3" as cetz-v3
-#import "@preview/cetz-plot:0.1.1": plot, chart
-#import "@preview/vartable:0.2.4": tabvar
-#import "archetypes.typ": *
 
 #let IS_TEACHER = sys.inputs.at("teacher", default: "true") == "true"
 
@@ -25,7 +20,7 @@
   ]
   \ #v(2pt)
   #text(size: 13pt, weight: "bold")[Vectơ trong không gian] \
-  #text(size: 9.5pt, style: "italic", fill: rgb("#475569"))[Bài học cung cấp kiến thức cơ bản về vectơ trong không gian, bao gồm định nghĩa, các phép toán vectơ (cộng, trừ, nhân số với vectơ), tích vô hướng, góc giữa hai vectơ và ứng dụng vào giải quyết các bài toán hình học không gian và vật lý.]
+  #text(size: 9.5pt, style: "italic", fill: rgb("#475569"))[Bài học cung cấp kiến thức nền tảng về vectơ trong không gian, bao gồm các định nghĩa, phép toán cộng, trừ, nhân số với vectơ, tích vô hướng, góc giữa hai vectơ và các ứng dụng thực tế trong vật lý.]
 ]
 #v(6pt)
 
@@ -94,8 +89,6 @@
 a) Có bao nhiêu vectơ có điểm đầu là  #mi(`A`)  và điểm cuối là một trong các đỉnh còn lại của tứ diện?
 b) Trong các vectơ tìm được ở câu a, những vectơ nào có giá nằm trong mặt phẳng  #mi(`(ABC)`) ?
 c) Tính độ dài của các vectơ tìm được ở câu a.
-    
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_1|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] a) Các đỉnh còn lại của tứ diện là  #mi(`B, C, D`) . Vậy có 3 vectơ thỏa mãn là  #mi(`\vec{AB}, \vec{AC}, \vec{AD}`) .
@@ -110,8 +103,6 @@ c) Vì tứ diện  #mi(`ABCD`)  có độ dài mỗi cạnh bằng  #mi(`1`)  n
   *Bài 1 (Chuẩn mẫu).* Cho tứ diện  #mi(`ABCD`) . 
 a) Liệt kê các vectơ có điểm đầu là  #mi(`B`)  và điểm cuối là một trong các đỉnh còn lại.
 b) Trong các vectơ vừa liệt kê, vectơ nào có giá nằm trong mặt phẳng  #mi(`(BCD)`) ?
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_1|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: a) Các đỉnh còn lại là  #mi(`A, C, D`) . Vậy các vectơ là  #mi(`\vec{BA}, \vec{BC}, \vec{BD}`) .
@@ -126,8 +117,6 @@ b) Mặt phẳng  #mi(`(BCD)`)  chứa các điểm  #mi(`B, C, D`) . Vậy các
   *Bài 2 (Tương tự 100%).* Cho tứ diện  #mi(`ABCD`) . 
 a) Liệt kê các vectơ có điểm đầu là  #mi(`C`)  và điểm cuối là một trong các đỉnh còn lại.
 b) Trong các vectơ vừa liệt kê, vectơ nào có giá nằm trong mặt phẳng  #mi(`(ACD)`) ?
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_1|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: a) Các đỉnh còn lại là  #mi(`A, B, D`) . Vậy các vectơ là  #mi(`\vec{CA}, \vec{CB}, \vec{CD}`) .
@@ -142,8 +131,6 @@ b) Mặt phẳng  #mi(`(ACD)`)  chứa các điểm  #mi(`A, C, D`) . Vậy các
   *Bài 3 (Biến thể nhẹ).* Cho hình chóp tam giác  #mi(`S.ABC`) . 
 a) Có bao nhiêu vectơ có điểm đầu là  #mi(`S`)  và điểm cuối là một trong các đỉnh của đáy  #mi(`ABC`) ?
 b) Nếu độ dài các cạnh bên bằng  #mi(`5`)  cm, hãy tính độ dài của các vectơ tìm được ở câu a.
-  
-  #align(center)[#draw-pyramid-tri(labels: ("S", "A", "B", "C"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_1|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: a) Các đỉnh của đáy là  #mi(`A, B, C`) . Vậy có 3 vectơ là  #mi(`\vec{SA}, \vec{SB}, \vec{SC}`) .
@@ -158,8 +145,6 @@ b) Vì các cạnh bên  #mi(`SA = SB = SC = 5`)  cm nên  #mi(`|\vec{SA}| = |\v
   *Bài 4 (Vận dụng).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  có cạnh bằng  #mi(`2`) . 
 a) Xác định các vectơ có điểm đầu là  #mi(`A`)  và điểm cuối là một đỉnh của hình lập phương sao cho giá của vectơ đó không nằm trong mặt phẳng  #mi(`(ABCD)`) .
 b) Tính độ dài của các vectơ tìm được ở câu a.
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_1|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: a) Các đỉnh của hình lập phương là  #mi(`A, B, C, D, A', B', C', D'`) . Các đỉnh không thuộc mặt phẳng  #mi(`(ABCD)`)  là  #mi(`A', B', C', D'`) . Vậy các vectơ thỏa mãn là  #mi(`\vec{AA'}, \vec{AB'}, \vec{AC'}, \vec{AD'}`) .
@@ -239,8 +224,6 @@ b) Độ dài các vectơ:
 // @ANCHOR:dang_2|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Xác định vectơ bằng nhau trong hình lăng trụ:] Cho hình lăng trụ  #mi(`ABC.A'B'C'`) . Trong các vectơ  #mi(`\vec{BC}, \vec{CC'}, \vec{B'B}`) , vectơ nào bằng vectơ  #mi(`\vec{AA'}`) ? Giải thích vì sao.
-    
-  #align(center)[#draw-prism-tri(labels: ("A", "B", "C", "A'", "B'", "C'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_2|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Xét các vectơ:
@@ -255,8 +238,6 @@ Vậy vectơ bằng  #mi(`\vec{AA'}`)  là  #mi(`\vec{CC'}`) .
 // @ANCHOR:dang_2|example|1|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 2 - Xác định vectơ đối trong hình chóp:] Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Chứng minh rằng  #mi(`\vec{AM}`)  và  #mi(`\vec{CN}`)  là hai vectơ đối nhau.
-    
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_2|example|1|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì  #mi(`ABCD`)  là hình bình hành nên  #mi(`AB // CD`)  và  #mi(`AB = CD`) .
@@ -273,8 +254,6 @@ Vậy  #mi(`\vec{AM}`)  và  #mi(`\vec{CN}`)  là hai vectơ đối nhau.
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_2|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Tìm tất cả các vectơ có điểm đầu và điểm cuối là các đỉnh của hình hộp mà bằng với vectơ  #mi(`\vec{AA'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_2|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Trong hình hộp  #mi(`ABCD.A'B'C'D'`) , các cạnh bên song song và bằng nhau. Ta có  #mi(`AA' // BB' // CC' // DD'`)  và  #mi(`AA' = BB' = CC' = DD'`) . Hơn nữa, các vectơ  #mi(`\vec{AA'}, \vec{BB'}, \vec{CC'}, \vec{DD'}`)  đều có cùng hướng (từ mặt đáy này sang mặt đáy kia). Vậy các vectơ bằng  #mi(`\vec{AA'}`)  là  #mi(`\vec{BB'}, \vec{CC'}, \vec{DD'}`) .] \
@@ -286,8 +265,6 @@ Vậy  #mi(`\vec{AM}`)  và  #mi(`\vec{CN}`)  là hai vectơ đối nhau.
     ]
 // @ANCHOR:dang_2|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình lăng trụ đứng tam giác  #mi(`ABC.A'B'C'`) . Tìm tất cả các vectơ có điểm đầu và điểm cuối là các đỉnh của hình lăng trụ mà bằng với vectơ  #mi(`\vec{BB'}`) .
-  
-  #align(center)[#draw-prism-tri(labels: ("A", "B", "C", "A'", "B'", "C'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_2|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Trong hình lăng trụ đứng  #mi(`ABC.A'B'C'`) , các cạnh bên  #mi(`AA', BB', CC'`)  song song, bằng nhau và cùng hướng. Do đó,  #mi(`\vec{AA'} = \vec{BB'} = \vec{CC'}`) . Vậy các vectơ bằng  #mi(`\vec{BB'}`)  là  #mi(`\vec{AA'}`)  và  #mi(`\vec{CC'}`) .] \
@@ -299,8 +276,6 @@ Vậy  #mi(`\vec{AM}`)  và  #mi(`\vec{CN}`)  là hai vectơ đối nhau.
     ]
 // @ANCHOR:dang_2|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình lăng trụ  #mi(`ABC.A'B'C'`) . Gọi  #mi(`M`)  là trung điểm của cạnh  #mi(`BC`) . Xác định điểm  #mi(`M'`)  sao cho  #mi(`\vec{MM'} = \vec{AA'}`) .
-  
-  #align(center)[#draw-prism-tri(labels: ("A", "B", "C", "A'", "B'", "C'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_2|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Để  #mi(`\vec{MM'} = \vec{AA'}`) , điểm  #mi(`M'`)  phải thỏa mãn  #mi(`MM' // AA'`)  và  #mi(`MM' = AA'`)  và  #mi(`\vec{MM'}`)  cùng hướng với  #mi(`\vec{AA'}`) . Vì  #mi(`AA'`)  là cạnh bên của lăng trụ, nên  #mi(`M'`)  phải nằm trên mặt phẳng  #mi(`(A'B'C')`) . Vì  #mi(`M`)  là trung điểm  #mi(`BC`) , nên  #mi(`M'`)  phải là trung điểm của cạnh  #mi(`B'C'`)  để  #mi(`MM' // BB' // AA'`)  và  #mi(`MM' = BB' = AA'`) . Vậy  #mi(`M'`)  là trung điểm của  #mi(`B'C'`) .] \
@@ -390,8 +365,6 @@ Kết luận:  #mi(`\vec{AM}`)  và  #mi(`\vec{CN}`)  là hai vectơ đối nhau
 // @ANCHOR:dang_3|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Chứng minh đẳng thức vectơ trong tứ diện:] Cho tứ diện  #mi(`ABCD`) . Chứng minh rằng  #mi(`\vec{AC} + \vec{BD} = \vec{AD} + \vec{BC}`) .
-    
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_3|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Sử dụng quy tắc ba điểm để chèn điểm  #mi(`D`)  vào  #mi(`\vec{AC}`)  và điểm  #mi(`C`)  vào  #mi(`\vec{BD}`) :
@@ -407,8 +380,6 @@ Vì  #mi(`\vec{DC} + \vec{CD} = \vec{0}`) , nên ta có:  #mi(`\vec{AC} + \vec{B
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_3|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho tứ diện  #mi(`ABCD`) . Chứng minh rằng  #mi(`\vec{AB} + \vec{CD} = \vec{AD} + \vec{CB}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_3|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có:  #mi(`\vec{AB} + \vec{CD} = (\vec{AD} + \vec{DB}) + \vec{CD} = \vec{AD} + (\vec{DB} + \vec{CD}) = \vec{AD} + \vec{DC}`) .
@@ -423,8 +394,6 @@ Vậy  #mi(`\vec{AB} + \vec{CD} = \vec{AD} + \vec{CB}`) .] \
     ]
 // @ANCHOR:dang_3|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho tứ diện  #mi(`ABCD`) . Chứng minh rằng  #mi(`\vec{BA} + \vec{CD} = \vec{BD} + \vec{CA}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_3|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có:  #mi(`\vec{BA} + \vec{CD} = (\vec{BD} + \vec{DA}) + \vec{CD} = \vec{BD} + (\vec{DA} + \vec{CD}) = \vec{BD} + \vec{CA}`) . (đpcm)] \
@@ -436,8 +405,6 @@ Vậy  #mi(`\vec{AB} + \vec{CD} = \vec{AD} + \vec{CB}`) .] \
     ]
 // @ANCHOR:dang_3|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Chứng minh rằng  #mi(`\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_3|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`ABCD`)  là hình bình hành nên  #mi(`\vec{AB} + \vec{AD} = \vec{AC}`) .
@@ -452,8 +419,6 @@ Vậy  #mi(`\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}`) .] \
     ]
 // @ANCHOR:dang_3|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Chứng minh rằng  #mi(`\vec{MN} = \frac{1}{2}(\vec{AC} + \vec{BD})`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: ((name: "M", type: "midpoint", of: ("A", "B"), k: 0.5), (name: "N", type: "midpoint", of: ("C", "D"), k: 0.5)), lines: (), vectors: (("M", "N"), ("A", "C"), ("B", "D")), polygons: ())]
 // @ANCHOR:dang_3|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có:  #mi(`\vec{MN} = \vec{MA} + \vec{AC} + \vec{CN}`) .
@@ -531,8 +496,6 @@ Suy ra  #mi(`2\vec{MN} = \vec{AC} + \vec{BD} \Rightarrow \vec{MN} = \frac{1}{2}(
 // @ANCHOR:dang_4|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Chứng minh đẳng thức hiệu vectơ:] Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Chứng minh rằng:  #mi(`\vec{SC} - \vec{AM} - \vec{AN} = \vec{SA}`) .
-    
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_4|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì  #mi(`ABCD`)  là hình bình hành nên  #mi(`\vec{AB} = \vec{DC}`) . Do  #mi(`M, N`)  là trung điểm của  #mi(`AB, CD`)  nên  #mi(`\vec{AM} = \frac{1}{2}\vec{AB}`)  và  #mi(`\vec{CN} = \frac{1}{2}\vec{CD}`) . 
@@ -551,8 +514,6 @@ Nhìn lại VD6:  #mi(`\vec{SC} - \vec{AM} - \vec{AN} = \vec{SC} + \vec{CN} - \v
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_4|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho tứ diện  #mi(`ABCD`) . Chứng minh rằng  #mi(`\vec{AB} - \vec{AC} = \vec{CB}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_4|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Theo quy tắc hiệu vectơ trong không gian, với ba điểm  #mi(`A, B, C`)  bất kỳ, ta có  #mi(`\vec{AB} - \vec{AC} = \vec{CB}`) . (Đpcm)] \
@@ -564,8 +525,6 @@ Nhìn lại VD6:  #mi(`\vec{SC} - \vec{AM} - \vec{AN} = \vec{SC} + \vec{CN} - \v
     ]
 // @ANCHOR:dang_4|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho tứ diện  #mi(`ABCD`) . Chứng minh rằng  #mi(`\vec{AD} - \vec{AB} = \vec{BD}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_4|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Theo quy tắc hiệu vectơ trong không gian, với ba điểm  #mi(`A, B, D`)  bất kỳ, ta có  #mi(`\vec{AD} - \vec{AB} = \vec{BD}`) . (Đpcm)] \
@@ -577,8 +536,6 @@ Nhìn lại VD6:  #mi(`\vec{SC} - \vec{AM} - \vec{AN} = \vec{SC} + \vec{CN} - \v
     ]
 // @ANCHOR:dang_4|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`M`)  là trung điểm của  #mi(`AB`) . Rút gọn biểu thức  #mi(`\vec{v} = \vec{MC} - \vec{MD}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_4|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Áp dụng quy tắc hiệu cho ba điểm  #mi(`M, C, D`) , ta có:  #mi(`\vec{MC} - \vec{MD} = \vec{DC}`) . Vậy  #mi(`\vec{v} = \vec{DC}`) .] \
@@ -590,8 +547,6 @@ Nhìn lại VD6:  #mi(`\vec{SC} - \vec{AM} - \vec{AN} = \vec{SC} + \vec{CN} - \v
     ]
 // @ANCHOR:dang_4|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Rút gọn biểu thức  #mi(`\vec{u} = \vec{A'C'} - \vec{B'D'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_4|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{A'C'} = \vec{A'B'} + \vec{B'C'}`)  và  #mi(`\vec{B'D'} = \vec{B'A'} + \vec{A'D'}`) . 
@@ -670,8 +625,6 @@ ightarrow \vec{cạnh}_1 + \vec{cạnh}_2 + \vec{cạnh}_3 = \vec{đường\ ch�
 // @ANCHOR:dang_5|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Chứng minh đẳng thức vectơ:] Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Chứng minh rằng  #mi(`\vec{BC} + \vec{DC} + \vec{AA'} = \vec{AC'}`) .
-    
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_5|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì  #mi(`ABCD`)  là hình bình hành nên ta có  #mi(`\vec{BC} = \vec{AD}`)  và  #mi(`\vec{DC} = \vec{AB}`) . Thay vào biểu thức vế trái, ta được:  #mi(`\vec{BC} + \vec{DC} + \vec{AA'} = \vec{AD} + \vec{AB} + \vec{AA'}`) . Theo quy tắc hình hộp,  #mi(`\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}`) . Vậy  #mi(`\vec{BC} + \vec{DC} + \vec{AA'} = \vec{AC'}`) . (đpcm)
@@ -682,8 +635,6 @@ ightarrow \vec{cạnh}_1 + \vec{cạnh}_2 + \vec{cạnh}_3 = \vec{đường\ ch�
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_5|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Hãy biểu diễn vectơ  #mi(`\vec{AC'}`)  theo ba vectơ  #mi(`\vec{AB}, \vec{AD}, \vec{AA'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_5|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Áp dụng trực tiếp quy tắc hình hộp cho hình hộp  #mi(`ABCD.A'B'C'D'`) , ta có:  #mi(`\vec{AC'} = \vec{AB} + \vec{AD} + \vec{AA'}`) .] \
@@ -695,8 +646,6 @@ ightarrow \vec{cạnh}_1 + \vec{cạnh}_2 + \vec{cạnh}_3 = \vec{đường\ ch�
     ]
 // @ANCHOR:dang_5|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Hãy biểu diễn vectơ  #mi(`\vec{A'C}`)  theo ba vectơ  #mi(`\vec{A'B'}, \vec{A'D'}, \vec{A'A}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_5|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Xét hình hộp  #mi(`ABCD.A'B'C'D'`) , áp dụng quy tắc hình hộp tại đỉnh  #mi(`A'`) , ta có tổng của ba vectơ cạnh xuất phát từ  #mi(`A'`)  là vectơ đường chéo xuất phát từ  #mi(`A'`) . Do đó:  #mi(`\vec{A'C} = \vec{A'B'} + \vec{A'D'} + \vec{A'A}`) .] \
@@ -708,8 +657,6 @@ ightarrow \vec{cạnh}_1 + \vec{cạnh}_2 + \vec{cạnh}_3 = \vec{đường\ ch�
     ]
 // @ANCHOR:dang_5|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Chứng minh rằng  #mi(`\vec{AB'} + \vec{AD'} + \vec{AC} = \vec{AC'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_5|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có:  #mi(`\vec{AB'} = \vec{AB} + \vec{AA'}`) ,  #mi(`\vec{AD'} = \vec{AD} + \vec{AA'}`) , và  #mi(`\vec{AC} = \vec{AB} + \vec{AD}`) . Cộng ba đẳng thức trên:  #mi(`\vec{AB'} + \vec{AD'} + \vec{AC} = (\vec{AB} + \vec{AA'}) + (\vec{AD} + \vec{AA'}) + (\vec{AB} + \vec{AD}) = 2(\vec{AB} + \vec{AD} + \vec{AA'}) = 2\vec{AC'}`) . Lưu ý: Đề bài yêu cầu chứng minh  #mi(`\vec{AB'} + \vec{AD'} + \vec{AC} = \vec{AC'}`) , nhưng tính toán cho thấy kết quả là  #mi(`2\vec{AC'}`) . Vậy đẳng thức đề bài cho là sai, kết quả đúng phải là  #mi(`\frac{1}{2}(\vec{AB'} + \vec{AD'} + \vec{AC}) = \vec{AC'}`) .] \
@@ -721,8 +668,6 @@ ightarrow \vec{cạnh}_1 + \vec{cạnh}_2 + \vec{cạnh}_3 = \vec{đường\ ch�
     ]
 // @ANCHOR:dang_5|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Gọi  #mi(`M`)  là trung điểm của  #mi(`CC'`) . Tính độ dài của vectơ  #mi(`\vec{u} = \vec{AB} + \vec{AD} + \vec{AM}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_5|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{AM} = \vec{AC} + \vec{CM} = (\vec{AB} + \vec{AD}) + \frac{1}{2}\vec{CC'}`) . Vì  #mi(`\vec{CC'} = \vec{AA'}`) , nên  #mi(`\vec{u} = \vec{AB} + \vec{AD} + (\vec{AB} + \vec{AD} + \frac{1}{2}\vec{AA'}) = 2\vec{AB} + 2\vec{AD} + \frac{1}{2}\vec{AA'}`) . Độ dài  #mi(`|\vec{u}| = \sqrt{(2a)^2 + (2a)^2 + (\frac{1}{2}a)^2} = \sqrt{4a^2 + 4a^2 + \frac{1}{4}a^2} = \sqrt{\frac{33}{4}a^2} = \frac{a\sqrt{33}}{2}`) .] \
@@ -869,8 +814,6 @@ eq \vec{0} #mi(`) cùng phương`) \Leftrightarrow \exists k \in \mathbb{R} #mi(
 // @ANCHOR:dang_7|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Chứng minh hệ thức trọng tâm tứ diện:] Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`G`)  là trọng tâm của tam giác  #mi(`BCD`) . Chứng minh rằng  #mi(`\vec{AB} + \vec{AC} + \vec{AD} = 3\vec{AG}`) .
-    
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_7|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì  #mi(`G`)  là trọng tâm  #mi(`\triangle BCD`)  nên ta có:  #mi(`\vec{GB} + \vec{GC} + \vec{GD} = \vec{0}`) .
@@ -882,8 +825,6 @@ Xét vế trái:  #mi(`\vec{AB} + \vec{AC} + \vec{AD} = (\vec{AG} + \vec{GB}) + 
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_7|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`G`)  là trọng tâm của tam giác  #mi(`BCD`) . Chứng minh rằng  #mi(`\vec{AB} + \vec{AC} + \vec{AD} = 3\vec{AG}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_7|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`G`)  là trọng tâm  #mi(`\triangle BCD \Rightarrow \vec{GB} + \vec{GC} + \vec{GD} = \vec{0}`) .
@@ -896,8 +837,6 @@ Ta có:  #mi(`\vec{AB} + \vec{AC} + \vec{AD} = (\vec{AG} + \vec{GB}) + (\vec{AG}
     ]
 // @ANCHOR:dang_7|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`G`)  là trọng tâm của tam giác  #mi(`ABC`) . Chứng minh rằng  #mi(`\vec{DA} + \vec{DB} + \vec{DC} = 3\vec{DG}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_7|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`G`)  là trọng tâm  #mi(`\triangle ABC \Rightarrow \vec{GA} + \vec{GB} + \vec{GC} = \vec{0}`) .
@@ -910,8 +849,6 @@ Ta có:  #mi(`\vec{DA} + \vec{DB} + \vec{DC} = (\vec{DG} + \vec{GA}) + (\vec{DG}
     ]
 // @ANCHOR:dang_7|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`G`)  là trọng tâm tứ diện. Chứng minh rằng với mọi điểm  #mi(`M`)  bất kỳ, ta có  #mi(`\vec{MA} + \vec{MB} + \vec{MC} + \vec{MD} = 4\vec{MG}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_7|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`G`)  là trọng tâm tứ diện  #mi(`ABCD \Rightarrow \vec{GA} + \vec{GB} + \vec{GC} + \vec{GD} = \vec{0}`) .
@@ -924,8 +861,6 @@ Với điểm  #mi(`M`)  bất kỳ:  #mi(`\vec{MA} + \vec{MB} + \vec{MC} + \vec
     ]
 // @ANCHOR:dang_7|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`G`)  là trọng tâm tứ diện. Gọi  #mi(`M`)  là trung điểm của  #mi(`AB`) . Chứng minh rằng  #mi(`\vec{MC} + \vec{MD} = 2\vec{MG}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_7|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{MA} + \vec{MB} = \vec{0}`)  vì  #mi(`M`)  là trung điểm  #mi(`AB`) .
@@ -1008,8 +943,6 @@ ightarrow #mi(`Tổng các vectơ cạnh xuất phát từ điểm đầu trong 
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tìm vectơ chỉ phương và biểu diễn vectơ:] Cho hình lăng trụ tam giác  #mi(`ABC.A'B'C'`) . 
 a) Tìm một vectơ khác  #mi(`\vec{AB}`)  cũng là vectơ chỉ phương của đường thẳng  #mi(`AB`) .
 b) Biểu diễn vectơ  #mi(`\vec{A'C}`)  theo  #mi(`\vec{A'A}, \vec{A'B}, \vec{A'C'}`) .
-    
-  #align(center)[#draw-prism-tri(labels: ("A", "B", "C", "A'", "B'", "C'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_8|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] a) Trong hình lăng trụ  #mi(`ABC.A'B'C'`) , ta có cạnh  #mi(`AB \parallel A'B'`)  và  #mi(`AB = A'B'`) . Do đó,  #mi(`\vec{A'B'} = \vec{AB}`) . Vậy  #mi(`\vec{A'B'}`)  cũng là một vectơ chỉ phương của đường thẳng  #mi(`AB`) .
@@ -1021,8 +954,6 @@ b) Sử dụng quy tắc ba điểm:  #mi(`\vec{A'C} = \vec{A'C'} + \vec{C'C}`) 
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_8|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Biểu diễn vectơ  #mi(`\vec{AC'}`)  theo ba vectơ  #mi(`\vec{AB}, \vec{AD}, \vec{AA'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_8|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Áp dụng quy tắc hình hộp cho hình hộp  #mi(`ABCD.A'B'C'D'`) , ta có:  #mi(`\vec{AC'} = \vec{AB} + \vec{AD} + \vec{AA'}`) .] \
@@ -1034,8 +965,6 @@ b) Sử dụng quy tắc ba điểm:  #mi(`\vec{A'C} = \vec{A'C'} + \vec{C'C}`) 
     ]
 // @ANCHOR:dang_8|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Biểu diễn vectơ  #mi(`\vec{BD'}`)  theo ba vectơ  #mi(`\vec{BA}, \vec{BC}, \vec{BB'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_8|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Áp dụng quy tắc hình hộp xuất phát từ đỉnh  #mi(`B`) , ta có:  #mi(`\vec{BD'} = \vec{BA} + \vec{BC} + \vec{BB'}`) .] \
@@ -1047,8 +976,6 @@ b) Sử dụng quy tắc ba điểm:  #mi(`\vec{A'C} = \vec{A'C'} + \vec{C'C}`) 
     ]
 // @ANCHOR:dang_8|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình lăng trụ tam giác  #mi(`ABC.A'B'C'`) . Gọi  #mi(`M`)  là trung điểm của  #mi(`BC`) . Biểu diễn  #mi(`\vec{A'M}`)  theo  #mi(`\vec{A'A}, \vec{A'B}, \vec{A'C}`) .
-  
-  #align(center)[#draw-prism-tri(labels: ("A", "B", "C", "A'", "B'", "C'"), derived: ((name: "M", type: "midpoint", of: ("B", "C"), k: 0.5),), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_8|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{A'M} = \vec{A'B} + \vec{BM}`) . Vì  #mi(`M`)  là trung điểm  #mi(`BC`)  nên  #mi(`\vec{BM} = \frac{1}{2}\vec{BC}`) .
@@ -1062,8 +989,6 @@ Suy ra  #mi(`\vec{A'M} = \vec{A'B} + \frac{1}{2}(\vec{A'C} - \vec{A'B}) = \frac{
     ]
 // @ANCHOR:dang_8|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Gọi  #mi(`G`)  là trọng tâm tam giác  #mi(`A'B'C'`) . Biểu diễn  #mi(`\vec{AG}`)  theo  #mi(`\vec{AB}, \vec{AD}, \vec{AA'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: ((name: "G", type: "centroid", of: ("A'", "B'", "C'"), k: 0.5),), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_8|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{AG} = \vec{AA'} + \vec{A'G}`) .
@@ -1142,8 +1067,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
 // @ANCHOR:dang_9|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tính góc trong hình lập phương:] Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Tính góc giữa hai vectơ  #mi(`\vec{AD}`)  và  #mi(`\vec{B'C'}`) .
-    
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_9|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì  #mi(`ABCD.A'B'C'D'`)  là hình lập phương nên  #mi(`AD // B'C'`)  và  #mi(`\vec{AD}`)  cùng hướng với  #mi(`\vec{B'C'}`) . Theo định nghĩa, hai vectơ cùng hướng thì góc giữa chúng bằng  #mi(`0^\circ`) . Vậy  #mi(`(\vec{AD}, \vec{B'C'}) = 0^\circ`) .
@@ -1152,8 +1075,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
 // @ANCHOR:dang_9|example|1|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 2 - Tính góc trong tứ diện đều:] Cho tứ diện đều  #mi(`ABCD`)  cạnh  #mi(`a`) . Tính góc giữa hai vectơ  #mi(`\vec{AB}`)  và  #mi(`\vec{CD}`) .
-    
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_9|example|1|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Sử dụng tích vô hướng:  #mi(`\vec{AB} \cdot \vec{CD} = \vec{AB} \cdot (\vec{AD} - \vec{AC}) = \vec{AB} \cdot \vec{AD} - \vec{AB} \cdot \vec{AC}`) . Vì tứ diện đều nên  #mi(`\vec{AB} \cdot \vec{AD} = a \cdot a \cdot \cos 60^\circ = \frac{a^2}{2}`)  và  #mi(`\vec{AB} \cdot \vec{AC} = a \cdot a \cdot \cos 60^\circ = \frac{a^2}{2}`) . Suy ra  #mi(`\vec{AB} \cdot \vec{CD} = 0`) . Vì tích vô hướng bằng  #mi(`0`)  nên  #mi(`\vec{AB} \perp \vec{CD}`) . Vậy góc giữa hai vectơ  #mi(`\vec{AB}`)  và  #mi(`\vec{CD}`)  bằng  #mi(`90^\circ`) .
@@ -1164,8 +1085,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_9|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Tính góc giữa hai vectơ  #mi(`\vec{AB}`)  và  #mi(`\vec{A'B'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_9|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`ABCD.A'B'C'D'`)  là hình lập phương nên  #mi(`AB // A'B'`)  và  #mi(`\vec{AB}`)  cùng hướng với  #mi(`\vec{A'B'}`) . Do đó, góc giữa hai vectơ  #mi(`\vec{AB}`)  và  #mi(`\vec{A'B'}`)  bằng  #mi(`0^\circ`) .] \
@@ -1177,8 +1096,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
     ]
 // @ANCHOR:dang_9|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Tính góc giữa hai vectơ  #mi(`\vec{BC}`)  và  #mi(`\vec{B'C'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_9|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`ABCD.A'B'C'D'`)  là hình lập phương nên  #mi(`BC // B'C'`)  và  #mi(`\vec{BC}`)  cùng hướng với  #mi(`\vec{B'C'}`) . Do đó, góc giữa hai vectơ  #mi(`\vec{BC}`)  và  #mi(`\vec{B'C'}`)  bằng  #mi(`0^\circ`) .] \
@@ -1190,8 +1107,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
     ]
 // @ANCHOR:dang_9|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Tính góc giữa hai vectơ  #mi(`\vec{AB}`)  và  #mi(`\vec{A'D'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_9|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{A'D'} = \vec{AD}`) . Khi đó  #mi(`(\vec{AB}, \vec{A'D'}) = (\vec{AB}, \vec{AD})`) . Vì  #mi(`ABCD`)  là hình vuông nên  #mi(`AB \perp AD`) , suy ra  #mi(`(\vec{AB}, \vec{AD}) = 90^\circ`) . Vậy góc giữa hai vectơ  #mi(`\vec{AB}`)  và  #mi(`\vec{A'D'}`)  bằng  #mi(`90^\circ`) .] \
@@ -1203,8 +1118,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
     ]
 // @ANCHOR:dang_9|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho tứ diện đều  #mi(`ABCD`)  cạnh  #mi(`a`) . Gọi  #mi(`M`)  là trung điểm của  #mi(`BC`) . Tính  #mi(`\cos(\vec{AB}, \vec{DM})`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_9|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{DM} = \frac{1}{2}(\vec{DB} + \vec{DC})`) . Tích vô hướng  #mi(`\vec{AB} \cdot \vec{DM} = \frac{1}{2}(\vec{AB} \cdot \vec{DB} + \vec{AB} \cdot \vec{DC})`) . Ta có  #mi(`\vec{AB} \cdot \vec{DB} = a \cdot a \cdot \cos 120^\circ = -\frac{a^2}{2}`)  (do  #mi(`\vec{DB}`)  ngược hướng  #mi(`\vec{BD}`) ).  #mi(`\vec{AB} \cdot \vec{DC} = \vec{AB} \cdot (\vec{AC} - \vec{AD}) = \vec{AB} \cdot \vec{AC} - \vec{AB} \cdot \vec{AD} = \frac{a^2}{2} - \frac{a^2}{2} = 0`) . Vậy  #mi(`\vec{AB} \cdot \vec{DM} = \frac{1}{2}(-\frac{a^2}{2} + 0) = -\frac{a^2}{4}`) . Độ dài  #mi(`|\vec{AB}|=a`)  và  #mi(`|\vec{DM}| = \frac{a\sqrt{3}}{2}`)  (đường cao tam giác đều). Suy ra  #mi(`\cos(\vec{AB}, \vec{DM}) = \frac{-a^2/4}{a \cdot a\sqrt{3}/2} = -\frac{1}{2\sqrt{3}}`) .] \
@@ -1279,8 +1192,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
 // @ANCHOR:dang_10|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tính tích vô hướng trong tứ diện đều:] Cho hình chóp tứ giác đều  #mi(`S.ABCD`)  có tất cả các cạnh bằng  #mi(`a`) . Tính tích vô hướng  #mi(`\vec{SA} \cdot \vec{BC}`) .
-    
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_10|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] 1. Xác định độ dài: Vì tất cả các cạnh bằng  #mi(`a`)  nên  #mi(`|\vec{SA}| = a`)  và  #mi(`|\vec{BC}| = a`) .
@@ -1293,8 +1204,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_10|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho tứ diện đều  #mi(`ABCD`)  cạnh  #mi(`a`) . Tính tích vô hướng  #mi(`\vec{AB} \cdot \vec{AD}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_10|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`ABCD`)  là tứ diện đều nên  #mi(`|\vec{AB}| = |\vec{AD}| = a`)  và góc  #mi(`(\vec{AB}, \vec{AD}) = 60^\circ`) . Tích vô hướng là:  #mi(`\vec{AB} \cdot \vec{AD} = a \cdot a \cdot \cos 60^\circ = \frac{a^2}{2}`) .] \
@@ -1306,8 +1215,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
     ]
 // @ANCHOR:dang_10|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho tứ diện đều  #mi(`ABCD`)  cạnh  #mi(`a`) . Tính tích vô hướng  #mi(`\vec{AC} \cdot \vec{AD}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_10|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`ABCD`)  là tứ diện đều nên  #mi(`|\vec{AC}| = |\vec{AD}| = a`)  và góc  #mi(`(\vec{AC}, \vec{AD}) = 60^\circ`) . Tích vô hướng là:  #mi(`\vec{AC} \cdot \vec{AD} = a \cdot a \cdot \cos 60^\circ = \frac{a^2}{2}`) .] \
@@ -1319,8 +1226,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
     ]
 // @ANCHOR:dang_10|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho tứ diện đều  #mi(`ABCD`)  cạnh  #mi(`a`) . Tính tích vô hướng  #mi(`\vec{AB} \cdot \vec{CD}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_10|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{AB} \cdot \vec{CD} = \vec{AB} \cdot (\vec{AD} - \vec{AC}) = \vec{AB} \cdot \vec{AD} - \vec{AB} \cdot \vec{AC}`) . Vì tứ diện đều nên  #mi(`\vec{AB} \cdot \vec{AD} = \frac{a^2}{2}`)  và  #mi(`\vec{AB} \cdot \vec{AC} = \frac{a^2}{2}`) . Vậy  #mi(`\vec{AB} \cdot \vec{CD} = \frac{a^2}{2} - \frac{a^2}{2} = 0`) . (Suy ra  #mi(`AB \perp CD`) ).] \
@@ -1332,8 +1237,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
     ]
 // @ANCHOR:dang_10|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho tứ diện đều  #mi(`ABCD`)  cạnh  #mi(`a`) . Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AC`)  và  #mi(`BD`) . Tính tích vô hướng  #mi(`\vec{MN} \cdot \vec{AB}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_10|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{MN} = \frac{1}{2}(\vec{AB} + \vec{CD})`) . Khi đó  #mi(`\vec{MN} \cdot \vec{AB} = \frac{1}{2}(\vec{AB} + \vec{CD}) \cdot \vec{AB} = \frac{1}{2}(\vec{AB}^2 + \vec{CD} \cdot \vec{AB})`) . Vì  #mi(`ABCD`)  là tứ diện đều nên  #mi(`\vec{AB}^2 = a^2`)  và  #mi(`\vec{CD} \cdot \vec{AB} = 0`) . Vậy  #mi(`\vec{MN} \cdot \vec{AB} = \frac{1}{2}(a^2 + 0) = \frac{a^2}{2}`) .] \
@@ -1406,8 +1309,6 @@ Vậy  #mi(`\vec{AG} = \vec{AA'} + \frac{2}{3}\vec{AB} + \frac{1}{3}\vec{AD}`) .
 // @ANCHOR:dang_11|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Chứng minh đường thẳng vuông góc trong tứ diện:] Cho tứ diện  #mi(`ABCD`)  có  #mi(`AC \perp AB`)  và  #mi(`BD \perp AB`) . Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Chứng minh rằng  #mi(`MN \perp AB`) .
-    
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_11|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) , theo công thức đường trung bình trong tứ diện, ta có:  #mi(`\vec{MN} = \frac{1}{2}(\vec{AC} + \vec{BD})`) . 
@@ -1422,8 +1323,6 @@ Vậy  #mi(`\vec{MN} \perp \vec{AB}`) .
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_11|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho tứ diện  #mi(`ABCD`)  có  #mi(`AD \perp AB`)  và  #mi(`BC \perp AB`) . Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Chứng minh rằng  #mi(`MN \perp AB`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_11|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{MN} = \frac{1}{2}(\vec{AD} + \vec{BC})`) . 
@@ -1438,8 +1337,6 @@ Suy ra  #mi(`\vec{MN} \cdot \vec{AB} = 0`) , vậy  #mi(`MN \perp AB`) .] \
     ]
 // @ANCHOR:dang_11|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho tứ diện  #mi(`ABCD`)  có  #mi(`AC \perp AB`)  và  #mi(`BD \perp AB`) . Gọi  #mi(`I, J`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Chứng minh rằng  #mi(`IJ \perp AB`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_11|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{IJ} = \frac{1}{2}(\vec{AC} + \vec{BD})`) . 
@@ -1454,8 +1351,6 @@ Suy ra  #mi(`\vec{IJ} \cdot \vec{AB} = 0`) , vậy  #mi(`IJ \perp AB`) .] \
     ]
 // @ANCHOR:dang_11|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Biết  #mi(`\vec{AC} \cdot \vec{AB} = 0`)  và  #mi(`\vec{BD} \cdot \vec{AB} = 0`) . Chứng minh rằng  #mi(`\vec{MN}`)  vuông góc với  #mi(`\vec{AB}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_11|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Sử dụng công thức trung điểm:  #mi(`\vec{MN} = \frac{1}{2}(\vec{AC} + \vec{BD})`) . 
@@ -1470,8 +1365,6 @@ Vậy  #mi(`\vec{MN} \perp \vec{AB}`) .] \
     ]
 // @ANCHOR:dang_11|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Gọi  #mi(`M`)  là trung điểm của  #mi(`AB`) ,  #mi(`N`)  là trung điểm của  #mi(`C'D'`) . Chứng minh rằng  #mi(`MN \perp AA'`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_11|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Đặt  #mi(`\vec{AB}=\vec{b}, \vec{AD}=\vec{d}, \vec{AA'}=\vec{a}`) . 
@@ -1567,8 +1460,6 @@ Vì tích vô hướng bằng  #mi(`0`)  nên  #mi(`\cos(\vec{BD}, \vec{A'C'}) =
 // @ANCHOR:dang_12|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tính cosin góc giữa hai đường thẳng trong hình chóp:] Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình vuông cạnh  #mi(`a`) ,  #mi(`SA \perp (ABCD)`)  và  #mi(`SA = a`) . Tính  #mi(`\cos(SC, BD)`) .
-    
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_12|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] 1. Xác định vectơ chỉ phương:  #mi(`\vec{u_{SC}} = \vec{SC}`)  và  #mi(`\vec{u_{BD}} = \vec{BD}`) .
@@ -1584,8 +1475,6 @@ Vậy  #mi(`\vec{SC} \cdot \vec{BD} = 0`) .
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_12|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Tính  #mi(`\cos(\vec{AB}, \vec{A'C'})`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_12|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{A'C'} = \vec{A'B'} + \vec{B'C'} = \vec{AB} + \vec{BC}`) .
@@ -1600,8 +1489,6 @@ Tích vô hướng:  #mi(`\vec{AB} \cdot \vec{A'C'} = \vec{AB} \cdot (\vec{AB} +
     ]
 // @ANCHOR:dang_12|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Tính  #mi(`\cos(\vec{AD}, \vec{A'C'})`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_12|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{A'C'} = \vec{AB} + \vec{BC} = \vec{AB} + \vec{AD}`) .
@@ -1616,8 +1503,6 @@ Tích vô hướng:  #mi(`\vec{AD} \cdot \vec{A'C'} = \vec{AD} \cdot (\vec{AB} +
     ]
 // @ANCHOR:dang_12|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Gọi  #mi(`M`)  là trung điểm  #mi(`BB'`) . Tính  #mi(`\cos(\vec{AM}, \vec{A'C'})`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_12|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Đặt  #mi(`\vec{AB} = \vec{x}, \vec{AD} = \vec{y}, \vec{AA'} = \vec{z}`) .
@@ -1634,8 +1519,6 @@ Tích vô hướng:  #mi(`\vec{AD} \cdot \vec{A'C'} = \vec{AD} \cdot (\vec{AB} +
     ]
 // @ANCHOR:dang_12|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình chóp  #mi(`S.ABC`)  có  #mi(`SA, SB, SC`)  đôi một vuông góc và  #mi(`SA=SB=SC=a`) . Tính  #mi(`\cos(BC, SA)`) .
-  
-  #align(center)[#draw-pyramid-tri(labels: ("S", "A", "B", "C"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_12|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vectơ chỉ phương của  #mi(`BC`)  là  #mi(`\vec{BC}`) , của  #mi(`SA`)  là  #mi(`\vec{SA}`) .
@@ -1763,8 +1646,6 @@ eq 0 #mi(`).`)
 // @ANCHOR:dang_13|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tính tỉ số đoạn thẳng qua phân tích vectơ:] Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M, N`)  lần lượt là các điểm thỏa mãn  #mi(`\vec{MD} + \vec{MS} = \vec{0}`)  và  #mi(`\vec{NB} + 2\vec{NC} = \vec{0}`) . Mặt phẳng  #mi(`(AMN)`)  cắt  #mi(`SC`)  tại  #mi(`P`) . Tính tỉ số  #mi(`\frac{SP}{SC}`) .
-    
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_13|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] 1. Xác định vị trí các điểm:  #mi(`\vec{MD} + \vec{MS} = \vec{0} \Rightarrow M`)  là trung điểm của  #mi(`DS`) .  #mi(`\vec{NB} + 2\vec{NC} = \vec{0} \Rightarrow \vec{NB} = -2\vec{NC}`) , vậy  #mi(`N`)  nằm trên đoạn  #mi(`BC`)  sao cho  #mi(`BN = 2NC`) .
@@ -1789,8 +1670,6 @@ eq 0 #mi(`).`)
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_13|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M`)  là trung điểm của  #mi(`SD`)  và  #mi(`N`)  là trung điểm của  #mi(`BC`) . Gọi  #mi(`P`)  là giao điểm của  #mi(`MN`)  và  #mi(`SC`) . Tính tỉ số  #mi(`\frac{SP}{SC}`) .
-  
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_13|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: 1.  #mi(`\vec{MN} = \vec{MS} + \vec{SN} = \frac{1}{2}\vec{DS} + \vec{SN}`) .
@@ -1815,8 +1694,6 @@ eq 0 #mi(`).`)
     ]
 // @ANCHOR:dang_13|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M`)  là trung điểm của  #mi(`SB`)  và  #mi(`N`)  là trung điểm của  #mi(`CD`) . Gọi  #mi(`P`)  là giao điểm của  #mi(`MN`)  và  #mi(`SC`) . Tính tỉ số  #mi(`\frac{SP}{SC}`) .
-  
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_13|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: 1.  #mi(`\vec{MN} = \vec{MS} + \vec{SN} = \frac{1}{2}\vec{BS} + \vec{SN}`) .
@@ -1836,8 +1713,6 @@ eq 0 #mi(`).`)
     ]
 // @ANCHOR:dang_13|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Gọi  #mi(`M`)  là trung điểm  #mi(`A'D'`) ,  #mi(`N`)  là trung điểm  #mi(`B'C'`) . Gọi  #mi(`I`)  là giao điểm của  #mi(`A'N`)  và  #mi(`B'M`) . Phân tích  #mi(`\vec{AI}`)  theo  #mi(`\vec{AA'}, \vec{AB}, \vec{AD}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_13|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: 1.  #mi(`\vec{A'N} = \vec{A'B'} + \vec{B'N} = \vec{AB} + \frac{1}{2}\vec{B'C'} = \vec{AB} + \frac{1}{2}\vec{DC} = \vec{AB} + \frac{1}{2}\vec{AB} = \frac{3}{2}\vec{AB}`) .
@@ -1854,8 +1729,6 @@ eq 0 #mi(`).`)
     ]
 // @ANCHOR:dang_13|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`G`)  là trọng tâm tam giác  #mi(`BCD`) . Chứng minh rằng  #mi(`\vec{AB} + \vec{AC} + \vec{AD} = 3\vec{AG}`) .
-  
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_13|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: 1. Vì  #mi(`G`)  là trọng tâm tam giác  #mi(`BCD`)  nên  #mi(`\vec{GB} + \vec{GC} + \vec{GD} = \vec{0}`) .
@@ -1933,8 +1806,6 @@ eq 0 #mi(`).`)
 // @ANCHOR:dang_14|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tính hợp lực của 3 lực đôi một vuông góc:] Ba lực  #mi(`\vec{F_1}, \vec{F_2}, \vec{F_3}`)  cùng tác động vào một vật, có phương đôi một vuông góc và có độ lớn lần lượt là  #mi(`2\text{N}, 3\text{N}, 4\text{N}`) . Tính độ lớn hợp lực của ba lực đã cho.
-    
-  #align(center)[#draw-oxyz()]
 // @ANCHOR:dang_14|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì ba lực  #mi(`\vec{F_1}, \vec{F_2}, \vec{F_3}`)  đôi một vuông góc nên hợp lực  #mi(`\vec{F} = \vec{F_1} + \vec{F_2} + \vec{F_3}`)  có độ lớn được tính theo công thức:
@@ -2057,8 +1928,6 @@ Vì  #mi(`\vec{F_3}`)  vuông góc với mặt phẳng chứa  #mi(`\vec{F_1}, \
 // @ANCHOR:dang_15|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Kiểm tra mệnh đề trong hình hộp:] Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Xét tính đúng sai của mệnh đề sau:  #mi(`\vec{AB} + \vec{BC} + \vec{CC'} = \vec{AC'}`) .
-    
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_15|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Bước 1: Áp dụng quy tắc ba điểm cho hai vectơ đầu tiên:  #mi(`\vec{AB} + \vec{BC} = \vec{AC}`) .
@@ -2070,8 +1939,6 @@ Kết luận: Mệnh đề trên là Đúng.
 // @ANCHOR:dang_15|example|1|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 2 - Mệnh đề về trung điểm trong tứ diện:] Cho tứ diện  #mi(`ABCD`) . Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`AB`)  và  #mi(`CD`) . Chứng minh rằng  #mi(`\vec{MN} = \frac{1}{2}(\vec{AC} + \vec{BD})`) .
-    
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_15|example|1|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Bước 1: Phân tích  #mi(`\vec{MN}`)  theo hai đường đi khác nhau:
@@ -2088,8 +1955,6 @@ Bước 4: Suy ra  #mi(`2\vec{MN} = \vec{AC} + \vec{BD} \Rightarrow \vec{MN} = \
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_15|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Kiểm tra tính đúng sai của mệnh đề:  #mi(`\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_15|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Đây là quy tắc hình hộp cơ bản. Trong hình hộp  #mi(`ABCD.A'B'C'D'`) , tổng của ba vectơ xuất phát từ một đỉnh và nằm trên ba cạnh chung đỉnh đó chính bằng vectơ đường chéo xuất phát từ đỉnh đó. Vậy  #mi(`\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}`) . Mệnh đề Đúng.] \
@@ -2101,8 +1966,6 @@ Bước 4: Suy ra  #mi(`2\vec{MN} = \vec{AC} + \vec{BD} \Rightarrow \vec{MN} = \
     ]
 // @ANCHOR:dang_15|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Kiểm tra tính đúng sai của mệnh đề:  #mi(`\vec{B'A'} + \vec{B'B} + \vec{B'C'} = \vec{B'D'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_15|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Xét hình hộp  #mi(`ABCD.A'B'C'D'`) , tại đỉnh  #mi(`B'`) , ta có ba vectơ cạnh là  #mi(`\vec{B'A'}`) ,  #mi(`\vec{B'B}`)  và  #mi(`\vec{B'C'}`) . Theo quy tắc hình hộp, tổng của chúng là vectơ đường chéo xuất phát từ  #mi(`B'`) . Vậy  #mi(`\vec{B'A'} + \vec{B'B} + \vec{B'C'} = \vec{B'D}`) . Tuy nhiên, đề bài ghi là  #mi(`\vec{B'D'}`) , điều này sai vì  #mi(`\vec{B'D'}`)  chỉ là đường chéo mặt đáy. Mệnh đề Sai.] \
@@ -2114,8 +1977,6 @@ Bước 4: Suy ra  #mi(`2\vec{MN} = \vec{AC} + \vec{BD} \Rightarrow \vec{MN} = \
     ]
 // @ANCHOR:dang_15|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Gọi  #mi(`O`)  là tâm của hình hộp. Kiểm tra tính đúng sai của mệnh đề:  #mi(`\vec{OA} + \vec{OB} + \vec{OC} + \vec{OD} = \vec{0}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "O", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_15|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`O`)  là tâm hình hộp nên  #mi(`O`)  là trung điểm của các đường chéo  #mi(`AC', BD', CA', DB'`) . Do đó,  #mi(`\vec{OA} + \vec{OC'} = \vec{0}`)  và  #mi(`\vec{OB} + \vec{OD'} = \vec{0}`) . Tuy nhiên,  #mi(`\vec{OA} + \vec{OB} + \vec{OC} + \vec{OD}`)  là tổng các vectơ từ tâm đến 4 đỉnh của một mặt. Vì  #mi(`ABCD`)  là hình bình hành tâm  #mi(`I`)  (giao  #mi(`AC`)  và  #mi(`BD`) ), nên  #mi(`\vec{IA} + \vec{IB} + \vec{IC} + \vec{ID} = \vec{0}`) . Nhưng  #mi(`O`)  không trùng  #mi(`I`) . Mệnh đề Sai.] \
@@ -2127,8 +1988,6 @@ Bước 4: Suy ra  #mi(`2\vec{MN} = \vec{AC} + \vec{BD} \Rightarrow \vec{MN} = \
     ]
 // @ANCHOR:dang_15|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Gọi  #mi(`M`)  là trung điểm  #mi(`BC`) . Kiểm tra tính đúng sai của mệnh đề:  #mi(`\vec{AM} = \vec{AB} + \frac{1}{2}\vec{BC}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "M", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_15|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Xét tam giác  #mi(`ABC`)  trong mặt phẳng đáy. Vì  #mi(`M`)  là trung điểm của  #mi(`BC`)  nên  #mi(`\vec{BM} = \frac{1}{2}\vec{BC}`) . Áp dụng quy tắc ba điểm:  #mi(`\vec{AM} = \vec{AB} + \vec{BM} = \vec{AB} + \frac{1}{2}\vec{BC}`) . Mệnh đề Đúng.] \
@@ -2204,8 +2063,6 @@ eq \vec{0} #mi(`) cùng phương khi và chỉ khi tồn tại số thực`) k #
 // @ANCHOR:dang_16|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Xác định tâm hình lập phương:] Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Gọi  #mi(`O`)  là tâm của hình lập phương. Hãy biểu diễn vectơ  #mi(`\vec{AO}`)  theo các vectơ  #mi(`\vec{AB}, \vec{AD}, \vec{AA'}`) .
-    
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_16|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Gọi  #mi(`O'`)  là tâm của hình vuông  #mi(`A'B'C'D'`) . Khi đó  #mi(`O`)  là trung điểm của  #mi(`AO'`) . Ta có  #mi(`\vec{AO'} = \vec{AA'} + \vec{A'O'}`) . Vì  #mi(`O'`)  là tâm hình vuông  #mi(`A'B'C'D'`)  nên  #mi(`\vec{A'O'} = \frac{1}{2}(\vec{A'B'} + \vec{A'D'}) = \frac{1}{2}(\vec{AB} + \vec{AD})`) . Suy ra  #mi(`\vec{AO'} = \vec{AA'} + \frac{1}{2}\vec{AB} + \frac{1}{2}\vec{AD}`) . Vì  #mi(`O`)  là trung điểm  #mi(`AO'`)  nên  #mi(`\vec{AO} = \frac{1}{2}\vec{AO'} = \frac{1}{2}(\frac{1}{2}\vec{AB} + \frac{1}{2}\vec{AD} + \vec{AA'}) = \frac{1}{4}\vec{AB} + \frac{1}{4}\vec{AD} + \frac{1}{2}\vec{AA'}`) . Lưu ý: Nếu  #mi(`O`)  là trung điểm đường chéo  #mi(`AC'`) , thì  #mi(`\vec{AO} = \frac{1}{2}\vec{AC'} = \frac{1}{2}(\vec{AB} + \vec{AD} + \vec{AA'})`) .
@@ -2216,8 +2073,6 @@ eq \vec{0} #mi(`) cùng phương khi và chỉ khi tồn tại số thực`) k #
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_16|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Gọi  #mi(`O`)  là tâm của hình lập phương. Biểu diễn vectơ  #mi(`\vec{AO}`)  theo các vectơ  #mi(`\vec{AB}, \vec{AD}, \vec{AA'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_16|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Tâm  #mi(`O`)  của hình lập phương là trung điểm của đường chéo  #mi(`AC'`) . Theo quy tắc hình hộp, ta có  #mi(`\vec{AC'} = \vec{AB} + \vec{AD} + \vec{AA'}`) . Vì  #mi(`O`)  là trung điểm  #mi(`AC'`)  nên  #mi(`\vec{AO} = \frac{1}{2}\vec{AC'} = \frac{1}{2}(\vec{AB} + \vec{AD} + \vec{AA'})`) .] \
@@ -2229,8 +2084,6 @@ eq \vec{0} #mi(`) cùng phương khi và chỉ khi tồn tại số thực`) k #
     ]
 // @ANCHOR:dang_16|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Gọi  #mi(`O`)  là tâm của hình lập phương. Biểu diễn vectơ  #mi(`\vec{BO}`)  theo các vectơ  #mi(`\vec{BA}, \vec{BC}, \vec{BB'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_16|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Tâm  #mi(`O`)  của hình lập phương là trung điểm của đường chéo  #mi(`BD'`) . Theo quy tắc hình hộp, ta có  #mi(`\vec{BD'} = \vec{BA} + \vec{BC} + \vec{BB'}`) . Vì  #mi(`O`)  là trung điểm  #mi(`BD'`)  nên  #mi(`\vec{BO} = \frac{1}{2}\vec{BD'} = \frac{1}{2}(\vec{BA} + \vec{BC} + \vec{BB'})`) .] \
@@ -2242,8 +2095,6 @@ eq \vec{0} #mi(`) cùng phương khi và chỉ khi tồn tại số thực`) k #
     ]
 // @ANCHOR:dang_16|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`) . Gọi  #mi(`M`)  là trung điểm của  #mi(`AA'`) . Tìm điểm  #mi(`O`)  sao cho  #mi(`\vec{AO} = \vec{AB} + \vec{AD} + \vec{AM}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_16|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`\vec{AM} = \frac{1}{2}\vec{AA'}`) . Khi đó  #mi(`\vec{AO} = \vec{AB} + \vec{AD} + \frac{1}{2}\vec{AA'}`) . Gọi  #mi(`N`)  là trung điểm của  #mi(`A'C'`) . Theo quy tắc hình hộp,  #mi(`\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}`) . Vậy  #mi(`\vec{AO} = \vec{AC'} - \frac{1}{2}\vec{AA'} = \vec{AC'} - \vec{A'M} = \vec{AM} + \vec{AB} + \vec{AD}`) . Điểm  #mi(`O`)  là điểm sao cho  #mi(`A B O D`)  là hình bình hành và  #mi(`O`)  nằm trên đoạn  #mi(`MC'`)  sao cho  #mi(`\vec{AO}`)  là tổng 3 vectơ. Cụ thể,  #mi(`\vec{AO} = \vec{AB} + \vec{AD} + \vec{AM} = \vec{AC} + \vec{AM}`) . Vì  #mi(`A, C, M`)  là 3 đỉnh của hình lập phương, điểm  #mi(`O`)  là đỉnh thứ tư của hình bình hành  #mi(`AMCO`) .] \
@@ -2255,8 +2106,6 @@ eq \vec{0} #mi(`) cùng phương khi và chỉ khi tồn tại số thực`) k #
     ]
 // @ANCHOR:dang_16|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Biết  #mi(`\vec{u} = m\vec{AB} + \vec{AD} + n\vec{AA'}`) . Tìm  #mi(`m, n`)  để  #mi(`\vec{u}`)  cùng phương với  #mi(`\vec{AC'}`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_16|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vectơ  #mi(`\vec{AC'} = \vec{AB} + \vec{AD} + \vec{AA'}`) . Để  #mi(`\vec{u}`)  cùng phương với  #mi(`\vec{AC'}`)  thì tồn tại số thực  #mi(`k`)  sao cho  #mi(`\vec{u} = k\vec{AC'}`) . Suy ra  #mi(`m\vec{AB} + \vec{AD} + n\vec{AA'} = k(\vec{AB} + \vec{AD} + \vec{AA'}) = k\vec{AB} + k\vec{AD} + k\vec{AA'}`) . Vì  #mi(`\vec{AB}, \vec{AD}, \vec{AA'}`)  không đồng phẳng nên ta có hệ:  #mi(`\begin{cases} m = k \\ 1 = k \\ n = k \end{cases} \Rightarrow m = 1, n = 1`) .] \
@@ -2349,8 +2198,6 @@ ightarrow kg #mi(`khi tính trọng lực`) P = mg #mi(`và dùng định lý Py
 // @ANCHOR:dang_17|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tính hợp lực của ba lực vuông góc:] Ba lực  #mi(`\vec{F_1}, \vec{F_2}, \vec{F_3}`)  cùng tác động vào một vật, có phương đôi một vuông góc và có độ lớn lần lượt là  #mi(`2\text{N}, 3\text{N}, 4\text{N}`) . Tính độ lớn hợp lực của ba lực trên.
-    
-  #align(center)[#draw-oxyz()]
 // @ANCHOR:dang_17|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] Vì ba lực  #mi(`\vec{F_1}, \vec{F_2}, \vec{F_3}`)  đôi một vuông góc, nên độ lớn hợp lực  #mi(`\vec{F} = \vec{F_1} + \vec{F_2} + \vec{F_3}`)  được tính theo công thức:  #mi(`F = \sqrt{F_1^2 + F_2^2 + F_3^2}`) . Thay số:  #mi(`F = \sqrt{2^2 + 3^2 + 4^2} = \sqrt{4 + 9 + 16} = \sqrt{29} \approx 5,39\text{ N}`) .
@@ -2394,8 +2241,6 @@ ightarrow kg #mi(`khi tính trọng lực`) P = mg #mi(`và dùng định lý Py
     ]
 // @ANCHOR:dang_17|drill|3|prompt
   *Bài 4 (Vận dụng).* Một vật chịu tác dụng của ba lực  #mi(`\vec{F_1}, \vec{F_2}, \vec{F_3}`)  đôi một vuông góc với độ lớn lần lượt là  #mi(`3\text{N}, 4\text{N}, 12\text{N}`) . Tính độ lớn hợp lực của vật và tính tỉ số giữa hợp lực này với lực lớn nhất trong ba lực thành phần.
-  
-  #align(center)[#draw-oxyz()]
 // @ANCHOR:dang_17|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Độ lớn hợp lực:  #mi(`F = \sqrt{3^2 + 4^2 + 12^2} = \sqrt{9 + 16 + 144} = \sqrt{169} = 13\text{ N}`) . Lực lớn nhất là  #mi(`F_3 = 12\text{ N}`) . Tỉ số cần tìm là  #mi(`\frac{F}{F_3} = \frac{13}{12} \approx 1,08`) .] \
@@ -2550,8 +2395,6 @@ Vì tích vô hướng bằng  #mi(`0`)  nên  #mi(`\cos(\vec{AB}, \vec{CD}) = 0
 // @ANCHOR:dang_19|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tính cosin góc giữa hai vectơ trong tứ diện đều:] Cho tứ diện đều  #mi(`ABCD`)  cạnh  #mi(`a`) . Gọi  #mi(`M`)  là trung điểm của  #mi(`BC`) . Tính  #mi(`\cos(\vec{AB}, \vec{DM})`) .
-    
-  #align(center)[#draw-tetrahedron(labels: ("A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_19|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] 1. Phân tích vectơ  #mi(`\vec{DM}`)  theo các vectơ cơ sở  #mi(`\vec{AB}, \vec{AC}, \vec{AD}`)  hoặc sử dụng quy tắc cộng:  #mi(`\vec{DM} = \vec{DA} + \vec{AM}`) .
@@ -2568,8 +2411,6 @@ Vì tích vô hướng bằng  #mi(`0`)  nên  #mi(`\cos(\vec{AB}, \vec{CD}) = 0
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_19|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Tính  #mi(`\cos(\vec{AC}, \vec{A'C'})`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_19|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`A'C' \parallel AC`)  và  #mi(`\vec{A'C'} = \vec{AC}`)  nên  #mi(`\cos(\vec{AC}, \vec{A'C'}) = \cos(0^\circ) = 1`) .] \
@@ -2581,8 +2422,6 @@ Vì tích vô hướng bằng  #mi(`0`)  nên  #mi(`\cos(\vec{AB}, \vec{CD}) = 0
     ]
 // @ANCHOR:dang_19|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Tính  #mi(`\cos(\vec{BD}, \vec{B'D'})`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_19|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vì  #mi(`B'D' \parallel BD`)  và  #mi(`\vec{B'D'} = \vec{BD}`)  nên  #mi(`\cos(\vec{BD}, \vec{B'D'}) = \cos(0^\circ) = 1`) .] \
@@ -2594,8 +2433,6 @@ Vì tích vô hướng bằng  #mi(`0`)  nên  #mi(`\cos(\vec{AB}, \vec{CD}) = 0
     ]
 // @ANCHOR:dang_19|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình lập phương  #mi(`ABCD.A'B'C'D'`)  cạnh  #mi(`a`) . Tính  #mi(`\cos(\vec{AC}, \vec{A'C})`) .
-  
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_19|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải:  #mi(`\vec{A'C} = \vec{A'A} + \vec{AC}`) .
@@ -2610,8 +2447,6 @@ Vậy  #mi(`\cos(\vec{AC}, \vec{A'C}) = \frac{2a^2}{a\sqrt{2} \cdot a\sqrt{3}} =
     ]
 // @ANCHOR:dang_19|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình chóp  #mi(`S.ABC`)  có  #mi(`SA, SB, SC`)  đôi một vuông góc và  #mi(`SA=SB=SC=a`) . Tính góc giữa hai đường thẳng  #mi(`AB`)  và  #mi(`SC`) .
-  
-  #align(center)[#draw-pyramid-tri(labels: ("S", "A", "B", "C"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_19|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Vectơ chỉ phương của  #mi(`AB`)  là  #mi(`\vec{AB}`) , của  #mi(`SC`)  là  #mi(`\vec{SC}`) .
@@ -2689,8 +2524,6 @@ Vậy góc giữa hai đường thẳng  #mi(`AB`)  và  #mi(`SC`)  bằng  #mi(
 // @ANCHOR:dang_20|example|0|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 1 - Tìm tỉ số đoạn thẳng bằng phương pháp phân tích vectơ:] Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M`)  là trung điểm của  #mi(`SB`)  và  #mi(`N`)  là điểm trên  #mi(`SC`)  sao cho  #mi(`SN = 2NC`) . Mặt phẳng  #mi(`(AMN)`)  cắt  #mi(`SD`)  tại  #mi(`P`) . Tính tỉ số  #mi(`\frac{SP}{SD}`) .
-    
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_20|example|0|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] 1. Chọn hệ vectơ cơ sở là  #mi(`\vec{SA}, \vec{SB}, \vec{SC}`) . 
@@ -2707,8 +2540,6 @@ Vậy góc giữa hai đường thẳng  #mi(`AB`)  và  #mi(`SC`)  bằng  #mi(
 // @ANCHOR:dang_20|example|1|problem
   #block(fill: rgb("#f1f5f9"), stroke: 1pt + rgb("#cbd5e1"), inset: 8pt, radius: 4pt, width: 100%)[
     #text(weight: "bold", fill: rgb("#0369a1"))[Ví dụ 2 - Biểu diễn vectơ qua hệ cơ sở:] Cho hình hộp  #mi(`ABCD.A'B'C'D'`) . Biểu diễn vectơ  #mi(`\vec{A'C}`)  theo  #mi(`\vec{A'A}, \vec{A'B'}, \vec{A'D'}`) .
-    
-  #align(center)[#draw-cube(labels: ("A", "B", "C", "D", "A'", "B'", "C'", "D'"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_20|example|1|solution
     #if IS_TEACHER [
       \ #v(3pt) #text(weight: "bold", fill: rgb("#15803d"))[Lời giải:] 1. Ta có  #mi(`\vec{A'C} = \vec{A'A} + \vec{AC}`) . 
@@ -2722,8 +2553,6 @@ Vậy góc giữa hai đường thẳng  #mi(`AB`)  và  #mi(`SC`)  bằng  #mi(
 #card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
 // @ANCHOR:dang_20|drill|0|prompt
   *Bài 1 (Chuẩn mẫu).* Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M`)  là trung điểm của  #mi(`SA`)  và  #mi(`N`)  là trung điểm của  #mi(`SB`) . Mặt phẳng  #mi(`(MNC)`)  cắt  #mi(`SD`)  tại  #mi(`P`) . Tìm tỉ số  #mi(`\frac{SP}{SD}`) .
-  
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_20|drill|0|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Chọn hệ cơ sở  #mi(`\vec{SA}, \vec{SB}, \vec{SC}`) . Ta có  #mi(`\vec{SD} = \vec{SA} + \vec{SB} - \vec{SC}`) . Vì  #mi(`P \in (MNC)`) ,  #mi(`\vec{SP} = x\vec{SM} + y\vec{SN} + z\vec{SC}`)  với  #mi(`x+y+z=1`) . Mà  #mi(`\vec{SM} = \frac{1}{2}\vec{SA}`)  và  #mi(`\vec{SN} = \frac{1}{2}\vec{SB}`) . Suy ra  #mi(`\vec{SP} = \frac{x}{2}\vec{SA} + \frac{y}{2}\vec{SB} + z\vec{SC}`) . Vì  #mi(`P \in SD \implies \vec{SP} = k\vec{SD} = k\vec{SA} + k\vec{SB} - k\vec{SC}`) . Đồng nhất hệ số:  #mi(`\frac{x}{2} = k, \frac{y}{2} = k, z = -k`) . Thay vào  #mi(`x+y+z=1 \implies 2k + 2k - k = 1 \implies 3k = 1 \implies k = \frac{1}{3}`) . Vậy  #mi(`\frac{SP}{SD} = \frac{1}{3}`) .] \
@@ -2735,8 +2564,6 @@ Vậy góc giữa hai đường thẳng  #mi(`AB`)  và  #mi(`SC`)  bằng  #mi(
     ]
 // @ANCHOR:dang_20|drill|1|prompt
   *Bài 2 (Tương tự 100%).* Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M`)  là trung điểm của  #mi(`SC`)  và  #mi(`N`)  là trung điểm của  #mi(`SD`) . Mặt phẳng  #mi(`(MNA)`)  cắt  #mi(`SB`)  tại  #mi(`P`) . Tìm tỉ số  #mi(`\frac{SP}{SB}`) .
-  
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_20|drill|1|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Chọn hệ cơ sở  #mi(`\vec{SA}, \vec{SB}, \vec{SC}`) . Ta có  #mi(`\vec{SD} = \vec{SA} + \vec{SB} - \vec{SC}`) . Vì  #mi(`P \in (MNA)`) ,  #mi(`\vec{SP} = x\vec{SM} + y\vec{SN} + z\vec{SA}`)  với  #mi(`x+y+z=1`) . Mà  #mi(`\vec{SM} = \frac{1}{2}\vec{SC}`)  và  #mi(`\vec{SN} = \frac{1}{2}\vec{SD} = \frac{1}{2}(\vec{SA} + \vec{SB} - \vec{SC})`) . Suy ra  #mi(`\vec{SP} = \frac{x}{2}\vec{SC} + \frac{y}{2}\vec{SA} + \frac{y}{2}\vec{SB} - \frac{y}{2}\vec{SC} + z\vec{SA} = (\frac{y}{2} + z)\vec{SA} + \frac{y}{2}\vec{SB} + (\frac{x}{2} - \frac{y}{2})\vec{SC}`) . Vì  #mi(`P \in SB \implies \vec{SP} = k\vec{SB}`) . Đồng nhất hệ số:  #mi(`\frac{y}{2} + z = 0, \frac{y}{2} = k, \frac{x}{2} - \frac{y}{2} = 0 \implies x = y, z = -\frac{y}{2}`) . Thay vào  #mi(`x+y+z=1 \implies y + y - \frac{y}{2} = 1 \implies \frac{3y}{2} = 1 \implies y = \frac{2}{3}`) . Suy ra  #mi(`k = \frac{y}{2} = \frac{1}{3}`) . Vậy  #mi(`\frac{SP}{SB} = \frac{1}{3}`) .] \
@@ -2748,8 +2575,6 @@ Vậy góc giữa hai đường thẳng  #mi(`AB`)  và  #mi(`SC`)  bằng  #mi(
     ]
 // @ANCHOR:dang_20|drill|2|prompt
   *Bài 3 (Biến thể nhẹ).* Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M`)  là trung điểm của  #mi(`SA`)  và  #mi(`N`)  là điểm trên  #mi(`SB`)  sao cho  #mi(`SN = 2NB`) . Mặt phẳng  #mi(`(MNC)`)  cắt  #mi(`SD`)  tại  #mi(`P`) . Tìm tỉ số  #mi(`\frac{SP}{SD}`) .
-  
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_20|drill|2|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Chọn hệ cơ sở  #mi(`\vec{SA}, \vec{SB}, \vec{SC}`) . Ta có  #mi(`\vec{SD} = \vec{SA} + \vec{SB} - \vec{SC}`) . Vì  #mi(`P \in (MNC)`) ,  #mi(`\vec{SP} = x\vec{SM} + y\vec{SN} + z\vec{SC}`)  với  #mi(`x+y+z=1`) . Mà  #mi(`\vec{SM} = \frac{1}{2}\vec{SA}`)  và  #mi(`\vec{SN} = \frac{2}{3}\vec{SB}`) . Suy ra  #mi(`\vec{SP} = \frac{x}{2}\vec{SA} + \frac{2y}{3}\vec{SB} + z\vec{SC}`) . Vì  #mi(`P \in SD \implies \vec{SP} = k\vec{SD} = k\vec{SA} + k\vec{SB} - k\vec{SC}`) . Đồng nhất hệ số:  #mi(`\frac{x}{2} = k, \frac{2y}{3} = k, z = -k`) . Thay vào  #mi(`x+y+z=1 \implies 2k + \frac{3k}{2} - k = 1 \implies \frac{5k}{2} = 1 \implies k = \frac{2}{5}`) . Vậy  #mi(`\frac{SP}{SD} = \frac{2}{5}`) .] \
@@ -2761,8 +2586,6 @@ Vậy góc giữa hai đường thẳng  #mi(`AB`)  và  #mi(`SC`)  bằng  #mi(
     ]
 // @ANCHOR:dang_20|drill|3|prompt
   *Bài 4 (Vận dụng).* Cho hình chóp  #mi(`S.ABCD`)  có đáy  #mi(`ABCD`)  là hình bình hành. Gọi  #mi(`M, N`)  lần lượt là trung điểm của  #mi(`SA, SB`) . Gọi  #mi(`I`)  là trung điểm của  #mi(`MN`) . Tìm điểm  #mi(`P`)  trên  #mi(`SC`)  sao cho  #mi(`\vec{SP} = 2\vec{SI}`) .
-  
-  #align(center)[#draw-pyramid-quad(labels: ("S", "A", "B", "C", "D"), derived: (), lines: (), vectors: (), polygons: ())]
 // @ANCHOR:dang_20|drill|3|solution
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Chọn hệ cơ sở  #mi(`\vec{SA}, \vec{SB}, \vec{SC}`) . Ta có  #mi(`\vec{SI} = \frac{1}{2}(\vec{SM} + \vec{SN}) = \frac{1}{2}(\frac{1}{2}\vec{SA} + \frac{1}{2}\vec{SB}) = \frac{1}{4}\vec{SA} + \frac{1}{4}\vec{SB}`) . Theo đề bài  #mi(`\vec{SP} = 2\vec{SI} = \frac{1}{2}\vec{SA} + \frac{1}{2}\vec{SB}`) . Tuy nhiên,  #mi(`P`)  nằm trên  #mi(`SC \implies \vec{SP} = k\vec{SC}`) . Điều này dẫn đến mâu thuẫn vì  #mi(`\vec{SA}, \vec{SB}, \vec{SC}`)  không đồng phẳng. Vậy không tồn tại điểm  #mi(`P`)  trên  #mi(`SC`)  thỏa mãn điều kiện trên. (Bài toán yêu cầu xác định vị trí  #mi(`P`)  hoặc kết luận không tồn tại).] \

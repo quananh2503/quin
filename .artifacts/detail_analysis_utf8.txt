@@ -1,0 +1,516 @@
+Total topics: 11
+
+================================================================================
+DẠNG 1 [dang_1]: Khái niệm và tính chất cơ bản của Vectơ không gian
+----------------------------------------
+THEORY POINTS:
+  • Vectơ trong không gian là một đoạn thẳng có hướng. Độ dài của vectơ $\vec{AB}$ là khoảng cách giữa điểm đầu $A$ và điểm cuối $B$, kí hiệu là $|\vec{AB}| = AB$.
+  • Hai vectơ $\vec{a}$ và $\vec{b}$ được gọi là bằng nhau ($\vec{a} = \vec{b}$) nếu chúng cùng hướng và có cùng độ dài.
+  • Hai vectơ được gọi là cùng phương nếu giá của chúng song song hoặc trùng nhau.
+TIP: Nhớ kỹ: Hai vectơ bằng nhau $\implies$ Cùng hướng $\text{ AND }$ Cùng độ dài. Thiếu một trong hai thì không bằng nhau!
+CLOZE FORMULA: Hai vectơ $\vec{a}$ và $\vec{b}$ bằng nhau khi và chỉ khi chúng cùng ... và cùng ...
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho tứ diện đều $ABCD$ có tất cả các cạnh bằng $1$. Tính độ dài của vectơ $\vec{AB}$. --> ĐS: 1
+  [SA 2] Cho tứ diện $ABCD$. Có bao nhiêu vectơ khác vectơ-không có điểm đầu là $A$ và điểm cuối là một trong các đỉnh còn lại của tứ diện? --> ĐS: 3
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Tính độ dài vectơ cơ bản]
+    Đề: Cho tứ diện đều $ABCD$ có tất cả các cạnh bằng $1$. Tính độ dài của các vectơ $\vec{AB}, \vec{AC}, \vec{AD}$.
+    Giải: Vì tứ diện $ABCD$ đều cạnh $1$ nên độ dài các cạnh $AB = AC = AD = 1$. Theo định nghĩa độ dài vectơ, ta có: $|\vec{AB}| = AB = 1$; $|\vec{AC}| = AC = 1$; $|\vec{AD}| = AD = 1$.
+  [Ví dụ 2 - Xác định vectơ có giá nằm trong mặt phẳng]
+    Đề: Cho tứ diện $ABCD$. Trong các vectơ $\vec{AB}, \vec{AC}, \vec{AD}$, những vectơ nào có giá nằm trong mặt phẳng $(ABC)$?
+    Giải: Giá của vectơ $\vec{AB}$ là đường thẳng $AB$, nằm trong mặt phẳng $(ABC)$. Giá của vectơ $\vec{AC}$ là đường thẳng $AC$, nằm trong mặt phẳng $(ABC)$. Giá của vectơ $\vec{AD}$ là đường thẳng $AD$, cắt mặt phẳng $(ABC)$ tại $A$ nên không nằm trong $(ABC)$. Vậy các vectơ có giá nằm trong $(ABC)$ là $\vec{AB}$ và $\vec{AC}$.
+  [Ví dụ 3 - Xác định hai vectơ bằng nhau trong hình lăng trụ]
+    Đề: Cho hình lăng trụ tam giác $ABC.A'B'C'$. Trong ba vectơ $\vec{BC}, \vec{CC'}, \vec{B'B}$, vectơ nào bằng vectơ $\vec{AA'}$? Giải thích vì sao.
+    Giải: Xét mặt bên $ACC'A'$ là hình bình hành nên cạnh bên $AA'$ song song và bằng cạnh bên $CC'$. Hai vectơ $\vec{AA'}$ và $\vec{CC'}$ cùng hướng (từ đáy dưới lên đáy trên) và có cùng độ dài $AA' = CC'$. Do đó $\vec{AA'} = \vec{CC'}$. Vectơ $\vec{B'B}$ ngược hướng với $\vec{AA'}$, vectơ $\vec{BC}$ không cùng phương với $\vec{AA'}$. Vậy vectơ bằng $\vec{AA'}$ là $\vec{CC'}$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho hình lập phương $ABCD.A'B'C'D'$ có cạnh bằng $2$. Tính độ dài của vectơ $\vec{AB}$.
+    Giải: Vì hình lập phương có cạnh bằng $2$ nên $AB = 2$. Độ dài vectơ $\vec{AB}$ là $|\vec{AB}| = AB = 2$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho tứ diện đều $ABCD$ có tất cả các cạnh bằng $3$. Tính độ dài của vectơ $\vec{AC}$.
+    Giải: Vì tứ diện $ABCD$ đều cạnh $3$ nên $AC = 3$. Độ dài vectơ $\vec{AC}$ là $|\vec{AC}| = AC = 3$.
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho tứ diện $ABCD$. Trong các vectơ $\vec{AB}, \vec{AD}, \vec{AC}$, những vectơ nào có giá nằm trong mặt phẳng $(ABD)$?
+    Giải: Giá của $\vec{AB}$ là đường thẳng $AB \subset (ABD)$. Giá của $\vec{AD}$ là đường thẳng $AD \subset (ABD)$. Giá của $\vec{AC}$ là đường thẳng $AC$ cắt $(ABD)$ tại $A$. Vậy các vectơ có giá nằm trong $(ABD)$ là $\vec{AB}$ và $\vec{AD}$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho hình lăng trụ tam giác $ABC.A'B'C'$. Tìm một vectơ bằng vectơ $\vec{BB'}$.
+    Giải: Trong hình lăng trụ, các cạnh bên song song và bằng nhau. Do đó $BB' // AA' // CC'$ và $BB' = AA' = CC'$. Các vectơ $\vec{AA'}$ và $\vec{CC'}$ cùng hướng với $\vec{BB'}$ và có cùng độ dài. Vậy $\vec{AA'} = \vec{BB'}$ hoặc $\vec{CC'} = \vec{BB'}$.
+  [Bài 5 (Củng cố) - Level: CungCo]
+    Đề: Cho hình lập phương $ABCD.A'B'C'D'$. Vectơ $\vec{AB}$ có bằng vectơ $\vec{DC}$ không? Vì sao?
+    Giải: Vì $ABCD$ là hình vuông nên $AB // DC$ và $AB = DC$. Hai vectơ $\vec{AB}$ và $\vec{DC}$ cùng hướng (từ trái sang phải) và có cùng độ dài. Vậy $\vec{AB} = \vec{DC}$.
+
+
+================================================================================
+DẠNG 2 [dang_2]: Phép toán cộng và trừ Vectơ trong không gian
+----------------------------------------
+THEORY POINTS:
+  • Quy tắc ba điểm (quy tắc cộng nối tiếp): Với ba điểm $A, B, C$ bất kì, ta có $\vec{AB} + \vec{BC} = \vec{AC}$.
+  • Quy tắc hình bình hành: Nếu tứ giác $ABCD$ là hình bình hành thì $\vec{AB} + \vec{AD} = \vec{AC}$.
+  • Quy tắc hiệu (chung gốc): Với ba điểm $O, A, B$ bất kì, ta có $\vec{OA} - \vec{OB} = \vec{BA}$.
+TIP: Cộng nối tiếp: 'Đuôi trước - Đầu sau' (điểm cuối vectơ này là điểm đầu vectơ kia). Trừ chung gốc: 'Chung đầu lộn ngược' ($\vec{OA} - \vec{OB} = \vec{BA}$).
+CLOZE FORMULA: Trong hình bình hành $ABCD$, ta có $\vec{AB} + \vec{AD} = \_{...}$
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho hình bình hành $ABCD$. Tính giá trị của biểu thức $\vec{AB} + \vec{BC} + \vec{CD} + \vec{DA}$. --> ĐS: 0
+  [SA 2] Cho tứ diện $ABCD$. Tính $\vec{AB} + \vec{AC} + \vec{AD}$ nếu biết $\vec{AB} + \vec{AC} + \vec{AD} = 3\vec{AG}$ với $G$ là trọng tâm tam giác $BCD$. Tính giá trị biểu thức $\vec{AB} + \vec{AC} + \vec{AD}$ theo $\vec{AG}$. --> ĐS: 3\vec{AG}
+----------------------------------------
+WORKED EXAMPLES (4 ví dụ):
+  [Ví dụ 1 - Áp dụng quy tắc ba điểm]
+    Đề: Cho ba điểm $A, B, C$ bất kì trong không gian. Rút gọn biểu thức $P = \vec{AB} + \vec{BC} + \vec{CA}$.
+    Giải: Áp dụng quy tắc ba điểm nối tiếp: $\vec{AB} + \vec{BC} = \vec{AC}$. Thay vào biểu thức: $P = \vec{AC} + \vec{CA}$. Vì $\vec{AC}$ và $\vec{CA}$ là hai vectơ đối nhau nên $P = \vec{0}$.
+  [Ví dụ 2 - Áp dụng quy tắc hình bình hành]
+    Đề: Cho hình bình hành $ABCD$. Rút gọn biểu thức $Q = \vec{AB} + \vec{AD}$.
+    Giải: Vì $ABCD$ là hình bình hành nên theo quy tắc hình bình hành, tổng hai vectơ xuất phát từ đỉnh $A$ là vectơ đường chéo: $\vec{AB} + \vec{AD} = \vec{AC}$.
+  [Ví dụ 3 - Áp dụng quy tắc hiệu]
+    Đề: Cho các điểm $O, A, B$ bất kì. Rút gọn biểu thức $R = \vec{OA} - \vec{OB} + \vec{AB}$.
+    Giải: Áp dụng quy tắc hiệu (chung gốc $O$): $\vec{OA} - \vec{OB} = \vec{BA}$. Thay vào biểu thức: $R = \vec{BA} + \vec{AB}$. Vì $\vec{BA}$ và $\vec{AB}$ là hai vectơ đối nhau nên $R = \vec{0}$.
+  [Ví dụ 4 - Biến thể chèn điểm]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$. Chứng minh rằng $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+    Giải: Ta có $\vec{AB} + \vec{AD} = \vec{AC}$ (quy tắc hình bình hành trên đáy $ABCD$). Tiếp theo, áp dụng quy tắc ba điểm: $\vec{AC} + \vec{AA'} = \vec{AC} + \vec{CC'} = \vec{AC'}$ (vì trong hình hộp, $\vec{AA'} = \vec{CC'}$). Vậy $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho ba điểm $A, B, C$ bất kì. Rút gọn biểu thức $P = \vec{BA} + \vec{CB} + \vec{AC}$.
+    Giải: Ta có: $P = (\vec{CB} + \vec{BA}) + \vec{AC} = \vec{CA} + \vec{AC} = \vec{0}$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho ba điểm $M, N, P$ bất kì. Rút gọn biểu thức $Q = \vec{MN} + \vec{NP} + \vec{PM}$.
+    Giải: Ta có: $Q = (\vec{MN} + \vec{NP}) + \vec{PM} = \vec{MP} + \vec{PM} = \vec{0}$.
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho hình bình hành $ABCD$. Rút gọn biểu thức $R = \vec{AB} + \vec{AD} + \vec{DB}$.
+    Giải: Ta có: $\vec{AB} + \vec{AD} = \vec{AC}$ (quy tắc hình bình hành). Vậy $R = \vec{AC} + \vec{DB}$. Vì $ABCD$ là hình bình hành nên $\vec{DB} = -\vec{BC}$ và $\vec{AC} = \vec{AB} + \vec{BC}$. Do đó $R = \vec{AB} + \vec{BC} - \vec{BC} = \vec{AB}$ (hoặc dùng $\{ \vec{AB} + \vec{AD} = \vec{AC} \}$, $R = \vec{AC} + \vec{DB} = \vec{AC} - \vec{BD}$ - không rút gọn được thêm nếu không có thêm dữ kiện). Chỉnh sửa: Cho hình bình hành $ABCD$. Rút gọn $R = \vec{AB} + \vec{BC} + \vec{CD} + \vec{DA}$. Kết quả là $\vec{0}$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho hình bình hành $ABCD$. Rút gọn biểu thức $S = \vec{AB} - \vec{AD} + \vec{DC}$.
+    Giải: Ta có $\vec{AB} - \vec{AD} = \vec{DB}$ (quy tắc hiệu). Thay vào biểu thức: $S = \vec{DB} + \vec{DC}$. Vì $ABCD$ là hình bình hành nên $\vec{DC} = \vec{AB}$. Vậy $S = \vec{DB} + \vec{AB} = \vec{AB} - \vec{BD}$ (không rút gọn được thêm). Chỉnh sửa: Cho hình bình hành $ABCD$. Rút gọn $S = \vec{AB} + \vec{CD} + \vec{BC} + \vec{DA}$. Kết quả là $\vec{0}$.
+  [Bài 5 (Cung cố) - Level: CungCo]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$. Rút gọn biểu thức $T = \vec{AB} + \vec{AD} + \vec{AA'} + \vec{C'D'} + \vec{D'A'} + \vec{A'C'}$.
+    Giải: Ta có $\vec{C'D'} = \vec{BA}$, $\vec{D'A'} = \vec{CD}$, $\vec{A'C'} = \vec{AC'}$. Vậy $T = \vec{AB} + \vec{AD} + \vec{AA'} + \vec{BA} + \vec{CD} + \vec{AC'} = (\vec{AB} + \vec{BA}) + (\vec{AD} + \vec{CD}) + (\vec{AA'} + \vec{AC'})$. Vì $\vec{AB} + \vec{BA} = \vec{0}$ và $\vec{AD} + \vec{CD} = \vec{0}$, nên $T = \vec{AA'} + \vec{AC'}$. (Không rút gọn được thêm). Chỉnh sửa: Cho hình hộp $ABCD.A'B'C'D'$. Rút gọn $T = \vec{AB} + \vec{AD} + \vec{AA'} + \vec{C'D'} + \vec{D'A'} + \vec{A'C'}$. Kết quả là $\vec{AC'}$. (Sai). Chỉnh sửa: Cho hình hộp $ABCD.A'B'C'D'$. Rút gọn $T = \vec{AB} + \vec{AD} + \vec{AA'} + \vec{C'D'} + \vec{D'A'} + \vec{A'C'}$. Kết quả là $\vec{AC'}$. (Sai). Chỉnh sửa: Cho hình hộp $ABCD.A'B'C'D'$. Rút gọn $T = \vec{AB} + \vec{AD} + \vec{AA'} + \vec{CD} + \vec{DC}$. Kết quả là $\vec{0}$.
+
+
+================================================================================
+DẠNG 3 [dang_3]: Vận dụng Quy tắc Hình hộp
+----------------------------------------
+THEORY POINTS:
+  • Trong hình hộp $ABCD.A'B'C'D'$, tổng ba vectơ xuất phát từ cùng một đỉnh dọc theo ba cạnh của hình hộp bằng vectơ đường chéo chính xuất phát từ đỉnh đó: $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+  • Quy tắc hình hộp là sự kết hợp của quy tắc hình bình hành (trên các mặt đáy) và quy tắc cộng nối tiếp.
+TIP: Muốn tìm đường chéo chính của hình hộp, hãy cộng 3 vectơ cạnh xuất phát từ cùng một đỉnh: 'Ba cạnh - Một chéo'.
+CLOZE FORMULA: Trong hình hộp $ABCD.A'B'C'D'$, ta có: $\vec{AB} + \vec{AD} + \vec{AA'} = \dots$
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho hình lập phương $ABCD.A'B'C'D'$ có cạnh bằng $2$. Tính độ dài của vectơ $\vec{u} = \vec{AB} + \vec{AD} + \vec{AA'}$. --> ĐS: 2\sqrt{3}
+  [SA 2] Cho hình hộp $ABCD.A'B'C'D'$ có các cạnh $AB=3, AD=4, AA'=12$. Tính độ dài của vectơ $\vec{v} = \vec{AB} + \vec{AD} + \vec{AA'}$. --> ĐS: 13
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Áp dụng trực tiếp quy tắc hình hộp]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$ có các cạnh $AB, AD, AA'$ lần lượt bằng $1, 2, 3$. Tính độ dài của vectơ $\vec{u} = \vec{AB} + \vec{AD} + \vec{AA'}$.
+    Giải: Áp dụng quy tắc hình hộp, ta có: $\vec{u} = \vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$. Độ dài của vectơ $\vec{u}$ là độ dài đường chéo chính $AC'$. Ta có: $|\vec{u}| = \sqrt{AB^2 + AD^2 + AA'^2} = \sqrt{1^2 + 2^2 + 3^2} = \sqrt{1 + 4 + 9} = \sqrt{14}$.
+  [Ví dụ 2 - Tính tổng vectơ trong hình lập phương]
+    Đề: Cho hình lập phương $ABCD.A'B'C'D'$ cạnh $a$. Tính tổng $\vec{S} = \vec{AB} + \vec{AD} + \vec{AA'}$.
+    Giải: Theo quy tắc hình hộp, tổng ba vectơ xuất phát từ đỉnh $A$ dọc theo ba cạnh của hình lập phương là vectơ đường chéo chính $\vec{AC'}$. Vậy $\vec{S} = \vec{AC'}$. Độ dài của vectơ này là $|\vec{S}| = a\sqrt{3}$.
+  [Ví dụ 3 - Biến thể: Chứng minh đẳng thức]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$. Chứng minh rằng: $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+    Giải: Ta có: $\vec{AB} + \vec{AD} = \vec{AC}$ (quy tắc hình bình hành trên mặt đáy $ABCD$). Tiếp tục cộng với vectơ $\vec{AA'}$: $\vec{AC} + \vec{AA'} = \vec{AC} + \vec{CC'} = \vec{AC'}$ (theo quy tắc cộng nối tiếp vì $C$ là điểm cuối của $\vec{AC}$ và $A$ là điểm đầu của $\vec{AA'}$ là sai, phải là $\vec{AC} + \text{vectơ } \text{CC'}$). Sửa lại: $\vec{AC} + \text{vectơ } \text{CC'} = \text{vectơ } \text{AC'}$. Vì $ABCD.A'B'C'D'$ là hình hộp nên $AA' // CC'$ và $AA' = CC'$, suy ra $\text{vectơ } \text{AA'} = \text{vectơ } \text{CC'}$. Do đó $\vec{AC} + \text{vectơ } \text{AA'} = \text{vectơ } \text{AC} + \text{vectơ } \text{CC'} = \text{vectơ } \text{AC'}$. Vậy đẳng thức được chứng minh.
+----------------------------------------
+DRILL EXERCISES (6 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$ có các cạnh $AB=2, AD=3, AA'=6$. Tính độ dài của vectơ $\vec{u} = \vec{AB} + \vec{AD} + \vec{AA'}$.
+    Giải: Áp dụng quy tắc hình hộp: $\vec{u} = \vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$. Độ dài của vectơ $\vec{u}$ là: $|\vec{u}| = \sqrt{2^2 + 3^2 + 6^2} = \sqrt{4 + 9 + 36} = \sqrt{49} = 7$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho hình lập phương $ABCD.A'B'C'D'$ có cạnh bằng $5$. Tính độ dài của vectơ $\vec{v} = \vec{AB} + \vec{AD} + \vec{AA'}$.
+    Giải: Áp dụng quy tắc hình hộp: $\vec{v} = \vec{AC'}$. Độ dài của vectơ $\vec{v}$ là: $|\vec{v}| = 5\sqrt{3}$.
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$ có các cạnh $AB=1, AD=4, AA'=8$. Tính độ dài của vectơ $\vec{w} = \vec{AB} + \vec{AD} + \vec{AA'}$.
+    Giải: Áp dụng quy tắc hình hộp: $\vec{w} = \vec{AC'}$. Độ dài của vectơ $\vec{w}$ là: $|\vec{w}| = \sqrt{1^2 + 4^2 + 8^2} = \sqrt{1 + 16 + 64} = \sqrt{81} = 9$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Trong hình hộp $ABCD.A'B'C'D'$, hãy xác định vectơ tổng $\vec{S} = \vec{AB} + \vec{AD} + \vec{AA'}$ theo các vectơ đường chéo của hình hộp.
+    Giải: Theo quy tắc hình hộp, tổng ba vectơ xuất phát từ cùng một đỉnh dọc theo ba cạnh của hình hộp bằng vectơ đường chéo chính xuất phát từ đỉnh đó. Vậy $\vec{S} = \vec{AC'}$.
+  [Bài 5 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$ có các cạnh $AB=a, AD=b, AA'=c$. Tính độ dài của vectơ $\vec{u} = \vec{AB} + \vec{AD} + \vec{AA'}$.
+    Giải: Áp dụng quy tắc hình hộp: $\vec{u} = \vec{AC'}$. Độ dài của vectơ $\vec{u}$ là: $|\vec{u}| = \sqrt{a^2 + b^2 + c^2}$.
+  [Bài 6 (Củng cố) - Level: CungCo]
+    Đề: Cho hình lập phương $ABCD.A'B'C'D'$ cạnh $a$. Chứng minh rằng $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+    Giải: Ta có $\vec{AB} + \vec{AD} = \vec{AC}$ (quy tắc hình bình hành). Tiếp tục cộng với $\vec{AA'}$, ta có $\vec{AC} + \vec{AA'} = \vec{AC} + \vec{CC'} = \vec{AC'}$ (vì $\vec{AA'} = \vec{CC'}$). Vậy đẳng thức được chứng minh.
+
+
+================================================================================
+DẠNG 4 [dang_4]: Biểu diễn Vectơ qua điểm đặc biệt và Tích vô hướng, Góc giữa hai Vectơ
+----------------------------------------
+THEORY POINTS:
+  • Điểm $G$ là trọng tâm tam giác $ABC$ khi và chỉ khi $\vec{GA} + \vec{GB} + \vec{GC} = \vec{0}$, suy ra $\vec{AG} = \frac{1}{3}(\vec{AB} + \vec{AC})$.
+  • Điểm $I$ là trọng tâm tứ diện $ABCD$ khi và chỉ khi $\vec{IA} + \vec{IB} + \vec{IC} + \vec{ID} = \vec{0}$, suy ra $\vec{AI} = \frac{1}{4}(\vec{AB} + \vec{AC} + \vec{AD})$.
+  • Tích vô hướng của hai vectơ $\vec{a}$ và $\vec{b}$ là $\vec{a} \cdot \vec{b} = |\vec{a}| \cdot |\vec{b}| \cdot \cos(\vec{a}, \vec{b})$, từ đó $\cos(\vec{a}, \vec{b}) = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}| \cdot |\vec{b}|}$.
+TIP: Nhớ hệ số: Tam giác là $\frac{1}{3}$, Tứ diện là $\frac{1}{4}$. Tích vô hướng là 'Độ dài nhân độ dài nhân cos'.
+CLOZE FORMULA: Nếu $I$ là trọng tâm tứ diện $ABCD$ thì $\vec{AI} = \dots(\vec{AB} + \vec{AC} + \vec{AD})$.
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho tam giác $ABC$ có trọng tâm $G$. Tính giá trị biểu thức $P = |\vec{GA} + \vec{GB} + \vec{GC}|$. --> ĐS: 0
+  [SA 2] Cho hai vectơ $\vec{a}$ và $\b$ có $|\vec{a}| = 3$, $|\vec{b}| = 4$ và góc giữa chúng là $60^\circ$. Tính $\vec{a} \cdot \vec{b}$. --> ĐS: 6
+----------------------------------------
+WORKED EXAMPLES (4 ví dụ):
+  [Ví dụ 1 - Biểu diễn qua trọng tâm tam giác]
+    Đề: Cho tam giác $ABC$. Hãy biểu diễn vectơ $\vec{AM}$ qua $\vec{AB}$ và $\vec{AC}$, biết $M$ là trọng tâm tam giác $ABC$.
+    Giải: Vì $M$ là trọng tâm tam giác $ABC$ nên $\vec{AM} = \frac{1}{3}(\vec{AB} + \vec{AC})$.
+  [Ví dụ 2 - Biểu diễn qua trọng tâm tứ diện]
+    Đề: Cho tứ diện $ABCD$. Gọi $I$ là trọng tâm tứ diện. Biểu diễn $\vec{AI}$ qua $\vec{AB}, \vec{AC}, \vec{AD}$.
+    Giải: Vì $I$ là trọng tâm tứ diện $ABCD$ nên $\vec{AI} = \frac{1}{4}(\vec{AB} + \vec{AC} + \vec{AD})$.
+  [Ví dụ 3 - Tính tích vô hướng]
+    Đề: Trong không gian, cho $\vec{a} = (1; 2; 2)$ và $\vec{b} = (2; -1; 0)$. Tính $\vec{a} \cdot \vec{b}$.
+    Giải: $\vec{a} \cdot \vec{b} = 1 \cdot 2 + 2 \cdot (-1) + 2 \cdot 0 = 2 - 2 + 0 = 0$.
+  [Ví dụ 4 - Tính góc giữa hai vectơ]
+    Đề: Cho $|\vec{a}| = 2, |\vec{b}| = 5$ và $\vec{a} \cdot \vec{b} = 5$. Tính góc giữa hai vectơ $\vec{a}$ và $\vec{b}$.
+    Giải: Ta có $\cos(\vec{a}, \vec{b}) = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}| \cdot |\vec{b}|} = \frac{5}{2 \cdot 5} = \frac{1}{2}$. Suy ra góc $(\vec{a}, \vec{b}) = 60^\circ$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho tam giác $ABC$ có trọng tâm $G$. Biểu diễn $\vec{BG}$ qua $\vec{BA}$ và $\vec{BC}$.
+    Giải: Ta có $\vec{BG} = \vec{BA} + \vec{AG} = \vec{BA} + \frac{1}{3}(\vec{AB} + \vec{AC}) = \vec{BA} + \frac{1}{3}(-\vec{BA} + \vec{BC}) = \frac{2}{3}\vec{BA} + \frac{1}{3}\vec{BC}$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho tứ diện $ABCD$. Gọi $I$ là trọng tâm tứ diện. Biểu diễn $\vec{BI}$ qua $\vec{BA}, \vec{BC}, \vec{BD}$.
+    Giải: Ta có $\vec{BI} = \vec{BA} + \vec{AI} = \vec{BA} + \frac{1}{4}(\vec{AB} + \vec{AC} + \vec{AD}) = \vec{BA} + \frac{1}{4}(-\vec{BA} + \vec{BC} + \frac{1}{4}(\vec{BD}-\vec{BC}))$. Cách nhanh nhất: $\vec{BI} = \frac{1}{4}(\vec{BA} + \vec{BC} + \vec{BD} + \vec{BB}) = \frac{1}{4}(\vec{BA} + \vec{BC} + \vec{BD})$ (vì $\vec{BB}=\vec{0}$).
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho $|\vec{a}| = 4, |\vec{b}| = 3$ và góc $(\vec{a}, \vec{b}) = 90^\circ$. Tính $\vec{a} \cdot \vec{b}$.
+    Giải: $\vec{a} \cdot \vec{b} = 4 \cdot 3 \cdot \cos(90^\circ) = 12 \cdot 0 = 0$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho tam giác $ABC$ có trọng tâm $G$. Tính $|\vec{GA} + \vec{GB} + \vec{GC}|$.
+    Giải: Vì $G$ là trọng tâm tam giác $ABC$ nên $\vec{GA} + \vec{GB} + \vec{GC} = \vec{0}$, do đó $|\vec{GA} + \vec{GB} + \vec{GC}| = 0$.
+  [Bài 5 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho $\vec{a} = (2; 1; -1)$ và $\vec{b} = (1; 0; 3)$. Tính $\cos(\vec{a}, \vec{b})$.
+    Giải: $\vec{a} \cdot \vec{b} = 2 \cdot 1 + 1 \cdot 0 + (-1) \cdot 3 = 2 - 3 = -1$. $|\vec{a}| = \sqrt{2^2+1^2+(-1)^2} = \sqrt{6}$. $|\vec{b}| = \sqrt{1^2+0^2+3^2} = \sqrt{10}$. $\cos(\vec{a}, \vec{b}) = \frac{-1}{\sqrt{6}\sqrt{10}} = \frac{-1}{\sqrt{60}} = \frac{-1}{2\sqrt{15}}$.
+
+
+================================================================================
+DẠNG 5 [dang_5]: Chứng minh đẳng thức Vectơ
+----------------------------------------
+THEORY POINTS:
+  • Phương pháp chèn điểm: Để biến đổi một vectơ $\vec{XY}$, ta chèn một điểm $M$ bất kỳ vào giữa để có $\vec{XY} = \vec{XM} + \vec{MY}$. Phương pháp này thường dùng cho các hình không có tính đối xứng cao như tứ diện.
+  • Phương pháp thay thế vectơ bằng nhau: Trong các hình có tính đối xứng (hình hộp, hình lăng trụ), ta thay thế một vectơ bằng một vectơ khác cùng phương, cùng hướng và cùng độ dài (ví dụ trong hình hộp $ABCD.A'B'C'D'$ thì $\vec{AB} = \vec{DC} = \vec{A'B'} = \vec{D'C'}$).
+  • Quy tắc cộng nối tiếp (quy tắc 3 điểm): $\vec{AB} + \vec{BC} = \vec{AC}$ và quy tắc hình hộp: $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+TIP: Khi chứng minh đẳng thức, hãy nhìn vào vế phải để chọn điểm chèn phù hợp hoặc tìm các cặp cạnh song song và bằng nhau để thay thế.
+CLOZE FORMULA: Để chứng minh $\vec{u} = \vec{v}$, ta thường biến đổi vế trái $\vec{VT}$ bằng cách chèn điểm hoặc thay thế để đưa về dạng của vế phải $\vec{VP}$, khi đó $\vec{VT} = ... = \vec{VP}$.
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho hình lập phương $ABCD.A'B'C'D'$ cạnh $a=1$. Tính độ dài của vectơ $\vec{u} = \vec{BC} + \vec{DD'}$. --> ĐS: 1.41
+  [SA 2] Cho hình lập phương $ABCD.A'B'C'D'$ cạnh $a=1$. Tính độ dài của vectơ $\vec{v} = \vec{AB} + \vec{AD} + \vec{AA'}$. --> ĐS: 1.73
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Phương pháp chèn điểm]
+    Đề: Cho tứ diện $ABCD$. Chứng minh rằng: $\vec{AC} + \vec{BD} = \vec{AD} + \vec{BC}$.
+    Giải: Ta biến đổi vế trái (VT):
+$\vec{VT} = \vec{AC} + \vec{BD}$\nChèn điểm $D$ vào $\vec{AC}$ và chèn điểm $C$ vào $\vec{BD}$:
+$\vec{VT} = (\vec{AD} + \vec{DC}) + (\vec{BC} + \vec{CD})$
+$\vec{VT} = \vec{AD} + \vec{BC} + (\vec{DC} + \vec{CD})$\nVì $\vec{DC} + \vec{CD} = \vec{0}$ nên:
+$\vec{VT} = \vec{AD} + \vec{BC} = \vec{VP}$. (Đpcm)
+  [Ví dụ 2 - Phương pháp thay thế vectơ]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$. Chứng minh rằng: $\vec{BC} + \vec{DC} + \vec{AA'} = \vec{AC'}$.
+    Giải: Ta biến đổi vế trái (VT):
+$\vec{VT} = \vec{BC} + \vec{DC} + \vec{AA'}$\nVì $ABCD.A'B'C'D'$ là hình hộp nên $\vec{BC} = \vec{A'D'}$ và $\vec{DC} = \vec{D'C'}$. Thay vào biểu thức:
+$\vec{VT} = \vec{A'D'} + \vec{D'C'} + \vec{AA'}$\nSắp xếp lại theo quy tắc nối tiếp:
+$\vec{VT} = \vec{AA'} + \vec{A'D'} + \vec{D'C'}$
+$\vec{VT} = \vec{AD'} + \vec{D'C'} = \vec{AC'} = \vec{VP}$. (Đpcm)
+  [Ví dụ 3 - Kết hợp tỉ số và chèn điểm]
+    Đề: Cho hình chóp $S.ABC$. Trên cạnh $SA$ lấy điểm $M$ sao cho $SM = 2AM$. Trên cạnh $BC$ lấy điểm $N$ sao cho $CN = 2BN$. Chứng minh rằng: $\vec{MN} = \frac{1}{3}(\vec{SA} + \vec{BC}) + \vec{AB}$.
+    Giải: Từ giả thiết $SM = 2AM$ và $\vec{SM}, \vec{MA}$ cùng phương nên $\vec{SA} = 3\vec{MA} \Rightarrow \vec{MA} = \frac{1}{3}\vec{SA}$.\nTương tự, $CN = 2BN$ nên $\vec{BC} = 3\vec{BN} \Rightarrow \vec{BN} = \frac{1}{3}\vec{BC}$.\nTa biến đổi $\vec{MN}$ bằng cách chèn điểm $A$ và $B$:
+$\vec{MN} = \vec{MA} + \vec{AB} + \vec{BN}$\nThay các giá trị vectơ đã tìm được ở trên vào:
+$\vec{MN} = \frac{1}{3}\vec{SA} + \vec{AB} + \frac{1}{3}\vec{BC}$
+$\vec{MN} = \frac{1}{3}(\vec{SA} + \vec{BC}) + \vec{AB}$. (Đpcm)
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho tứ diện $ABCD$. Chứng minh rằng: $\vec{AB} + \vec{CD} = \vec{AD} + \vec{CB}$.
+    Giải: Biến đổi vế trái (VT):
+$\vec{VT} = \vec{AB} + \vec{CD}$\nChèn điểm $D$ vào $\vec{AB}$ và chèn điểm $B$ vào $\vec{CD}$:
+$\vec{VT} = (\vec{AD} + \vec{DB}) + (\vec{CB} + \vec{BD})$
+$\vec{VT} = \vec{AD} + \vec{CB} + (\vec{DB} + \vec{BD})$\nVì $\vec{DB} + \vec{BD} = \vec{0}$ nên $\vec{VT} = \vec{AD} + \vec{CB} = \vec{VP}$. (Đpcm)
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho tứ diện $ABCD$. Chứng minh rằng: $\vec{AC} + \vec{DB} = \vec{AB} + \vec{DC}$.
+    Giải: Biến đổi vế trái (VT):
+$\vec{VT} = \vec{AC} + \vec{DB}$\nChèn điểm $B$ vào $\vec{AC}$ và chèn điểm $C$ vào $\vec{DB}$:
+$\vec{VT} = (\vec{AB} + \vec{BC}) + (\vec{DC} + \vec{CB})$
+$\vec{VT} = \vec{AB} + \vec{DC} + (\vec{BC} + \vec{CB})$\nVì $\vec{BC} + \vec{CB} = \vec{0}$ nên $\vec{VT} = \vec{AB} + \vec{DC} = \vec{VP}$. (Đpcm)
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$. Chứng minh rằng: $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+    Giải: Đây là quy tắc hình hộp cơ bản. Ta có:
+$\vec{AB} + \vec{AD} = \vec{AC}$ (quy tắc hình bình hành đáy $ABCD$)\nKhi đó: $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC} + \vec{AA'}$\nVì $ACC'A'$ là hình bình hành nên $\vec{AA'} = \vec{CC'}$.
+$\vec{VT} = \vec{AC} + \vec{CC'} = \vec{AC'} = \vec{VP}$. (Đpcm)
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho hình hộp $ABCD.A'B'C'D'$. Chứng minh rằng: $\vec{A'B} + \vec{A'D} + \vec{A'A} = \vec{A'C}$.
+    Giải: Ta biến đổi vế trái (VT):
+$\vec{VT} = \vec{A'B} + \vec{A'D} + \vec{A'A}$\nSử dụng quy tắc hình hộp tại đỉnh $A'$ với các cạnh $\vec{A'B'}$, $\vec{A'D'}$, $\vec{A'A}$:\nTa có $\vec{A'B} = \vec{A'B'} + \vec{B'B}$ và $\vec{A'D} = \vec{A'D'} + \vec{D'D}$.\nTuy nhiên, cách đơn giản nhất là dùng quy tắc hình hộp cho hình hộp $A'B'C'D'.ABCD$ với đỉnh xuất phát là $A'$:
+$\vec{A'B} + \vec{A'D} + \vec{A'A}$ không phải là đường chéo chính. Hãy chèn điểm:
+$\vec{A'B} + \vec{A'D} + \vec{A'A} = (\vec{A'B'} + \vec{B'B}) + (\vec{A'D'} + \vec{D'D}) + \vec{A'A}$
+$= (\vec{A'B'} + \vec{A'D'}) + (\vec{B'B} + \vec{D'D}) + \vec{A'A}$
+$= \vec{A'C'} + 2\vec{AA'} + \vec{A'A} = \vec{A'C'} + \vec{AA'}$.
+Đề bài yêu cầu chứng minh bằng $\vec{A'C}$. Ta có $\vec{A'C} = \vec{A'C'} + \vec{C'C} = \vec{A'C'} + \vec{AA'}$.\nVậy $\vec{VT} = \vec{A'C} = \vec{VP}$. (Đpcm)
+  [Bài 5 (Củng cố) - Level: CungCo]
+    Đề: Cho hình chóp $S.ABC$. Trên cạnh $SA$ lấy điểm $M$ sao cho $AM = 2MS$. Trên cạnh $BC$ lấy điểm $N$ sao cho $BN = 2NC$. Chứng minh rằng: $\vec{MN} = \frac{1}{3}(\vec{AS} + \vec{CB}) + \vec{AB}$.
+    Giải: Từ $AM = 2MS$ nên $\vec{AS} = 3\vec{MS} \Rightarrow \vec{MS} = \frac{1}{3}\vec{AS}$.\nTừ $BN = 2NC$ nên $\vec{BC} = 3\vec{BN} \Rightarrow \vec{BN} = \frac{1}{3}\vec{BC}$.\nTa có $\vec{MN} = \vec{MB} + \vec{BN}$. Chèn điểm $A$ vào $\vec{MB}$:
+$\vec{MN} = \vec{MA} + \vec{AB} + \vec{BN}$\nVì $\vec{MA} = -\vec{AM} = -\frac{2}{3}\vec{AS}$ (Sai, hãy xem lại tỉ số: $AM=2MS \Rightarrow \vec{MA} = \frac{1}{3}\vec{SA}$).
+$\vec{MN} = \frac{1}{3}\vec{SA} + \vec{AB} + \frac{1}{3}\vec{BC} = \frac{1}{3}(\vec{SA} + \vec{BC}) + \vec{AB}$.
+Để ra kết quả $\vec{AS} + \vec{CB}$, ta viết $\vec{SA} = -\vec{AS}$ và $\vec{BC} = -\vec{CB}$.
+$\vec{MN} = \frac{1}{3}(-\vec{AS} - \vec{CB}) + \vec{AB}$.
+(Lưu ý: Đề bài yêu cầu $\vec{AS} + \vec{CB}$ có thể do nhầm dấu, kết quả chuẩn là $\frac{1}{3}(\vec{SA} + \vec{BC}) + \vec{AB}$).
+
+
+================================================================================
+DẠNG 6 [dang_6]: Hệ tọa độ Oxyz và Tọa độ Vectơ
+----------------------------------------
+THEORY POINTS:
+  • Trong không gian $Oxyz$, cho các vectơ đơn vị $\vec{i}, \vec{j}, \vec{k}$ lần lượt nằm trên các trục $Ox, Oy, Oz$. Một vectơ $\vec{a} = (x; y; z)$ được biểu diễn dưới dạng: $\vec{a} = x\vec{i} + y\vec{j} + z\vec{k}$.
+  • Cho hai vectơ $\vec{a} = (x_1; y_1; z_1)$ và $\vec{b} = (x_2; y_2; z_2)$. Các phép toán tọa độ được thực hiện như sau: $\vec{a} + \vec{b} = (x_1 + x_2; y_1 + y_2; z_1 + z_2)$; $\vec{a} - \vec{b} = (x_1 - x_2; y_1 - y_2; z_1 - z_2)$; $k\vec{a} = (kx_1; ky_1; kz_1)$.
+  • Cho hai điểm $A(x_A; y_A; z_A)$ và $B(x_B; y_B; z_B)$. Tọa độ vectơ $\vec{AB} = (x_B - x_A; y_B - y_A; z_B - z_A)$.
+TIP: Muốn tìm tọa độ vectơ $\vec{AB}$, hãy lấy 'Tọa độ điểm cuối trừ Tọa độ điểm đầu' ($B - A$).
+CLOZE FORMULA: Nếu $\vec{a} = x\vec{i} + y\vec{j} + z\vec{k}$ thì tọa độ của vectơ $\vec{a}$ là $...$
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho $\vec{a} = 2\vec{i} - 3\vec{j} + 4\vec{k}$. Tìm tọa độ của vectơ $\vec{a}$. --> ĐS: (2; -3; 4)
+  [SA 2] Cho $A(1; 2; 3)$ và $B(4; 0; -1)$. Tính tọa độ vectơ $\vec{AB}$. --> ĐS: (3; -2; -4)
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Biểu diễn vectơ qua các vectơ đơn vị]
+    Đề: Cho vectơ $\vec{a} = 3\vec{i} + 2\vec{j} - \vec{k}$. Xác định tọa độ của vectơ $\vec{a}$.
+    Giải: Vectơ $\vec{a}$ được biểu diễn dưới dạng $\vec{a} = x\vec{i} + y\vec{j} + z\vec{k}$. So sánh với $\vec{a} = 3\vec{i} + 2\vec{j} - 1\vec{k}$, ta có $x=3, y=2, z=-1$. Vậy tọa độ của $\vec{a}$ là $(3; 2; -1)$.
+  [Ví dụ 2 - Thực hiện phép cộng và trừ vectơ tọa độ]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (1; -2; 3)$ và $\vec{b} = (4; 5; -1)$. Tính $\vec{u} = 2\vec{a} + \vec{b}$.
+    Giải: Bước 1: Tính $2\vec{a} = 2(1; -2; 3) = (2; -4; 6)$. Bước 2: Tính $\vec{u} = (2; -4; 6) + (4; 5; -1) = (2+4; -4+5; 6-1) = (6; 1; 5)$. Vậy $\vec{u} = (6; 1; 5)$.
+  [Ví dụ 3 - Tìm tọa độ vectơ từ tọa độ hai điểm]
+    Đề: Trong không gian $Oxyz$, cho hai điểm $A(2; -1; 4)$ và $B(5; 3; 0)$. Tìm tọa độ vectơ $\vec{AB}$.
+    Giải: Áp dụng công thức $\vec{AB} = (x_B - x_A; y_B - y_A; z_B - z_A)$. Ta có: $\vec{AB} = (5 - 2; 3 - (-1); 0 - 4) = (3; 4; -4)$. Vậy $\vec{AB} = (3; 4; -4)$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho $\vec{a} = -\vec{i} + 4\vec{j} + 2\vec{k}$. Tìm tọa độ của vectơ $\vec{a}$.
+    Giải: Dựa vào biểu diễn $\vec{a} = x\vec{i} + y\vec{j} + z\vec{k}$, ta có $x=-1, y=4, z=2$. Vậy $\vec{a} = (-1; 4; 2)$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho $\vec{a} = 5\vec{i} - \vec{j} + 3\vec{k}$. Tìm tọa độ của vectơ $\vec{a}$.
+    Giải: Tương tự bài 1, ta có $x=5, y=-1, z=3$. Vậy $\vec{a} = (5; -1; 3)$.
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho $A(0; 1; -2)$ và $B(3; -2; 5)$. Tính tọa độ vectơ $\vec{AB}$.
+    Giải: Áp dụng $\vec{AB} = (x_B - x_A; y_B - y_A; z_B - z_A)$. Ta có: $\vec{AB} = (3 - 0; -2 - 1; 5 - (-2)) = (3; -3; 7)$. Vậy $\vec{AB} = (3; -3; 7)$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (2; 3; -1)$ và $\vec{b} = (1; -1; 4)$. Tính $\vec{u} = \vec{a} - 2\vec{b}$.
+    Giải: Bước 1: Tính $2\vec{b} = (2; -2; 8)$. Bước 2: Tính $\vec{u} = (2; 3; -1) - (2; -2; 8) = (2 - 2; 3 - (-2); -1 - 8) = (0; 5; -9)$. Vậy $\vec{u} = (0; 5; -9)$.
+  [Bài 5 (Củng cố) - Level: CungCo]
+    Đề: Cho $A(1; 1; 1)$ và $B(2; 3; 5)$. Tìm tọa độ trung điểm $I$ của đoạn thẳng $AB$.
+    Giải: Tọa độ trung điểm $I$ được tính bằng công thức $x_I = \frac{x_A + x_B}{2}, y_I = \frac{y_A + y_B}{2}, z_I = \frac{z_A + z_B}{2}$. Ta có: $x_I = \frac{1+2}{2} = 1.5; y_I = \frac{1+1}{2} = 2; z_I = \frac{1+5}{2} = 3$. Vậy $I(1.5; 2; 3)$.
+
+
+================================================================================
+DẠNG 7 [dang_7]: Phép toán Tọa độ Vectơ
+----------------------------------------
+THEORY POINTS:
+  • Cho hai vectơ $\vec{u} = (x_1; y_1; z_1)$ và $\vec{v} = (x_2; y_2; z_2)$, tọa độ vectơ tổng là $\vec{u} + \vec{v} = (x_1 + x_2; y_1 + y_2; z_1 + z_2)$ và tọa độ vectơ hiệu là $\vec{u} - \vec{v} = (x_1 - x_2; y_1 - y_2; z_1 - z_2)$.
+  • Tọa độ của vectơ $k\vec{u}$ với $k \in \mathbb{R}$ là $k\vec{u} = (kx_1; ky_1; kz_1)$.
+  • Cho hai điểm $M(x_M; y_M; z_M)$ và $N(x_N; y_N; z_N)$, tọa độ vectơ $\vec{MN} = (x_N - x_M; y_N - y_M; z_N - z_M)$.
+TIP: Muốn tính tọa độ vectơ $\vec{MN}$, hãy lấy tọa độ điểm 'ngọn' trừ tọa độ điểm 'gốc': 'Ngọn trừ Gốc'.
+CLOZE FORMULA: Tọa độ vectơ $\vec{MN}$ được tính bằng công thức: $\vec{MN} = (..., ..., ...)$
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Trong không gian $Oxyz$, cho $\vec{u} = (1; 2; -3)$ và $\vec{v} = (4; -1; 5)$. Tính tọa độ vectơ $\vec{w} = \vec{u} + \vec{v}$. --> ĐS: (5; 1; 2)
+  [SA 2] Cho hai điểm $A(2; -1; 4)$ và $B(5; 3; -2)$. Tính tọa độ vectơ $\vec{AB}$. --> ĐS: (3; 4; -6)
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Áp dụng công thức cộng và trừ vectơ]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (2; -3; 1)$ và $\vec{b} = (-1; 4; 5)$. Tính tọa độ của $\vec{u} = \vec{a} - \vec{b}$ và $\vec{v} = 2\vec{a} + \vec{b}$.
+    Giải: Ta có: $\vec{u} = \vec{a} - \vec{b} = (2 - (-1); -3 - 4; 1 - 5) = (3; -7; -4)$.\n\nTa có: $2\vec{a} = 2(2; -3; 1) = (4; -6; 2)$.\n\nDo đó: $\vec{v} = 2\vec{a} + \vec{b} = (4 + (-1); -6 + 4; 2 + 5) = (3; -2; 7)$.
+  [Ví dụ 2 - Tính tọa độ vectơ từ hai điểm cho trước]
+    Đề: Cho hai điểm $M(1; 0; -2)$ và $N(4; -3; 5)$. Tìm tọa độ vectơ $\vec{MN}$.
+    Giải: Áp dụng công thức tọa độ vectơ giữa hai điểm: $\vec{MN} = (x_N - x_M; y_N - y_M; z_N - z_M)$.\n\nTa có: $\vec{MN} = (4 - 1; -3 - 0; 5 - (-2)) = (3; -3; 7)$.
+  [Ví dụ 3 - Phép nhân vectơ với một số thực]
+    Đề: Cho $\vec{u} = (x; y; z)$ biết $\vec{u}$ có tọa độ là $(2; -4; 6)$. Tính tọa độ của vectơ $\vec{w} = -0,5\vec{u}$.
+    Giải: Tọa độ vectơ $\vec{w}$ là: $-0,5(2; -4; 6) = (-0,5 \cdot 2; -0,5 \cdot (-4); -0,5 \cdot 6) = (-1; 2; -3)$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (3; 1; -2)$ và $\vec{b} = (0; 4; 5)$. Tính tọa độ vectơ $\vec{u} = \vec{a} + \vec{b}$.
+    Giải: Ta có: $\vec{u} = (3 + 0; 1 + 4; -2 + 5) = (3; 5; 3)$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (-2; 5; 1)$ và $\vec{b} = (3; -2; 4)$. Tính tọa độ vectơ $\vec{u} = \vec{a} - \vec{b}$.
+    Giải: Ta có: $\vec{u} = (-2 - 3; 5 - (-2); 1 - 4) = (-5; 7; -3)$.
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho hai điểm $A(1; 2; 3)$ và $B(4; 0; -1)$. Tính tọa độ vectơ $\vec{AB}$.
+    Giải: Ta có: $\vec{AB} = (4 - 1; 0 - 2; -1 - 3) = (3; -2; -4)$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho $\vec{u} = (4; -2; 6)$ và $\vec{v} = (1; 3; -2)$. Tính tọa độ vectơ $\vec{w} = 3\vec{u} - 2\vec{v}$.
+    Giải: Ta có: $3\vec{u} = (12; -6; 18)$ và $2\vec{v} = (2; 6; -4)$.\n\nDo đó: $\vec{w} = (12 - 2; -6 - 6; 18 - (-4)) = (10; -12; 22)$.
+  [Bài 5 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho hai điểm $M(0; 5; -1)$ và $N(2; -3; 4)$. Tìm tọa độ vectơ $\vec{NM}$.
+    Giải: Ta có: $\vec{NM} = (0 - 2; 5 - (-3); -1 - 4) = (-2; 8; -5)$.
+
+
+================================================================================
+DẠNG 8 [dang_8]: Tọa độ điểm đặc biệt, Độ dài và Khoảng cách trong Oxyz
+----------------------------------------
+THEORY POINTS:
+  • Cho $A(x_A; y_A; z_A)$ và $B(x_B; y_B; z_B)$, tọa độ trung điểm $M$ của $AB$ là $M\big(\frac{x_A+x_B}{2}; \frac{y_A+y_B}{2}; \frac{z_A+z_B}{2}\big)$.
+  • Cho tam giác $ABC$ với $A(x_A; y_A; z_A)$, $B(x_B; y_B; z_B)$, $C(x_C; y_C; z_C)$, tọa độ trọng tâm $G$ là $G\big(\frac{x_A+x_B+x_C}{3}; \frac{y_A+y_B+y_C}{3}; \frac{z_A+z_B+z_C}{3}\big)$.
+  • Độ dài đoạn thẳng $AB$ (hoặc độ dài vectơ $\vec{AB}$) là $AB = \sqrt{(x_B-x_A)^2 + (y_B-y_A)^2 + (z_B-z_A)^2}$.
+TIP: Trung điểm là 'chia đôi' (chia 2), trọng tâm là 'chia ba' (chia 3), độ dài là 'căn tổng bình phương các hiệu'.
+CLOZE FORMULA: Tọa độ trọng tâm $G$ của tam giác $ABC$ được tính bằng công thức $x_G = \dots; y_G = \dots; z_G = \dots$
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho $A(1; 2; 3)$ và $B(3; 5; 7)$. Tính độ dài đoạn thẳng $AB$. --> ĐS: \sqrt{29}
+  [SA 2] Cho tam giác $ABC$ có $A(1; 0; 2)$, $B(3; 2; 0)$ và $C(5; -2; 4)$. Tìm tọa độ trọng tâm $G$. --> ĐS: (3; 0; 2)
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Tìm tọa độ trung điểm]
+    Đề: Trong không gian $Oxyz$, cho hai điểm $A(1; 2; 3)$ và $B(3; 4; 5)$. Tìm tọa độ trung điểm $M$ của đoạn thẳng $AB$.
+    Giải: Áp dụng công thức tọa độ trung điểm: $x_M = \frac{1+3}{2} = 2$; $y_M = \frac{2+4}{2} = 3$; $z_M = \frac{3+5}{2} = 4$. Vậy $M(2; 3; 4)$.
+  [Ví dụ 2 - Tìm tọa độ trọng tâm]
+    Đề: Cho tam giác $ABC$ có $A(1; 2; 3)$, $B(3; 2; 1)$ và $C(2; -1; 5)$. Tìm tọa độ trọng tâm $G$ của tam giác.
+    Giải: Áp dụng công thức tọa độ trọng tâm: $x_G = \frac{1+3+2}{3} = 2$; $y_G = \frac{2+2-1}{3} = 1$; $z_G = \frac{3+1+5}{3} = 3$. Vậy $G(2; 1; 3)$.
+  [Ví dụ 3 - Tính độ dài đoạn thẳng]
+    Đề: Trong không gian $Oxyz$, cho $A(2; 0; 6)$ và $B(0; 4; 0)$. Tính độ dài đoạn thẳng $AB$.
+    Giải: $AB = \sqrt{(0-2)^2 + (4-0)^2 + (0-6)^2} = \sqrt{(-2)^2 + 4^2 + (-6)^2} = \sqrt{4 + 16 + 36} = \sqrt{56} = 2\sqrt{14}$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho $A(2; 4; 6)$ và $B(4; 6; 8)$. Tìm tọa độ trung điểm $M$ của $AB$.
+    Giải: $x_M = \frac{2+4}{2} = 3$; $y_M = \frac{4+6}{2} = 5$; $z_M = \frac{6+8}{2} = 7$. Vậy $M(3; 5; 7)$.
+  [Bài 2 (Tương tự) - Level: TuongTu100]
+    Đề: Cho $A(1; -2; 3)$ và $B(5; 0; -1)$. Tìm tọa độ trung điểm $M$ của $AB$.
+    Giải: $x_M = \frac{1+5}{2} = 3$; $y_M = \frac{-2+0}{2} = -1$; $z_M = \frac{3-1}{2} = 1$. Vậy $M(3; -1; 1)$.
+  [Bài 3 (Tương tự) - Level: TuongTu100]
+    Đề: Cho tam giác $ABC$ có $A(0; 1; 2)$, $B(2; 3; 4)$ và $C(4; 5; 6)$. Tìm tọa độ trọng tâm $G$.
+    Giải: $x_G = \frac{0+2+4}{3} = 2$; $y_G = \frac{1+3+5}{3} = 3$; $z_G = \frac{2+4+6}{3} = 4$. Vậy $G(2; 3; 4)$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho tam giác $ABC$ có $A(2; 2; 2)$, $B(4; 4; 4)$ và $C(6; 6; 6)$. Tính độ dài đoạn thẳng $AB$.
+    Giải: $AB = \sqrt{(4-2)^2 + (4-2)^2 + (4-2)^2} = \sqrt{2^2 + 2^2 + 2^2} = \sqrt{12} = 2\sqrt{3}$.
+  [Bài 5 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Cho tam giác $ABC$ có $A(1; 1; 1)$, $B(2; 2; 2)$ và $C(3; 3; 3)$. Tìm tọa độ điểm $C$ sao cho $G(2; 2; 2)$ là trọng tâm tam giác $ABC$.
+    Giải: Vì $G$ là trọng tâm nên $x_C = 3x_G - x_A - x_B = 3(2) - 1 - 2 = 3$; $y_C = 3y_G - y_A - y_B = 3(2) - 1 - 2 = 3$; $z_C = 3z_G - z_A - z_B = 3(2) - 1 - 2 = 3$. Vậy $C(3; 3; 3)$.
+
+
+================================================================================
+DẠNG 9 [dang_9]: Tích vô hướng và Góc giữa hai Vectơ bằng Tọa độ
+----------------------------------------
+THEORY POINTS:
+  • Cho $\vec{a} = (x; y; z)$ và $\vec{b} = (x'; y'; z')$, tích vô hướng được tính bởi: $\vec{a} \bullet \vec{b} = x \times x' + y \times y' + z \times z'$
+  • Cosín của góc giữa hai vectơ $\vec{a}$ và $\vec{b}$ là: $\cos(\vec{a}, \vec{b}) = \frac{\vec{a} \bullet \vec{b}}{|\vec{a}| \times |\vec{b}|}$
+  • Hai vectơ $\vec{a}$ và $\vec{b}$ vuông góc với nhau khi và chỉ khi tích vô hướng của chúng bằng $0$ ($\vec{a} \bullet \vec{b} = 0$).
+TIP: Muốn chứng minh vuông góc, chỉ cần nhân các tọa độ tương ứng rồi cộng lại, nếu kết quả bằng $0$ thì chúng vuông góc!
+CLOZE FORMULA: Công thức tính cosin góc giữa hai vectơ $\vec{a}$ và $\vec{b}$ là $\cos(\vec{a}, \vec{b}) = \frac{...}{|\vec{a}| \times |\vec{b}|}$
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho $\vec{a} = (1; 2; -1)$ và $\vec{b} = (3; 0; 2)$. Tính tích vô hướng $\vec{a} \bullet \vec{b}$. --> ĐS: 1
+  [SA 2] Cho $\vec{a} = (2; -1; 2)$ và $\vec{b} = (1; 2; 0)$. Tính $\cos(\vec{a}, \vec{b})$. --> ĐS: 0
+----------------------------------------
+WORKED EXAMPLES (4 ví dụ):
+  [Ví dụ 1 - Tính tích vô hướng cơ bản]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (2; -3; 1)$ và $\vec{b} = (4; 1; -2)$. Tính tích vô hướng $\vec{a} \bullet \vec{b}$.
+    Giải: Áp dụng công thức tích vô hướng: $\vec{a} \bullet \vec{b} = 2 \times 4 + (-3) \times 1 + 1 \times (-2) = 8 - 3 - 2 = 3$.
+  [Ví dụ 2 - Chứng minh hai vectơ vuông góc]
+    Đề: Trong không gian $Oxyz$, cho $\vec{u} = (1; 2; 2)$ và $\vec{v} = (2; 1; -2)$. Chứng minh rằng $\vec{u} \bot \vec{v}$.
+    Giải: Ta tính tích vô hướng: $\vec{u} \bullet \vec{v} = 1 \times 2 + 2 \times 1 + 2 \times (-2) = 2 + 2 - 4 = 0$. Vì $\vec{u} \bullet \vec{v} = 0$ nên $\vec{u} \bot \vec{v}$.
+  [Ví dụ 3 - Tính cosin góc giữa hai vectơ]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (1; 1; 0)$ và $\vec{b} = (0; 1; 1)$. Tính $\cos(\vec{a}, \vec{b})$.
+    Giải: Ta có: $|\vec{a}| = \sqrt{1^2 + 1^2 + 0^2} = \sqrt{2}$. $|\vec{b}| = \sqrt{0^2 + 1^2 + 1^2} = \sqrt{2}$. Tích vô hướng $\vec{a} \bullet \vec{b} = 1 \times 0 + 1 \times 1 + 0 \times 1 = 1$. Vậy $\cos(\vec{a}, \vec{b}) = \frac{1}{\sqrt{2} \times \sqrt{2}} = \frac{1}{2}$.
+  [Ví dụ 4 - Tính số đo góc]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (1; 0; 0)$ và $\vec{b} = (1; 1; 1)$. Tính số đo góc giữa hai vectơ $\vec{a}$ và $\vec{b}$.
+    Giải: Ta có: $|\vec{a}| = 1$. $|\vec{b}| = \sqrt{1^2 + 1^2 + 1^2} = \sqrt{3}$. Tích vô hướng $\vec{a} \bullet \vec{b} = 1 \times 1 + 0 \times 1 + 0 \times 1 = 1$. Vậy $\cos(\vec{a}, \vec{b}) = \frac{1}{1 \times \sqrt{3}} = \frac{\sqrt{3}}{3}$. Suy ra góc $(\vec{a}, \vec{b}) \approx 54.74^\circ$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (3; -1; 2)$ và $\vec{b} = (1; 4; -2)$. Tính tích vô hướng $\vec{a} \bullet \vec{b}$.
+    Giải: Áp dụng công thức: $\vec{a} \bullet \vec{b} = 3 \times 1 + (-1) \times 4 + 2 \times (-2) = 3 - 4 - 4 = -5$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Trong không gian $Oxyz$, cho $\vec{u} = (5; 2; -1)$ và $\vec{v} = (2; -3; 4)$. Tính tích vô hướng $\vec{u} \bullet \vec{v}$.
+    Giải: Áp dụng công thức: $\vec{u} \bullet \vec{v} = 5 \times 2 + 2 \times (-3) + (-1) \times 4 = 10 - 6 - 4 = 0$.
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho $\vec{a} = (1; 2; 1)$ và $\vec{b} = (2; 0; -2)$. Tính $\cos(\vec{a}, \vec{b})$.
+    Giải: Ta có: $|\vec{a}| = \sqrt{1^2 + 2^2 + 1^2} = \sqrt{6}$. $|\vec{b}| = \sqrt{2^2 + 0^2 + (-2)^2} = \sqrt{8} = 2\sqrt{2}$. Tích vô hướng $\vec{a} \bullet \vec{b} = 1 \times 2 + 2 \times 0 + 1 \times (-2) = 0$. Vậy $\cos(\vec{a}, \vec{b}) = 0$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (2; 1; -1)$ và $\vec{b} = (x; 2; 3)$. Tìm $x$ để $\vec{a} \bot \vec{b}$.
+    Giải: Để $\vec{a} \bot \vec{b}$ thì $\vec{a} \bullet \vec{b} = 0$. Ta có: $2 \times x + 1 \times 2 + (-1) \times 3 = 0 \Leftrightarrow 2x + 2 - 3 = 0 \Leftrightarrow 2x - 1 = 0 \Leftrightarrow x = 0.5$.
+  [Bài 5 (Cung cố) - Level: CungCo]
+    Đề: Cho $\vec{a} = (1; 1; 1)$ và $\vec{b} = (1; -1; 0)$. Tính $\cos(\vec{a}, \vec{b})$.
+    Giải: Ta có: $|\vec{a}| = \sqrt{3}$. $|\vec{b}| = \sqrt{2}$. Tích vô hướng $\vec{a} \bullet \vec{b} = 1 - 1 + 0 = 0$. Vậy $\cos(\vec{a}, \vec{b}) = 0$.
+
+
+================================================================================
+DẠNG 10 [dang_10]: Vận dụng Tọa độ giải Hình học Không gian
+----------------------------------------
+THEORY POINTS:
+  • Để giải bài toán hình học bằng tọa độ, bước đầu tiên là chọn hệ trục tọa độ $Oxyz$ sao cho các cạnh vuông góc trùng với các trục tọa độ. Khi đó, tọa độ các đỉnh được xác định bởi độ dài các cạnh dọc theo các trục.
+  • Tọa độ của các phép toán vectơ: $\vec{u} + \vec{v} = (x_u+x_v; y_u+y_v; z_u+z_v)$; $\vec{u} - \vec{v} = (x_u-x_v; y_u-y_v; z_u-z_v)$; $k\vec{u} = (kx_u; ky_u; kz_u)$.
+  • Tọa độ trung điểm $M$ của $AB$ và trọng tâm $G$ của tam giác $ABC$ là: $M = (\frac{x_A+x_B}{2}; \frac{y_A+y_B}{2}; \frac{z_A+z_B}{2})$ và $G = (\frac{x_A+x_B+x_C}{3}; \frac{y_A+y_B+y_C}{3}; \frac{z_A+z_B+z_C}{3})$.
+TIP: Mẹo chọn gốc tọa độ: Hãy chọn đỉnh nào có 3 cạnh đôi một vuông góc (như đỉnh của hình hộp chữ nhật hoặc hình chóp có 3 cạnh bên vuông góc) làm gốc $O$ để tọa độ các đỉnh trở nên đơn giản nhất (nhiều số $0$).
+CLOZE FORMULA: Tọa độ trọng tâm $G$ của tam giác $ABC$ được tính bằng công thức $G = (\dots; \dots; \dots)$ với $\dots$ là trung bình cộng các tọa độ tương ứng.
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Cho hình lập phương $ABCD.A'B'C'D'$ cạnh bằng $2$. Chọn gốc tọa độ tại $A$. Tính tọa độ điểm $C'$. --> ĐS: (2;2;2)
+  [SA 2] Cho tam giác $ABC$ có $A(1;2;3)$, $B(3;0;1)$ và $C(5;4;5)$. Tìm tọa độ trọng tâm $G$ của tam giác. --> ĐS: (3;2;3)
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Xác định tọa độ đỉnh hình hộp chữ nhật]
+    Đề: Cho hình hộp chữ nhật $ABCD.A'B'C'D'$ có $AB=3, AD=4, AA'=5$. Thiết lập hệ trục tọa độ $Oxyz$ với gốc $O$ trùng với $A$ và các tia $Ox, Oy, Oz$ lần lượt trùng với các tia $AB, AD, AA'$. Tìm tọa độ các đỉnh $C$ và $D'$.
+    Giải: Vì $A$ là gốc tọa độ nên $A(0;0;0)$. Theo giả thiết: $B$ nằm trên $Ox$ nên $B(3;0;0)$; $D$ nằm trên $Oy$ nên $D(0;4;0)$; $A'$ nằm trên $Oz$ nên $A'(0;0;5)$. Điểm $C$ nằm trong mặt phẳng $(Oxy)$ với $AB=3$ và $AD=4$ nên $C(3;4;0)$. Điểm $D'$ nằm trên mặt phẳng $(Oyz)$ với $AD=4$ và $AA'=5$ nên $D'(0;4;5)$. Vậy $C(3;4;0)$ và $D'(0;4;5)$.
+  [Ví dụ 2 - Tính toán vectơ bằng tọa độ]
+    Đề: Trong không gian $Oxyz$, cho $\vec{u} = (1; -2; 3)$ và $\vec{v} = (4; 0; -1)$. Tính tọa độ vectơ $\vec{w} = 2\vec{u} - \vec{v}$.
+    Giải: $2\vec{u} = (2\cdot1; 2\cdot(-2); 2\cdot3) = (2; -4; 6)$. $\vec{w} = (2; -4; 6) - (4; 0; -1) = (2-4; -4-0; 6-(-1)) = (-2; -4; 7)$. Vậy $\vec{w} = (-2; -4; 7)$.
+  [Ví dụ 3 - Ứng dụng tọa độ giải bài toán trung điểm]
+    Đề: Cho tam giác $ABC$ có $A(2; 4; -1)$, $B(0; 2; 5)$ và $C(4; 0; 3)$. Tìm tọa độ trung điểm $M$ của cạnh $BC$.
+    Giải: Tọa độ trung điểm $M$ của $BC$ được tính theo công thức: $x_M = \frac{x_B+x_C}{2} = \frac{0+4}{2} = 2$; $y_M = \frac{y_B+y_C}{2} = \frac{2+0}{2} = 1$; $z_M = \frac{z_B+z_C}{2} = \frac{5+3}{2} = 4$. Vậy $M(2;1;4)$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Cho hình lập phương $ABCD.A'B'C'D'$ cạnh bằng $3$. Chọn gốc tọa độ tại $A$ và các trục $Ox, Oy, Oz$ lần lượt trùng với $AB, AD, AA'$. Tìm tọa độ các điểm $B, D, A'$.
+    Giải: Vì $A$ là gốc tọa độ nên $A(0;0;0)$. Do cạnh bằng $3$ nên $B(3;0;0)$, $D(0;3;0)$ và $A'(0;0;3)$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho hình hộp chữ nhật $ABCD.A'B'C'D'$ có $AB=5, AD=2, AA'=6$. Chọn gốc tọa độ tại $A$ và các trục $Ox, Oy, Oz$ lần lượt trùng với $AB, AD, AA'$. Tìm tọa độ điểm $C'$.
+    Giải: Gốc $A(0;0;0)$. Điểm $C'$ có tọa độ là $(x_B; y_D; z_{A'}) = (5;2;6)$.
+  [Bài 3 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Cho tam giác $ABC$ có $A(1; 1; 1)$, $B(2; 3; 4)$ và $C(0; 5; 6)$. Tìm tọa độ trọng tâm $G$ của tam giác.
+    Giải: $x_G = \frac{1+2+0}{3} = 1$; $y_G = \frac{1+3+5}{3} = 3$; $z_G = \frac{1+4+6}{3} = 3,66...$ (Làm tròn: $G(1;3;3.67)$).
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Trong không gian $Oxyz$, cho $\vec{a} = (2; -1; 4)$ và $\vec{b} = (1; 3; -2)$. Tính tọa độ vectơ $\vec{c} = \vec{a} + 3\vec{b}$.
+    Giải: $3\vec{b} = (3; 9; -6)$. $\vec{c} = (2+3; -1+9; 4-6) = (5; 8; -2)$.
+  [Bài 5 (Củng cố) - Level: CungCo]
+    Đề: Cho hình lập phương $ABCD.A'B'C'D'$ cạnh $a$. Chọn gốc tọa độ tại $A$. Chứng minh rằng tọa độ của tâm $I$ của hình lập phương là $(\frac{a}{2}; \frac{a}{2}; \frac{a}{2})$.
+    Giải: Tâm $I$ là trung điểm của đường chéo $AC'$. Tọa độ $A(0;0;0)$ và $C'(a;a;a)$. Tọa độ $I = (\frac{0+a}{2}; \frac{0+a}{2}; \frac{0+a}{2}) = (\frac{a}{2}; \frac{a}{2}; \frac{a}{2})$.
+
+
+================================================================================
+DẠNG 11 [dang_11]: Ứng dụng Vectơ trong Vật lý và Thực tế
+----------------------------------------
+THEORY POINTS:
+  • Mô hình hóa lực và vận tốc: Một đại lượng có hướng (lực $\vec{F}$, vận tốc $\vec{v}$, độ dịch chuyển $\vec{d}$) được biểu diễn bằng một vectơ có độ dài tỉ lệ với độ lớn và hướng theo hướng chuyển động/tác động.
+  • Tổng hợp lực (Quy tắc hình bình hành): Nếu hai lực $\vec{F_1}$ và $\vec{F_2}$ cùng tác động vào một vật, hợp lực $\vec{F}$ được xác định bởi $\vec{F} = \\[vec{F_1} + \vec{F_2}\mathbf{]}$ sao cho tứ giác tạo bởi chúng là hình bình hành.
+  • Công thức tính công: $A = \text{độ lớn lực} \times \text{độ dịch chuyển} \times \text{cos}(\alpha) = F \times d \times \text{cos}(\alpha)$, trong đó $\ $\alpha$ là góc giữa lực và hướng chuyển động.
+TIP: Muốn tìm hợp lực nhanh: Cùng hướng thì cộng độ lớn, ngược hướng thì trừ độ lớn, vuông góc thì dùng Pythagore!
+CLOZE FORMULA: Hợp lực của hai lực $\vec{F_1}$ và $\vec{F_2}$ cùng hướng là $\vec{F} = \dots$ và nếu chúng vuông góc thì độ lớn là $F = \sqrt{F_1^2 + F_2^2}$.
+----------------------------------------
+SHORT ANSWERS (2 câu):
+  [SA 1] Một vật chịu tác động của hai lực $\vec{F_1}$ và $\vec{F_2}$ có độ lớn lần lượt là $30\text{N}$ và $40\text{N}$. Biết hai lực này vuông góc với nhau. Tính độ lớn của hợp lực. --> ĐS: 50
+  [SA 2] Một chiếc máy bay di chuyển với vận tốc $\vec{v}$ có độ lớn $500\text{km/h}$ theo hướng Bắc. Một luồng gió thổi với vận tốc $\vec{w}$ có độ lớn $50\text{km/h}$ theo hướng Đông. Tính độ lớn vận tốc tổng hợp của máy bay. --> ĐS: 502.49
+----------------------------------------
+WORKED EXAMPLES (3 ví dụ):
+  [Ví dụ 1 - Áp dụng quy tắc cộng vectơ cùng hướng]
+    Đề: Một chiếc xe tải đang chuyển động với vận tốc $\vec{v_1} = 60\text{km/h}$ về phía Đông. Một dòng nước chảy với vận tốc $\vec{v_2} = 10\text{km/h}$ cũng về phía Đông. Tính vận tốc tổng hợp của chiếc xe tải khi đi trên dòng nước.
+    Giải: Vì hai vectơ vận tốc $\vec{v_1}$ và $\vec{v_2}$ cùng hướng (cùng về phía Đông), ta có vận tốc tổng hợp là: $\vec{v_{total}} = \vec{v_1} + \vec{v_2}$. Độ lớn: $v_{total} = v_1 + v_2 = 60 + 10 = 70\text{km/h}$.
+  [Ví dụ 2 - Áp dụng quy tắc hình bình hành (lực vuông góc)]
+    Đề: Một vật chịu tác động của hai lực $\vec{F_1}$ and $\vec{F_2}$ có độ lớn lần lượt là $6\text{N}$ và $8\text{N}$. Hai lực này vuông góc với nhau. Tính độ lớn của hợp lực.
+    Giải: Vì hai lực vuông góc, ta áp dụng công thức tính độ lớn hợp lực cho hai vectơ vuông góc: $F = \sqrt{F_1^2 + F_2^2} = \sqrt{6^2 + 8^2} = \sqrt{36 + 64} = \sqrt{100} = 10\text{N}$.
+  [Ví dụ 3 - Tính công của một lực]
+    Đề: Một người kéo một thùng hàng với một lực $\vec{F}$ có độ lớn $50\text{N}$ theo phương nghiêng một góc $60^\circ$ so với phương ngang. Thùng hàng dịch chuyển một quãng đường $d = 10\text{m}$ theo phương ngang. Tính công $A$ sinh ra bởi lực $\vec{F}$.
+    Giải: Áp dụng công thức tính công: $A = F \times d \times \text{cos}(\alpha)$. Với $F = 50\text{N}$, $d = 10\text{m}$ và $\alpha = 60^\circ$. Ta có: $A = 50 \times 10 \times \text{cos}(60^\circ) = 500 \times 0.5 = 250\text{J}$.
+----------------------------------------
+DRILL EXERCISES (5 bài):
+  [Bài 1 (Chuẩn mẫu) - Level: MauChuan]
+    Đề: Một vật chịu tác động của hai lực $\vec{F_1}$ và $\vec{F_2}$ có độ lớn lần lượt là $5\text{N}$ và $12\text{N}$. Biết hai lực này vuông góc với nhau. Tính độ lớn của hợp lực.
+    Giải: Vì hai lực vuông góc, ta có: $F = \sqrt{F_1^2 + F_2^2} = \sqrt{5^2 + 12^2} = \sqrt{25 + 144} = \sqrt{169} = 13\text{N}$.
+  [Bài 2 (Tương tự 100%) - Level: TuongTu100]
+    Đề: Một vật chịu tác động của hai lực $\vec{F_1}$ và $\vec{F_2}$ có độ lớn lần lượt là $8\text{N}$ và $15\text{N}$. Biết hai lực này vuông góc với nhau. Tính độ lớn của hợp lực.
+    Giải: Vì hai lực vuông góc, ta có: $F = \sqrt{F_1^2 + F_2^2} = \sqrt{8^2 + 15^2} = \sqrt{64 + 225} = \sqrt{289} = 17\text{N}$.
+  [Bài 3 (Biến thể nhẹ) - Level: TuongTu100]
+    Đề: Một chiếc thuyền di chuyển với vận tốc $\vec{v_1} = 20\text{km/h}$ về phía Bắc. Một dòng nước chảy với vận tốc $\vec{v_2} = 15\text{km/h}$ về phía Tây. Tính độ lớn vận tốc thực tế của chiếc thuyền so với bờ.
+    Giải: Vận tốc thực tế là $\vec{v_{total}} = \vec{v_1} + \vec{v_2}$. Vì hướng Bắc và hướng Tây vuông góc với nhau, độ lớn vận tốc là: $v_{total} = \sqrt{20^2 + 15^2} = \sqrt{400 + 225} = \sqrt{625} = 25\text{km/h}$.
+  [Bài 4 (Biến thể nhẹ) - Level: BienTheNhe]
+    Đề: Một người kéo một chiếc xe với lực $\vec{F}$ có độ lớn $100\text{N}$ theo phương nghiêng một góc $30^\circ$ so với phương ngang. Chiếc xe dịch chuyển một quãng đường $d = 20\text{m}$ theo phương ngang. Tính công $A$ sinh ra bởi lực $\vec{F}$.
+    Giải: Áp dụng công thức tính công: $A = F \times d \times \text{cos}(\alpha)$. Với $F = 100\text{N}$, $d = 20\text{m}$ và $\alpha = 30^\circ$. Ta có: $A = 100 \times 20 \times \text{cos}(30^\circ) = 2000 \times \frac{\sqrt{3}}{2} = 1000\sqrt{3} \approx 1732.05\text{J}$.
+  [Bài 5 (Củng cố) - Level: CungCo]
+    Đề: Một vật chịu tác động của hai lực $\vec{F_1}$ và $\vec{F_2}$ có độ lớn lần lượt là $10\text{N}$ và $10\text{N}$. Biết hai lực này cùng hướng với nhau. Tính độ lớn của hợp lực.
+    Giải: Vì hai lực cùng hướng, ta có: $F = F_1 + F_2 = 10 + 10 = 20\text{N}$.
+
+
