@@ -145,10 +145,6 @@ type RefinedTopicsResponse struct {
 
 const ArtifactDir = ".artifacts"
 
-func init() {
-	_ = os.MkdirAll(ArtifactDir, 0755)
-}
-
 func LogPhase(phase string, msg string, a ...any) {
 	formatted := fmt.Sprintf(msg, a...)
 	timestamp := time.Now().Format("15:04:05")
@@ -164,9 +160,13 @@ func LogTokenUsage(phase string, usage *genai.GenerateContentResponseUsageMetada
 }
 
 func SaveArtifact(filename string, data any) error {
+	info, err := os.Stat(ArtifactDir)
+	if err != nil || !info.IsDir() {
+		// Thư mục .artifacts không tồn tại (chế độ Production), không ghi file để tránh lỗi quyền ghi
+		return nil
+	}
 	path := filepath.Join(ArtifactDir, filename)
 	var bytes []byte
-	var err error
 	if str, ok := data.(string); ok {
 		bytes = []byte(str)
 	} else {

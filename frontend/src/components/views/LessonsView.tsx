@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../api';
-import { cleanYouTubeURL, formatDateTime, normalizeError } from '../../utils';
+import { formatDateTime, normalizeError } from '../../utils';
 import { V2CreateLesson, V2UploadDocuments } from '../../../wailsjs/go/wails/App';
 import { wails } from '../../../wailsjs/go/models';
 import { 
@@ -11,8 +11,8 @@ import {
   UploadCloud, 
   X, 
   CheckCircle2,
-  Layers,
-  HelpCircle
+  Video,
+  Plus
 } from 'lucide-react';
 
 interface LessonsViewProps {
@@ -22,33 +22,29 @@ interface LessonsViewProps {
   showToast: (msg: string, isError?: boolean) => void;
 }
 
+const DEFAULT_PIPELINE_MODEL = 'gemma-4-31b';
+
 export const LessonsView: React.FC<LessonsViewProps> = ({ 
   onOpenEditor, 
-  onRetryPDF, 
+  onRetryPDF: _onRetryPDF, 
   onOpenErrorModal, 
   showToast 
 }) => {
   const [drafts, setDrafts] = useState<any[]>([]);
-  const [models, setModels] = useState<any[]>([]);
   const [documents, setDocuments] = useState<any[]>([]);
-  const [selectedModel, setSelectedModel] = useState("gemini-3.7-flash");
   
   // State Form
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('');
   const [selectedDocIds, setSelectedDocIds] = useState<string[]>([]);
-  const [prompt, setPrompt] = useState("");
+  const [youtubeUrls, setYoutubeUrls] = useState<string[]>([]);
+  const [currentUrl, setCurrentUrl] = useState('');
+  const [prompt, setPrompt] = useState('');
   
   const [creating, setCreating] = useState(false);
   const [uploadingDoc, setUploadingDoc] = useState(false);
 
-  // Tải danh sách model AI, lịch sử bài giảng và kho tài liệu PDF
+  // Tải danh sách lịch sử bài giảng và kho tài liệu PDF
   const loadData = async () => {
-    try {
-      const mList = await api.listAIModels();
-      if (mList && mList.length > 0) setModels(mList);
-    } catch (_) {}
-
     loadDrafts();
     loadDocuments();
   };
@@ -58,7 +54,7 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
       const dList = await api.listLessonDrafts();
       setDrafts(dList || []);
     } catch (err) {
-      console.error(err);
+      console.error('Lỗi tải danh sách drafts:', err);
     }
   };
 
@@ -69,7 +65,7 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
         setDocuments(docs || []);
       }
     } catch (err) {
-      console.error("Lỗi tải danh sách documents:", err);
+      console.error('Lỗi tải danh sách documents:', err);
     }
   };
 
@@ -93,25 +89,41 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
         ...uploadedDocs.filter((doc) => doc.id).map((doc) => String(doc.id)),
       ]);
     } catch (err) {
-      showToast("Lỗi khi tải tài liệu: " + normalizeError(err), true);
+      showToast('Lỗi khi tải tài liệu: ' + normalizeError(err), true);
     } finally {
       setUploadingDoc(false);
     }
   };
 
+  // Thêm / bớt link YouTube
+  const handleAddYoutubeUrl = () => {
+    const trimmed = currentUrl.trim();
+    if (!trimmed) return;
+    if (!trimmed.includes('youtube.com') && !trimmed.includes('youtu.be')) {
+      showToast('Chỉ chấp nhận link từ YouTube (youtube.com hoặc youtu.be)', true);
+      return;
+    }
+    if (youtubeUrls.includes(trimmed)) {
+      showToast('Link video này đã được thêm trong danh sách', true);
+      return;
+    }
+    setYoutubeUrls((current) => [...current, trimmed]);
+    setCurrentUrl('');
+  };
+
+  const handleRemoveYoutubeUrl = (index: number) => {
+    setYoutubeUrls((current) => current.filter((_, i) => i !== index));
+  };
+
   // Gửi lệnh tạo bài giảng tới Backend
   const handleCreateLesson = async () => {
     if (!title.trim()) {
-      showToast("Vui lòng nhập tiêu đề bài giảng", true);
+      showToast('Vui lòng nhập tiêu đề bài giảng', true);
       return;
     }
 
-    const hasYouTube = !!url.trim();
-    const hasPDF = selectedDocIds.length > 0;
-
-    // Bắt buộc phải có ít nhất 1 nguồn tài liệu
-    if (!hasYouTube && !hasPDF) {
-      showToast("Vui lòng cung cấp ít nhất một tài liệu (dán link YouTube hoặc chọn file PDF)", true);
+    if (selectedDocIds.length === 0 && youtubeUrls.length === 0) {
+      showToast('Vui lòng chọn ít nhất một file PDF hoặc thêm link video YouTube', true);
       return;
     }
 
@@ -119,73 +131,58 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
     try {
       const request = new wails.GenerateLessonRequest({
         title: title.trim(),
-        model: selectedModel,
+        model: DEFAULT_PIPELINE_MODEL,
         prompt: prompt.trim(),
-        url: hasYouTube ? cleanYouTubeURL(url.trim()) : '',
+        url: youtubeUrls[0] || '', // Fallback link đầu tiên cho code cũ
+        urls: youtubeUrls,         // Danh sách đầy đủ nhiều video YouTube
         document_id: selectedDocIds[0] || '',
         document_ids: selectedDocIds,
         pages: [], // Rỗng quy ước lấy trọn vẹn file PDF
       });
 
       await V2CreateLesson(request);
-
-      if (hasYouTube && hasPDF) {
-        showToast("Đã gửi yêu cầu! AI đang kết hợp phân tích cả Video và file PDF...");
-      } else {
-        showToast("Đã gửi yêu cầu! AI đang phân tích tài liệu và soạn bài...");
-      }
+      showToast('Đã gửi yêu cầu! AI Pipeline đang phân tích tài liệu và biên soạn bài giảng...');
       
       // Reset form sau khi gửi thành công
-      setTitle("");
-      setUrl("");
+      setTitle('');
       setSelectedDocIds([]);
-      setPrompt("");
+      setYoutubeUrls([]);
+      setCurrentUrl('');
+      setPrompt('');
       loadDrafts();
     } catch (err) {
-      showToast("Lỗi tạo bài giảng: " + normalizeError(err), true);
+      showToast('Lỗi tạo bài giảng: ' + normalizeError(err), true);
     } finally {
       setCreating(false);
     }
   };
 
-  // Nạp lại dữ liệu bài cũ (Hỗ trợ nạp lại cả 2 nguồn nếu bài cũ có cả 2)
+  // Nạp lại dữ liệu bài cũ
   const handleRetry = (draft: any) => {
     setTitle(draft.title || '');
     setPrompt(draft.custom_prompt || '');
-    setSelectedModel(draft.model || selectedModel);
 
-    let loadedSources = 0;
-
-    // Kiểm tra danh sách materials mới
     if (Array.isArray(draft.materials) && draft.materials.length > 0) {
-      const ytMat = draft.materials.find((m: any) => m.type === 'youtube');
       const pdfMats = draft.materials.filter((m: any) => m.type === 'pdf');
-
-      if (ytMat?.url) {
-        setUrl(ytMat.url);
-        loadedSources++;
-      } else {
-        setUrl('');
-      }
-
       const pdfIds = pdfMats.flatMap((material: any) => {
         const ids = Array.isArray(material.pdf_document_id) ? material.pdf_document_id : [material.pdf_document_id];
         return ids.filter(Boolean).map(String);
       });
-      if (pdfIds.length > 0) {
-        setSelectedDocIds(pdfIds);
-        loadedSources++;
-      } else {
-        setSelectedDocIds([]);
-      }
+      setSelectedDocIds(pdfIds);
+
+      const ytMats = draft.materials.filter((m: any) => m.type === 'youtube');
+      const urls = ytMats.map((m: any) => m.source_url).filter(Boolean);
+      setYoutubeUrls(urls);
     } else {
-      // Fallback cho định dạng bài cũ
       if (draft.source_type?.toLowerCase() === 'pdf') {
         setSelectedDocIds(draft.pdf_document_id ? [String(draft.pdf_document_id)] : []);
-        setUrl('');
-      } else {
-        setUrl(draft.source_url || '');
+        setYoutubeUrls([]);
+      } else if (draft.source_type?.toLowerCase() === 'youtube' && draft.source_url) {
         setSelectedDocIds([]);
+        setYoutubeUrls([draft.source_url]);
+      } else {
+        setSelectedDocIds([]);
+        setYoutubeUrls([]);
       }
     }
 
@@ -193,13 +190,13 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const selectedDocInfos = documents.filter(d => selectedDocIds.includes(String(d.id)));
+  const selectedDocInfos = documents.filter((d) => selectedDocIds.includes(String(d.id)));
 
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto">
       <div>
         <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Trợ lý Sư phạm AI</span>
-        <h1 className="text-2xl font-bold text-slate-800">Biên soạn Giáo án & Bài tập</h1>
+        <h1 className="text-2xl font-bold text-slate-800">Biên soạn Giáo án & Bài tập từ PDF</h1>
       </div>
 
       {/* Form tạo bài mới */}
@@ -209,151 +206,158 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
             <Sparkles className="text-emerald-600" size={20} /> Tạo bài giảng mới
           </h3>
           <p className="text-sm text-slate-500 mt-1">
-            Bạn có thể cung cấp <strong>Video YouTube</strong>, <strong>File PDF</strong> hoặc <strong>kết hợp cả hai</strong> để AI tổng hợp lý thuyết, mẹo Casio và hệ thống bài tập giàn giáo.
+            Cung cấp <strong>Tài liệu PDF</strong> (sách giáo khoa, chuyên đề, đề thi) để AI tự động phân tích cấu trúc, thiết lập mục tiêu học tập và biên tập giáo án kèm bài tập giàn giáo.
           </p>
         </div>
 
-        {/* 1. Tiêu đề & Model */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="md:col-span-2">
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
-              Tiêu đề bài giảng <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="Ví dụ: Chuyên đề Khảo sát hàm số và Kỹ thuật bấm máy Casio..."
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            />
+        {/* 1. Tiêu đề bài giảng */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-700 mb-1">
+            Tiêu đề bài giảng <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Ví dụ: Chuyên đề Hệ trục tọa độ Oxyz và các phép toán Vectơ..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full px-3.5 py-2.5 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-xs"
+          />
+        </div>
+
+        {/* 2. KHU VỰC TÀI LIỆU PDF ĐẦU VÀO */}
+        <div className="border border-slate-200 rounded-xl p-5 bg-slate-50/50 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+              <FileText size={15} className="text-blue-600" /> Tài liệu PDF nguồn <span className="text-red-500">*</span>
+            </span>
+            <span className="text-[11px] text-slate-500 italic">
+              * Tối thiểu 1 file PDF tham khảo
+            </span>
           </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">Model AI xử lý</label>
-            <select
-              value={selectedModel}
-              onChange={(e) => setSelectedModel(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            >
-              {models.length > 0 ? (
-                models.map((m: any) => (
-                  <option key={m.id} value={m.id}>{m.display_name || m.id}</option>
-                ))
-              ) : (
-                <option value="gemini-3.7-flash">gemini-3.7 Flash (Mặc định)</option>
-              )}
-            </select>
+          <div className={`p-4 rounded-lg border transition ${
+            selectedDocIds.length > 0 ? 'bg-blue-50/40 border-blue-200' : 'bg-white border-slate-200'
+          }`}>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <select
+                value=""
+                onChange={(e) => {
+                  if (e.target.value && !selectedDocIds.includes(e.target.value)) {
+                    setSelectedDocIds((current) => [...current, e.target.value]);
+                  }
+                }}
+                className="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              >
+                <option value="">-- Chọn file PDF từ kho lưu trữ --</option>
+                {documents.map((doc: any) => (
+                  <option key={String(doc.id)} value={String(doc.id)}>
+                    {doc.file_name} ({doc.page_count} trang)
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                onClick={handlePickAndUploadDocument}
+                disabled={uploadingDoc}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold whitespace-nowrap flex items-center justify-center gap-1.5 transition shadow-xs disabled:opacity-50"
+              >
+                <UploadCloud size={15} /> {uploadingDoc ? 'Đang đọc...' : 'Nạp file PDF từ máy tính'}
+              </button>
+            </div>
+
+            {/* Danh sách các file PDF đã chọn */}
+            {selectedDocInfos.length > 0 ? (
+              <div className="mt-3 pt-3 border-t border-blue-100 flex flex-wrap gap-2">
+                {selectedDocInfos.map((doc) => (
+                  <span
+                    key={String(doc.id)}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-100/70 border border-blue-200 text-blue-900 text-xs font-medium"
+                  >
+                    <CheckCircle2 size={13} className="text-blue-600" />
+                    <span>{doc.file_name} ({doc.page_count} trang)</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDocIds((current) => current.filter((id) => id !== String(doc.id)))}
+                      className="ml-0.5 text-blue-400 hover:text-red-600"
+                      aria-label={`Bỏ ${doc.file_name}`}
+                    >
+                      <X size={13} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[11px] text-slate-500 mt-2">
+                AI sẽ trích xuất lý thuyết, phân tích các dạng toán và ví dụ mẫu trực tiếp từ file PDF này.
+              </p>
+            )}
           </div>
         </div>
 
-        {/* 2. KHU VỰC TÀI LIỆU ĐẦU VÀO (CHO PHÉP CẢ HAI) */}
-        <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/50 space-y-4">
+        {/* 2.2. KHU VỰC VIDEO BÀI GIẢNG YOUTUBE */}
+        <div className="border border-slate-200 rounded-xl p-5 bg-slate-50/50 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Layers size={14} className="text-slate-500" /> Nguồn tài liệu cung cấp (Có thể kết hợp cả hai)
+              <Video size={15} className="text-red-600" /> Video Bài giảng YouTube (Đa nguồn / Mẹo giải nhanh)
             </span>
             <span className="text-[11px] text-slate-500 italic">
-              * Tối thiểu 1 nguồn tài liệu
+              * Tùy chọn (kết hợp với PDF hoặc chạy độc lập)
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* NGUỒN 1: VIDEO YOUTUBE */}
-            <div className={`p-4 rounded-lg border transition ${
-              url.trim() ? 'bg-red-50/40 border-red-200' : 'bg-white border-slate-200'
-            }`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="flex items-center gap-1.5 text-xs font-bold text-red-600">
-                  <Play size={14} /> Nguồn 1: Video YouTube
-                </span>
-                {url.trim() && (
-                  <button 
-                    type="button" 
-                    onClick={() => setUrl('')}
-                    className="text-slate-400 hover:text-red-500 text-xs flex items-center gap-0.5"
-                  >
-                    <X size={12} /> Bỏ chọn
-                  </button>
-                )}
-              </div>
+          <div className={`p-4 rounded-lg border transition ${
+            youtubeUrls.length > 0 ? 'bg-red-50/40 border-red-200' : 'bg-white border-slate-200'
+          }`}>
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
-                type="url"
-                placeholder="Dán link video YouTube (https://...)"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-red-400"
+                type="text"
+                placeholder="Dán link YouTube (VD: https://www.youtube.com/watch?v=... hoặc https://youtu.be/...)"
+                value={currentUrl}
+                onChange={(e) => setCurrentUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddYoutubeUrl();
+                  }
+                }}
+                className="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-red-400"
               />
-              <p className="text-[11px] text-slate-500 mt-1.5">
-                AI sẽ trích xuất phương pháp giải, mẹo bấm máy tính Casio từ video.
+              <button
+                type="button"
+                onClick={handleAddYoutubeUrl}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-semibold whitespace-nowrap flex items-center justify-center gap-1.5 transition shadow-xs"
+              >
+                <Plus size={15} /> Thêm Video
+              </button>
+            </div>
+
+            {/* Danh sách các video YouTube đã thêm */}
+            {youtubeUrls.length > 0 ? (
+              <div className="mt-3 pt-3 border-t border-red-100 flex flex-wrap gap-2">
+                {youtubeUrls.map((url, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-red-100/70 border border-red-200 text-red-900 text-xs font-medium max-w-full"
+                  >
+                    <Play size={12} className="text-red-600 fill-red-600 shrink-0" />
+                    <span className="truncate max-w-xs">{url}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveYoutubeUrl(idx)}
+                      className="ml-1 text-red-400 hover:text-red-700"
+                      aria-label={`Xóa video ${url}`}
+                    >
+                      <X size={13} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-[11px] text-slate-500 mt-2">
+                AI sẽ tự động cào bản chép lời (transcript), trích xuất các mẹo giải nhanh, phương pháp Casio và tự động nén thành tài liệu học tập chuẩn N-Up 4.
               </p>
-            </div>
-
-            {/* NGUỒN 2: FILE PDF */}
-            <div className={`p-4 rounded-lg border transition ${
-              selectedDocIds.length > 0 ? 'bg-blue-50/40 border-blue-200' : 'bg-white border-slate-200'
-            }`}>
-              <div className="flex items-center justify-between mb-2">
-                <span className="flex items-center gap-1.5 text-xs font-bold text-blue-600">
-                  <FileText size={14} /> Nguồn 2: Tài liệu PDF (Toàn bộ)
-                </span>
-                {selectedDocIds.length > 0 && (
-                  <button 
-                    type="button" 
-                    onClick={() => setSelectedDocIds([])}
-                    className="text-slate-400 hover:text-blue-500 text-xs flex items-center gap-0.5"
-                  >
-                    <X size={12} /> Bỏ chọn
-                  </button>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex gap-2">
-                  <select
-                    value=""
-                    onChange={(e) => {
-                      if (e.target.value && !selectedDocIds.includes(e.target.value)) {
-                        setSelectedDocIds((current) => [...current, e.target.value]);
-                      }
-                    }}
-                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-400"
-                  >
-                    <option value="">-- Chọn file PDF đã có --</option>
-                    {documents.map((doc: any) => (
-                      <option key={String(doc.id)} value={String(doc.id)}>
-                        {doc.file_name} ({doc.page_count} trang)
-                      </option>
-                    ))}
-                  </select>
-
-                  <button
-                    type="button"
-                    onClick={handlePickAndUploadDocument}
-                    disabled={uploadingDoc}
-                    className="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold whitespace-nowrap flex items-center gap-1.5 transition disabled:opacity-50"
-                  >
-                    <UploadCloud size={14} /> {uploadingDoc ? "Đang đọc..." : "Chọn file máy tính"}
-                  </button>
-                </div>
-
-                {selectedDocInfos.length > 0 ? (
-                  <div className="space-y-1">
-                    {selectedDocInfos.map((doc) => (
-                      <p key={String(doc.id)} className="text-[11px] text-blue-700 flex items-center gap-1 font-medium">
-                        <CheckCircle2 size={12} /> {doc.file_name} ({doc.page_count} trang)
-                        <button type="button" onClick={() => setSelectedDocIds((current) => current.filter((id) => id !== String(doc.id)))} className="ml-1 text-blue-400 hover:text-red-500" aria-label={`Bỏ ${doc.file_name}`}>
-                          <X size={12} />
-                        </button>
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-[11px] text-slate-500">
-                    AI sẽ dùng file PDF này làm khung kiến thức và ngân hàng dạng bài.
-                  </p>
-                )}
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -364,10 +368,10 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
           </label>
           <textarea
             rows={2}
-            placeholder="Ví dụ: Ưu tiên trích xuất mẹo Casio từ video, tập trung sinh 3 câu tự luận phân rã bước và 5 câu trắc nghiệm nhanh..."
+            placeholder="Ví dụ: Tập trung phân dạng chi tiết, sinh 4 bài tập tự luyện bậc thang từ dễ đến vận dụng cho mỗi dạng..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full px-3.5 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-xs"
           />
         </div>
 
@@ -377,11 +381,11 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
           disabled={creating || uploadingDoc}
           className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold text-sm shadow-sm transition disabled:opacity-50"
         >
-          <Sparkles size={16} /> {creating ? "Đang gửi yêu cầu..." : "Bắt đầu tạo bài giảng"}
+          <Sparkles size={16} /> {creating ? 'Đang gửi yêu cầu...' : 'Bắt đầu tạo bài giảng'}
         </button>
       </div>
 
-      {/* Bảng lịch sử */}
+      {/* Bảng lịch sử bài giảng */}
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
           <h3 className="font-bold text-slate-800">Lịch sử bài giảng đã biên soạn</h3>
@@ -394,9 +398,8 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
             <thead className="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
               <tr>
                 <th className="py-3 px-5">Bài giảng</th>
-                <th className="py-3 px-5">Nguồn tài liệu</th>
-                <th className="py-3 px-5">Prompt</th>
-                <th className="py-3 px-5">Model</th>
+                <th className="py-3 px-5">Tài liệu nguồn</th>
+                <th className="py-3 px-5">Yêu cầu Prompt</th>
                 <th className="py-3 px-5">Thời gian</th>
                 <th className="py-3 px-5">Trạng thái</th>
                 <th className="py-3 px-5 text-right">Thao tác</th>
@@ -405,7 +408,7 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
             <tbody className="divide-y divide-slate-100">
               {drafts.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                  <td colSpan={6} className="py-8 text-center text-slate-400">
                     Chưa có bài giảng nào được tạo
                   </td>
                 </tr>
@@ -417,10 +420,10 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
                     <tr key={d.id} className="hover:bg-slate-50">
                       {/* Tiêu đề */}
                       <td className="py-3.5 px-5 font-semibold text-slate-800">
-                        {d.title || "Chưa có tiêu đề"}
+                        {d.title || 'Chưa có tiêu đề'}
                       </td>
 
-                      {/* Hiển thị Nguồn (YouTube + PDF cùng lúc nếu có) */}
+                      {/* Hiển thị Nguồn tài liệu */}
                       <td className="py-3.5 px-5">
                         {hasMaterials ? (
                           <div className="flex flex-col gap-1.5">
@@ -446,16 +449,13 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
                           </div>
                         ) : (
                           <small className="text-slate-400 font-mono text-xs">
-                            {d.source_url || (d.source_type?.toUpperCase() === 'PDF' ? d.pdf_file_name : "Nguồn khác")}
+                            {d.source_url || (d.source_type?.toUpperCase() === 'PDF' ? d.pdf_file_name : 'Nguồn khác')}
                           </small>
                         )}
                       </td>
 
                       <td className="py-3.5 px-5 text-xs text-slate-600 max-w-xs truncate">
-                        {d.custom_prompt || "Mặc định"}
-                      </td>
-                      <td className="py-3.5 px-5 font-mono text-xs text-slate-500">
-                        {d.model}
+                        {d.custom_prompt || 'Mặc định'}
                       </td>
                       <td className="py-3.5 px-5 text-xs text-slate-500">
                         {formatDateTime(d.created_at)}
@@ -463,17 +463,17 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
 
                       {/* Trạng thái */}
                       <td className="py-3.5 px-5">
-                        {d.status === "processing" && (
+                        {d.status === 'processing' && (
                           <span className="px-2 py-0.5 bg-amber-50 text-amber-600 border border-amber-200 rounded text-xs font-medium">
                             Đang phân tích...
                           </span>
                         )}
-                        {d.status === "completed" && (
+                        {d.status === 'completed' && (
                           <span className="px-2 py-0.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded text-xs font-medium">
                             Đã hoàn thành
                           </span>
                         )}
-                        {d.status === "failed" && (
+                        {d.status === 'failed' && (
                           <div className="flex items-center gap-1.5 text-red-600 text-xs">
                             <span>Thất bại</span>
                             <button onClick={() => onOpenErrorModal(d)} className="underline text-[11px]">
@@ -491,7 +491,7 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
 
                       {/* Thao tác */}
                       <td className="py-3.5 px-5 text-right">
-                        {d.status === "completed" && (
+                        {d.status === 'completed' && (
                           <div className="flex justify-end items-center gap-2">
                             <button
                               onClick={() => handleRetry(d)}

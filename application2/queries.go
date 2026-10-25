@@ -74,7 +74,15 @@ func LessonToView(v *lesson.Lesson) *LessonView {
 			for _, b := range t.Blocks() {
 				blocks = append(blocks, blockToView(b))
 			}
-			topics = append(topics, TopicView{Title: t.Title().String(), Blocks: blocks})
+			topicExs := make([]ExerciseView, 0, len(t.Exercises()))
+			for _, e := range t.Exercises() {
+				topicExs = append(topicExs, ExerciseToView(e))
+			}
+			topics = append(topics, TopicView{
+				Title:     t.Title().String(),
+				Blocks:    blocks,
+				Exercises: topicExs,
+			})
 		}
 		out.Sections = append(out.Sections, SectionView{Title: s.Title().String(), Topics: topics})
 	}

@@ -19,6 +19,7 @@ import (
 type Storage interface {
 	FindStudentIDBySpaceID(ctx context.Context, spaceID string) (uuid.UUID, bool, error)
 	SaveSpaceLink(ctx context.Context, spaceID string, studentID uuid.UUID, meetingCode, spaceName string) error
+	SaveStudent(ctx context.Context, s *student.Student) error
 }
 
 type Adapter struct {
@@ -113,7 +114,12 @@ func (a *Adapter) resolveStudentID(
 		return uuid.Nil(), nil, err
 	}
 
-	// BƯỚC 4: Lưu vào danh bạ và lưu vào RAM Cache cho các lần sau
+	// BƯỚC 4: Lưu học sinh mới vào DB TRƯỚC TIÊN để thỏa mãn Foreign Key constraint của bảng external_student_links
+	if err := a.store.SaveStudent(ctx, newStudent); err != nil {
+		return uuid.Nil(), nil, fmt.Errorf("lưu học sinh mới cho space link: %w", err)
+	}
+
+	// BƯỚC 5: Lưu vào danh bạ và lưu vào RAM Cache cho các lần sau
 	err = a.store.SaveSpaceLink(ctx, m.SpaceID, newStudent.ID(), m.MeetingCode, m.SpaceName)
 	if err != nil {
 		return uuid.Nil(), nil, err

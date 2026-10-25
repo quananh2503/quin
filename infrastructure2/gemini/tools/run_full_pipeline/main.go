@@ -54,42 +54,56 @@ func main() {
 	}
 	fmt.Printf("🔑 Đã nạp %d API keys khả dụng cho KeyPool\n\n", len(keys))
 
-	// 2. Danh mục 3 tài liệu PDF đầu vào
-	pdfPaths := []string{
-		filepath.Join("infrastructure2", "gemini", "dsd.pdf"),
-		filepath.Join("infrastructure2", "gemini", "HH12-KNTT- C2-GHEP FULL GIAI.pdf"),
-		filepath.Join("infrastructure2", "gemini", "ÔN VEC TƠ KG 10T10.pdf"),
+	// 2. Danh mục tài liệu đầu vào: nén N-Up 4 độc lập cho từng file để bảo toàn ranh giới trang & DocID
+	type inputItem struct {
+		docID    string
+		path     string
+		roleHint string
 	}
 
-	fmt.Println("📂 DANH SÁCH 3 TÀI LIỆU PDF ĐẦU VÀO ĐƯỢC KẾT HỢP:")
-	fmt.Printf("  [1] Tài liệu dsd: %s\n", filepath.Base(pdfPaths[0]))
-	fmt.Printf("  [2] Tài liệu chính (SGK & Bài giải Chương II): %s\n", filepath.Base(pdfPaths[1]))
-	fmt.Printf("  [3] Tài liệu ngân hàng bài tập ôn luyện: %s\n", filepath.Base(pdfPaths[2]))
+	items := []inputItem{
+		{"DOC_DSD", filepath.Join("infrastructure2", "gemini", "dsd.pdf"), "Tài liệu tóm tắt lý thuyết và kiến thức trọng tâm (dsd)"},
+		{"DOC_SGK_HH12", filepath.Join("infrastructure2", "gemini", "HH12-KNTT- C2-GHEP FULL GIAI.pdf"), "Tài liệu chính: SGK & Bài giải chi tiết Chương II Hình học 12"},
+		{"DOC_ON_VECTO", filepath.Join("infrastructure2", "gemini", "ÔN VEC TƠ KG 10T10.pdf"), "Tài liệu ngân hàng bài tập ôn luyện chuyên đề Vectơ"},
+	}
 
-	// Với mô hình Gemma trên gói Free Tier (trần 16,000 input tokens/phút),
-	// 3 tài liệu PDF được tự động N-Up 8 trang/sheet để nén số tokens tối đa
-	nupPath := filepath.Join("infrastructure2", "gemini", "consolidated_dsd_hh12_onvec_nup8.pdf")
-	nupBytes, err := os.ReadFile(nupPath)
-	if err != nil || len(nupBytes) == 0 {
-		fmt.Println("🔄 Đang hợp nhất 3 file PDF thành định dạng N-Up 8 trang/sheet...")
-		proc := pdf.NewProcessor()
-		nupBytes, err = proc.MergeAndNUp8(context.Background(), pdfPaths)
-		if err != nil {
-			log.Fatalf("❌ Lỗi NUp: %v", err)
+	fmt.Println("📂 DANH SÁCH CÁC TÀI LIỆU ĐẦU VÀO ĐƯỢC NÉN N-UP 4 ĐỘC LẬP TỪNG TÀI LIỆU:")
+	var docs []gemini.DocumentInput
+
+	for idx, item := range items {
+		nupFile := strings.TrimSuffix(item.path, ".pdf") + "_nup4.pdf"
+		nupBytes, errRead := os.ReadFile(nupFile)
+		if errRead != nil || len(nupBytes) == 0 {
+			fmt.Printf("  🔄 [%d] Đang nén N-Up 4 riêng cho: %s...\n", idx+1, filepath.Base(item.path))
+			proc := pdf.NewProcessor()
+			var errNUp error
+			nupBytes, errNUp = proc.MergeAndNUp(context.Background(), []string{item.path}, 4)
+			if errNUp != nil {
+				log.Fatalf("❌ Lỗi nén N-Up 4 cho %s: %v", item.path, errNUp)
+			}
+			_ = os.WriteFile(nupFile, nupBytes, 0644)
 		}
-		_ = os.WriteFile(nupPath, nupBytes, 0644)
+		fmt.Printf("  ✅ [%d] %s -> %s (%.2f MB)\n", idx+1, item.docID, filepath.Base(nupFile), float64(len(nupBytes))/(1024*1024))
+		docs = append(docs, gemini.DocumentInput{
+			DocID:    item.docID,
+			FileName: filepath.Base(nupFile),
+			RoleHint: item.roleHint,
+			RawPDF:   nupBytes,
+		})
 	}
 
-	docs := []gemini.DocumentInput{
-		{
-			DocID:    "DOC_CONSOLIDATED_3PDFS",
-			FileName: "consolidated_dsd_hh12_onvec_nup8.pdf",
-			RoleHint: "Tài liệu hợp nhất 3 nguồn: dsd + SGK HH12 + Đề bài ôn tập vectơ (N-Up 8)",
-			RawPDF:   nupBytes,
-		},
+	// 2.2 Tích hợp Video YouTube (hỗ trợ cào transcript & nén N-Up 4 tự động)
+	youtubeURL := "https://www.youtube.com/watch?v=7urfQ8s20oY" // Video bài giảng Thầy Nguyễn Phan Tiến
+	if strings.TrimSpace(youtubeURL) != "" {
+		fmt.Printf("\n🎥 Đang tích hợp Video YouTube tự động: %s...\n", youtubeURL)
+		ytDoc, errYT := gemini.NewDocumentInputFromYouTube(context.Background(), "DOC_YOUTUBE", youtubeURL, "Video bài giảng trích xuất mẹo giải nhanh và phương pháp tư duy")
+		if errYT != nil {
+			fmt.Printf("  ⚠️ Không thể nạp YouTube (%v), tiếp tục với các tài liệu PDF\n", errYT)
+		} else {
+			fmt.Printf("  ✅ DOC_YOUTUBE -> %s (%.2f KB)\n\n", ytDoc.FileName, float64(len(ytDoc.RawPDF))/1024)
+			docs = append(docs, ytDoc)
+		}
 	}
-	fmt.Printf("✅ Đã hợp nhất 3 tài liệu thành 1 khối KV-Cache N-Up 8 tối ưu (Kích thước: %.2f MB, ~2,850 tokens)\n\n",
-		float64(len(nupBytes))/(1024*1024))
 
 	// 3. Khởi tạo Pipeline hoàn chỉnh
 	ctx := context.Background()

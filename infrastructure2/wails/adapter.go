@@ -17,9 +17,11 @@ import (
 	wailsRuntime "github.com/wailsapp/wails/v2/pkg/runtime"
 
 	"meet-attendance-clean/application2"
+	"meet-attendance-clean/domain2/assignment"
 	"meet-attendance-clean/domain2/lesson"
 
 	// "meet-attendance-clean/infrastructure/onenote"
+	"meet-attendance-clean/infrastructure2/gemini"
 	"meet-attendance-clean/infrastructure2/googlemeet"
 	"meet-attendance-clean/infrastructure2/onenote"
 )
@@ -41,6 +43,7 @@ type Application2Services struct {
 	PreparePublishingTargets  *application2.PreparePublishingTargetsUsecase
 	AssignLesson              *application2.AssignLessonUsecase
 	GradeAssignment           *application2.GradeAssignmentUsecase
+	Drafts                    application2.LessonDraftEditorRepo
 	Lessons                   application2.LessonRepo
 	Assignments               application2.AssignmentRepo
 	Workspace                 application2.WorkSpaceGateway
@@ -71,6 +74,17 @@ func (a *App) SetApplication2Services(services *Application2Services) {
 func (a *App) Startup(ctx context.Context) {
 	a.ctx = ctx
 	go a.startPDFStreamServer()
+}
+
+func (a *App) SetContext(ctx context.Context) {
+	a.ctx = ctx
+}
+
+func (a *App) getContext() context.Context {
+	if a.ctx == nil {
+		return context.Background()
+	}
+	return a.ctx
 }
 
 // parseID là hàm tiện ích validate UUID nội bộ
@@ -198,6 +212,7 @@ type GenerateLessonRequest struct {
 	Model       string   `json:"model"`
 	Prompt      string   `json:"prompt"`
 	URL         string   `json:"url"`
+	URLs        []string `json:"urls"`
 	Material    string   `json:"material"`
 	DocumentID  string   `json:"document_id"`
 	DocumentIDs []string `json:"document_ids"`
@@ -212,11 +227,19 @@ func (a *App) V2CreateLesson(request GenerateLessonRequest) (string, error) {
 
 	materials := make([]lesson.StudyMaterial, 0)
 
-	// 1. Xử lý tài liệu YouTube (nếu có)
-	if strings.TrimSpace(request.URL) != "" {
-		ytMaterial, err := lesson.NewYouTubeMaterial(request.URL)
+	// 1. Xử lý tài liệu YouTube (hỗ trợ cả mảng URLs lẫn trường URL đơn lẻ)
+	youtubeURLs := request.URLs
+	if len(youtubeURLs) == 0 && strings.TrimSpace(request.URL) != "" {
+		youtubeURLs = []string{request.URL}
+	}
+	for _, rawURL := range youtubeURLs {
+		rawURL = strings.TrimSpace(rawURL)
+		if rawURL == "" {
+			continue
+		}
+		ytMaterial, err := lesson.NewYouTubeMaterial(rawURL)
 		if err != nil {
-			return "", fmt.Errorf("tài liệu YouTube không hợp lệ: %w", err)
+			return "", fmt.Errorf("tài liệu YouTube không hợp lệ (%s): %w", rawURL, err)
 		}
 		materials = append(materials, ytMaterial)
 	}
@@ -234,7 +257,7 @@ func (a *App) V2CreateLesson(request GenerateLessonRequest) (string, error) {
 
 		// Truy vấn bảng documents để lấy đường dẫn file thực tế trên ổ cứng
 		// (Giả sử bạn gọi qua Repo Documents sẵn có trong DB)
-		doc, err := a.application2.DocRepo.GetByID(a.ctx, docUUID)
+		doc, err := a.application2.DocRepo.GetByID(a.getContext(), docUUID)
 		if err != nil {
 			return "", fmt.Errorf("không tìm thấy file PDF tương ứng: %w", err)
 		}
@@ -267,7 +290,7 @@ func (a *App) V2CreateLesson(request GenerateLessonRequest) (string, error) {
 		Material: materials, // Sửa lỗi typo: truyền slice materials
 	}
 
-	id, err := a.application2.GenerateLesson.Create(a.ctx, cmd)
+	id, err := a.application2.GenerateLesson.Create(a.getContext(), cmd)
 	if err != nil {
 		fmt.Printf("Lỗi tạo lesson draft: %v\n", err)
 		return "", fmt.Errorf("lỗi tạo lesson draft: %w", err)
@@ -310,7 +333,7 @@ func (a *App) CreateByUrl(request GenerateLessonRequest) (string, error) {
 // 		Material: material,
 // 	}
 
-// 	id, err := a.application2.GenerateLesson.Create(a.ctx, cmd)
+// 	id, err := a.application2.GenerateLesson.Create(a.getContext(), cmd)
 // 	if err != nil {
 // 		return "", err
 // 	}
@@ -398,7 +421,7 @@ type SaveLessonDraftRequest struct {
 }
 
 func (a *App) V2ListLessonDrafts() ([]application2.DraftView, error) {
-	return a.application2.Queries.ListLessonDrafts(a.ctx)
+	return a.application2.Queries.ListLessonDrafts(a.getContext())
 }
 
 func (a *App) V2GetLessonDraft(id string) (application2.DraftView, error) {
@@ -406,7 +429,7 @@ func (a *App) V2GetLessonDraft(id string) (application2.DraftView, error) {
 	if err != nil {
 		return application2.DraftView{}, err
 	}
-	return a.application2.Queries.GetLessonDraft(a.ctx, parsed)
+	return a.application2.Queries.GetLessonDraft(a.getContext(), parsed)
 }
 
 // func (a *App) V2SaveLessonDraft(request SaveLessonDraftRequest) error {
@@ -729,6 +752,170 @@ func (a *App) V2PreparePublishing(request PreparePublishingRequest) (application
 	return a.application2.PreparePublishingTargets.Prepare(a.ctx, id)
 }
 
+// GetStudentNotebookRequest chứa thông tin truy vấn sổ tay OneNote của học sinh.
+type GetStudentNotebookRequest struct {
+	StudentID string `json:"student_id"`
+	Audience  string `json:"audience,omitempty"`
+}
+
+// StudentNotebookView trả về trạng thái liên kết sổ tay OneNote của học sinh.
+type StudentNotebookView struct {
+	StudentID       string `json:"student_id"`
+	Audience        string `json:"audience"`
+	NotebookID      string `json:"notebook_id"`
+	NotebookName    string `json:"notebook_name"`
+	IsBound         bool   `json:"is_bound"`
+	LastChapterName string `json:"last_chapter_name,omitempty"`
+}
+
+// ListOneNoteSectionsRequest chứa thông tin truy vấn các chương (sections) trong một sổ tay OneNote.
+type ListOneNoteSectionsRequest struct {
+	NotebookID string `json:"notebook_id"`
+}
+
+// SaveLastChapterRequest chứa thông tin lưu chương cuối cùng cho học sinh.
+type SaveLastChapterRequest struct {
+	StudentID   string `json:"student_id"`
+	Audience    string `json:"audience,omitempty"`
+	ChapterName string `json:"chapter_name"`
+}
+
+// BindStudentNotebookRequest chứa thông tin để liên kết học sinh với một cuốn sổ tay OneNote.
+type BindStudentNotebookRequest struct {
+	StudentID    string `json:"student_id"`
+	Audience     string `json:"audience,omitempty"`
+	NotebookID   string `json:"notebook_id"`
+	NotebookName string `json:"notebook_name"`
+}
+
+// V2GetStudentNotebook lấy thông tin sổ tay OneNote đang liên kết với học sinh (mặc định audience "HS").
+// Nếu chưa liên kết, trả về tên sổ tay mặc định và IsBound = false.
+func (a *App) V2GetStudentNotebook(request GetStudentNotebookRequest) (StudentNotebookView, error) {
+	studentUUID, err := parseID(request.StudentID, "student_id")
+	if err != nil {
+		return StudentNotebookView{}, err
+	}
+	audience := request.Audience
+	if audience == "" {
+		audience = "HS"
+	}
+	if a.oneNoteClient == nil {
+		return StudentNotebookView{}, errors.New("OneNote client chưa được cấu hình")
+	}
+	binding, found, err := a.oneNoteClient.GetStudentNotebookBinding(a.getContext(), studentUUID, audience)
+	if err != nil {
+		return StudentNotebookView{}, fmt.Errorf("lấy thông tin sổ tay học sinh thất bại: %w", err)
+	}
+
+	var lastCh string
+	if ch, chFound, chErr := a.oneNoteClient.GetStudentLastChapter(a.getContext(), studentUUID, audience); chErr == nil && chFound {
+		lastCh = ch
+	}
+
+	if found {
+		return StudentNotebookView{
+			StudentID:       request.StudentID,
+			Audience:        audience,
+			NotebookID:      binding.ID,
+			NotebookName:    binding.Name,
+			IsBound:         true,
+			LastChapterName: lastCh,
+		}, nil
+	}
+	studentName := ""
+	if a.application2 != nil && a.application2.Queries != nil {
+		detail, qErr := a.application2.Queries.GetStudentDetail(a.getContext(), studentUUID, application2.MeetingFilter{})
+		if qErr != nil {
+			log.Printf("cảnh báo: không lấy được thông tin chi tiết học sinh %s: %v, sử dụng tên mặc định", studentUUID, qErr)
+		} else if detail.Student.Name != "" {
+			studentName = detail.Student.Name
+		}
+	}
+	defaultName := onenote.DefaultNotebookName(studentName, audience)
+	return StudentNotebookView{
+		StudentID:       request.StudentID,
+		Audience:        audience,
+		NotebookID:      "",
+		NotebookName:    defaultName,
+		IsBound:         false,
+		LastChapterName: lastCh,
+	}, nil
+}
+
+// V2ListOneNoteNotebooks lấy danh sách các sổ tay OneNote của tài khoản giáo viên hiện tại từ Graph API.
+func (a *App) V2ListOneNoteNotebooks() ([]onenote.NotebookInfo, error) {
+	if a.oneNoteClient == nil {
+		return nil, errors.New("OneNote client chưa được cấu hình")
+	}
+	notebooks, err := a.oneNoteClient.ListNotebooks(a.getContext())
+	if err != nil {
+		return nil, fmt.Errorf("lấy danh sách sổ tay OneNote thất bại: %w", err)
+	}
+	return notebooks, nil
+}
+
+// V2BindStudentNotebook cập nhật liên kết giữa học sinh và một cuốn sổ tay OneNote vào CSDL SQLite.
+func (a *App) V2BindStudentNotebook(request BindStudentNotebookRequest) error {
+	studentUUID, err := parseID(request.StudentID, "student_id")
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(request.NotebookID) == "" {
+		return errors.New("notebook_id không được để trống")
+	}
+	if strings.TrimSpace(request.NotebookName) == "" {
+		return errors.New("notebook_name không được để trống")
+	}
+	audience := request.Audience
+	if audience == "" {
+		audience = "HS"
+	}
+	if a.oneNoteClient == nil {
+		return errors.New("OneNote client chưa được cấu hình")
+	}
+	if err := a.oneNoteClient.BindStudentNotebook(a.getContext(), studentUUID, audience, strings.TrimSpace(request.NotebookID), strings.TrimSpace(request.NotebookName)); err != nil {
+		return fmt.Errorf("liên kết sổ tay học sinh thất bại: %w", err)
+	}
+	return nil
+}
+
+// V2ListOneNoteSections truy vấn danh sách tất cả các chương (sections) trong một sổ tay OneNote qua Graph API.
+func (a *App) V2ListOneNoteSections(request ListOneNoteSectionsRequest) ([]onenote.SectionInfo, error) {
+	if strings.TrimSpace(request.NotebookID) == "" {
+		return nil, errors.New("notebook_id không được để trống")
+	}
+	if a.oneNoteClient == nil {
+		return nil, errors.New("OneNote client chưa được cấu hình")
+	}
+	sections, err := a.oneNoteClient.ListSections(a.getContext(), strings.TrimSpace(request.NotebookID))
+	if err != nil {
+		return nil, fmt.Errorf("lấy danh sách sections OneNote thất bại: %w", err)
+	}
+	return sections, nil
+}
+
+// V2SaveLastChapter lưu lại tên chương được chọn gần nhất của học sinh (HS hoặc GV) vào SQLite.
+func (a *App) V2SaveLastChapter(request SaveLastChapterRequest) error {
+	studentUUID, err := parseID(request.StudentID, "student_id")
+	if err != nil {
+		return err
+	}
+	if strings.TrimSpace(request.ChapterName) == "" {
+		return errors.New("chapter_name không được để trống")
+	}
+	audience := request.Audience
+	if audience == "" {
+		audience = "HS"
+	}
+	if a.oneNoteClient == nil {
+		return errors.New("OneNote client chưa được cấu hình")
+	}
+	if err := a.oneNoteClient.SaveStudentLastChapter(a.getContext(), studentUUID, audience, strings.TrimSpace(request.ChapterName)); err != nil {
+		return fmt.Errorf("lưu tên chương thất bại: %w", err)
+	}
+	return nil
+}
+
 type PublishLessonRequest struct {
 	LessonID           string `json:"lesson_id"`
 	StudentID          string `json:"student_id"`
@@ -756,22 +943,306 @@ func (a *App) V2PublishLesson(request PublishLessonRequest) error {
 		return fmt.Errorf("lesson chưa có material nào, không thể publish")
 	}
 	// Bài học khắc phục lỗi (Remediation) có chu trình MistakeGraph riêng biệt
+	var assignErr error
 	if _, ok := materials[0].(lesson.MistakeMaterial); ok {
-		return a.application2.AssignLesson.AssignRemediation(a.ctx, application2.AssignRemediationLessonCommand{
+		assignErr = a.application2.AssignLesson.AssignRemediation(a.ctx, application2.AssignRemediationLessonCommand{
 			LessonID:           lessonID,
 			PageName:           request.PageName,
 			StudentChapterName: request.StudentChapterName,
 			TeacherChapterName: request.TeacherChapterName,
 		})
+	} else {
+		assignErr = a.application2.AssignLesson.AssignNormal(a.ctx, application2.AssignNormalLessonCommand{
+			LessonID:           lessonID,
+			StudentID:          studentID,
+			PageName:           request.PageName,
+			StudentChapterName: request.StudentChapterName,
+			TeacherChapterName: request.TeacherChapterName,
+		})
+	}
+	if assignErr != nil {
+		return assignErr
+	}
+	if a.oneNoteClient != nil {
+		if strings.TrimSpace(request.StudentChapterName) != "" {
+			if sErr := a.oneNoteClient.SaveStudentLastChapter(a.getContext(), studentID, "HS", strings.TrimSpace(request.StudentChapterName)); sErr != nil {
+				log.Printf("cảnh báo: không thể lưu last chapter HS: %v", sErr)
+			}
+		}
+		if strings.TrimSpace(request.TeacherChapterName) != "" {
+			if tErr := a.oneNoteClient.SaveStudentLastChapter(a.getContext(), studentID, "GV", strings.TrimSpace(request.TeacherChapterName)); tErr != nil {
+				log.Printf("cảnh báo: không thể lưu last chapter GV: %v", tErr)
+			}
+		}
+	}
+	return nil
+}
+
+// ============================================================================
+// 11b. PUBLISH PDF LESSON (FULL PIPELINE ĐẨY TRỰC TIẾP LÊN ONENOTE)
+// ============================================================================
+
+type PublishPDFLessonRequest struct {
+	LessonID           string `json:"lesson_id"`
+	StudentID          string `json:"student_id"`
+	TeacherPDFPath     string `json:"teacher_pdf_path"`
+	StudentPDFPath     string `json:"student_pdf_path"`
+	PageName           string `json:"page_name"`
+	StudentChapterName string `json:"student_chapter_name"`
+	TeacherChapterName string `json:"teacher_chapter_name"`
+}
+
+// ResolveLessonPDFPaths xác định đường dẫn thực tế của 2 file PDF Giáo viên & Học sinh.
+// Khi teacherPath hoặc studentPath rỗng, hàm sẽ tự động tìm kiếm các file đầu ra chuẩn trong .artifacts/full_pipeline_output.
+func ResolveLessonPDFPaths(teacherPath, studentPath string) (string, string) {
+	tResolved := teacherPath
+	if strings.TrimSpace(tResolved) == "" {
+		primaryTeacher := filepath.Join(".artifacts", "full_pipeline_output", "GIAO_AN_GIAO_VIEN.pdf")
+		fallbackTeacher := filepath.Join(".artifacts", "full_pipeline_output", "teacher_lesson.pdf")
+		if info, err := os.Stat(primaryTeacher); err == nil && !info.IsDir() {
+			tResolved = primaryTeacher
+		} else {
+			tResolved = fallbackTeacher
+		}
 	}
 
-	return a.application2.AssignLesson.AssignNormal(a.ctx, application2.AssignNormalLessonCommand{
-		LessonID:           lessonID,
-		StudentID:          studentID,
-		PageName:           request.PageName,
-		StudentChapterName: request.StudentChapterName,
-		TeacherChapterName: request.TeacherChapterName,
+	sResolved := studentPath
+	if strings.TrimSpace(sResolved) == "" {
+		primaryStudent := filepath.Join(".artifacts", "full_pipeline_output", "PHIEU_BAI_TAP_HOC_SINH.pdf")
+		fallbackStudent := filepath.Join(".artifacts", "full_pipeline_output", "student_lesson.pdf")
+		if info, err := os.Stat(primaryStudent); err == nil && !info.IsDir() {
+			sResolved = primaryStudent
+		} else {
+			sResolved = fallbackStudent
+		}
+	}
+
+	return tResolved, sResolved
+}
+
+// RenderLessonPDFBytes biên dịch động một Lesson Entity sang định dạng PDF Bytes bằng Typst.
+// Cờ isTeacher quyết định sinh bản in cho Giáo viên (kèm lời giải) hay Học sinh (có chỗ làm bài).
+func RenderLessonPDFBytes(ctx context.Context, lsn *lesson.Lesson, isTeacher bool) ([]byte, error) {
+	if lsn == nil {
+		return nil, errors.New("lesson không được nil")
+	}
+
+	renderer := gemini.NewDefaultLessonTypstRenderer()
+	typstCode, err := renderer.Render(lsn)
+	if err != nil {
+		return nil, fmt.Errorf("sinh mã Typst thất bại: %w", err)
+	}
+
+	compiler := gemini.NewCLITypstCompiler()
+	tmpDir, err := os.MkdirTemp("", "typst_pdf_*")
+	if err != nil {
+		return nil, fmt.Errorf("tạo thư mục tạm thất bại: %w", err)
+	}
+	defer func() {
+		if rmErr := os.RemoveAll(tmpDir); rmErr != nil {
+			log.Printf("cảnh báo: dọn dẹp thư mục tạm %s thất bại: %v", tmpDir, rmErr)
+		}
+	}()
+
+	outPath := filepath.Join(tmpDir, "rendered.pdf")
+	teacherVal := "false"
+	if isTeacher {
+		teacherVal = "true"
+	}
+
+	_, err = compiler.Compile(ctx, typstCode, gemini.CompileOptions{
+		IsTeacher:  isTeacher,
+		OutPDFPath: outPath,
+		Inputs:     map[string]string{"teacher": teacherVal},
 	})
+	if err != nil {
+		return nil, fmt.Errorf("biên dịch Typst PDF thất bại: %w", err)
+	}
+
+	pdfBytes, err := os.ReadFile(outPath)
+	if err != nil {
+		return nil, fmt.Errorf("đọc file PDF thất bại: %w", err)
+	}
+
+	return pdfBytes, nil
+}
+
+func (a *App) V2PublishPDFLesson(request PublishPDFLessonRequest) error {
+	lessonID, err := parseID(request.LessonID, "lesson_id")
+	if err != nil {
+		return err
+	}
+	studentID, err := parseID(request.StudentID, "student_id")
+	if err != nil {
+		return err
+	}
+
+	var teacherBytes []byte
+	var studentBytes []byte
+	var teacherPNGPages [][]byte
+	var studentPNGPages [][]byte
+
+	hasTeacherPath := strings.TrimSpace(request.TeacherPDFPath) != ""
+	hasStudentPath := strings.TrimSpace(request.StudentPDFPath) != ""
+
+	var lsn *lesson.Lesson
+	if a.application2 != nil && a.application2.Lessons != nil {
+		foundLesson, getErr := a.application2.Lessons.GetByID(a.getContext(), lessonID)
+		if getErr == nil && foundLesson != nil {
+			lsn = foundLesson
+		} else if getErr != nil {
+			log.Printf("không tìm thấy bài học trong Lessons repo: %v", getErr)
+		}
+	}
+
+	if lsn == nil && a.application2 != nil && a.application2.Drafts != nil {
+		draft, draftErr := a.application2.Drafts.GetByID(a.getContext(), lessonID)
+		if draftErr == nil && draft != nil && draft.Lesson() != nil {
+			lsn = draft.Lesson()
+		} else if draftErr != nil {
+			log.Printf("không tìm thấy draft hoặc draft chưa hoàn thành: %v", draftErr)
+		}
+	}
+
+	if hasTeacherPath && hasStudentPath {
+		teacherBytes, err = os.ReadFile(request.TeacherPDFPath)
+		if err != nil {
+			return fmt.Errorf("không thể đọc file PDF Giáo viên %q: %w", request.TeacherPDFPath, err)
+		}
+		studentBytes, err = os.ReadFile(request.StudentPDFPath)
+		if err != nil {
+			return fmt.Errorf("không thể đọc file PDF Học sinh %q: %w", request.StudentPDFPath, err)
+		}
+	} else {
+		if lsn != nil {
+			// Ưu tiên render các trang ảnh PNG 300 DPI để trang OneNote không bị vỡ/mờ hạt
+			tPages, tErr := gemini.RenderLessonPNGPages(a.getContext(), lsn, true, 300)
+			sPages, sErr := gemini.RenderLessonPNGPages(a.getContext(), lsn, false, 300)
+			if tErr == nil && sErr == nil && len(tPages) > 0 && len(sPages) > 0 {
+				teacherPNGPages = tPages
+				studentPNGPages = sPages
+			} else {
+				if tErr != nil {
+					log.Printf("cảnh báo: không thể render PNG giáo viên (sẽ fallback PDF): %v", tErr)
+				}
+				if sErr != nil {
+					log.Printf("cảnh báo: không thể render PNG học sinh (sẽ fallback PDF): %v", sErr)
+				}
+				// Fallback sang PDF
+				tBytes, ptErr := RenderLessonPDFBytes(a.getContext(), lsn, true)
+				if ptErr != nil {
+					log.Printf("lỗi render PDF giáo viên: %v", ptErr)
+				}
+				sBytes, psErr := RenderLessonPDFBytes(a.getContext(), lsn, false)
+				if psErr != nil {
+					log.Printf("lỗi render PDF học sinh: %v", psErr)
+				}
+
+				if ptErr == nil && psErr == nil && len(tBytes) > 0 && len(sBytes) > 0 {
+					teacherBytes = tBytes
+					studentBytes = sBytes
+				}
+			}
+		}
+
+		if len(teacherPNGPages) == 0 && (len(teacherBytes) == 0 || len(studentBytes) == 0) {
+			teacherPath, studentPath := ResolveLessonPDFPaths(request.TeacherPDFPath, request.StudentPDFPath)
+			teacherBytes, err = os.ReadFile(teacherPath)
+			if err != nil {
+				return fmt.Errorf("không thể đọc file PDF Giáo viên %q: %w", teacherPath, err)
+			}
+			studentBytes, err = os.ReadFile(studentPath)
+			if err != nil {
+				return fmt.Errorf("không thể đọc file PDF Học sinh %q: %w", studentPath, err)
+			}
+		}
+	}
+
+	studentName := "Hoc-sinh"
+	if a.application2 != nil && a.application2.Queries != nil {
+		studentView, qErr := a.application2.Queries.GetStudentDetail(a.getContext(), studentID, application2.MeetingFilter{})
+		if qErr != nil {
+			log.Printf("cảnh báo: không lấy được thông tin chi tiết học sinh %s: %v, sử dụng tên mặc định", studentID, qErr)
+		} else if studentView.Student.Name != "" {
+			studentName = studentView.Student.Name
+		}
+	}
+
+	// 1. Tạo Assignment Entity từ Lesson để quản lý bài tập và kết quả chấm
+	var asgn *assignment.Assignment
+	if lsn != nil {
+		materials := lsn.Materials()
+		if len(materials) > 0 {
+			if mistakeMat, ok := materials[0].(*lesson.MistakeMaterial); ok {
+				asgn, err = assignment.NewRemediationAssignmentFromLesson(studentID, mistakeMat.MistakeID(), request.PageName, *lsn)
+			}
+		}
+		if asgn == nil {
+			asgn, err = assignment.NewNormalAssignmentFromLesson(studentID, request.PageName, *lsn)
+		}
+		if err != nil {
+			return fmt.Errorf("không thể tạo assignment entity: %w", err)
+		}
+	}
+
+	// 2. Lưu Assignment vào bảng assignments của CSDL TRƯỚC TIÊN
+	// Bắt buộc phải lưu trước để thỏa mãn Foreign Key constraint của bảng assignment_pages
+	// khi Microsoft OneNote tạo trang thành công và lưu liên kết page_id.
+	if asgn != nil && a.application2 != nil && a.application2.Assignments != nil {
+		if saveErr := a.application2.Assignments.Save(a.getContext(), asgn); saveErr != nil {
+			return fmt.Errorf("không thể lưu assignment vào CSDL: %w", saveErr)
+		}
+	}
+
+	// 3. Target ID liên kết với OneNote Pages là Assignment ID (hoặc fallback lessonID)
+	targetID := lessonID
+	if asgn != nil {
+		targetID = asgn.ID()
+	}
+
+	if a.oneNoteClient != nil {
+		var publishErr error
+		if len(teacherPNGPages) > 0 && len(studentPNGPages) > 0 {
+			publishErr = a.oneNoteClient.PublishPNGPages(
+				a.getContext(),
+				targetID,
+				studentID,
+				studentName,
+				teacherPNGPages,
+				studentPNGPages,
+				request.StudentChapterName,
+				request.TeacherChapterName,
+				request.PageName,
+			)
+		} else {
+			publishErr = a.oneNoteClient.PublishPDFPages(
+				a.getContext(),
+				targetID,
+				studentID,
+				studentName,
+				teacherBytes,
+				studentBytes,
+				request.StudentChapterName,
+				request.TeacherChapterName,
+				request.PageName,
+			)
+		}
+		if publishErr != nil {
+			return publishErr
+		}
+		if strings.TrimSpace(request.StudentChapterName) != "" {
+			if sErr := a.oneNoteClient.SaveStudentLastChapter(a.getContext(), studentID, "HS", strings.TrimSpace(request.StudentChapterName)); sErr != nil {
+				log.Printf("cảnh báo: không thể lưu last chapter HS: %v", sErr)
+			}
+		}
+		if strings.TrimSpace(request.TeacherChapterName) != "" {
+			if tErr := a.oneNoteClient.SaveStudentLastChapter(a.getContext(), studentID, "GV", strings.TrimSpace(request.TeacherChapterName)); tErr != nil {
+				log.Printf("cảnh báo: không thể lưu last chapter GV: %v", tErr)
+			}
+		}
+	}
+
+	return nil
 }
 
 // ============================================================================
@@ -835,7 +1306,7 @@ func (a *App) runOAuthFlow(
 			}
 
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
-			fmt.Fprintf(w, `
+			if _, err := fmt.Fprintf(w, `
 				<html>
 				<head><meta charset="utf-8"><title>Thành công</title></head>
 				<body style="font-family: system-ui, sans-serif; text-align: center; padding: 60px 20px; background: #f8faf9;">
@@ -845,7 +1316,9 @@ func (a *App) runOAuthFlow(
 					</div>
 				</body>
 				</html>
-			`, serviceName)
+			`, serviceName); err != nil {
+				log.Printf("ghi phản hồi oauth html thất bại: %v", err)
+			}
 
 			sendResult(nil)
 		}),
@@ -854,7 +1327,9 @@ func (a *App) runOAuthFlow(
 	defer func() {
 		shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 2*time.Second)
 		defer shutdownCancel()
-		_ = server.Shutdown(shutdownCtx)
+		if err := server.Shutdown(shutdownCtx); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Printf("tắt server oauth thất bại: %v", err)
+		}
 	}()
 
 	go func() {
@@ -874,6 +1349,15 @@ func (a *App) runOAuthFlow(
 		}
 		return flowCtx.Err()
 	}
+}
+
+// OpenExternalURL mở một đường dẫn ngoài (trang web, OneNote, etc.) trong trình duyệt mặc định của hệ thống
+func (a *App) OpenExternalURL(rawURL string) error {
+	trimmed := strings.TrimSpace(rawURL)
+	if trimmed == "" {
+		return errors.New("URL không được để trống")
+	}
+	return openSystemBrowser(a.getContext(), trimmed)
 }
 
 // ============================================================================
@@ -923,7 +1407,11 @@ func (a *App) servePDFStream(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "document file unavailable", http.StatusNotFound)
 		return
 	}
-	defer file.Close()
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil {
+			log.Printf("đóng file document thất bại: %v", closeErr)
+		}
+	}()
 
 	info, err := file.Stat()
 	if err != nil {

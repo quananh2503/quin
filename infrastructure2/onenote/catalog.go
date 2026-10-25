@@ -47,6 +47,140 @@ func notebookName(studentName, audience string) string {
 	return base + "-" + audience
 }
 
+// NotebookInfo đại diện cho thông tin một cuốn sổ tay Microsoft OneNote từ Microsoft Graph API.
+type NotebookInfo struct {
+	ID          string `json:"id"`
+	DisplayName string `json:"displayName"`
+}
+
+// DefaultNotebookName trả về tên sổ tay mặc định theo quy ước nếu học sinh chưa từng liên kết sổ tay nào.
+// Ví dụ: "Nguyen Van A" + "HS" -> "Nguyen-Van-A-HS".
+func DefaultNotebookName(studentName, audience string) string {
+	return notebookName(studentName, audience)
+}
+
+// ListNotebooks truy vấn danh sách tất cả các sổ tay OneNote của tài khoản hiện tại qua Microsoft Graph API.
+// Trả về danh sách NotebookInfo hoặc lỗi nếu không kết nối được hoặc Graph API trả mã lỗi.
+func (c *Client) ListNotebooks(ctx context.Context) ([]NotebookInfo, error) {
+	client, err := c.GetHTTPClient(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("không thể lấy HTTP client: %w", err)
+	}
+	entries, err := listAll(ctx, client, notesBase+"/notebooks?$select=id,displayName")
+	if err != nil {
+		return nil, fmt.Errorf("lấy danh sách notebook từ Microsoft Graph thất bại: %w", err)
+	}
+	result := make([]NotebookInfo, len(entries))
+	for i, entry := range entries {
+		result[i] = NotebookInfo{ID: entry.ID, DisplayName: entry.DisplayName}
+	}
+	return result, nil
+}
+
+// GetStudentNotebookBinding lấy thông tin liên kết sổ tay của học sinh từ CSDL SQLite theo studentID và audience (mặc định "HS" nếu rỗng).
+// Trả về (binding, true, nil) nếu đã liên kết, hoặc (empty, false, nil) nếu chưa liên kết.
+func (c *Client) GetStudentNotebookBinding(ctx context.Context, studentID uuid.UUID, audience string) (database.NotebookBinding, bool, error) {
+	if audience == "" {
+		audience = "HS"
+	}
+	return c.links.GetNotebookByStudent(ctx, studentID, audience)
+}
+
+// BindStudentNotebook lưu hoặc cập nhật liên kết giữa học sinh và một cuốn sổ tay OneNote vào CSDL SQLite.
+// Invariants:
+// - studentID không được nil.
+// - notebookID và notebookName không được để trống.
+// - audience mặc định là "HS" nếu để rỗng.
+// - Tài khoản OneNote hiện tại phải lấy được qua GetAccountID.
+func (c *Client) BindStudentNotebook(ctx context.Context, studentID uuid.UUID, audience, notebookID, notebookName string) error {
+	if studentID == uuid.Nil() {
+		return errors.New("studentID không được nil")
+	}
+	if notebookID == "" {
+		return errors.New("notebookID không được để trống")
+	}
+	if strings.TrimSpace(notebookName) == "" {
+		return errors.New("notebookName không được để trống")
+	}
+	if audience == "" {
+		audience = "HS"
+	}
+	accountID, err := c.GetAccountID(ctx)
+	if err != nil {
+		return fmt.Errorf("không thể lấy account ID: %w", err)
+	}
+	binding := database.NotebookBinding{
+		StudentID: studentID,
+		Audience:  audience,
+		AccountID: accountID,
+		ID:        notebookID,
+		Name:      strings.TrimSpace(notebookName),
+	}
+	if err := c.links.SaveNotebook(ctx, binding); err != nil {
+		return fmt.Errorf("lưu liên kết sổ tay thất bại: %w", err)
+	}
+	return nil
+}
+
+// SectionInfo đại diện cho thông tin một chương (section) trong cuốn sổ tay OneNote.
+type SectionInfo struct {
+	ID          string `json:"id"`
+	DisplayName string `json:"displayName"`
+}
+
+// ListSections truy vấn danh sách tất cả các chương (sections) trong một cuốn sổ tay OneNote từ Microsoft Graph API.
+// Invariants:
+// - notebookID không được để trống.
+func (c *Client) ListSections(ctx context.Context, notebookID string) ([]SectionInfo, error) {
+	trimmedID := strings.TrimSpace(notebookID)
+	if trimmedID == "" {
+		return nil, errors.New("notebookID không được để trống")
+	}
+	client, err := c.GetHTTPClient(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("không thể lấy http client: %w", err)
+	}
+	entries, err := c.listSections(ctx, client, trimmedID)
+	if err != nil {
+		return nil, fmt.Errorf("truy vấn danh sách sections thất bại: %w", err)
+	}
+	res := make([]SectionInfo, 0, len(entries))
+	for _, e := range entries {
+		res = append(res, SectionInfo{
+			ID:          e.ID,
+			DisplayName: e.DisplayName,
+		})
+	}
+	return res, nil
+}
+
+// GetStudentLastChapter lấy tên chương được chọn gần đây nhất của học sinh từ CSDL SQLite theo studentID và audience (mặc định "HS" nếu rỗng).
+func (c *Client) GetStudentLastChapter(ctx context.Context, studentID uuid.UUID, audience string) (string, bool, error) {
+	if audience == "" {
+		audience = "HS"
+	}
+	return c.links.GetLastChapter(ctx, studentID, audience)
+}
+
+// SaveStudentLastChapter lưu tên chương được chọn gần đây nhất của học sinh vào CSDL SQLite.
+// Invariants:
+// - studentID không được nil.
+// - chapterName không được để trống.
+// - audience mặc định là "HS" nếu rỗng.
+func (c *Client) SaveStudentLastChapter(ctx context.Context, studentID uuid.UUID, audience, chapterName string) error {
+	if studentID == uuid.Nil() {
+		return errors.New("studentID không được nil")
+	}
+	trimmedCh := strings.TrimSpace(chapterName)
+	if trimmedCh == "" {
+		return errors.New("chapterName không được để trống")
+	}
+	if audience == "" {
+		audience = "HS"
+	}
+	return c.links.SaveLastChapter(ctx, studentID, audience, trimmedCh)
+}
+
 func (c *Client) PrepareStudent(ctx context.Context, studentID uuid.UUID, studentName string) (application2.PublishingTargets, error) {
 	client, err := c.GetHTTPClient(ctx)
 	if err != nil {

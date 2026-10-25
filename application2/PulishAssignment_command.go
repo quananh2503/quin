@@ -197,6 +197,13 @@ func (u *AssignLessonUsecase) publish(
 	teacherChapterName string,
 	pageName string,
 ) error {
+	// Bắt buộc lưu assignment vào CSDL trước khi publish để thỏa mãn foreign key của bảng assignment_pages
+	if err := u.assignmentRepo.Save(ctx, a); err != nil {
+		return fmt.Errorf(
+			"không thể lưu assignment: %w",
+			err,
+		)
+	}
 
 	if err := u.publisher.PublishAssignment(
 		ctx,
@@ -209,13 +216,6 @@ func (u *AssignLessonUsecase) publish(
 	); err != nil {
 		return fmt.Errorf(
 			"không thể publish assignment: %w",
-			err,
-		)
-	}
-
-	if err := u.assignmentRepo.Save(ctx, a); err != nil {
-		return fmt.Errorf(
-			"không thể lưu assignment: %w",
 			err,
 		)
 	}

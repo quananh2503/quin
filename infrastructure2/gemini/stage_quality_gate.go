@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -63,7 +64,11 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 				for slotID, fixedContent := range fixedMap {
 					asmResult.Registry.Update(slotID, fixedContent)
 				}
-				asmResult, _ = q.assembler.Assemble(plan, workers)
+				if reAsm, errAsm := q.assembler.Assemble(plan, workers); errAsm == nil {
+					asmResult = reAsm
+				} else {
+					fmt.Printf("⚠️ [QualityGate Pre-Audit] Lắp ráp lại thất bại: %v\n", errAsm)
+				}
 			}
 		}
 	}
@@ -77,7 +82,7 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 	for attempt := 1; attempt <= maxRetries; attempt++ {
 		gvOpts := CompileOptions{
 			IsTeacher:  true,
-			OutPDFPath: fmt.Sprintf("%s/GIAO_AN_GIAO_VIEN.pdf", outDir),
+			OutPDFPath: filepath.Join(outDir, "GIAO_AN_GIAO_VIEN.pdf"),
 		}
 		resGV, errGV := q.compiler.Compile(ctx, asmResult.Markup, gvOpts)
 		if errGV == nil && resGV != nil && resGV.Success {
@@ -90,7 +95,10 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 		if resGV != nil && resGV.RawStderr != "" {
 			fmt.Printf("📋 Typst stderr:\n%s\n", resGV.RawStderr)
 		}
-		_ = os.WriteFile(fmt.Sprintf("%s/failed_attempt_%d.typ", outDir, attempt), []byte(asmResult.Markup), 0644)
+		failedPath := filepath.Join(outDir, fmt.Sprintf("failed_attempt_%d.typ", attempt))
+		if wErr := os.WriteFile(failedPath, []byte(asmResult.Markup), 0644); wErr != nil {
+			fmt.Printf("⚠️ [QualityGate] Không thể ghi file lỗi %s: %v\n", failedPath, wErr)
+		}
 
 		if q.repairer != nil {
 			// Thu thập toàn bộ lỗi trên file qua ScanAllTypstErrors (Line Isolation Scanner)
@@ -152,8 +160,12 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 						}
 					}
 					if anyUpdated {
-						asmResult, _ = q.assembler.Assemble(plan, workers)
-						continue
+						if reAsm, errAsm := q.assembler.Assemble(plan, workers); errAsm == nil {
+							asmResult = reAsm
+							continue
+						} else {
+							fmt.Printf("⚠️ [QualityGate] Lắp ráp lại thất bại: %v\n", errAsm)
+						}
 					}
 					fmt.Println("⚠️ [QualityGate] Nội dung sau sửa không đổi, chờ 5s trước khi thử lại...")
 					time.Sleep(5 * time.Second)
@@ -170,7 +182,7 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 
 	hsOpts := CompileOptions{
 		IsTeacher:  false,
-		OutPDFPath: fmt.Sprintf("%s/PHIEU_BAI_TAP_HOC_SINH.pdf", outDir),
+		OutPDFPath: filepath.Join(outDir, "PHIEU_BAI_TAP_HOC_SINH.pdf"),
 	}
 	resHS, errHS := q.compiler.Compile(ctx, asmResult.Markup, hsOpts)
 	if errHS == nil && resHS != nil && resHS.Success {

@@ -45,7 +45,7 @@ type ParagraphBlock struct {
 func NewParagraphBlock(body shareKernel.Content) ParagraphBlock {
 	return ParagraphBlock{body: body}
 }
-func (p *ParagraphBlock) Body() shareKernel.Content { return p.body }
+func (p ParagraphBlock) Body() shareKernel.Content { return p.body }
 
 func (ParagraphBlock) BlockType() BlockType { return BlockParagraph }
 
@@ -176,22 +176,71 @@ func (c *CalloutBlock) Body() shareKernel.Content  { return copyContent(c.body) 
 
 func (CalloutBlock) BlockType() BlockType { return BlockCallout }
 
+// ============================================================
+// TẦNG 3: DẠNG TOÁN (TOPIC) & PHẦN LỚN (SECTION)
+// ============================================================
+
+// Topic đại diện cho một Đơn vị Sư phạm hoàn chỉnh (Self-contained Pedagogical Unit / Dạng toán).
+// Một Topic bao gồm:
+// - title: Tiêu đề dạng toán (VD: "Dạng 1: Tích vô hướng của hai vectơ").
+// - blocks: Các khối nội dung giảng dạy (Lý thuyết, Công thức, Mẹo, Ví dụ mẫu).
+// - exercises: Danh sách bài tập rèn luyện tương ứng của riêng dạng toán này (Tự luận, Trắc nghiệm, Trả lời ngắn).
 type Topic struct {
-	title  shareKernel.Content
-	blocks []Block
+	title     shareKernel.Content
+	blocks    []Block
+	exercises []shareKernel.Exercise
 }
 
-func NewTopic(title shareKernel.Content, blocks []Block) (Topic, error) {
+// NewTopic khởi tạo một Topic mới với đầy đủ blocks giảng dạy và bài tập rèn luyện.
+// Invariants:
+// - Nếu title rỗng, tự động gán tiêu đề mặc định "Không có tiêu đề".
+// - blocks và exercises được sao chép bảo vệ (defensive copy) để chống thay đổi từ bên ngoài.
+func NewTopic(title shareKernel.Content, blocks []Block, exercises []shareKernel.Exercise) (Topic, error) {
 	if title.IsEmpty() {
 		title = shareKernel.NewContent(shareKernel.InlinePart{Type: shareKernel.InlineText, Value: "Không có tiêu đề"})
 	}
-	return Topic{title: title, blocks: append([]Block(nil), blocks...)}, nil
+	var copiedBlocks []Block
+	if len(blocks) > 0 {
+		copiedBlocks = make([]Block, len(blocks))
+		copy(copiedBlocks, blocks)
+	}
+	var copiedExercises []shareKernel.Exercise
+	if len(exercises) > 0 {
+		copiedExercises = make([]shareKernel.Exercise, len(exercises))
+		copy(copiedExercises, exercises)
+	}
+	return Topic{
+		title:     copyContent(title),
+		blocks:    copiedBlocks,
+		exercises: copiedExercises,
+	}, nil
 }
-func (t *Topic) Title() shareKernel.Content { return copyContent(t.title) }
 
+// Title trả về bản sao an toàn của tiêu đề Topic.
+func (t *Topic) Title() shareKernel.Content {
+	if t == nil {
+		return shareKernel.Content{}
+	}
+	return copyContent(t.title)
+}
+
+// Blocks trả về bản sao lát cắt (slice copy) các khối nội dung giảng dạy.
 func (t *Topic) Blocks() []Block {
+	if t == nil || len(t.blocks) == 0 {
+		return nil
+	}
 	copied := make([]Block, len(t.blocks))
 	copy(copied, t.blocks)
+	return copied
+}
+
+// Exercises trả về bản sao lát cắt (slice copy) các bài tập thuộc Topic này.
+func (t *Topic) Exercises() []shareKernel.Exercise {
+	if t == nil || len(t.exercises) == 0 {
+		return nil
+	}
+	copied := make([]shareKernel.Exercise, len(t.exercises))
+	copy(copied, t.exercises)
 	return copied
 }
 
@@ -234,9 +283,26 @@ func ReconstituteClozeBlock(instruction shareKernel.Content, items []ClozeItem) 
 func ReconstituteCalloutBlock(kind CalloutKind, title, body shareKernel.Content) Block {
 	return CalloutBlock{kind: kind, title: title, body: body}
 }
-func ReconstituteTopic(title shareKernel.Content, blocks []Block) Topic {
-	return Topic{title: title, blocks: append([]Block(nil), blocks...)}
+
+// ReconstituteTopic tái tạo Topic từ dữ liệu lưu trữ (Repository/Database).
+func ReconstituteTopic(title shareKernel.Content, blocks []Block, exercises []shareKernel.Exercise) Topic {
+	var copiedBlocks []Block
+	if len(blocks) > 0 {
+		copiedBlocks = make([]Block, len(blocks))
+		copy(copiedBlocks, blocks)
+	}
+	var copiedExercises []shareKernel.Exercise
+	if len(exercises) > 0 {
+		copiedExercises = make([]shareKernel.Exercise, len(exercises))
+		copy(copiedExercises, exercises)
+	}
+	return Topic{
+		title:     copyContent(title),
+		blocks:    copiedBlocks,
+		exercises: copiedExercises,
+	}
 }
+
 func ReconstituteSection(title shareKernel.Content, topics []Topic) Section {
 	return Section{title: title, topics: append([]Topic(nil), topics...)}
 }

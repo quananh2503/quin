@@ -163,14 +163,15 @@ func NewMultipleChoiceExercise(
 
 	// 5. Khởi tạo Entity an toàn 100%
 	return MultipleChoiceExercise{
-		// id:         uuid.New(),
-		topic:      topic,
-		difficulty: strings.TrimSpace(difficulty),
-		prompt:     prompt,
-		options:    append([]MCOption(nil), options...), // Copy slice để tránh bị thay đổi từ bên ngoài
-		answer:     cleanAnswer,
-		diagram:    diagram,
-		solution:   solution, // Copy Content để tránh bị thay đổi từ bên ngoài
+		exerciseBase: exerciseBase{
+			topic:      topic,
+			difficulty: strings.TrimSpace(difficulty),
+			prompt:     prompt,
+			diagram:    diagram,
+		},
+		options:  append([]MCOption(nil), options...), // Copy slice để tránh bị thay đổi từ bên ngoài
+		answer:   cleanAnswer,
+		solution: solution, // Copy Content để tránh bị thay đổi từ bên ngoài
 	}, nil
 }
 
@@ -217,11 +218,12 @@ func NewEssayExercise(
 	}
 
 	return EssayExercise{
-		// id:         uuid.New(),
-		topic:      topic,
-		difficulty: strings.TrimSpace(difficulty),
-		prompt:     prompt,
-		parts:      newParts, // Copy slice để tránh bị thay đổi từ bên ngoài
-		diagram:    diagram,
+		exerciseBase: exerciseBase{
+			topic:      topic,
+			difficulty: strings.TrimSpace(difficulty),
+			prompt:     prompt,
+			diagram:    diagram,
+		},
+		parts:   newParts, // Copy slice để tránh bị thay đổi từ bên ngoài
 	}, nil
 }

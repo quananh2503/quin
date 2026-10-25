@@ -92,7 +92,9 @@ func (p *DefaultLessonPipeline) Execute(ctx context.Context, req PipelineRequest
 		}
 		fmt.Printf("✅ [Stage 1.75: Polisher] Hoàn tất sắp xếp sư phạm: %d dạng toán.\n", len(plan.Topics))
 	}
-	_ = SaveArtifact("phase1_plan.json", plan)
+	if errSave := SaveArtifact("phase1_plan.json", plan); errSave != nil {
+		fmt.Printf("⚠️ Cảnh báo: không thể lưu artifact phase1_plan.json: %v\n", errSave)
+	}
 
 	// Giai đoạn 2: Biên soạn bài tập song song
 	fmt.Printf("👉 [Stage 2: Authoring] Đang khởi động Worker Pool biên soạn song song %d dạng toán...\n", len(plan.Topics))
@@ -101,7 +103,9 @@ func (p *DefaultLessonPipeline) Execute(ctx context.Context, req PipelineRequest
 		return nil, fmt.Errorf("Stage 2 (Authoring) thất bại: %w", err)
 	}
 	fmt.Printf("✅ [Stage 2: Authoring] Hoàn tất biên soạn %d dạng toán!\n", len(workers))
-	_ = SaveArtifact("phase2_all_results.json", workers)
+	if errSave := SaveArtifact("phase2_all_results.json", workers); errSave != nil {
+		fmt.Printf("⚠️ Cảnh báo: không thể lưu artifact phase2_all_results.json: %v\n", errSave)
+	}
 
 	// Giai đoạn 2.5: Làm giàu hình ảnh nếu cần (CeTZ / Image Crop)
 	if p.visual != nil {

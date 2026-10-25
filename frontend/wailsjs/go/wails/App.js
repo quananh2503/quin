@@ -18,12 +18,24 @@ export function CreateByUrl(arg1) {
   return window['go']['wails']['App']['CreateByUrl'](arg1);
 }
 
+export function OpenExternalURL(arg1) {
+  return window['go']['wails']['App']['OpenExternalURL'](arg1);
+}
+
 export function SetApplication2Services(arg1) {
   return window['go']['wails']['App']['SetApplication2Services'](arg1);
 }
 
+export function SetContext(arg1) {
+  return window['go']['wails']['App']['SetContext'](arg1);
+}
+
 export function Startup(arg1) {
   return window['go']['wails']['App']['Startup'](arg1);
+}
+
+export function V2BindStudentNotebook(arg1) {
+  return window['go']['wails']['App']['V2BindStudentNotebook'](arg1);
 }
 
 export function V2CreateLesson(arg1) {
@@ -54,6 +66,10 @@ export function V2GetStudentDetail(arg1) {
   return window['go']['wails']['App']['V2GetStudentDetail'](arg1);
 }
 
+export function V2GetStudentNotebook(arg1) {
+  return window['go']['wails']['App']['V2GetStudentNotebook'](arg1);
+}
+
 export function V2GradeAssignment(arg1) {
   return window['go']['wails']['App']['V2GradeAssignment'](arg1);
 }
@@ -78,6 +94,14 @@ export function V2ListMistakes() {
   return window['go']['wails']['App']['V2ListMistakes']();
 }
 
+export function V2ListOneNoteNotebooks() {
+  return window['go']['wails']['App']['V2ListOneNoteNotebooks']();
+}
+
+export function V2ListOneNoteSections(arg1) {
+  return window['go']['wails']['App']['V2ListOneNoteSections'](arg1);
+}
+
 export function V2ListStudentChoices() {
   return window['go']['wails']['App']['V2ListStudentChoices']();
 }
@@ -90,8 +114,16 @@ export function V2PublishLesson(arg1) {
   return window['go']['wails']['App']['V2PublishLesson'](arg1);
 }
 
+export function V2PublishPDFLesson(arg1) {
+  return window['go']['wails']['App']['V2PublishPDFLesson'](arg1);
+}
+
 export function V2PushAssignmentFeedback(arg1) {
   return window['go']['wails']['App']['V2PushAssignmentFeedback'](arg1);
+}
+
+export function V2SaveLastChapter(arg1) {
+  return window['go']['wails']['App']['V2SaveLastChapter'](arg1);
 }
 
 export function V2SyncMeetings() {

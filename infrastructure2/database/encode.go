@@ -167,8 +167,9 @@ func encodeBlock(b lesson.Block) (blockRecord, error) {
 }
 
 type topicRecord struct {
-	Title  contentRecord `json:"title"`
-	Blocks []blockRecord `json:"blocks"`
+	Title     contentRecord    `json:"title"`
+	Blocks    []blockRecord    `json:"blocks"`
+	Exercises []exerciseRecord `json:"exercises,omitempty"`
 }
 
 type sectionRecord struct {
@@ -176,7 +177,7 @@ type sectionRecord struct {
 	Topics []topicRecord `json:"topics"`
 }
 
-// encodeSection gom gọn cả phần Topic bên trong nó
+// encodeSection gom gọn cả phần Topic và các Exercise bên trong nó
 func encodeSection(s lesson.Section) (sectionRecord, error) {
 	secRec := sectionRecord{
 		Title:  encodeContent(s.Title()),
@@ -185,8 +186,9 @@ func encodeSection(s lesson.Section) (sectionRecord, error) {
 
 	for i, top := range s.Topics() {
 		topRec := topicRecord{
-			Title:  encodeContent(top.Title()),
-			Blocks: make([]blockRecord, len(top.Blocks())),
+			Title:     encodeContent(top.Title()),
+			Blocks:    make([]blockRecord, len(top.Blocks())),
+			Exercises: make([]exerciseRecord, len(top.Exercises())),
 		}
 
 		for j, b := range top.Blocks() {
@@ -195,6 +197,14 @@ func encodeSection(s lesson.Section) (sectionRecord, error) {
 				return sectionRecord{}, fmt.Errorf("lỗi encode block thứ %d ở topic '%s': %w", j+1, top.Title().String(), err)
 			}
 			topRec.Blocks[j] = bRec
+		}
+
+		for k, ex := range top.Exercises() {
+			exRec, err := encodeExercise(ex)
+			if err != nil {
+				return sectionRecord{}, fmt.Errorf("lỗi encode exercise thứ %d ở topic '%s': %w", k+1, top.Title().String(), err)
+			}
+			topRec.Exercises[k] = exRec
 		}
 
 		secRec.Topics[i] = topRec
@@ -614,4 +624,22 @@ func flattenMistakeNode(
 	}
 
 	return rows
+}
+
+// EncodeLessonToJSON chuyển đổi Lesson Domain Entity thành chuỗi JSON lưu trữ
+func EncodeLessonToJSON(l *lesson.Lesson) ([]byte, error) {
+	rec, err := encodeLesson(l)
+	if err != nil {
+		return nil, fmt.Errorf("encode lesson thất bại: %w", err)
+	}
+	data, err := json.Marshal(rec)
+	if err != nil {
+		return nil, fmt.Errorf("marshal lesson record thất bại: %w", err)
+	}
+	return data, nil
+}
+
+// DecodeLessonFromJSON giải mã chuỗi JSON từ SQLite thành Lesson Domain Entity
+func DecodeLessonFromJSON(data []byte) (*lesson.Lesson, error) {
+	return decodeLesson(data)
 }

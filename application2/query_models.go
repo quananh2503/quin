@@ -80,8 +80,9 @@ type ClozePartView struct {
 	Value string `json:"value"`
 }
 type TopicView struct {
-	Title  string      `json:"title"`
-	Blocks []BlockView `json:"blocks"`
+	Title     string         `json:"title"`
+	Blocks    []BlockView    `json:"blocks"`
+	Exercises []ExerciseView `json:"exercises,omitempty"`
 }
 type SectionView struct {
 	Title  string      `json:"title"`

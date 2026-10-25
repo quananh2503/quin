@@ -4,6 +4,7 @@ go 1.27.1
 
 require (
 	github.com/fogleman/gg v1.3.0
+	github.com/horiagug/youtube-transcript-api-go v0.0.13
 	github.com/invopop/jsonschema v0.14.0
 	github.com/pdfcpu/pdfcpu v0.15.0
 	github.com/stretchr/testify v1.12.1
@@ -11,6 +12,7 @@ require (
 	golang.org/x/net v0.59.0
 	golang.org/x/oauth2 v0.37.0
 	golang.org/x/sync v0.23.0
+	golang.org/x/sys v0.48.0
 	google.golang.org/genai v1.71.0
 	modernc.org/sqlite v1.56.0
 )
@@ -71,7 +73,6 @@ require (
 	go.yaml.in/yaml/v4 v4.0.0-rc.2 // indirect
 	golang.org/x/crypto v0.57.0 // indirect
 	golang.org/x/image v0.44.0 // indirect
-	golang.org/x/sys v0.48.0 // indirect
 	golang.org/x/text v0.42.0 // indirect
 	google.golang.org/api v0.299.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260921155816-b14227669459 // indirect

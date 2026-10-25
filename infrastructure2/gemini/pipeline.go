@@ -83,6 +83,9 @@ var (
 
 	// Khắc phục lỗi gõ nhầm backslash trước biến số đơn lẻ trong toán (như \F_1 -> F_1, \a \sqrt -> a \sqrt)
 	singleLetterMathRegex = regexp.MustCompile(`(^|[^\\])\\([a-zA-Z])([^a-zA-Z{]|$)`)
+
+	// Chuẩn hóa thẻ HTML break line (<br>, <br/>, <br />) sang cú pháp xuống dòng của Typst
+	htmlBrRegex = regexp.MustCompile(`(?i)<br\s*/?>`)
 )
 
 // SanitizeRawJSONLaTeX bảo vệ các lệnh LaTeX không bị Go JSON parser nuốt thành mã điều khiển
@@ -204,6 +207,9 @@ func LaTeXToMiTeX(content string) string {
 	if content == "" {
 		return ""
 	}
+
+	// 0. Chuẩn hóa các thẻ HTML ngắt dòng sang dấu xuống dòng Typst
+	content = htmlBrRegex.ReplaceAllString(content, " \\ ")
 
 	// 1. Chuyển $$...$$ sang block mitex
 	content = blockMathRegex.ReplaceAllStringFunc(content, func(m string) string {
@@ -458,8 +464,6 @@ Yêu cầu riêng của giáo viên: %s`, len(docs), strings.TrimSpace(customPro
 	return &plan, nil
 }
 
-var questionIDPattern = regexp.MustCompile(`(?i)^([A-Za-z]+)(\d+)([A-Za-z]?)$`)
-
 // AuditPlanIssues kiểm tra toán học trên LessonPlan để tìm:
 // 1. Các mã câu hỏi có trong Catalog hoặc bị thủng lỗ trong dãy số (VD: có E1, E24 nhưng thiếu E5..E19) chưa được gán vào Topic nào.
 // 2. Các Topic bị "gom gộp lười biếng" (chứa > 12 câu hỏi trong 1 Topic).
@@ -469,14 +473,14 @@ func AuditPlanIssues(plan *LessonPlan) (unassignedIDs []string, overloadedTopics
 
 	for _, item := range plan.QuestionCatalog {
 		for _, qid := range item.QuestionIDs {
-			qid = strings.TrimSpace(strings.ToUpper(qid))
+			qid = strings.TrimSpace(qid)
 			if qid == "" {
 				continue
 			}
 			catalogSet[qid] = fmt.Sprintf("[%s] %s (%s)", item.DocID, item.TargetOutput, item.CoreMethod)
-			if m := questionIDPattern.FindStringSubmatch(qid); len(m) >= 3 {
-				prefix := strings.ToUpper(m[1])
-				num, _ := strconv.Atoi(m[2])
+			if p := ParseQuestionID(qid); p != nil {
+				prefix := p.Prefix
+				num := p.MainNum
 				if num > prefixMaxNum[prefix] && num <= 200 {
 					prefixMaxNum[prefix] = num
 				}
@@ -489,16 +493,17 @@ func AuditPlanIssues(plan *LessonPlan) (unassignedIDs []string, overloadedTopics
 	baseAssigned := make(map[string]bool) // Hỗ trợ cả khi gán D1 hoặc D1a
 	for _, t := range plan.Topics {
 		for _, qid := range t.AssignedQuestionIDs {
-			qid = strings.TrimSpace(strings.ToUpper(qid))
+			qid = strings.TrimSpace(qid)
 			assignedSet[qid] = true
-			if m := questionIDPattern.FindStringSubmatch(qid); len(m) >= 3 {
-				prefix := strings.ToUpper(m[1])
-				num, _ := strconv.Atoi(m[2])
+			if p := ParseQuestionID(qid); p != nil {
+				prefix := p.Prefix
+				num := p.MainNum
 				if num > prefixMaxNum[prefix] && num <= 200 {
 					prefixMaxNum[prefix] = num
 				}
 				baseID := fmt.Sprintf("%s%d", prefix, num)
 				baseAssigned[baseID] = true
+				assignedSet[p.Normalized] = true
 			}
 		}
 		// Phát hiện Topic bị gom gộp lười biếng (ôm quá 12 câu hỏi)
@@ -512,9 +517,9 @@ func AuditPlanIssues(plan *LessonPlan) (unassignedIDs []string, overloadedTopics
 	for qid, desc := range catalogSet {
 		isCovered := assignedSet[qid]
 		if !isCovered {
-			if m := questionIDPattern.FindStringSubmatch(qid); len(m) >= 3 {
-				baseID := fmt.Sprintf("%s%s", strings.ToUpper(m[1]), m[2])
-				if baseAssigned[baseID] {
+			if p := ParseQuestionID(qid); p != nil {
+				baseID := fmt.Sprintf("%s%d", p.Prefix, p.MainNum)
+				if baseAssigned[baseID] || assignedSet[p.Normalized] {
 					isCovered = true
 				}
 			}
@@ -978,7 +983,7 @@ func compileTypst(ctx context.Context, typPath, pdfPath string, isTeacher bool) 
 	if isTeacher {
 		val = "true"
 	}
-	cmd := exec.CommandContext(ctx, "typst", "compile", "--root", ".", "--input", "teacher="+val, typPath, pdfPath)
+	cmd := exec.CommandContext(ctx, resolveTypstCLI(), "compile", "--root", ".", "--input", "teacher="+val, typPath, pdfPath)
 	out, err := cmd.CombinedOutput()
 	return string(out), err
 }

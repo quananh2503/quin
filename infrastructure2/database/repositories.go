@@ -591,4 +591,18 @@ func (r ExternalLinks) SaveSpaceLink(ctx context.Context, spaceID string, studen
 	})
 }
 
+func (r ExternalLinks) SaveStudent(ctx context.Context, value *student.Student) error {
+	if value == nil {
+		return errors.New("student không được nil")
+	}
+	q := dbgen.New(r.Store.DB)
+	return q.UpsertStudent(ctx, dbgen.UpsertStudentParams{
+		ID:            value.ID().String(),
+		Name:          value.Name(),
+		Class:         value.Class(),
+		CycleStartDay: int64(value.CycleStartDay()),
+		CreatedAt:     timeText(value.CreatedAt()),
+	})
+}
+
 func ptrString(s string) *string { return &s }

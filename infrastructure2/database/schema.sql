@@ -148,3 +148,12 @@ CREATE TABLE IF NOT EXISTS external_student_links (
   PRIMARY KEY(provider, external_key),
   FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS student_last_chapters (
+  student_id TEXT NOT NULL,
+  audience TEXT NOT NULL,
+  chapter_name TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  PRIMARY KEY(student_id, audience),
+  FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
+);

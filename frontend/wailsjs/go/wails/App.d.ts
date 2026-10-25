@@ -3,6 +3,7 @@
 import {wails} from '../models';
 import {context} from '../models';
 import {application2} from '../models';
+import {onenote} from '../models';
 
 export function ConnectGoogleMeet():Promise<void>;
 
@@ -12,9 +13,15 @@ export function CreateByPDf(arg1:wails.GenerateLessonRequest):Promise<string>;
 
 export function CreateByUrl(arg1:wails.GenerateLessonRequest):Promise<string>;
 
+export function OpenExternalURL(arg1:string):Promise<void>;
+
 export function SetApplication2Services(arg1:wails.Application2Services):Promise<void>;
 
+export function SetContext(arg1:context.Context):Promise<void>;
+
 export function Startup(arg1:context.Context):Promise<void>;
+
+export function V2BindStudentNotebook(arg1:wails.BindStudentNotebookRequest):Promise<void>;
 
 export function V2CreateLesson(arg1:wails.GenerateLessonRequest):Promise<string>;
 
@@ -30,6 +37,8 @@ export function V2GetLessonDraft(arg1:string):Promise<application2.DraftView>;
 
 export function V2GetStudentDetail(arg1:wails.StudentDetailRequest):Promise<application2.StudentDetailView>;
 
+export function V2GetStudentNotebook(arg1:wails.GetStudentNotebookRequest):Promise<wails.StudentNotebookView>;
+
 export function V2GradeAssignment(arg1:wails.GradeRequest):Promise<void>;
 
 export function V2ListAIModels():Promise<Array<wails.ModelView>>;
@@ -42,13 +51,21 @@ export function V2ListLessonDrafts():Promise<Array<application2.DraftView>>;
 
 export function V2ListMistakes():Promise<Array<application2.StudentMistakeGroup>>;
 
+export function V2ListOneNoteNotebooks():Promise<Array<onenote.NotebookInfo>>;
+
+export function V2ListOneNoteSections(arg1:wails.ListOneNoteSectionsRequest):Promise<Array<onenote.SectionInfo>>;
+
 export function V2ListStudentChoices():Promise<Array<application2.StudentView>>;
 
 export function V2PreparePublishing(arg1:wails.PreparePublishingRequest):Promise<application2.PublishingTargets>;
 
 export function V2PublishLesson(arg1:wails.PublishLessonRequest):Promise<void>;
 
+export function V2PublishPDFLesson(arg1:wails.PublishPDFLessonRequest):Promise<void>;
+
 export function V2PushAssignmentFeedback(arg1:string):Promise<void>;
+
+export function V2SaveLastChapter(arg1:wails.SaveLastChapterRequest):Promise<void>;
 
 export function V2SyncMeetings():Promise<void>;
 

@@ -2,8 +2,10 @@ package gemini
 
 import (
 	"context"
+	_ "embed"
 	"fmt"
 	"math/rand"
+	"os"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -11,6 +13,15 @@ import (
 
 	"google.golang.org/genai"
 )
+
+//go:embed key1.txt
+var embeddedKey1 string
+
+//go:embed key3.txt
+var embeddedKey3 string
+
+//go:embed key4.txt
+var embeddedKey4 string
 
 type KeySlot struct {
 	index    int
@@ -83,10 +94,37 @@ func isTransientError(err error) bool {
 		return false
 	}
 	msg := strings.ToLower(err.Error())
-	return strings.Contains(msg, "429") || strings.Contains(msg, "resource_exhausted") ||
+
+	// HTTP transient status codes & GenAI status errors
+	if strings.Contains(msg, "429") || strings.Contains(msg, "resource_exhausted") ||
 		strings.Contains(msg, "503") || strings.Contains(msg, "500") ||
 		strings.Contains(msg, "unavailable") || strings.Contains(msg, "overloaded") ||
-		strings.Contains(msg, "internal") || strings.Contains(msg, "deadline_exceeded")
+		strings.Contains(msg, "internal") || strings.Contains(msg, "deadline_exceeded") {
+		return true
+	}
+
+	// Socket / Network transient errors
+	transientSubstrings := []string{
+		"wsarecv",
+		"connection reset",
+		"connection aborted",
+		"unexpected eof",
+		"eof",
+		"timeout",
+		"timed out",
+		"i/o timeout",
+		"broken pipe",
+		"request canceled",
+		"request cancelled",
+	}
+
+	for _, sub := range transientSubstrings {
+		if strings.Contains(msg, sub) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // GenerateContent: Tự động phân tải Round-Robin qua các Keys + Failover tức thì nếu gặp 429 hoặc 403
@@ -192,4 +230,28 @@ func (p *KeyPool) GenerateContent(
 	}
 
 	return nil, fmt.Errorf("đã thử qua toàn bộ Pool (%d lần) nhưng vẫn thất bại", effectiveRetries)
+}
+
+// LoadAvailableAPIKeys nạp các API keys đã được embed trực tiếp trong binary (key1, key3, key4)
+// cùng biến môi trường GEMINI_API_KEY (nếu có). Loại bỏ đọc file và bỏ qua key2, key5.
+func LoadAvailableAPIKeys() []string {
+	var keys []string
+	seen := make(map[string]bool)
+
+	addKey := func(k string) {
+		k = strings.TrimSpace(k)
+		if k != "" && !seen[k] {
+			seen[k] = true
+			keys = append(keys, k)
+		}
+	}
+
+	addKey(embeddedKey1)
+	addKey(embeddedKey3)
+	addKey(embeddedKey4)
+
+	if envKey := strings.TrimSpace(os.Getenv("GEMINI_API_KEY")); envKey != "" {
+		addKey(envKey)
+	}
+	return keys
 }

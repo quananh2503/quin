@@ -168,3 +168,56 @@ SELECT meeting_code, space_name
 FROM external_student_links
 WHERE student_id = ? AND provider = 'google_meet_space'
 LIMIT 1;
+
+-- ============================================================
+-- 7. NOTEBOOK BINDINGS
+-- ============================================================
+
+-- name: GetNotebookBinding :one
+SELECT student_id, audience, account_id, notebook_id, notebook_name
+FROM notebook_bindings
+WHERE student_id = ? AND audience = ? AND account_id = ?;
+
+-- name: GetNotebookBindingByStudentAndAudience :one
+SELECT student_id, audience, account_id, notebook_id, notebook_name
+FROM notebook_bindings
+WHERE student_id = ? AND audience = ?
+LIMIT 1;
+
+-- name: UpsertNotebookBinding :exec
+INSERT INTO notebook_bindings (student_id, audience, account_id, notebook_id, notebook_name)
+VALUES (?, ?, ?, ?, ?)
+ON CONFLICT(student_id, audience, account_id) DO UPDATE SET
+  notebook_id = excluded.notebook_id,
+  notebook_name = excluded.notebook_name;
+
+-- name: ListNotebookBindingsByStudentID :many
+SELECT student_id, audience, account_id, notebook_id, notebook_name
+FROM notebook_bindings
+WHERE student_id = ?;
+
+-- name: DeleteNotebookBinding :exec
+DELETE FROM notebook_bindings
+WHERE student_id = ? AND audience = ? AND account_id = ?;
+
+-- ============================================================
+-- 8. STUDENT LAST CHAPTERS
+-- ============================================================
+
+-- name: GetLastChapter :one
+SELECT student_id, audience, chapter_name, updated_at
+FROM student_last_chapters
+WHERE student_id = ? AND audience = ?;
+
+-- name: UpsertLastChapter :exec
+INSERT INTO student_last_chapters (student_id, audience, chapter_name, updated_at)
+VALUES (?, ?, ?, ?)
+ON CONFLICT(student_id, audience) DO UPDATE SET
+  chapter_name = excluded.chapter_name,
+  updated_at = excluded.updated_at;
+
+-- name: ListLastChaptersByStudentID :many
+SELECT student_id, audience, chapter_name, updated_at
+FROM student_last_chapters
+WHERE student_id = ?;
+

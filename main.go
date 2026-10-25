@@ -32,7 +32,7 @@ import (
 // EMBEDDED ASSETS & CONFIGS
 // ============================================================================
 
-//go:embed frontend
+//go:embed all:frontend/dist
 var assets embed.FS
 
 //go:embed config/google-oauth.json
@@ -44,7 +44,7 @@ var embeddedGeminiKey []byte
 //go:embed config/microsoft-oauth.json
 var embeddedMicrosoftCredentials []byte
 
-const localDatabaseFilename = "attendance-local.db"
+const localDatabaseFilename = "quin-v1.1.db"
 
 type MicrosoftConfig struct {
 	ClientID     string `json:"client_id"`
@@ -205,6 +205,7 @@ func buildApplicationServices(
 		PreparePublishingTargets:  application2.NewPreparePublishingTargetsUsecase(students, oneNote),
 		AssignLesson:              application2.NewAssignLessonUsecase(students, lessons, assignments, graphs, oneNote),
 		GradeAssignment:           application2.NewGradeAssignmentUsecase(assignments, graphs, oneNote, ai),
+		Drafts:                    drafts,
 		Lessons:                   lessons,
 		Assignments:               assignments,
 		Workspace:                 oneNote,
@@ -228,6 +229,21 @@ func loadMicrosoftConfig(data []byte) MicrosoftConfig {
 	return cfg
 }
 
+// appDataDirectory lấy đường dẫn thư mục dữ liệu chuẩn người dùng từ hệ điều hành:
+// Trên Windows: %APPDATA%\QUIN (C:\Users\<User>\AppData\Roaming\QUIN)
+// Trên macOS:   ~/Library/Application Support/QUIN
+// Trên Linux:   ~/.config/QUIN
 func appDataDirectory() (string, error) {
-	return os.Getwd()
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		configDir, err = os.UserHomeDir()
+		if err != nil {
+			configDir = "."
+		}
+	}
+	appDir := filepath.Join(configDir, "QUIN")
+	if err := os.MkdirAll(appDir, 0755); err != nil {
+		return ".", fmt.Errorf("không thể tạo thư mục dữ liệu ứng dụng: %w", err)
+	}
+	return appDir, nil
 }

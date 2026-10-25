@@ -1,0 +1,177 @@
+Dưới đây là tóm tắt toàn bộ nội dung bài giảng **"Nguyên hàm"** của Thầy Nguyễn Phan Tiến, bao gồm lý thuyết, công thức, mẹo tư duy giải nhanh và các ví dụ minh họa chi tiết.
+
+---
+
+# I. TÓM TẮT NỘI DUNG LÝ THUYẾT
+
+### 1. Định nghĩa Nguyên hàm
+*   **Định nghĩa:** Cho hàm số $f(x)$ xác định trên K. Hàm số $F(x)$ được gọi là một nguyên hàm của $f(x)$ trên K nếu:
+    $$F'(x) = f(x)$$
+*   **Ký hiệu:** 
+    $$\int f(x) dx = F(x) + C$$
+*   **Giải thích hằng số $C$:** Vì đạo hàm của hằng số $(C)' = 0$, nên nếu $F(x)$ là một nguyên hàm thì $F(x) + C$ cũng là nguyên hàm (tạo thành một *họ nguyên hàm*).
+
+### 2. Tính chất của Nguyên hàm
+1.  **Đưa hằng số ra ngoài:** $\int k \cdot f(x) dx = k \int f(x) dx \quad (k \neq 0)$
+2.  **Nguyên hàm của Tổng / Hiệu:** $\int [f(x) \pm g(x)] dx = \int f(x) dx \pm \int g(x) dx$
+    *   *Lưu ý quan trọng:* **KHÔNG** có công thức nguyên hàm cho phép nhân $\int [f(x) \cdot g(x)]dx$ hoặc phép chia $\int \frac{f(x)}{g(x)}dx$. Muốn tính phải biến đổi/khai triển về dạng tổng/hiệu trước.
+
+---
+
+# II. MẸO GIẢI NHANH, CÁCH NHỚ CÔNG THỨC VÀ LƯU Ý
+
+### 1. Câu hỏi thần chú khi tìm nguyên hàm
+*   Luôn tự hỏi trong đầu: **"Cái gì đạo hàm ra nó?"** 
+    *(Ví dụ: Tìm nguyên hàm của $1/x^2 \to$ Hỏi: "Cái gì đạo hàm ra $1/x^2$?" $\to$ Đáp án là $-1/x$).*
+
+### 2. Quy tắc tìm nguyên hàm Hàm Lũy Thừa ($x^\alpha$)
+*   **Thần chú:** *"Tăng mũ lên 1 đơn vị, rồi chia cho chính cái mũ đó"*.
+    $$\int x^\alpha dx = \frac{x^{\alpha+1}}{\alpha+1} + C \quad (\alpha \neq -1)$$
+*   **Biến đổi lũy thừa căn/phân số trước khi lấy nguyên hàm:**
+    *   Căn thức về mũ: $\sqrt[n]{x^m} = x^{\frac{m}{n}}$ *(Mũ trên căn)*.
+    *   Phân thức về mũ âm: $\frac{1}{x^m} = x^{-m}$.
+
+### 3. Mẹo nhớ Nguyên hàm Hàm Lượng Giác bằng Đường Tròn Lượng Giác
+Xác định trục đứng là $\sin x / -\sin x$, trục nằm ngang là $\cos x / -\cos x$:
+*   **Chiều thuận kim đồng hồ:** Là chiều lấy **ĐẠO HÀM**.
+*   **Chiều ngược kim đồng hồ:** Là chiều lấy **NGUYÊN HÀM** (Đi ngược thời gian).
+    *   Ngược chiều kim đồng hồ từ $\cos x \to \sin x \implies \int \cos x dx = \sin x + C$.
+    *   Ngược chiều kim đồng hồ từ $\sin x \to -\cos x \implies \int \sin x dx = -\cos x + C$.
+
+### 4. Mẹo Hàm Mũ ($e^x, a^x$)
+*   $e^x$ là hàm số "trước sau như một": Đạo hàm hay nguyên hàm cũng đều chính là $e^x$.
+*   Quy tắc dấu/hệ số với $a^x$:
+    *   **Đạo hàm** thì **NHÂN** với $\ln a$: $(a^x)' = a^x \cdot \ln a$.
+    *   **Nguyên hàm** thì **CHIA** cho $\ln a$: $\int a^x dx = \frac{a^x}{\ln a} + C$.
+*   **Công thức mở rộng lũy thừa tuyến tính:**
+    $$\int a^{mx+n} dx = \frac{a^{mx+n}}{m \cdot \ln a} + C$$
+
+### 5. Sơ đồ Bài toán Thực tế (Chuyển động)
+*   Chuỗi đại lượng: $S(t)$ *(Quãng đường)* $\to V(t)$ *(Vận tốc)* $\to A(t)$ *(Gia tốc)* (Mẹo nhớ: **S**ao **V**ậy **A**nh).
+    *   **Chiều thuận (Đạo hàm):** $S'(t) = V(t)$ và $V'(t) = A(t)$.
+    *   **Chiều ngược (Nguyên hàm):** $V(t) = \int A(t) dt$ và $S(t) = \int V(t) dt$.
+*   **Ứng dụng Tốc độ tăng trưởng / Cường độ dòng điện:**
+    *   $\text{Số lượng } Q(t) = \int (\text{Tốc độ tăng trưởng}) dt$
+    *   $\text{Điện tích } Q(t) = \int I(t) dt \quad (\text{do } Q'(t) = I(t))$.
+
+---
+
+# III. BẢNG CÔNG THỨC NGUYÊN HÀM CƠ BẢN
+
+| Dạng hàm | Công thức Nguyên hàm cơ bản | Mở rộng / Trường hợp đặc biệt |
+| :--- | :--- | :--- |
+| **Hằng số** | $\int 1 dx = x + C$ | $\int k dx = kx + C$ |
+| **Lũy thừa** | $\int x^\alpha dx = \frac{x^{\alpha+1}}{\alpha+1} + C \quad (\alpha \neq -1)$ | $\int \frac{1}{x^2} dx = -\frac{1}{x} + C$ |
+| **Logarit** | $\int \frac{1}{x} dx = \ln\|x\| + C$ | $\int \frac{1}{ax+b} dx = \frac{1}{a}\ln\|ax+b\| + C$ |
+| **Lượng giác**| $\int \cos x dx = \sin x + C$ | $\int \frac{1}{\cos^2 x} dx = \tan x + C$ |
+| | $\int \sin x dx = -\cos x + C$ | $\int \frac{1}{\sin^2 x} dx = -\cot x + C$ |
+| **Hàm mũ** | $\int e^x dx = e^x + C$ | $\int e^{-x} dx = -e^{-x} + C$ |
+| | $\int a^x dx = \frac{a^x}{\ln a} + C$ | $\int a^{mx+n} dx = \frac{a^{mx+n}}{m \cdot \ln a} + C$ |
+
+---
+
+# IV. CÁC VÍ DỤ MẪU TIÊU BIỂU VÀ LỜI GIẢI CHI TIẾT
+
+### **Dạng 1: Nguyên hàm hàm lũy thừa**
+
+**Ví dụ 1:** Tính nguyên hàm các biểu thức sau:
+a) $\int 7x^4 dx$
+*   *Lời giải:* $= 7 \cdot \frac{x^5}{5} + C = \frac{7}{5}x^5 + C$.
+
+b) $\int (x^5 - 3x^2 + 2x - 8) dx$
+*   *Lời giải:* $= \frac{x^6}{6} - 3 \cdot \frac{x^3}{3} + 2 \cdot \frac{x^2}{2} - 8x + C = \frac{x^6}{6} - x^3 + x^2 - 8x + C$.
+
+c) $\int (x^2 - 2)^2 dx$
+*   *Lời giải:* Khai triển hằng đẳng thức trước: $\int (x^4 - 4x^2 + 4) dx = \frac{x^5}{5} - \frac{4}{3}x^3 + 4x + C$.
+
+d) $\int \frac{(2x+1)^2}{x^2} dx$
+*   *Lời giải:* Khai triển tử và chia từng số hạng cho mẫu:
+    $$\int \frac{4x^2 + 4x + 1}{x^2} dx = \int \left(4 + \frac{4}{x} + \frac{1}{x^2}\right) dx = 4x + 4\ln|x| - \frac{1}{x} + C$$
+
+e) $\int (3x-2)(x+1) dx$
+*   *Lời giải:* Nhân phá ngoặc: $\int (3x^2 + x - 2) dx = x^3 + \frac{x^2}{2} - 2x + C$.
+
+---
+
+**Ví dụ 2:** Biến đổi căn thức/phân thức về dạng lũy thừa để tính nguyên hàm:
+a) $\int \sqrt{x} dx$
+*   *Lời giải:* $\int x^{\frac{1}{2}} dx = \frac{x^{\frac{3}{2}}}{\frac{3}{2}} + C = \frac{2}{3}\sqrt{x^3} + C$.
+
+b) $\int x\sqrt{x} dx$
+*   *Lời giải:* $\int x^1 \cdot x^{\frac{1}{2}} dx = \int x^{\frac{3}{2}} dx = \frac{x^{\frac{5}{2}}}{\frac{5}{2}} + C = \frac{2}{5}\sqrt{x^5} + C$.
+
+c) $\int \frac{1}{x^3} dx$
+*   *Lời giải:* $\int x^{-3} dx = \frac{x^{-2}}{-2} + C = -\frac{1}{2x^2} + C$.
+
+d) $\int \frac{4}{\sqrt[3]{x^5}} dx$
+*   *Lời giải:* $\int 4 \cdot x^{-\frac{5}{3}} dx = 4 \cdot \frac{x^{-\frac{2}{3}}}{-\frac{2}{3}} + C = -6 \cdot \frac{1}{\sqrt[3]{x^2}} + C = -\frac{6}{\sqrt[3]{x^2}} + C$.
+
+---
+
+### **Dạng 2: Nguyên hàm hàm lượng giác**
+
+**Ví dụ 3:** Tính nguyên hàm:
+a) $\int (3\cos x - 2\sin x) dx = 3\sin x + 2\cos x + C$.
+
+b) $\int \left(2\cos x - \frac{1}{\cos^2 x}\right) dx = 2\sin x - \tan x + C$.
+
+c) $\int \left(\frac{3}{\cos^2 x} - \frac{1}{\sin^2 x}\right) dx = 3\tan x + \cot x + C$.
+
+d) $\int \left(\sin\frac{x}{2} + \cos\frac{x}{2}\right)^2 dx$
+*   *Lời giải:* Khai triển: $\int \left(\sin^2\frac{x}{2} + 2\sin\frac{x}{2}\cos\frac{x}{2} + \cos^2\frac{x}{2}\right) dx$
+    Sử dụng công thức $\sin^2\alpha + \cos^2\alpha = 1$ và $2\sin\alpha\cos\alpha = \sin(2\alpha)$:
+    $$= \int (1 + \sin x) dx = x - \cos x + C$$
+
+e) $\int \tan^2 x dx$
+*   *Lời giải:* Dùng công thức $\tan^2 x = \frac{1}{\cos^2 x} - 1$:
+    $$= \int \left(\frac{1}{\cos^2 x} - 1\right) dx = \tan x - x + C$$
+
+---
+
+### **Dạng 3: Nguyên hàm hàm mũ**
+
+**Ví dụ 4:** Tính nguyên hàm:
+a) $\int (2^x - 3 \cdot 7^x) dx = \frac{2^x}{\ln 2} - 3 \cdot \frac{7^x}{\ln 7} + C$.
+
+b) $\int \left(\frac{1}{3^x} - \frac{2}{e^x}\right) dx = \int \left[\left(\frac{1}{3}\right)^x - 2\left(\frac{1}{e}\right)^x\right] dx = \frac{(1/3)^x}{\ln(1/3)} - 2 \cdot \frac{(1/e)^x}{\ln(1/e)} + C$.
+
+c) $\int (2e^x - 5^{x+2}) dx = \int (2e^x - 25 \cdot 5^x) dx = 2e^x - 25 \cdot \frac{5^x}{\ln 5} + C$.
+
+d) $\int 4^x (3^{x+1} - 2^x) dx = \int (3 \cdot 12^x - 8^x) dx = \frac{3 \cdot 12^x}{\ln 12} - \frac{8^x}{\ln 8} + C$.
+
+---
+
+### **Dạng 4: Bài toán tìm hằng số $C$**
+
+**Ví dụ 5:** Cho $f'(x) = 2x + \frac{1}{x^2}$ với $x > 0$ và $f(1) = 1$. Tính $f(4)$.
+*   *Lời giải:*
+    1.  Tìm họ nguyên hàm $f(x) = \int f'(x) dx = \int \left(2x + \frac{1}{x^2}\right) dx = x^2 - \frac{1}{x} + C$.
+    2.  Dùng điều kiện $f(1) = 1 \implies 1^2 - \frac{1}{1} + C = 1 \implies C = 1$.
+    3.  Hàm số cụ thể: $f(x) = x^2 - \frac{1}{x} + 1$.
+    4.  Tính $f(4) = 4^2 - \frac{1}{4} + 1 = 16.75$.
+
+---
+
+### **Dạng 5: Bài toán thực tế ứng dụng Nguyên hàm**
+
+**Ví dụ 6 (Bài toán Chuyển động):** 
+Một viên đạn được bắn thẳng đứng lên từ mặt đất ($t=0$) với vận tốc $v(t) = 160 - 9,8t$ (m/s).
+a) Tính độ cao $h(t)$ của viên đạn sau $t = 5$ giây.
+b) Tính độ cao lớn nhất viên đạn đạt được.
+
+*   *Lời giải:*
+    *   **a)** Quãng đường/độ cao $h(t) = \int v(t) dt = \int (160 - 9,8t) dt = 160t - 4,9t^2 + C$.
+        *   Tại mặt đất lúc bắn $t = 0 \implies h(0) = 0 \implies C = 0$.
+        *   Do đó $h(t) = 160t - 4,9t^2$.
+        *   Thay $t = 5 \implies h(5) = 160(5) - 4,9(5)^2 = 677,5$ (m).
+    *   **b)** Đạt độ cao lớn nhất khi viên đạn dừng lại bắt đầu rơi xuống $\implies v(t) = 0$.
+        *   $160 - 9,8t = 0 \implies t = \frac{800}{49}$ (s).
+        *   Thay vào $h(t) \implies h_{max} = h\left(\frac{800}{49}\right) \approx 1306,1$ (m).
+
+**Ví dụ 7 (Bài toán Tốc độ phát triển vi khuẩn/sinh học):**
+Tốc độ phát triển vi khuẩn HP là $F'(t) = \frac{1000}{t+1}$. Ban đầu bệnh nhân có $2000$ con vi khuẩn ($F(0) = 2000$). Hỏi sau 10 ngày số lượng vi khuẩn là bao nhiêu?
+*   *Lời giải:*
+    1.  Số lượng vi khuẩn $F(t) = \int \frac{1000}{t+1} dt = 1000 \ln|t+1| + C$.
+    2.  Với $F(0) = 2000 \implies 1000 \ln(1) + C = 2000 \implies C = 2000$.
+    3.  Hàm số lượng vi khuẩn: $F(t) = 1000 \ln(t+1) + 2000$.
+    4.  Sau 10 ngày ($t = 10$): $F(10) = 1000 \ln(11) + 2000 \approx 4398$ (con).

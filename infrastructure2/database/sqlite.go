@@ -7,6 +7,7 @@ import (
 	_ "embed"
 	"errors"
 	"fmt"
+	"log"
 	"strings"
 	"time"
 	"uuid"
@@ -27,14 +28,38 @@ func Open(path string) (*SQLite, error) {
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)
 	if _, err = db.Exec("PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL;"); err != nil {
-		db.Close()
+		if closeErr := db.Close(); closeErr != nil {
+			log.Printf("đóng database thất bại: %v", closeErr)
+		}
 		return nil, err
 	}
+	checkLegacyAndReset(db)
 	if _, err = db.Exec(schema); err != nil {
-		db.Close()
+		if closeErr := db.Close(); closeErr != nil {
+			log.Printf("đóng database thất bại: %v", closeErr)
+		}
 		return nil, fmt.Errorf("khởi tạo schema v2: %w", err)
 	}
 	return &SQLite{DB: db}, nil
+}
+
+// checkLegacyAndReset phát hiện nếu database chứa schema cũ (INTEGER id)
+// và tự động dọn dẹp các bảng cũ để schema v2 được tạo mới hoàn toàn.
+func checkLegacyAndReset(db *sql.DB) {
+	var idType string
+	err := db.QueryRow("SELECT type FROM pragma_table_info('students') WHERE name = 'id'").Scan(&idType)
+	if err == nil && strings.EqualFold(idType, "INTEGER") {
+		log.Println("[Database] Phát hiện database schema cũ (INTEGER id). Tiến hành làm mới bảng cho v1.1...")
+		legacyTables := []string{
+			"participants", "meetings", "mistakes", "assignments",
+			"lesson_drafts", "class_sessions", "students", "system_settings",
+		}
+		for _, tbl := range legacyTables {
+			if _, dropErr := db.Exec(fmt.Sprintf("DROP TABLE IF EXISTS %s", tbl)); dropErr != nil {
+				log.Printf("dọn dẹp bảng cũ %s: %v", tbl, dropErr)
+			}
+		}
+	}
 }
 
 func migrateLegacyStudents(db *sql.DB) error {

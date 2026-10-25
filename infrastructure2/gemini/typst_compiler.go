@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -20,10 +21,29 @@ type CLITypstCompiler struct {
 	cliPath string
 }
 
+// ResolveTypstCLI tìm đường dẫn thực thi của typst binary:
+// Ưu tiên tìm file typst.exe nằm cùng thư mục với file exe ứng dụng, sau đó tìm trong %PATH%.
+func ResolveTypstCLI() string {
+	if exe, err := os.Executable(); err == nil {
+		candidate := filepath.Join(filepath.Dir(exe), "typst.exe")
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate
+		}
+	}
+	if path, err := exec.LookPath("typst"); err == nil {
+		return path
+	}
+	return "typst"
+}
+
+func resolveTypstCLI() string {
+	return ResolveTypstCLI()
+}
+
 // NewCLITypstCompiler khởi tạo một CLITypstCompiler mới.
 func NewCLITypstCompiler() *CLITypstCompiler {
 	return &CLITypstCompiler{
-		cliPath: "typst",
+		cliPath: resolveTypstCLI(),
 	}
 }
 
@@ -50,10 +70,16 @@ func (c *CLITypstCompiler) Compile(ctx context.Context, typstMarkup string, opts
 		}
 	}
 	tmpPath := tmpFile.Name()
-	defer os.Remove(tmpPath)
+	defer func() {
+		if rmErr := os.Remove(tmpPath); rmErr != nil && !os.IsNotExist(rmErr) {
+			log.Printf("dọn dẹp file typst tạm thất bại: %v", rmErr)
+		}
+	}()
 
 	if _, err := tmpFile.WriteString(typstMarkup); err != nil {
-		_ = tmpFile.Close()
+		if closeErr := tmpFile.Close(); closeErr != nil {
+			log.Printf("lỗi đóng file typst tạm: %v", closeErr)
+		}
 		return nil, fmt.Errorf("failed to write typst markup: %w", err)
 	}
 	if err := tmpFile.Close(); err != nil {
@@ -127,6 +153,36 @@ func (c *CLITypstCompiler) Compile(ctx context.Context, typstMarkup string, opts
 		ErrorLines: errorLines,
 		RawStderr:  stderrStr,
 	}, fmt.Errorf("typst compilation failed: %w", runErr)
+}
+
+// CompileToBytes biên dịch trực tiếp typstMarkup ra []byte của file PDF (tự dọn dẹp file tạm)
+func (c *CLITypstCompiler) CompileToBytes(ctx context.Context, typstMarkup string) ([]byte, error) {
+	tmpPDF, err := os.CreateTemp("", "typst_out_*.pdf")
+	if err != nil {
+		return nil, fmt.Errorf("không thể tạo file PDF tạm: %w", err)
+	}
+	tmpPDFPath := tmpPDF.Name()
+	if errClose := tmpPDF.Close(); errClose != nil {
+		if rmErr := os.Remove(tmpPDFPath); rmErr != nil && !os.IsNotExist(rmErr) {
+			log.Printf("dọn dẹp file pdf tạm thất bại: %v", rmErr)
+		}
+		return nil, fmt.Errorf("lỗi đóng file PDF tạm: %w", errClose)
+	}
+	defer func() {
+		if rmErr := os.Remove(tmpPDFPath); rmErr != nil && !os.IsNotExist(rmErr) {
+			log.Printf("dọn dẹp file pdf tạm thất bại: %v", rmErr)
+		}
+	}()
+
+	opts := CompileOptions{OutPDFPath: tmpPDFPath}
+	res, err := c.Compile(ctx, typstMarkup, opts)
+	if err != nil {
+		return nil, err
+	}
+	if !res.Success {
+		return nil, fmt.Errorf("biên dịch Typst thất bại: %s", res.RawStderr)
+	}
+	return os.ReadFile(tmpPDFPath)
 }
 
 // extractTypstErrorLines bóc tách toàn bộ số dòng lỗi từ stderr của Typst

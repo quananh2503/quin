@@ -461,6 +461,7 @@ export namespace application2 {
 	export class TopicView {
 	    title: string;
 	    blocks: BlockView[];
+	    exercises?: ExerciseView[];
 	
 	    static createFrom(source: any = {}) {
 	        return new TopicView(source);
@@ -470,6 +471,7 @@ export namespace application2 {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.title = source["title"];
 	        this.blocks = this.convertValues(source["blocks"], BlockView);
+	        this.exercises = this.convertValues(source["exercises"], ExerciseView);
 	    }
 	
 		convertValues(a: any, classs: any, asMap: boolean = false): any {
@@ -938,6 +940,39 @@ export namespace application2 {
 
 }
 
+export namespace onenote {
+	
+	export class NotebookInfo {
+	    id: string;
+	    displayName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new NotebookInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.displayName = source["displayName"];
+	    }
+	}
+	export class SectionInfo {
+	    id: string;
+	    displayName: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SectionInfo(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.displayName = source["displayName"];
+	    }
+	}
+
+}
+
 export namespace wails {
 	
 	export class Application2Services {
@@ -959,6 +994,7 @@ export namespace wails {
 	    AssignLesson?: any;
 	    // Go type: application2
 	    GradeAssignment?: any;
+	    Drafts: any;
 	    Lessons: any;
 	    Assignments: any;
 	    Workspace: any;
@@ -984,6 +1020,7 @@ export namespace wails {
 	        this.PreparePublishingTargets = this.convertValues(source["PreparePublishingTargets"], null);
 	        this.AssignLesson = this.convertValues(source["AssignLesson"], null);
 	        this.GradeAssignment = this.convertValues(source["GradeAssignment"], null);
+	        this.Drafts = source["Drafts"];
 	        this.Lessons = source["Lessons"];
 	        this.Assignments = source["Assignments"];
 	        this.Workspace = source["Workspace"];
@@ -1010,6 +1047,24 @@ export namespace wails {
 		    }
 		    return a;
 		}
+	}
+	export class BindStudentNotebookRequest {
+	    student_id: string;
+	    audience?: string;
+	    notebook_id: string;
+	    notebook_name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new BindStudentNotebookRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.student_id = source["student_id"];
+	        this.audience = source["audience"];
+	        this.notebook_id = source["notebook_id"];
+	        this.notebook_name = source["notebook_name"];
+	    }
 	}
 	export class DashboardRequest {
 	    search_name: string;
@@ -1054,6 +1109,7 @@ export namespace wails {
 	    model: string;
 	    prompt: string;
 	    url: string;
+	    urls: string[];
 	    material: string;
 	    document_id: string;
 	    document_ids: string[];
@@ -1069,10 +1125,25 @@ export namespace wails {
 	        this.model = source["model"];
 	        this.prompt = source["prompt"];
 	        this.url = source["url"];
+	        this.urls = source["urls"];
 	        this.material = source["material"];
 	        this.document_id = source["document_id"];
 	        this.document_ids = source["document_ids"];
 	        this.pages = source["pages"];
+	    }
+	}
+	export class GetStudentNotebookRequest {
+	    student_id: string;
+	    audience?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new GetStudentNotebookRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.student_id = source["student_id"];
+	        this.audience = source["audience"];
 	    }
 	}
 	export class GradeRequest {
@@ -1091,6 +1162,18 @@ export namespace wails {
 	        this.item_ids = source["item_ids"];
 	        this.prompt = source["prompt"];
 	        this.model = source["model"];
+	    }
+	}
+	export class ListOneNoteSectionsRequest {
+	    notebook_id: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new ListOneNoteSectionsRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.notebook_id = source["notebook_id"];
 	    }
 	}
 	export class ModelView {
@@ -1141,6 +1224,30 @@ export namespace wails {
 	        this.teacher_chapter_name = source["teacher_chapter_name"];
 	    }
 	}
+	export class PublishPDFLessonRequest {
+	    lesson_id: string;
+	    student_id: string;
+	    teacher_pdf_path: string;
+	    student_pdf_path: string;
+	    page_name: string;
+	    student_chapter_name: string;
+	    teacher_chapter_name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new PublishPDFLessonRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.lesson_id = source["lesson_id"];
+	        this.student_id = source["student_id"];
+	        this.teacher_pdf_path = source["teacher_pdf_path"];
+	        this.student_pdf_path = source["student_pdf_path"];
+	        this.page_name = source["page_name"];
+	        this.student_chapter_name = source["student_chapter_name"];
+	        this.teacher_chapter_name = source["teacher_chapter_name"];
+	    }
+	}
 	export class RemediationRequest {
 	    student_id: string;
 	    mistake_id: string;
@@ -1159,6 +1266,22 @@ export namespace wails {
 	        this.title = source["title"];
 	        this.model = source["model"];
 	        this.prompt = source["prompt"];
+	    }
+	}
+	export class SaveLastChapterRequest {
+	    student_id: string;
+	    audience?: string;
+	    chapter_name: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new SaveLastChapterRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.student_id = source["student_id"];
+	        this.audience = source["audience"];
+	        this.chapter_name = source["chapter_name"];
 	    }
 	}
 	export class StudentDetailRequest {
@@ -1198,6 +1321,28 @@ export namespace wails {
 		    }
 		    return a;
 		}
+	}
+	export class StudentNotebookView {
+	    student_id: string;
+	    audience: string;
+	    notebook_id: string;
+	    notebook_name: string;
+	    is_bound: boolean;
+	    last_chapter_name?: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new StudentNotebookView(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.student_id = source["student_id"];
+	        this.audience = source["audience"];
+	        this.notebook_id = source["notebook_id"];
+	        this.notebook_name = source["notebook_name"];
+	        this.is_bound = source["is_bound"];
+	        this.last_chapter_name = source["last_chapter_name"];
+	    }
 	}
 	export class UpdateStudentRequest {
 	    student_id: string;

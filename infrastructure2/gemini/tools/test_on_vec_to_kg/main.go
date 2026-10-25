@@ -23,7 +23,7 @@ type ExerciseVisualSpec struct {
 	QuestionID  string             `json:"question_id" jsonschema:"description=Mã câu hỏi (VD: 'Câu 1', 'Câu 2')"`
 	Topic       string             `json:"topic" jsonschema:"description=Tóm tắt ngắn chủ đề (VD: 'Vectơ trong tứ diện', 'Quy tắc hình hộp')"`
 	Archetype   string             `json:"archetype" jsonschema:"enum=tetrahedron,enum=box,enum=pyramid4,enum=pyramid_perp,enum=prism_triangular,description=Khung mẫu: tetrahedron (tứ diện), box (hình hộp/lập phương), pyramid4 (chóp tứ giác), pyramid_perp (chóp có SA vuông góc đáy), prism_triangular (lăng trụ tam giác)"`
-	Labels      []string           `json:"labels" jsonschema:"description=Tên các đỉnh chuẩn (VD: ['A', 'B', 'C', 'D'] hoặc ['A', 'B', 'C', 'D', 'A\'', 'B\'', 'C\'', 'D\''] hoặc ['S', 'A', 'B', 'C'])"`
+	Labels      []string           `json:"labels" jsonschema:"description=Tên các đỉnh chuẩn (VD: ['A', 'B', 'C', 'D'] hoặc ['A', 'B', 'C', 'D', 'A'', 'B'', 'C'', 'D''] hoặc ['S', 'A', 'B', 'C'])"`
 	Derived     []DerivedPointSpec `json:"derived,omitempty" jsonschema:"description=Điểm phụ nếu đề bài nhắc tới: trung điểm, tỉ số, trọng tâm"`
 	Lines       []LineSpec         `json:"lines,omitempty" jsonschema:"description=Đoạn thẳng nối thêm giữa các điểm"`
 	Vectors     [][]string         `json:"vectors,omitempty" jsonschema:"description=Các vectơ xuất hiện trong bài cần vẽ mũi tên: [['A', 'B'], ['M', 'N']]"`

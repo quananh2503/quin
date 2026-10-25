@@ -37,10 +37,34 @@ export const api = {
   listMistakes: () => GoApp().V2ListMistakes(),
   generateRemediation: (req: any) => GoApp().V2GenerateRemediation(req),
 
-  // OneNote Publishing
+  // OneNote Publishing & Notebook Bindings
   listStudentChoices: () => GoApp().V2ListStudentChoices(),
   preparePublishing: (req: any) => GoApp().V2PreparePublishing(req),
   publishLesson: (req: any) => GoApp().V2PublishLesson(req),
+  publishPDFLesson: (req: any) => GoApp().V2PublishPDFLesson(req),
+  getStudentNotebook: (req: { student_id: string; audience?: string }) => GoApp().V2GetStudentNotebook(req),
+  listOneNoteNotebooks: () => GoApp().V2ListOneNoteNotebooks(),
+  bindStudentNotebook: (req: { student_id: string; audience?: string; notebook_id: string; notebook_name: string }) => GoApp().V2BindStudentNotebook(req),
+  listOneNoteSections: (req: { notebook_id: string }) => GoApp().V2ListOneNoteSections(req),
+  saveLastChapter: (req: { student_id: string; audience?: string; chapter_name: string }) => GoApp().V2SaveLastChapter(req),
 
-  openExternalURL: (url: string) => GoApp().OpenExternalURL(url)
+  openExternalURL: async (url: string) => {
+    if (!url) return;
+    try {
+      if (GoApp()?.OpenExternalURL) {
+        await GoApp().OpenExternalURL(url);
+        return;
+      }
+      if ((window as any).runtime?.BrowserOpenURL) {
+        (window as any).runtime.BrowserOpenURL(url);
+        return;
+      }
+      window.open(url, '_blank');
+    } catch (e) {
+      console.error("Lỗi khi mở URL ngoài:", url, e);
+      try {
+        window.open(url, '_blank');
+      } catch (_) {}
+    }
+  }
 };

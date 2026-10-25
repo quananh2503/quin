@@ -29,6 +29,9 @@ func decodeMaterial(r materialRecord) (lesson.StudyMaterial, error) {
 		if r.Path == nil {
 			return nil, errors.New("pdf material thiếu path")
 		}
+		if len(r.Pages) == 0 {
+			return lesson.NewFullPDFMaterial(*r.Path)
+		}
 		return lesson.NewSlicedPDFMaterial(*r.Path, r.Pages)
 	case string(lesson.MaterialMistake):
 		if r.MistakeID == nil || r.StudentID == nil {
@@ -145,15 +148,8 @@ func decodeLesson(raw []byte) (*lesson.Lesson, error) {
 		materials = append(materials, v)
 	}
 
-	xs := make([]sharekernel.Exercise, 0, len(r.Exercises))
-	for _, x := range r.Exercises {
-		v, e := decodeExercise(x)
-		if e != nil {
-			return nil, e
-		}
-		xs = append(xs, v)
-	}
 	ss := make([]lesson.Section, 0, len(r.Sections))
+	totalTopicExercises := 0
 	for _, s := range r.Sections {
 		ts := make([]lesson.Topic, 0, len(s.Topics))
 		for _, t := range s.Topics {
@@ -165,11 +161,40 @@ func decodeLesson(raw []byte) (*lesson.Lesson, error) {
 				}
 				bs = append(bs, v)
 			}
-			ts = append(ts, lesson.ReconstituteTopic(decodeContent(t.Title), bs))
+
+			exs := make([]sharekernel.Exercise, 0, len(t.Exercises))
+			for _, ex := range t.Exercises {
+				v, e := decodeExercise(ex)
+				if e != nil {
+					return nil, e
+				}
+				exs = append(exs, v)
+			}
+			totalTopicExercises += len(exs)
+
+			ts = append(ts, lesson.ReconstituteTopic(decodeContent(t.Title), bs, exs))
 		}
 		ss = append(ss, lesson.ReconstituteSection(decodeContent(s.Title), ts))
 	}
-	return lesson.ReconstituteLesson(r.ID, decodeContent(r.Title), decodeContent(r.Overview), ss, xs, materials)
+
+	// Tương thích ngược: Nếu bản ghi cũ có exercises ở root mà các topic chưa có:
+	if totalTopicExercises == 0 && len(r.Exercises) > 0 && len(ss) > 0 && len(ss[0].Topics()) > 0 {
+		rootExs := make([]sharekernel.Exercise, 0, len(r.Exercises))
+		for _, x := range r.Exercises {
+			v, e := decodeExercise(x)
+			if e != nil {
+				return nil, e
+			}
+			rootExs = append(rootExs, v)
+		}
+		firstSection := ss[0]
+		firstTopic := firstSection.Topics()[0]
+		updatedTopic := lesson.ReconstituteTopic(firstTopic.Title(), firstTopic.Blocks(), rootExs)
+		updatedTopics := append([]lesson.Topic{updatedTopic}, firstSection.Topics()[1:]...)
+		ss[0] = lesson.ReconstituteSection(firstSection.Title(), updatedTopics)
+	}
+
+	return lesson.ReconstituteLesson(r.ID, decodeContent(r.Title), decodeContent(r.Overview), ss, materials)
 }
 func decodeItems(raw []byte) ([]assignment.AssignmentItem, error) {
 	var rs []itemRecord

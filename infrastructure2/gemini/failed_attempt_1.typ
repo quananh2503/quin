@@ -31,7 +31,7 @@
   - Lý thuyết  #mi(`x > 0`) 
 ]
 #v(4pt)
-#card(title: "IV. Bài tập tự luận rèn tư duy & luyện phản xạ (Bậc thang 4 bài tương tự)")[
+#card(title: "IV. Bài tập tự luyện")[
   #if IS_TEACHER [*Bài 1.*] else [*Bài 1.*] Tính giá trị  #mi(`x + y có thiếu đô la`) 
     #if IS_TEACHER [
       #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`x + y = 10`) ] \

@@ -49,6 +49,12 @@ func (m *Manager) Disconnect() error {
 }
 
 func (m *Manager) GetHTTPClient(ctx context.Context) (*http.Client, error) {
+	if cl, ok := ctx.Value(oauth2.HTTPClient).(*http.Client); ok && cl != nil {
+		if !m.IsConnected() {
+			return cl, nil
+		}
+	}
+
 	file, err := os.Open(m.tokenPath)
 	if err != nil {
 		return nil, errors.New("chưa liên kết tài khoản (không tìm thấy token)")

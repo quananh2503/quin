@@ -1,0 +1,761 @@
+[00:00] bài 1.2 nguyên hàm đặc biệt nguyên hàm đặc biệt nguyên hàm đặc biệt
+
+[00:16] biệt ok rồi bài 1.2 nguyên hàm đặc biệt
+
+[00:23] nhá đặc biệt nhá những cái dạng đặc biệt mà hay gặp thì các em chú ý như sau rồi 1 dạng là hàm hợp nhá hàm hợp bậc nhất hàm hợp bậc nhất nguyên hàm dạng 1 hàm hợp bậc nhất
+
+[00:47] nhá hàm hợp bậc nhất như sau các em nhìn này nguyên hàm của f ax + b hàm bằng
+
+[00:58] nhất đây nhá không phải là FX nữa đúng không Thì chúng ta có phải nhá nguyên hàm của FX DX thì bằng gì Các em ơi Làm f nhỏ bằng gì nhở FX cộ C bài hôm
+
+[01:12] trước mình học cái bài này không Thì bây giờ mình phải học hàm đặc biệt làm ax + b em hiểu không ax + b không đấy thì công thức nó như nào thì nó vẫn thế thôi Các em ạ f em vẫn làm như thế bằng f của
+
+[01:26] ax + b nhưng các em phải chia cho thầy hệ số a trước mặt nhớ chưa đấy Các em chể chia cho hệ số a thôi nhớ nhá chia cho hệ số a là được ok chưa Nhá nguyên hàm nhớ mình sẽ nguyên
+
+[01:44] hàm bình thường rồi Các em chia cho hệ số a được nhá và thầy sẽ lập cho các em một cái bảng một cái bảng như sau cái bảng này mình sẽ từng công thức một nhá bảng này hàm hợp đơn giản hàm cơ bản
+
+[01:58] hàm cơ bản hàm hợp nhá hàm cơ bản hàm hợp đây thầy sẽ cho một cái bảng này đi chúng ta sẽ có một cái bảng với nhau như sau ên mình này hàm cơ bản thứ nhất nhá nguyên hàm của x mũ Alpha các em
+
+[02:19] biết bằng gì không nguyên hàm của x mũ alpha bằng gì nhở nguyên hàm x mũ alpha bằng gì hôm trước với học xong rồi Các em thẽ tăng lên một đơn vị đúng không tăng lên một đơn vị đúng không là x mũ alpha cộng gì 1 chia cho gì alpha cộng 1 rồi Các
+
+[02:35] em cộng thêm gì nữa nhỉ cộng c đúng không Bây là hàm hợp nhá nhìn này hàm hợp bậc nhất thì nó sẽ còn là nguyên hàm của ax + b đấy mũ Alpha DX bằng gì nhỉ Bằng gì các em coi đây là chữ X thôi đúng không Đây là ax b không Nó
+
+[02:54] to hơn không thì các em vẫn như vậy tăng thêm một đơn vị cho thầy là bằng gì ax cộng b mũ gì Alpha cng 1 chia gì đây Alpha c 1 Các em có hiểu không giống nhau không X đây tăng lên alha + 1
+
+[03:10] chia alha + 1 không đấy thì thằng này cũng thế tăng lên alha + 1 chia alha + 1 không rồi cộng c thôi nhưng các em nhớ chúng ta phải làm gì khác biệt này các em phải chia đi này đây An em nhìn này fax B bằng f ax + b chia cho A nhớ
+
+[03:26] chưa chia cho a mẫu không vậy thì các em phải có xuất hiện cho thầy cái A là mẫu đúng không xuất đện a mẫu đấy A mẫu đây nhớ chưa A mẫu nữa Ok các em nhá ngĩ các
+
+[03:38] em phải có thêm a ở mẫu nữa nhá Ok chưa nhá các em nhân thêm a ở mẫu được chưa Tại vì nhá chia cho A là nhân a mẫu đúng không Ok chưa đấy với điều kiện này là
+
+[03:49] Alpha khác -1 nhá Alpha khác -1 đúng không Tại vì mẫu phải khác 0 mà được chưa rồi áp dụng nhanh câu đó để làm ví dụ một cho thầy đi áp dụng nhanh làm ví dụ 1 cho thầy nào sẽ hướng dẫn cả lớp mình đến công thức nào thì mình sẽ
+
+[04:08] áp dụng bài tập luôn nhá chứ mình nhớ một Đán công thức sẽ khó nào làm ví tục 1 thầy đi nhìn thầy luôn nào nhanh Các em ơi nguyên hàm của ax + b mũ Alpha sẽ bằng ax + b m Alpha cộ 1 chia alha + 1 và có a ở gì nhân thêm 3 dấy mẫu được chưa sẽ bằng viết luôn công thức bằng mấy các em ơi ax + b mũ alha sẽ bằng gì
+
+[04:29] gì nhở 3x c 1 mũ mấy bao nhiêu 11 chia mấy 11 và các em phải nhân thêm cái hệ số a ở trước mặt nhân thêm 3 nữa cộng c các em có hiểu không Và mình biến đổi
+
+[04:44] nốt nhá Thôi kệ đi B tương tự đúng không bằng gì Các em ơi Gì đây 5x 5 - 3x mũ 7 bằng gì 5 - 3x mũ mấy 8 chia mấy
+
+[04:56] chiao 8 mình phải nhân thêm bao nhiêu nữa các em ơi nhân thêm -3 nhá Đúng không nhân thêm -3 đâ nữa Ok các em cộng c nhá Đúng chưa đấy rất đơn giản như vậy thôi nhá rồi mình cứ gọn nốt thôi không
+
+[05:11] sao tươ tự câu c các em ơi nguyên hàm của 4 - x mũ 20 bằng gì tăng thêm một đơn vị không bằng gì 4 trừ x mũ mấy 21 chia mấy 21 nhưng phải
+
+[05:26] nhân thêm bao nhiêu Đúng rồi hệ thuố chữ X là -1 ok cộng c nhá Có hiểu không
+
+[05:38] đấy nào tương tự đọc thầy câu D đi bằng gì câu D bằng gì nhở nguyên hàm của 5x + 2 mũ 6 ĐX bằng gì 5x cộ 2 mũ mấy 7 chia mấy ch
+
+[05:54] 7 như phải nhân thêm bao nhiêu nhân thêm hệ số trước x số mấy đây số 5 7 nh 5 cộ c Đấy và các em thể viết lại thành là 5x cộng 2 mũ 7 chia mấy 35 cộng c Đấy mình thể viết lại nốt như
+
+[06:11] này ok chưa đấy Các em hiểu không Rồi chư đi công thức thứ hai này nguyên hàm của 1 trx bằng gì Các em nguyên hàm 1 trx bằng gì nhở bằng len trừ đố x đúng không chưa cộng c không l tr đối x
+
+[06:30] + c đúng không Rồi thì tương tự bài này bằng gì Các em ơi nào vậy thằng này mình biến đổi thôi nguyên hàm của 1 tr ax + b đấy hàm bằng nhất chưa bằng gì nhỉ bằng len của gì đây phải len mẫu không len
+
+[06:43] mẫu không thì bằng len của mẫu không len mẫu luôn không ln của ax + b được chia cho mấy chia cho A đúng không nhớ là lúc nào mình cũng phải là chia cho A này fax + B rồi chia cho a chia cho a h mẫu chia cho a h mẫu được chưa chia cho A là mẫu cộng c được chưa Đấy A phải có xuất hiện là
+
+[07:04] mẫu nhá Ok và một công thức nữa này 1 trên ng nà 1 trên x bình dx bằng gì Các em ơ nà 1 trx
+
+[07:17] bình dx bằng gì con nhớ không bằng gì - 1/6 C đây công thức cơ bản phải nhớ nha Nguyên hàng 1 trx bình bằng - 1/6 được chưa rồi thì tưởng tự bên này bằng gì Các em tương tự bên này bằng gì nhở thay số đi nguyên hàm của 1 tr ax + b t bình bằng gì
+
+[07:45] nhở là -1 trx không thì thằng này là -1 trên gì nhở -1 trên bao nhiêu ax + b không à Nhưng các em ơi đừng quên có thêm thằng a nữa nha em cộng c thầy là xong đ không Mình Nguyên làm như bình thường xong mình cần phải nhân thêm chữ a ở dưới mẫu nữa nhớ chưa Thế thôi ví dụ hai nhá tính này nguyên hàm này câu a này nguyên hàm của 1/3 x trừ 4 đúng không À mẫu bậc nhất
+
+[08:12] mẫu bậc nhất thì bằng Lan được chưa đây em Vy mẫu bằng nhất đây 1 tr ax + b chưa th bằng ln của Chính nó chia cho hệ Thố A được chưa viết luôn kết quả bao nhiêu ln của mấy len của Chính nó là 3x Ừ 4
+
+[08:26] không 3x chia đi 4 các em phải chia m nữa chia 3 đúng không cộng c thôi Các em hình dúng được không Thế thôi tương tự bên này bằng bao nhiêu đây bằng này tự câu b nhá 5/4 - 2x thì em để
+
+[08:41] số 5 ra ngoài được chưa bằng len của gì đây len của gì nhỉ 4 - 2x chưa 4 - 2x Ok
+
+[08:49] và các em chia tất cả cho mấy -2 nhưng nếu cả lớp viết giống ở trên thì cục quá mình viết nhẹ nhàng cho nó dễ nhìn hơn chia cho -2 5 ph tr-2 cộng c viết này được không mình thay vì mình chia này thì cảm giác nhìn nó cục kiểu nó hơi thô đúng không Mình chia thầy ở dưới Ok Thế thôi đơn giản không Rồi tương tự này câu c mẫu là bình phương không mẫu bình phương bằng gì là áp dụng công thức nhá -1 trên ax + b đúng không mũ 2 này
+
+[09:21] dưới đây còn mũ 1 thôi nhá được chưa nhân với a nhá mũ 2 ở mẫu thì thành mũ 1 thôi nhá chưa Đấy Thế là - 1/2 x + 1 thôi đấy r các em nhân thêm mấy nữa nhân thêm Hệ số là mấy đây nhân thêm 2 nữa rồi xong 3 cộng c nữa thôi đúng không
+
+[09:40] tương tự câu D cũng thế rồi nguyên hàm 7/5 - 2x bình phương đúng không Thì 7 vẫ ra ngoài thôi nhân với này 1 -1 trên đúng không -1 trên nhêu đây 5 - 2x đấy nghĩa là mẫu năng bậc 2 thì thành bậc 1 Ok V các em nhân thêm mấy -2 nữa cộng c
+
+[10:02] viết lại cho đẹp đi bằng bao nhiêu các em ơi viết lại cho đẹp bằng gì nhở âm với là hết vậy là 7/2 2 x 5x - 2 c đúng không Vớ lại chỗ đây một xíu được chưa rồi Các em chữa đi câu e các em ơi câu e là nguyên hàm của 1 tr 3x +
+
+[10:21] 1 mũ 20 đúng không Câu này thì theo các em áp dụng công thức 1 hay công thức hai hay công thức 3 như này công thức 1 là công thức tổng quát đây này các em phải sử dụng công thức 1 cho thầy nhá Đây Công thức này Công thức này đây công thức tổng quát này nhá áp dụng công thức này cho thầy tại vì sao bài mình biến đổi một xíu nữa thôi là gì nhở các em biết là 1 trx mũ m bằng gì nhở bằng x
+
+[10:41] mũ gì đây trừ m đúng không Vậy thì bài này thầy biến đổi thành gì đây bằng gì đây nguyên hàm của này biến đổi một tí thôi 1 tr 3x c 1 mũ 20 đúng không thì thành gì 3x + 1 mũ -20 DX được không bằng gì
+
+[11:00] đây à 3x + 1 mũ 20 thành 3x cộ 1 mũ bao nhiêu nhở đây là x mũ alpha này a c b mũ alha này thành -19 không cộng Thới 1 là -19 chia cho bao nhiêu đây -19 rồi mình
+
+[11:13] phải nhân thêm 3 nữa không Ok rồi mình cộng c đúng không nhưng mà chưa xong đâu hãy trả nó về cái hình hài tuyệt vời nhất của nó là không được để mũ âm cho nó xuống dưới đúng không Đấy mũ âm mình phải cho nó xuống dưới nhá là thành
+
+[11:30] cái này vẫn là âm này thầy xử lý trước âm của gì đây -1 đúng không -1 phần 19 nh 3 bao nhiêu nhỉ 57 đúng không 57 này mũ âm thì sẽ Tống xuống dưới là 3x + 1 mũ 19 cộng c các em có hiểu không nhá
+
+[11:48] -19 nhân 3 thì bằng - 1/57 chưa ở dướ mẫu này thì cái thằng này đang là mũ âm thì phải cho xuống dưới nhá Ok chư rồi câu F bằng gì Các em ơi bao nhiêu nguyên hàm của gì đây
+
+[12:07] 1 10 đúng không chia cho 1 Ừ 4x mũ 7 không thì là 10 nhân với 1 - 4x mũ bao nhiêu nhỉ -7 Không ĐX th bằng gì đây 10 đ im này 1 - 4x mũ -7 bằng gì
+
+[12:23] nhỉ 1 - 4x mũ bao nhiêu trừ mấy -6 rồi chia mấy -6 đúng không Nhưng mình phải nhân thêm bao nhiêu nữa nhân thêm -4 nữa Ok mình cộng c bằng mấy đây các em ơi bằng là 10
+
+[12:40] cứ gọn cả 24 là Thành 5/12 nhá mũ âm ở trên thì mình phải cho xuống dưới đúng không bằng gì đây 1 trừ đi 4x mũ mấy 6 cộng c đúng không mũ âm ở trên phải cho xuống dưới không Rồi em chưa đi nào các em nhìn câu gâu h này hàm hợp của dạng bậc nhất được chưa căn
+
+[13:01] của 1 + 2x ở trong phải hàm bậc nhất đâu Đúng chưa vậy thầy biến đổi như nào Các em ơi bằng gì nguyên hàm của 1 c 2x mũ mấy 1/2 Vì căn phải là Mũ 1/2 không đúng còn nhớ này không đấy DX đế chỗ
+
+[13:17] này các em tính được nguyên hàm chưa bằng gì nhở 1 + 2x tăng thêm một đơn vị là gì 3/2 rồi chia cho mấy 3/2
+
+[13:29] nhưng phải nhân thêm gì nữa nhân thêm hệ số tr là nhân thêm số 2 có hiểu không cộng c rồi trả về hình hài của nó căn
+
+[13:40] thì vẫn phải trả về căn nhá các em nhìn này 1 + 2x mũ 3 1 + 2x mũ 3 được chưa
+
+[13:49] chia 2 là căn bằc mấy căn bậc 2 có hiểu không chia cho mẫu này 3/2 nhân 2 là mấy 3 cộng D kể l mình hiểu chưa Đấy mình
+
+[14:02] biến đổi rất là dễ thôi cái hàm này bắt buộc phải biết làm nhá Nó giống như hàm bình thường thôi Mỗi tội chúng ta phải thêm gì nhở thêm a ở mẫu Được chưa Rồi tương tự nhìn Thầy câu h này
+
+[14:18] câu h nguyên hàm của căn bậc 3 1 - 5x mũ 2 bằng gì Các em bằng gì thứ nhất nguyên hàm của này biến đổ này mũ 2 c đ 3 là gì nhỉ 1 - 5x mũ mấy
+
+[14:32] mũ 2/3 đúng không DX bằng gì đây tăng thêm một đơn vị là 1 - 5x mũ mấy 2/3 1 là 5 phần 5/3 đúng
+
+[14:45] không chia cho mấy 5/3 rồi Các em phải nhân thêm mấy nữa nhân -5 đúng không Mình cộng thêm c đ đúng này Không chưa vậy bằng bao nhiêu đây các em rút gọn thầy nào thứ nhất mình xử lý cái phần hệ số rưới đã 5/3
+
+[15:03] nhân 5 là mấy - 25/3 đúng không 5 nhân -5 là - 25/3 đúng không mẫu thì sẽ nó bị lộn ngược lại hiểu không đảo ngược lại thì thành là 3 phần - 3/25 đấy rồi nhân với cả các em nhìn này 1 trừ đi 5x đúng
+
+[15:21] không mũ mấy 5 rồi lấy căn bậc mấy chia là căn bậc 3 có hiểu không cộng c Đấy mình sẽ giải ra như vậy được chưa đấy Các em chữa đi câu y nhá câu y là nguyên hàm của 1 chia căn 1 - 4x đúng không v này cũng là căn đúng không Nhưng câu này lại kết hợp giữa câu EF và gh
+
+[15:44] với nhau cơ các em biết nó khác nhau chỗ nào không kết hợp nó vừa ở với mẫu vừa có căn vậy cácem biến đổi thầy như sau và nguyên hàm của này 1 chia này căn của 1 - 4x bằng gì 1 - 4x mũ mấy 1/2 2 DX có
+
+[16:01] như này không nhưng nó ở dấy mẫu mình lộn lại thành gì Nguyên hàng của gì 1 - 4x mũ bao nhiêu - 1/2 cá có hiểu không đấy Nó ở dưới mẫu là 1/2 thì lên thành - 1/2 không áp dụng bằng bao nhiêu đây â m 1 - 4x cộng thêm
+
+[16:20] 1 là mấy đấy nhỉ cộng thêm 1 sẽ là à - 1/2 cộng thêm 1 sẽ bằng là 1/2 đúng không chưa r mình chia cho 1/2 thôi Ok thì mình phải nhân thêm bao nhiêu nữa -4 đúng không -4 cộng c thôi Ok vậy kết
+
+[16:37] quả câu của mình bằng gì đây Y mình bằng mấy đây kết quả mình sẽ bằng bao nhiêu nhỉ À 1/2 nhân cả -4 là mấy -2 đúng không 1/2 nhân - 4 là -2 không mẫu là -2 ok mẫu là -2 vậy là thế phân số là -2 đúng không 1 - 4x mũ 1
+
+[16:57] căn 1 chia 2 bằng gì là 1 - 4x mũ 1 đúng không chia 2 là căn bậc 2 đúng không cộng c lên mình có hiểu chưa đấy thì các em nhớ là mình sẽ biến đổi rất là đa dạ người ta hỏi em nhiều cách được chưa nhiều cách hỏi rồi chư đi rồi Các em ơi sang thầy phần tiếp theo nhá nào 3 này các em ơi
+
+[17:20] 3 các em n cho như sau em ghi đi 3 này
+
+[17:26] là hàm lượng giác nhá đúng không lượng giác này các em ơi nguyên hàm của sin x là gì nguyên hàm sin bằng gì Ừ ngi nguyên hàm sin là trừ cos đúng không sin đạo hàm bằng cos thì nguyên hàm thêm dấu trừ vào là trừ cos mình nhớ để thuộc luôn cả hai công thức nhá trừ cosx cộng c nguyên
+
+[17:46] hàm của cos bằng gì đây cos đạo hàm bằng trừ sin đúng không nguyên hàm thì nó trừ vào thì thành sin đấy thế thôi nhớ như thế TH Thầy thầ nhớ thấy rất là nhanh thay vì dùng đường tròn lượng giác dùng thầ nhớ rất là nhanh luôn mà mình còn thuộc cả nguyên đạo được chưa đấy Tại vì đạo hàm mình đã nhớ từ hồi lớp 11 rồi đúng không nguyên hàm chỉ cần thêm dấu trừ vào hiểu không đấy cos đạo hàm bằng trừ sin thì thêm dấu trừ nữa thành Sin không
+
+[18:16] sin thì đạo hàm bằng cos không thì đầ trừ thành cos không Rồi hàm hợp tương tự thôi Các em ơi bây giờ thầy không phải là sin x nữa Nhưng người ta hỏi sin 2x thì sao sin 3x thì sao có hiểu đúng không nhở thì đây mình hàm hợp nhá vậy ta sẽ có là nguyên hàm của sin ax + b bằng gì Các em nhỉ bằng gì Các em
+
+[18:38] kết quả sẽ bằng là trừ cos Thôi trừ cos ax + b thôi chia cho mấy chia cho a cộng đêm C em hình dung đúng không tương tự thành em thế thôi nguyên hàm của cos ax + b DX sẽ bằng gì
+
+[18:53] nhở cos nguyên hàm bằng sin không ax + b
+
+[18:58] đ không chia cho A chưa cộng đêm C thôi đúng không còn tan và cotan đữ nhá nào thầy viết nốt này tan và cotan nhá nguyên hàm của tan à 1 tr cos bình nhá 1 tr cos bình x bằng gì nhỉ nguyên hàm của
+
+[19:14] 1 tr sin bình bằng gì đây ng là 1 trên cos bình bằng gì tan đúng không tanm là 1 tr cos bình mà đúng không nhớ nguyên hàm và đạo hàm của mối quan hệ đối lập với nhau đấy
+
+[19:28] cái gì đ h ra 1 tr Bình đó chính là tan ok chưa đấy cộng c thôi Cái này nguyên hàm bằng trừ cotan không cộng c đúng không tương tự em viết bên này đi C này bên bằng gì đây nguyên hàm của 1
+
+[19:44] trên 1 cos bình ax + b nhá DX bằng
+
+[19:50] gì đây Thế bằng là gì đây bằng tan của ax + b rồi chia mấy cho a cộng
+
+[19:59] c đúng không nguyên hàm của 1 trên sin bình x a+ b nhá DX sẽ bằng gì đây bằng là trừ cotan
+
+[20:14] của ax + b chia cho A đúng không cộng thêm C nữa nhớ chưa tất cả đ theo quy luật này nhá Đây quy luật đúng không quy luật nhưng áp dụng cho từng hàm một thầy vẫn phải viết cho lớp mình từng hàm một được chưa ví dụ 3 này tính câu a nguyên hàm của sin 3x cộng cos 2x DX các em thấy là nó không chỉ còn là x sin và cos x nữa đúng không mà sẽ là 3x và 2x đúng không Nghĩa là ax c b là hàm bấc nhất đúng không Vậy chúng ta sẽ tư duy cho thầy như sau thôi Các em nhớ nhá Hãy nhớ công thức đạo hàm và thêm dấu trừ vào thì thành nguyên hàm được chưa sin đạo hàm bằng gì sin đạo hàm bằng cos Ok thì
+
+[20:53] nguyên hàm sẽ là trừ cos 3x rồi Các em chia cho mấy nữa chia cho 3 Ok cộng với này cos đạo hàm bằng gì cos đạo hàm bằng trừ sin thì nguyên hàm sẽ là sin đúng không Đấy sin 2x giờ các em chia cho mấy
+
+[21:09] nữa chia cho 2 cộng c hiểu không nguyên hàm thì mới chia còn đọo hàm bình thường mình sẽ nhân thêm đấy đúng không nó khác biệt như vậy đấy nhá câu b này nguyên hàm của 4 cos - x cộ pi tr3 DX bằng gì
+
+[21:23] đầu tiên nhá 4 thầ im đúng không cos đạo hàm bằng gì cos đạo hàm bằng trừ sin đúng không Vậy nguyên hàm sẽ là sin - x cộ pi tr3 và
+
+[21:37] mình phải chia cho mấy nữa chia cho -1 hiểu không viết lại sẽ bằng là -4 trừ 4 Sin của tr-x cộ B tr3 Ok cộng c cái l mình hiểu chưa đấy
+
+[21:53] Các em cứ làm từng bước thôi để đỡ bị loạn hiểu không thì mình trong lúc mình hỏi như thế thì mình sẽ nhớ ng Hàm được chưa và nhớ cả đạo hàm Câu c này nguyên hàm của sin 2x - 1 đầu tiên bạn nào nhớ
+
+[22:04] được thì tốt nhưng mà đôi lúc các em nhớ các sẽ bị nhầm hiểu không Hãy liên kết với những cái gì mình đã nhớ sẵn từ lớp 11 rồi và mình kiểm tra sự khác biệt của nguyên hàm và đạo hàm nó chính là gì thêm dấu trừ và thực hiện phép chia cho hệ số a được chưa Đấy sin
+
+[22:22] đạo hàm bằng cos được chưa sin đạo hàm bằng cos vậy nguyên hàm sẽ là trừ cos hiểu không và chia cho hệ số a là chia cho mấy chia cho 2 cộng c dễ không quá đơn giản luôn mà mình còn thuộc luôn công thức đạo hàm các em sẽ cảm thấy nó đơn giản thôi nhá Đừng nhớ thầy
+
+[22:42] không khuyên các em nhớ đâu hãy liên kết với những gì mình đã học rồi câu D các em ơi câu D bằng gì 1 trên sin bình 3x nguyên hàm của 1 trên sin bình bằng gì nhỉ trừ Thôi cotan đúng không cái này dễ rồi Cái này thì không Mình nhầm lẫn được đúng không 1 trên sin bình ngy làm trừ cotan của 3x rồi chia mấy 3 cộng này cos
+
+[23:10] thì thễ rồi 4 đ Im Nguyên hàng 1 trên cos bình bằng gì tan x đúng không cái này tan của 2x rồi chia mấy nữa ch 2 cộng đêm C Viết lại đi bằng trừ cotan 3x
+
+[23:24] chia 3 này trừ 1/3 đúng không trừ 1 3 nhá Đấy cộng 2 tan 2x cộng c l mình hiểu chưa nhá nhìn Thầy câu e đi Khó một chút nhá nguyên hàm của sin x cộ cosx tất cả bình phương DX bằng gì thì đây các em thấy nó không phải là nó không phải dạng có thể khai triển luôn đúng không bình phương thì các em phải biến đổi thôi nào bình phương thầy bằng mấy nguyên hàm này sin x cộng cosx t bình bằng mấy sin bình x cộng 2 sinx cos
+
+[24:00] x cộng cos bình x đúng không DX rồi bằng gì Các em ơi sin bình cộng cos bình bằng mấy sin bình cộng cos bình bằng mấy nhở bằng 1 Đúng rồi bằng 1 này cộng các em biết 2 sin cosx bằng gì không bằng sin 2x còn nhớ không bằng sin 2x không sin 2x nhá sin 2x Đấy được chưa bây giờ
+
+[24:25] mình ra như này thì phải biết Tính nguyên hàm của 2x chứ đúng không đơn giản thôi đến cho này thì dễ chưa nguyên hàm của 1 là gì Các em nguyên hàm của 1 là x Đúng rồi cộng này nguyên hàm của sin 2x bằng gì sin đạo hàm bằng cos vậy nguyên hàm là trừ cos 2x chia cho 2 cộng
+
+[24:43] c Đấy đây thầy cách nhở Thầy nhớ mà các em thầy không bao giờ bị sai luôn Thầy V biết quy luật nó rồi sin a bằng cos nguyên hàm là trừ cos chia cho 2 thôi Hiểu không đấy thì không bao giờ bị nhầm câu f nguyên hàm của sin 3x nhân cosx bằng gì câu này các em không thể nguyên hạm từng Ngà một đâu nhá phép nhân thì bắt buộc phải biến đổi thành phép cộng và phép trừ được chưa nhưng cả lớp mình còn nhớ sin nhân cos bằng gì không Các nhớ đâu nhỉ nào không nhớ thì thầy sẽ ghi cho các em công thức nhá các lớ mình nhớ thầy nhá remember 1 này phi nhân cos bằng 1/2 sin a + b c sin a - b 2 này cos
+
+[25:18] a nhân cos B bằng 1/2 cos a + b cộ cos a - b nhá 3 này sin nhân bằng - 1/2 cos tổng lại trừ đi cos hiệu rồi Các em nhớ thầy Ba Công thức này thì sẽ làm được bài nhá rồi lắp cho thầy câu f đi bằng gì đây nguyên hàm của sin 3x nhân cos x
+
+[25:39] được gì đây bằng 1/2 này sin tổng của mấy 3 + 1 là mấy nhở 4x cộng gì nhở Sin của mấy 3 - 1 là mấy 2x x thế không Bây giờ thầ dễ chưa áp dụng công thức lớp 11 thấy dễ chưa bằng bao nhiêu đây phần 2 sin 1x Nguyên Hà bằng gì nhở sin đạo
+
+[26:05] hàm bằng cos thì là trừ cos 4x chia cho 4 này đúng không cộng này Sin là bằng cos thì là trừ cos 2x chia cho 2 đúng không cộng c thôi Ok CH này thích rút gọn cũng được nhá thầy không rút gọn đâu đến chỗ này thì biết rồi đúng không đấy Chỗ này các em nhớ là sẽ có một cái ngoặc vuông nhá Tại vì 1/2 thầy vẫn để ngoài mà Thì vẫn có Ngọ vuông ở ngoài nhá Ok Đấy câu h này câu h nguyên hàm của cos 5x nhân
+
+[26:35] cos 3x DX bằng quá dễ luôn cos nhân bằng 1/2 cos tổng này 5x + 3x là mấy x 8x cộng cos hiệu 5x trừ 3x là mấy
+
+[26:51] 2x ok đấy thế thôi DX hiểu nhá mình vẫn phải để nguyên hàm nhá tại vì mình đã Tính nguyên hàm đâu mình chỉ biến đổi công thức thôi đúng không bằng này 1/2 vớt ra ngoài nhân gì đây nguyên hàm
+
+[27:04] của cos là gì cos đạo hàm bằng trừ sin thì nguyên hàm sẽ là sin 8x chia 8 hiểu không thầ lúc nào Thầy cũng sẽ nghĩ một bước đó mặc dù nó sẽ dài hơn một xíu nếu các em nhớ luôn Nhưng mà chắc chắn sẽ không bao giờ nhầm nhá cos đạo hàm bằng trừ sin thì nguyên hàm là sin chia cho 2 hiểu không cộng C
+
+[27:29] thôi hiểu không thế thôi tương tự câu K nguyên hàm của sin 7x nhân sin x DX bằng gì nhỉ sin nhân bằng gì Ừ 1/2 cos tổng nhá sin nhân đúng
+
+[27:46] không - 1/2 cos tổng 7 cộng 1 là 8x đúng không trừ đi cos Hiệu nhá cos của bao nhiêu 7 - 1 là mấy 6X nhá Ok vậy công thức của sin nh bằng - 1/2 cos tổng trừ cos hiệu xong bài bằng này - 1/2 thì
+
+[28:04] ra ngoài nguyên hàm cos thì nguyên hàm bằng gì nhỉ bằng sin sao là mình quen rồi mình nhớ luôn là sin 8x chia 8 đúng không Ok trừ đi này cos đúng không thành sin 6X chia 6 ok rồi cộng c
+
+[28:22] luôn Ok lớp mình đã hiểu chưa dễ không rất là dễ đúng không mặc dù Nếu mà bạn nào không nhiếu công thức thì coi như bài này siêu khó đấy t mình phải liên kết công thức để đưa về dạng này được chưa Đấy đi không rồi đấy nguyên hàm của cos bình x DX và nguyên hàm của sin bình x DX bằng gì Các
+
+[28:41] em bằng gì nào K đó mình biết cos bình bằng gì không Mình làm gì có nguyên hàm của cos bình đâu đúng không mình chỉ có nguyên hàm của cos x ax b thôi đúng không làm tí ng làm cos bình nhở vậy mình phải làm sao cos bình mình phải làm gì ph Bình mình phải làm gì mình phải hạ bậc chính xác rồi nhá Thì cái Lớp mình có nhớ bông thức hạ bậc không nhớ đúng không Bây giờ mình ghi nào bấu thức 4 này sin bình x hạ bậc bằng gì cos bình x
+
+[29:13] hạ bậc bằng gì sin bình hạ B bằng gì sin sẽ là dấu trừ cos là dấu cộng có nó giống hết nhau sin bình là 1 - cos 2x chia cho 2 còn cos bình là 1 + cos 2x
+
+[29:28] chia cho 2 Dễ chưa đến bài đây thì bài này dễ luôn đúng không khó là không nhớ công thức lớ 11 đây này Ok vậy bài tập thôi áp dụng tôi nào cos bình sẽ bằng nguyên hàm thì các em ơi 1 cộng cos
+
+[29:41] 2x chia mấy 2 chưa DX rồi bằng gì đây các em ơi 1/2 vứt ra ngoài nhá 1/2 Vứt ra ngoài này đúng không 1/2 viết ra ngoài chia 2 mà Nguyên là 1 gì x
+
+[29:58] nguyên hàm của cos 2x bằng gì sin 2x chia 2 đúng không nguyên hàm của cos là sin 2x chia 2 Ok cộng cấy xong rồi dế chưa Mình chỉ
+
+[30:10] biết hạ bậc là được rồi 1/2 nhóm ra ngoài ngng của 1 là x ngô hàm cos 2x là sin 2x chia 2 chẩn chưa đấy tương tự c m chưa bằng gì sin bình hạ bậc sẽ bằng là 1 ngyên bằng 1 trừ đi cos 2x chia cho 2
+
+[30:25] chưa Đấy DX sẽ bằng gì Các em ơi 1/2 để ra ngoài nhá Đúng chưa nguyên hàm của 1 là gì nhở x chưa trừ đi nguyên hàm cosx bằng gì sin 2x chia mấy cho 2 Ok cộng c đã hiểu chưa Đấy tất cả những cái công
+
+[30:46] thức các em học từ lớp 11 mình áp dụng cho lớp 12 hết rồi đấy câu thứ 4 này bây gi mình sẽ thang cho thầy hàm mũ logarit nhá nguyên hàm của a m x bằng gì Các em
+
+[30:55] ơi nguyên hàm a x bằng gì Đúng rồi a mũ x chia nhớ nguyên hàm phải là chia nhá nguyên hàm chia len An cộng c có đúng này Không các em rồi nguyên hàm của e mũ x bằng gì Đúng rồi thầy mà hôm chưa bảo các em rồi hãy tìm một người như ũ x để yêu đúng không dù đạo hàm hay nguyên hàm thì nó vẫn là chính nó trước sau như 1 đúng không đấy trước đạo hàm cũng thế sau đạo hàm cũng thế trước nguyên hàm cũng như vậy sau nguyên hàm như vậy mãi là trính nó e mũ x cộng c đúng không e x đạo hàm cũng bằng E MX x nguyên hàm cũng là E MX đúng không một người rất chung thủy trước sau như một và các em có nhớ là lene bằng mấy không
+
+[31:40] lene bằng mấy nhở bằng 1 đúng không lene bằng 1 Đúng chưa le bằng 1 Đúng không Một đời kiếp Trung Thủy đế đến trung thủy đến nỗi là len của nó cũng bằng một cơ đúng không chỉ duy nhất only one thôi Only Me đúng không only you
+
+[31:58] đấy e nó nguyên hàm đạo vẫn là E đúng không đến ngay khi cả mình lấy len của nó đúng không Thì nó vẫn bằng 1 một đời chung thủy đúng không nào hàm hợp nhá nào nguyên hàm của a mũ MX + n sẽ
+
+[32:12] bằng gì đây thầ sẽ đổi thành MN nhá Tại vì trùng rồi bằng gì Các em ơi bằng a mũ MX + N các em vânn như vậy thôi Hiểu không chia cho gì đây chia lên A và các
+
+[32:24] em phải nhân với M nhá ở trước mặt được chưa nhân hệ số tr x c nguyên hàm của e mũ MX c n DX
+
+[32:34] bằng gì đây Bằng chính nó e mũ MX c
+
+[32:41] n chia cho mấy chia cho m nhá cộng c đúng không Các em nhớ phải chia cho m dưới mẫu đúng không m dưới mẫu không đấy tương tự thôi ngĩa là thay vì mình biến đổi mình áp dụng công thức luôn thì rất là nhanh nhá nào vụ 4 tính câu a này nguyên hàm của 7 mũ 2x + 3 trừ
+
+[33:00] 5 mũ x 5 mũ 4x + 1 c 3 mũ -2x đúng không Các em không phải biến đổi như bài hằm trước áp dụng thức ra luôn Hiểu không bài hôm trước các em phải biến đổi rất lòng nhoằng không phải nhân ra rất là dài B áp dụng công thức luôn cho thầy bằng gì đây bằng này 7 mũ ax b đúng không hoặc 7 mũ MX + N không a mũ MX + N không bằng gì đây chính nó chia cho m l
+
+[33:20] a m là hệ số trướ x được không đấy vậy Chính nó là bao nhiêu các em ơi 7 mũ 2x + 3 chia cho m là mấy hệ số chức là mấy 2 lên mấy 7 2 l 7 cơ hệ số cơ là
+
+[33:35] 7 đúng không rồi trừ đi này 5 mũ mấy 4x + 1 luôn chia mấy hệ số chứ X là mấy 4 L5 có hiểu không cộng bao nhiêu đây 3 mũ
+
+[33:51] trừ 2X đúng không Bằng chính nó luôn chư mấy hệ số Trứ X là mấy trừ 2 lên mấy
+
+[34:00] 3 cộng c các em hiểu không đy rất là dễ luôn không phải biến đổi như bài hôm trước đấy bài hôm trước bài này thẽ làm mình rút gọn bài hôm trước đi câu b Bab bằng gì Các em ơi câu b các em tì thầy bằng gì đây b là
+
+[34:18] nguyên hàm của e mũ tr-x cộ e mũ 2x trừ e DX bằng gì thứ nhất nguyên hàm của e mũ tr x bằng gì hàm mũ đúng không mũ ngĩ là x ở trên mũ ý bằng gì Chính nó e
+
+[34:30] mũ tr-x đúng không Nhưng mà hệu số Trứ X là mấy -1 thì mình phải làm gì chia 1 Các em có hiểu không phải nhân len e nữa l e bằng mấy nhở len E bằng 1 đúng không Thì có phải viết n vào nữa không Thôi nhá cộng này e mũ 2x
+
+[34:48] nguyên hàm bằng gì Chính nó chia mấy 2 t hệ số cho x là 2 mà hiểu không nhỉ tất cả những bài ax c b phải chia cho hệ số trước x hiểu không Rồi len E là 1 thôi không viết nữa thầ thở các em nguyên hàm của e là gì nguyên hàm của e là
+
+[35:11] gì Câu này rất nhiều Bạn sai luôn ngy hàm của e bằng gì ng hàm của e bằng gì nhỉ Bằng exx cộng c tại vì e exx đạo hàm bằng E mà có đúng không Câu này cực kỳ dễ nhầm luôn mấy HM n các em sẽ thấy trên mạng rất nhiều Cái người ta hỏi là nguyên hàm của Pi bằng gì đấy nguyên hàm của Pi bằng gì
+
+[35:35] Các em Đúng rồi pix chứ không phải pi bình chia 2 đâu nhá pi là hằng số đúng không nằng là pix C đấy Các em hiểu không nhở gi nguyên hàm của e DX sẽ bằng là exx cộng c An em hiểu không nhở hằng
+
+[35:50] số mà nhiều câu này nhiều Bạn sai lắm luôn câu C nguyên hàm của e mũ 3x cộng 1 tr e mũ 5x cộ 7 mũ 2 trừ x bằng bao nhiêu đây Tính nhanh cho thầy được không nguyên hàm của e mũ x bằng gì nguyên hàm của e mũ 3x bằng gì nhở e mũ 3x
+
+[36:08] chia 3 thôi cộng này 1 tr e mũ 5x bằng gì nhở 1 tr e mũ 5x bằng gì e mũ trừ 5x có hiểu không Cái này mình vừa đầu giờ mình vừa học rồi 1 tr a mũ m bằng a mũ trừ m chưa Đấy bằng e mũ trừ 5x Nguyên nà bằ gì đây e mũ -5x chia mấy
+
+[36:30] - 5 tại vì nó hệ số nào trước X là -5 mà cộng bao nhiêu đây 7 mũ 2 - x chia
+
+[36:39] mấy âm len 7 tại vì sao hệ số chứ X là -1 để không cộng c rồi cá lớn mình đã hiểu chưa đấy Đây là nguyên hàm của hợp dạng ax + b và chốt lại mình phải chia cho gì chia cho A ở dưới mẫu ok
+
+[36:55] chưa là xong rồi cho lại ghi đi nào ghi cho thầy nào dạng 2 hai nguyên hàm của nhiều công thức nguyên hàm của nhiều công thức nguyên hàm của nhiều công
+
+[37:23] thức nhá Ok nà Cái biết hàm nhiều C thức là hàm như nào không là hàm như này các em ơi ta có này ta có FX sẽ bằng
+
+[37:34] F1 x được chưa f2x Đấy cái này điều kiện nào đó x thuộc D1 x thuộc D2 được chưa mỗi cái sẽ có điều kiện có thể là ba cái hoặc là hai cái cũng được nhá TH là mẫu hai cái thôi thì khi chúng
+
+[37:51] ta lấy nguyên hàm các em chú ý nghe tập trung này vì nó chia làm hai hàm đúng không vậy khi lấy nguyên hàm nó sẽ có 2C vậy khi em lấy nguyên hàm nhá nguyên hàm này lấy nguyên hàm này FX
+
+[38:06] nó sẽ bằng gì đây sẽ có 2C là F1 này X được chưa cộng C1 f2x cộng C2 rồi ok các em hiểu không nhở đấy rồi quả hai điều kiện này đúng không và bây giờ các em biết làm sao để tìm mối quan hệ giữa C1 và C2 không cả lớp
+
+[38:34] có nhớ nào một tính chất này hàm số có đạo hàm thì sẽ như nào có liên tục không hàm số có đạo hàm sẽ liên tục tại điểm đó nhá X đây vụ x sẽ lớn hơ bằng x0 chẳng hạn đây X nhỏ bằng x0 đi x nh x0
+
+[38:48] đi giả thử thầy cho như này đi cho tổng quát được chưa thì các em ơi x0 Em hiểu không nhở thì nó sẽ liên tục vậy chứng tỏ là thay x0 vào đây hay Thay x0 vào đây nó đều bằng nhau các em hiểu không nhở nào hàm số liên tục nhá Tại vì có đo hàm thì sẽ có liên tục nhá hàm số liên tục hàm số liên tục Ok thì Bài này ý thường thì
+
+[39:13] người ta các em phải tính lim Nhưng mà nếu tính lim thì nó hơi dài thì thầy coi như đây là hàm đa thức đi nhá thì các em sẽ cho Thầy luôn thấy x0 vào đây nghĩa là F1 x0 nha F1 của x0 này F1 của
+
+[39:27] x0 cộng C1 nó sẽ bằng là f2x cộng C2 từ đó các em tìm được mối quan hệ giữa C1 và C2 được chưa nhở bình thường thì mình chỉ có một cái C thôi nhá Nhưng bài này vẫn hai cái C có những bài ba ngoặc thì ba cái C cơ đúng không thì các em nhớ thầy nhá hàm số liên tục thầy coi đây là hàm đa thức đi thầy coi Thy làm đa thức đi đa thức đi để đỡ phải tính lim nhớ nhá thầy coi hàm đa thức đi nhá Thay vào đây Thay vào đây được chưa
+
+[39:55] là được còn đ hàm các khác khó hơn thì lúc đó mình sẽ phải tính lim nhưng mà cho lim vào đây luôn thì các em có thể hơi khó đ cho dễ hơn ok rồi mình sẽ tìm được mối quan hệ giữa C1 và C2 nhá thì khi đó mình sẽ tính được C1 và C2 Thôi nhá Ok sẽ tìm
+
+[40:12] được c1 c2 này tìm c1 c2 được chưa Đấy
+
+[40:18] là xong rồi nhá vụ 5 nhá Cho hàm số FX bằ 2x - 1 khi x lớn hơ bằng 1 và bằng 3x bình - 2 khi X nhỏ hơn 1 Giả sử f lớ là nguyên hàm của f tr r trên chưa là liên tục trên R đấy ok chưa rồi thỏa mãn f0 = 2 Tính f - 1 cộ
+
+[40:38] 2s - 2 câu này của lớp mình xử lý như nào Bước 1 Tính nguyên hàm đúng không nhớ là có 2C nhá rồi fx bằng gì nhở ta
+
+[40:48] có fx bằng gì Các em nguyên hàm cho thầy đi rồi nguyên hàm này nguyên hàm của 2x bằng gì nguyên hàm của 2x bằng gì cái g đo hàm ra 2x nhở x bình trừ đi nguyên hàm của 1
+
+[41:03] là gì x cộng C1 khi x lớn hơn bằng 1 này
+
+[41:08] tiếp tục này 3x bình trừ đi 2 ngyên hàng 3x bình - 2 là mấy bao nhiêu nhỉ 3x bình ngy ha là x mũ 3 đúng không chính xác đúng không trừ đi 2x đúng không cộng C2 khi X nhỏ hơn 1
+
+[41:24] Các hiểu không nhở hàm số liên tục là gì Các em hiểu liên tục là gì như này x lớn hơn 1 là một hàm X nhỏ hơn 1 là một hàm vậy liên tục nghĩa là hai thằng nó phải ví dụ như này là không liên tục không bị ngắt quãng không liên tục là gì Các em ơi nó phải chập vào nhau gọi là liên tục không như kiểu liên tục nó không bị ngắt quãng ý đấy vậy Hai thằng Phả liền nhau vào đây và điểm đó trên điểm gì Các em ơi x bằng mấy x 0
+
+[41:49] bằ 1 Đúng rồi em hiểu không nhở hai cái sẽ liền vào nhau thành liên tục chưa đấy ok chưa rồi vậy ta sẽ có gì đây vì hàm số liên tục trên R hàm số liên tục trên R nhá hàm số liên tục trên R có nguyên hàm đạo là liên tục th nhá liên tục trên R
+
+[42:08] suy ra này bình thường sẽ phải tính lim nhưng thôi Các em thay 1 vào trên đây thay 1 vào dưới đây hai thằng bằng nhau là liên tục hiểu không Rồi các em thay 1 lên trên tử thay bằng hàm trên đường mấy đây thay 1 vào hàm này được gì
+
+[42:23] nhở 1 Ừ cộng c 1 bằng mấy th 1 vào đây
+
+[42:29] được mấy 1 - 2+ C2 vậy mối quan hệ giữa chúng là gì Các em ơi Ừ cái này hết rồi này C1 sẽ bằng C2 -
+
+[42:46] 1 ok các em đã hiểu tìm được mối quan hệ giữa chúng không đúng Đấy phải là C1 thì bằng C2 - 1 chưa đúng không rồi cácem hiểu m quan hệ giữa hai cái C chưa mà ta cho một dữ kiện gì nữa các em ơi mình có 2 cái C tất nhiên phải có hai dư kiện rồi Các em hiểu không nhở nào mà f0 Thì bằng 2 rồi mà f0 Thì bằng 2 f0
+
+[43:14] thì bằng 2 vậy Các em ơi f0 Thay vào cái trên hay Cái dưới f0 là x như nào x = 0
+
+[43:23] đúng không x0 thì lớn hơn 1 hay nhỏ hơn 1 nhỏ hơn 1 hay lớn hơn 1 Đúng rồi nhỏ hơn 1 Vậy đánh dấu 1 và 2 nhá vậy các em phải thay vào 2 chưa X đây đúng không f0 là nhỏ hơn 1 không em thay vào
+
+[43:39] 2 Thay vào 2 ch được gì Các em ơi f0 Đúng không thay vào 2 đi các em ơi f0 Thay vào đây 0 này trừ đi 2 X 0 bằ nhá Đừng ai nhầm nhá cộng C2 đấy đúng chưa
+
+[43:54] bằng 2 không Rồi từ đó tương đương các em tính được c2 bằng mấy 2 có đúng không Rồi Ok nhá Đấy các em nhớ Thay vào đây Phải chuẩn nhá rồi nào Ok khi đó này khi đó C1 bằng gì
+
+[44:11] Các em ơi Đúng không f0 là thay x bằng 0 ý f0 là thay x bằng 0 vào đây chưa đấy cộng c2 bằng 2 rồi khi đó các em ơi Thay vào đi C2 = 2 đúng không có đính C1 không
+
+[44:25] bằng gì C2 - 1 bằng 2 - 1 bằng mấy 1
+
+[44:32] chưa đúng không C1 1 Ok vậy khi đó cái hàm f x của thầy bằng gì nhở f x bằng gì đây th vào đây x bình - x cộ C1 là cộng 1 chưa Đấy x m 3
+
+[44:50] - 2x đúng không cộng C2 là cộng 2 chưa Rồi n là x sẽ lớn hơn bằng 1 này xỏ hơn 1 đúng không để mình thay cho phù hợp hiểu không nhỉ lớn hơn bằng 1 thì thay vào hàm trên nhỏ hơn 1 theo hàm dưới vậy các em tính được cho thầy f - 1 + 2 F2 chưa rồi vậy nào
+
+[45:12] vậy s - 1 cộng 2 F2 bằng gì Các em
+
+[45:19] ơi Em tính cho thầy đi f - 1 là mấy F -1 là nhỏ hơn 1 đúng không f - 1 nhỏ hơn 1 đúng không thì thay vào đâu thay vào cái Hà dưới đúng không thay đi -1 mũ 3 - 1
+
+[45:32] mũ 3 nhá -1 mũ 3 này trừ đi 2 nh -1 cộng 2 đúng không đấy rồi không f -1 thay vào đây nhá cộng này 2 F2 đúng không Các em thay 2 lớn hơn 1 chưa mình thay vào đây không 4 - 2 + 1 Các em Nhẩm đi bằng mấy
+
+[45:55] Bằng 9 đúng không -3 -1 này 2 + là 4 trừ đi 1 là 3 cộng với cả 4 + 1 là 5 - 2 là 3 x 2 là 6 3 +
+
+[46:17] 6 là 9 đúng không Chuẩn bằng 9 chưa rồi OK đ là 9 vậy đ em khoanh tô ch thầy đ án là 9 nhá 1 2 3 9 nhá rồi Ok Các
+
+[46:28] em chữa đi Ví dụ 6 là cho hàm số fx bằng trệt đối của x - 2 đúng không Thì cái Lớp mình có nhớ trệt đối x - 2 bằng gì không ta có các em biết tr đối của x -2
+
+[46:40] gì không sẽ Bằng chính nó khi nhở x như nào nó sẽ Bằng chính nó nếu Dương không ngĩ x - 2 lớn bằng 0 thì X như nào lớn bằng 2 và sẽ bằng gì nhở đối của nó khi âm Con nhớ cái tính chất này không đấy thì X nhỏ hơn 2 Đấy Tuy là 1 nhưng mà
+
+[47:08] hóa ra là 2 được chưa rồi Các em ơi thỏa mãn thì f0 bằng 5 đúng không Rồi ta có nhá rồi dấu cộng tiếp theo vậy FX là C lớp mình sẽ lấy nguyên hàm đúng không lấy nguyên hàm thầy đi bằng mấy nguyên hàm đi nguyên hàm đi x nguyên hàm bằng
+
+[47:26] gì nhở x m2 bằng gì x bình tr2 không trừ 2X + C1 không đúng chưa đấy khi x lớn
+
+[47:36] bằng 2 rồi - x + 2 bằng gì nhở trừ x
+
+[47:41] bình chia 2 c 2x cộng C2 không khi X nhỏ hơn 2 Đấy mình có đúng này chưa Rồi mà các em ơi hàm số sẽ liên tục nhá hàm số liên tục nhá hàm số liên tục được chưa Đấy hàm số liên tục nhá Ok có nguyên hàm
+
+[48:02] đ thầy hàm số liên tục hàm số liên tục trên R Ok thì suy ra
+
+[48:12] Các em tính thầy đi nào vậy các em sẽ thính này thay 2 vào đi thay và được gì đây thay 2 vào đây được mấy nhở 2 bình chia cho 2 là trừ 4 cộng C1 bằng mấy
+
+[48:27] đây thay 2 vào đây được mấy -2 cộng 4 C2 tương đương là gì Các em ơi là gì đây nhở C1 sẽ bằng mấy đây C1
+
+[48:41] sẽ bằng C2 nào Các em ơi 4 - 2 = này 2
+
+[48:48] - 4 là -2 chuyển về sang là 2 chưa vậy là C2 cộng mấy 4 đúng không Các em chem ta nh này không phải c1 = c2 + 4 không nhớ Phả ra như này không đúng c1 = c2 + 4 Chưa Rồi mà các em ơi
+
+[49:07] nào mà gì nhở mà người ta cho f gì Các
+
+[49:12] em ơi f0 thì bằng 5 f0 = 5 f0 bằng 5 vậy
+
+[49:18] các em thay vào đâu f0 là nhỏ hơn 2 đúng không thay và 2 chưa đây lấ 1 đây là 2 Thay vào 2 nhá thì ta được gì đây f0 các em thay đây đi thay đây được mấy nhở f0 là mất hết chưa vậy c2 bằng mấy nhở c2 bằng 5
+
+[49:37] không c2 bằng 5 từ đó cá em t C1 bằng mấy C1 đây sẽ bằng 9 đúng không
+
+[49:46] C2 + 5 bằng 9 rồi đúng không C2 C đúng không c2 bằng 5 thì thay 5 vào đây 5 + 4 bằng 9 chưa rồi vậy các xong rồi đấy vậy f l x sẽ bằng em thay đi đấy x bình
+
+[50:01] tr 2 x bình tr2 trừ 2x cộng C1 là cộng
+
+[50:06] với cả 9 x bình tr 2 cộng 2x đúng không Đấy cộ C2 là cộ 5 x
+
+[50:17] sẽ lớn hơn bằng 2 này X nhỏ hơn 2 đúng không đâu đây trừ y bình đúng không Đây trừ y bình đúng không Đây trừ Bình đúng không các em tính đi khi đó thì f -2 + F5 bằng mấy khi đó f -2 em thay xuống dưới đúng
+
+[50:36] không F5 thay lên trên bấm đi bằng mấy s -2 Tính cho thầy bằng mấy đi -2 thành là -2 ừ 4 + 5 đúng không cộng F5 là thay lên trên 5 Bình 25/2 này đúng không 25/2
+
+[50:55] này đúng không 25/2 kem tính đi 25/2 th 5 vào đây trừ đi 10+ 9 rồi cho thầy kết quả mấy các em ơi 10,5 các em ra 10,5 không chưa em ghi bài ry nào nguyên hàm Hữu tỳ Nguyên hàng hữ
+
+[51:21] tỉ nguyên hàm hữu tỉ Ok hôm nay chúng ta sẽ cùng nhau nên cứu về cái nguyên hàm của hữu tỷ là dạng có gì nhở có phân số nhá Thì cái Lớp mình tập trung nhìn bảng ch thầy như sau này nguyên hàm hữu tỉ đầu tiên các em nhớ là lý thuyết như
+
+[51:37] sau lý thuyết cái phương pháp chung nhá phương pháp chung để làm cái nguyên hàm hữu tỉ các em chú ý cho thầy như sau Thứ nhất Nó sẽ có dạng là PX trên gới đúng không p trên gới và các em trước khi làm cái bài này
+
+[51:57] đầu tiên các em cần phải nhớ thầy là nếu cái bậc tử và bậc mẫu nhá các em phải nhìn xem bậc tử là bậc gì mẫu là bậc gì nhá thì nếu mà bậc tử ấ bậc tử mà lớn
+
+[52:08] hơn bậc mẫu tử mà lớn hơn bậc mẫu thì các em phải thực hiện bậc mẫu nhá Ok chưa hoặc có dấu băng cũng được nhá hoặc có dấu băng này thì các em phải thực hiện phép chia đa thức chia đa thức chia đa thức
+
+[52:27] ok chưa bậc tử mà lớn hơn hoặc bằng bậc mẫu thì cả lớp mình phải thực hiện cho thầy chia đa thức các em biết chia đ thức không PX chia GX biết chia không biết chia chưa Tí nữa Nếu không biết chia thì thầy sẽ hướng dẫn cách chia nhá cái thứ hai nếu bậc tử mà nhỏ
+
+[52:48] hơn bậc mẫu tử này mà bé b mẫu nhá Bậc mẫu rồi bậc tử mà bé bậc mẫu thì các em sẽ áp dụng các dạng cho thầy nhá mình phải tách này biến đổi
+
+[53:06] đổi để đưa về cho thầy cái công thức cơ bản được chưa nhá tách và biến đổi để đưa về công thức cơ bản công thức sau nhá tách và biến đổi để đưa về công thức những cái công thức cả lớp mình cần nhớ như sau nhá Đấy muốn
+
+[53:25] làm một cái Hữu tị đầu tiên các em nhớ thầy như vậy Thứ nhất Xem mậc tử như nào bậc mẫu Nếu mà lớn hơn hoặc bằng thì phải chia còn đâu nhỏ hơn thì làm sao tách vào biến đổi có hiểu không Rồi nhìn
+
+[53:38] nhá công thức như sau này Công thức thứ nhất là nguyên hàm của 1/6 bằng gì Các em nguyên hàm 1 trx bằng gì nhỉ bằng len của tr đối x cộng c đúng này Không
+
+[53:55] công thức thứ hai là gì đây nguyên hàm của 1 tr ax + b bx bằng gì Các em nguyên
+
+[54:03] hàm của 1 tr ax + b bằng gì nhỉ Bằng gì len của Ừ ax + b đúng không và các em phải chia cho gì nữa chia cho A rồi mình cộng c Đúng chưa công thức thứ ba của lớp
+
+[54:17] mình cần nhớ là nguyên hàm của 1 trên ax + b tất bình dx bằng gì đây nguyên hàm 1 tr ax + b t bình dx bằng mấy đây bằng là -1 trax + b và
+
+[54:34] các em phải nhân thêm a nữa đúng không Đây hàm mở rộng rồi hàm hợp đúng không được chưa các em đây ba công thức các em cần nhớ thầy nhá Đấy nguyên hàm của 1 trx bằng len trừ đối x nguyên hàm của 1 trax + b nguyên hàm của 1 tr ax + b tất cả bình phương được chưa đấy Các em thể Khoanh vào đây công
+
+[54:56] thức nhá cần nhớ Ok đấy Các em chưa đi rồi bây giờ mình sẽ làm bài tập nhá Đấy đây mình sẽ gần ghi nhớ nhá nốt vào thầy chú ý cả bài hôm nay thầy sẽ sử dụng những cái công thức này ok chưa và các em chú ý này thầy sẽ chia dạng như sau nhá là phần hai này là phần dạng bài tập này phần hai là phần bài tập thì thầy sẽ chia bốn trường
+
+[55:24] hợp sau đây thẽ có bốn trường hợp nhá bốn trường hợp bài tập nó sẽ có bốn trường hợp sau đây thì các em sẽ ghi lý thuyết chung một chút sau đó mình sẽ cùng nhau làm bài tập nhá trường hợp 1 Thế là mẫu bậc nhất trường hợp 1 này mẫu bậc nhất mẫu
+
+[55:39] bậc nhất mẫu bậc nhất này chập thứ hai là
+
+[55:47] mẫu nghiệm kép mẫu nghiệm kép Ok chều thứ ba là mẫu nghiệm đơn mẫu có nhiều nghiệm đơn mẫu có nhiều nghiệm đơn có nhiều nghiệm đơn được chưa mẫu có nhiều nghiệm đơn thường là hai nghiệm đơn 3 cũng được bốn chc thứ b là mẫu đạo hàm bằng k
+
+[56:17] lần tử mẫu này đạo hàm bằng k lần
+
+[56:24] tử ok mẫu đạo hàm bằng k lần tử mẫu đạo hàm bằng k lần tử nhá Nó sẽ có bốn trường hợp sau đây Em nhớ chưa tr-1 là mẫu bằng 1 trều thứ hai là mẫu bậc có nghiệm ké trều thứ ba là ng mẫu có nhiều nghiệm đơn đấy trều bốn là mẫu đạo hàm bằng k lần tử nhá các
+
+[56:44] em nhớ có bốn dạng này các em xem tùy vào từng dạng một và mình sẽ có cách làm khác nhau biết chưa ví dụ một này tính đây là mẫu hoặc nhất nhá Ok các em nhìn cho thầy câu a này 4x + 1 chia cho 2x -
+
+[56:57] 1 Đúng không các em nhìn câu a ch thầy nhá các em quan sát này bậc tử như nào với bậc mẫu đây bậc tử bằng bậc mẫu đúng không Bằng có chia không bằng vẫn phải chia đúng không bằng vẫn phải chia nhá vậy các em chia đi 4x + 1 chia cho 2x
+
+[57:14] trừ đi 1 chia nào phân thức mà phải chia thôi Các em nhìn này 4x các em lấy 4x chia 2x bằng mấy 2 Đúng rồi tiếp tục này sao các em nhân ngược lại 2 nh 2x là mấy
+
+[57:27] 4x 2 nh -1 là mấy -2 chia nào xong mình
+
+[57:33] trừ đi này 4X - là hết chưa 1 trừ - 2 là thành cộng 3 rồi vậy Đây là gì đây là thương ok Còn đây là
+
+[57:47] dư có hiểu không vậy câu a Thầy ghi là chữ i đi sẽ bằng nhớ nhá người ta hay k hiệu chữ i y sẽ bằng gì đây nguyên hàm của này có phải thầy đã chia rồi đúng không thầy là được thương và Dư đúng không thương là 2 Đúng rồi sẽ là 2 cộng
+
+[58:05] với cả Mấy dư là 3 nó chưa chia hết thì phải này có phân số nhá 2x - 1
+
+[58:15] ĐX các lớp hiểu không Rồi từ đó mình sẽ Tính nguyên hàm chưa nguyên hàm của 2 là gì hôm chưa học rồi nguyên hàm của 2 là gì nhở Ừ 2x đúng không nguyên hàm 2 là 2x rồi trừ cộng với này 3 nhân với này
+
+[58:30] phải là 3 mình hàng số mình để im đúng không nguyên hàm của 1/2 - 1 bằng gì ln của tuyệt đối 2x - 1 đúng không chia cho mấy chia cho 2 cộng c có đúng này Không công thức mình vừa áp dụng ở đây này nhá Đây các em ơi công thức này Đấy Công thức này 1 tr ax + b Đúng chưa thì thầy có thể bổ sung cho em một công thức nữa là nguyên hàm của x mũ Alpha DX bằng x mũ alha cộng 1 chia Alpha + 1 đúng không cộng c chưa đúng không cái này Alpha khác trừ 1 nhá đ mình thầ bổ
+
+[59:03] sung thêm công thức này cũng được nhá cho nhớ ok tiế tự câu b này chúng ta cho gì đây nguyên hàm của x bình - 3x + 2 chia cho tr-x - 3 đúng không bậc tử là bậc mấy 2 bậc
+
+[59:19] mẫu là bậc 1 lớn hơn chưa chia nào x bình trừ 3x cộng 2 chia cho - x
+
+[59:30] 3 bằng bao nhiêu đây các em chia này X bình chia - x là mấy X bình chia tr-x là mấy nhở - x các em nhân ngược lại là thành x bình đúng không nhân ngược lại x bình này nhân lại cộng 3x đúng không sau các em trừ đi được gì
+
+[59:49] đây x bình trừ x bình là hết không -3x trừ đi 3 là mấy - 6X cộ 2 đúng không sau khi mình trừ
+
+[60:03] rồi mình xem có chia tiếp và 0 vẫn chia tiếp được -6x chia cho tr-x là mấy bằng 6 đúng không nhân ngược lại là -6x cộng bao nhiêu đây Cộng à -18 đúng
+
+[60:17] không an Em trừ đi kết quả bao nhiêu đây còn dư bao nhiêu trừ 20 Đúng chưa rồi 2 trừ thành cộng đúng không 2 trừ -1 th cộng 18 thành 20 chưa vậy Đây là thương đây là dư chưa vậy câu b của thầy sẽ viết lại bằng gì Các em ơi nguyên hàm của gì tr-x + 6 không tr-x + 6 cộng với dư
+
+[60:41] là 20 chưa chia mấy 20 chia mấy đây 20 chia cho đây mẫu là ch x -3 chưa Đây trừ -3 Ok hoặc vào đển chỗ này C lớ mình đã tính được nguyên hàm chưa Rồi nguyên hàm của tr-x là gì đây - X bình tr 2 đúng
+
+[61:02] không công thức thôi nguyên hàm của 6 là 6X cộng này 20 đ im len tuyệt đối của
+
+[61:11] tr-x -3 chưa cộng c và các em nhớ phải hệ số trữ x là bao nhiêu đây -1 V các em phải nhớ chia cho -1 nhá chia cho -1 chia cho -1 chia cho 1 -1 nhá Ok hoặc
+
+[61:23] các em đổi dấu luôn cũng được nhá Ok các em đã hiểu cái trường hợp này chưa Mình thực hiện phép chia thì nó tự nhiên ra cho mình những cái rất là dễ ok chưa Rồi các em tự làm cho thầy câu c xem nào Các lên nhì câu c này câu C là
+
+[61:39] nguyên hàm của gì đây câu C là nguyên hàm của x mũ 3 - 2 tr x - 1 DX nhá Đúng không S bằng gì đây nguyên hàm của x mũ 3 trừ 2 tr x - 1 DX nhá các em thực hiện
+
+[61:51] phép chia cho thầy nào chia ra nháp nhá x m 3 trừ đi 2 chia ra này x - 1 đúng không Ok x mũ 3 chia cho x là bình nhân ngược lại là thành x mũ 3 trừ x bình các em trừ đi Đ mấy đây x m 3 trừ
+
+[62:07] X3 là hết trừ thành cộng là x bình 2 -2 hạn xuống được chưa Nhớ phải biết bậc to trước bậc bé sau nhá rồi X bình chia cho x là mấy x đúng không nhân ngược lại là x
+
+[62:26] bình trừ x đi bằng mấy đây x bình Ừ x bình là hết này đúng không kết quả là thành dương x trừ 2 x chia cho x là 1 này đúng không 1 nhân ngược lại sẽ bằng là ờ x trừ 1 đúng không kết quả là dư
+
+[62:43] mấy các em nhỉ -2 Ừ -1 ok thành cộng 1 là dư -1 nhá đúng không Nhưng mình thường nếu mà chia này thì đôi lúc có thể hơi dài một chút có bạn nào học tốt ấy thì chia cho thầy theo cách h dùng hằng thức đi Có nhớ hàng đẳng thức Không các này thầy tách như sau nhá các em biết chia theo cách này rồi đúng không còn một cách nữa này nhanh hơn này các em nhớ hàng thức x mũ 3 mẫu là x - 1 đúng không thì các em nhớ hàng bẳng thức không x mũ 3 - 1 bằng gì x - 1 nhân x bình cộ x + 1 lớp th nhớ
+
+[63:16] công thức này không đúng thì thầy sẽ tách thôi th sẽ bằng là x mũ 3 trừ đi 1 trừ đi 1 đấy Hiểu không thầy Tách cái -2 Thành - 1 được không Rồi chia cho x - 1 DX được không Các em ơi thì phải là x m
+
+[63:32] 3 - 1 chia cho x - 1 đây x 3 - 1 chia cho x - 1 bằng gì nhở x bình + x 1 không đấy x b + x 1 ok chưa đấy còn
+
+[63:43] thằng này là -1 tr x - 1 DX đấy cái Lớp
+
+[63:48] mình có hiểu không dùng cách này đôi lúc mình sẽ chia bằng dùng hàng thức sẽ nhanh hơn rất là nhiều rồi bằng bao nhiêu đây x mũ 3/3 này cộng x bình tr 2 cộng x đúng không trừ
+
+[64:00] đi len của x - 1 cộng c Đấy em thể chữa và nhá Đấy câu c l mình chữa đi nhá Đấy nghiểm một là mình sẽ chia theo cách này nhưng cách này chia nhiều rất là hay nhầm Bạn nào mà học tốt thì nên dùng cái cách này các em Nhẩm đi tách thằng Đường thức rất là hay nhá Rồi có phải là chúng ta nhé Trường hợp 1 là mẫu bậc nhất thì thầy vừa chữa xong cho cả lớp mình rồi đúng không Vậy cả lớp mình sang thầy phần hai mẫu là nghiệm kết ké thì sao cả lớp bình phương pháp của chúng ta sẽ gì đây mẫu bình phương nghiệm ké đúng không thì các em sẽ tách thôi nhá nãy giờ mình chia
+
+[64:35] Mình tách đúng không Tại vì hàm phân thức mà hữu tỉ mà là chia và tách Thôi vậy Các em ơi nhì thầy câu a nhá nguyên hàm của 2x - 3 chia cho x + 1 tất cả bình đúng không thì các em tách như nào cho hợp lý nhìn thầy nhá hướng dẫn cách tách như sau này để mình có thể rút gọn được tách để làm sao cho rút gọn được hiểu không Các em nhìn này mẫu của mình là gì x cộng mấy x + 1 ở trên tử là mấy X
+
+[65:01] đây 2x đúng không Vậy nếu thầy nhân 2 lên với mẫu là gì nhân 2 đi là gì 2x cộng mấy Nếu thầy nhân 2 là phảy 2x cộng mấy đây cộng 2 thì nhân 2 lên để cho giống tử ấy hiểu không Vậy là 2x + 2 không vậy thì nhưng mà tử của thầy đang là bao nhiêu 2x - 3 đúng không Vậy thầy phải thêm bớt 2 rồi trừ đi 2 vậy thầy sẽ viết lại như sau nhá 2x cộng
+
+[65:27] - 3 đúng không chia cho x + 1 tất cả bình phương DX đúng không thầy viết lại nhá thẽ bằng này thầy thêm bớt để cho tử thẽ là 2x + 2 thì 2x + 2 mới chia hết cho x + 1 cái lớ có hiểu không nào thêm
+
+[65:39] bớt này 2x + 2 Đúng chưa thầy cộng thêm 2 thì phải thầy làm sao trừ đi 2 trừ đi 2 mà trừ đi 3 nữa thành trừ mấy - 5 Thư không nhở mình thêm 2 thì mình phải bớt đi 2 mà trừ đi 5 chia cho x + 1 t bình
+
+[66:00] dx C lớp hiểu chỗ này không Đây này C phải là chỗ này là x + 1 không vậy khi mình nhân đôi lên phải là 2x + 2 thì nó mới nhân tử chung là số 2 ra ngoài là x + 1 ấy các em có hiểu không đấy nhá
+
+[66:16] thì mình sau khi đó thì mình sẽ rút gọn được này các em ơi 2x + 2 rút gọn cả x + 1 t bình bằng gì rút gọn được một cái x + 1 không thì nó chỉ còn là 2 chia cho x + 1 Các em có hiểu không Đây này 2x + 2
+
+[66:32] này thì thầy thôi viết lại thê một dòng nhá bằng là nguyên hàm của 2 nhân x + 1 trừ đi 5 chia mấy cho x + 1 t bình dx có hiểu như này không mục đích của mình thêm mớt để làm sao để có thể rút gọn hiểu không rút gọn để không còn là bình phương nữa thì 2x + 1 dú còn cả x + 1 Tân Bình bằng gì x + 1 dú còn x + 1 không nó chỉ còn là 2 trx + 1 không
+
+[66:58] tiếp tục trừ đi 5 tr x + 1 t bình không - 5 tr x + 1 t bình đấy DX đế chỗ này hiểu không đấy đến chỗ này thì các em tính dùng nguyên hàm thôi Đây công thức đây các em nhìn này lý thuyết đây rồi Các em nhìn này nguyên hàm của 1 tra + b thì bằng ln của ax + b chia a chưa nguyên hàm của 1 tr ax + b t bình không phương sẽ bằng là -1 tr ax + b không đấy đang dương thì đổi thành dấu Âm thêm một dấu âm nữa nhá -1 tr ax + b được chưa rồi vậy bài này các em ơi bằng gì nhở bài này bằng gì quay trở lại bài này đi bằng gì 2 nhân ln của x + 1 hệ số là 1 thì thôi
+
+[67:42] không chia nữa nhá trừ này thành cộng đúng không thành nguyên hàm của 5/1 5x 5 chia cho x + 1 t bình bằng -5 Vậy là bằng nguyên hàm bằng -5 chia cho x + 1 đâ đúng không Các em lại trừ thừ thành cộng viết dấu cộng đi đấy đúng không 5
+
+[68:03] trx + 1 nghĩa là số 5 thì vẫn để im thôi đấy nguyên hàm của 1 trx + 1 tất bình bằng -1 trx + 1 hiểu không trừ từ thành cộng đấy c thế thôi Tại vì hệ số trước x là 1 nên thầy không cần phải chia cho 1 nữa nhá Đấy mục tích của mình là phải tách cho giống ở mẫu để mình trệt tiêu bớt đi không trệt tiêu bớt đi thì mình sẽ ra được kết quả nhá mình sẽ đưa về ra cái công thức của mình nào lớ nhìn Thầy câu b nhá câu b này nguyên hàm của gì đây 4X
+
+[68:34] + 3 chia cho 2x trừ đi 1 tất cả bình phương DX sẽ bằng gì đây các em phân tích cho thầy này Chỗ là 2x - 1 đúng không Vậy ở trên tử là 4x đúng không Vậy các em sẽ nhân đôi lên 2x - 1 nhân đôi là mấy 2x thành 4x phải là 4x - 2 đúng
+
+[68:53] không có hiểu gấp đôi lên không để cho giống ở trên tử là 4x mà đúng không Ok vậy sẽ bằng là 4x thì phải trừ đi 2 có hiểu không thì khi mình nhóm 2 ra ngoài là 2x - 1 nó giống nhân tử của mẫu không đấy mà mình trừ đi 2 thì mình phải làm gì phải cộng thêm 2 đúng không cộng
+
+[69:09] thêm 2 mà ban đầu mình có 3 đúng không 3 + 2 là mấy 5 Ok mình có thể check lại 5 - 2 đúng bằng 3 chưa Chuẩn rồi chia cho mẫu là 2x trừ 1 tất cả bình phương
+
+[69:23] DX C hiểu không bằng bao nhiêu đây các em rút gọn này Ờ thích thì viết thêm một bước nhóm 2i ra ngoài là 2x - 1 đúng không Đấy cộng 5 chia cho 2x - 1 tất cả bình phương DX đấy hoặc là bạn nào chia luôn cho thầy đi nhá học tốt chia luôn đi 2x - 1 rút gọn hết nó chỉ còn là 2
+
+[69:44] chia cho chưa hết nhá chưa Tính nguyên hàm nhá Đang chỉ biến đổi thôi 2 chia cho 2x trừ đi 1 tất cả bình phương à Hết rồi đúng không Tại vì một cái rút gọn rồi thì hết bình phương đúng không cộng 5 trên mấy cng 5 chia 2x - 1 t bình
+
+[70:02] phương DX các lớp M có hiểu chỗ này chưa vậy bằng gì đây nào nguyên hàm bậc nhất 2 nhân len của gì nhở 2x trừ đi 1 và chia cho mấy đúng không hệ số ch X là 2 cộng này cóy là khi nguyên hàm của nhớ
+
+[70:22] nhá Thầy nhắc lại thầy viết lại cho các em nhớ này nguyên hàm tr ax + b t bình dx sẽ bằng -1 tr ax + b nhân A ok cộng c viết lại cho nhớ càng viết nhiều càng nhớ thôi Có gì đâu 1 tr ax + b t Bình Được chưa bằng -1 tr ax + b đây 5 tr 2x - 1 t bình không th bằng
+
+[70:44] -5 bằng chia mấy các em bỏ cái bình phương đi hiểu không bỏ cái bình phương đi là 2x - 1 nhưng các em nhân thêm mấy nữa nhân thêm 2 nữa thôi cộng c là xong hiểu chưa Đấy mẫu là bình phương thì khi nguyên hàm là mất bình phương chưa Còn mẫu bậc 1 thì nguyên hàm bằng len không đấy Các em nhớ như vậy ghi vàoo trong đầu như vậy chem nhớ các em nhìn câu c này câu C nguyên hàm của x bình cộ 3x +
+
+[71:11] 2 chia cho mấy đây chia cho x bình trừ đi 2x + 1 DX nhìn Thầy câu này nhá đầu tiên các em quan sát này bậc tử C bậc mẫu như nào bằng nhau thì phương pháp chung phải là gì chia Đúng rồi Các em lập phép chia đi lập phép chia đi x b +
+
+[71:31] 3x + 2 các em chia đã x b - 2x cộ 1 Các
+
+[71:37] em phải thực hiện phép chia cho thầy nhá chia Đi X bình chia x bình là mấy 1 chưa nhân ngược lại là mấy x bình - 2x cộng 1
+
+[71:48] đúng không trừ đi bằng mấy x bình trừ x bình hết 3 trừ thành cộng là 5x x chưa đúng không 2 trừ - 1 là mấy cộng 1 5x + 1 có hiểu không vậy thầy sẽ viết lại thằng này bằng gì đây bằng ngân hàm của bao nhiêu đây giữ
+
+[72:07] là thương 1 đúng không cộng 5x trừ đi 1 cộng này chia cho x bình - 2x + 1 DX
+
+[72:18] rồi đến chỗ này thì cả lớp mình mới biến đổi được chưa đến chỗ này mới biến đổi này Tại vì bậc tử nhó bậc mẫu thì mới biến đổi hay là tách chưa nhớ cái phương pháp chung nhá Đừng để người ta lừa mình đừng để đề bài lừa mình rồi sau khi đó mình sẽ tách thôi Các em nhìn này các em biết cái mẫu bản
+
+[72:35] chất là gì không bằn bản chất cái mẫu bằng gì nhở nguyên hàm của 1 cộng này 5x + 1 chia cho mẫu là mấy nhở x - 1 tất cả gì đây bình phương DX cái Lớp mình hiểu không nào biến đổi
+
+[72:49] thầ bằng mấy đây bằng này mấy đây mình sẽ chia ra nháp nhá chia ra nháp ok được chưa bằng nhiêu đây các em nhìn này nguyên hàm của 1 nhá cộng này Chỗ là x - 1 đúng không Vậy 5x phải trừ đi mấy
+
+[73:04] nhân 5 lên x - 1 thì trên tử phải là 5x trừ mấy đúng rồi nhân 5 lên là Thành -5 nhá 5x trừ đi 5 đúng không - 5 thì phải cộng thêm mấy cộng 5 Ừ cộng 5 1 là thành cộng 6 có hiểu không đấy chia cho
+
+[73:18] mấy x - 1 z bình dx bằng bao nhiêu đây
+
+[73:23] nguy hàm của 1 này cộng bao nhiêu đây 5x - 5 chia cho x Ừ 1 bằng mấy nhá 5 không chia cho x - 1 đúng không Vậy thì một cái bị chì tiêu x - 1 rồi đúng không còn cộng với cả 6 trên gì nhấy x - 1 t bình
+
+[73:40] dx cái Lớp mình có hiểu không vậy bằng bao nhiêu đến chỗ này mình mới Tính nguyên hàm này nguyên hàm của 1 là gì x cộng 5 nhân gì nhở ln của tuyệt đối x - 1 được chưa cộng thành trừ - 6 trx - 1
+
+[73:57] cộng c xong bằ đấy nhá các em chữa vào đi Có hiểu không nhở đấy vậy thì trước hết cả lớp mình phải thực hiện phép chia cho thầy đã chia được chưa Sau rồi mình mới biến đổi để đưa về dạng cơ bản của mình được chưa đấy Các em chữa đi nào trườ hợp Thứ
+
+[74:17] hai trườ hợp thứ hai là mẫu nghiệm kép Thầy vừa chữa cho các em rồi đúng không Mình sẽ tách Được chưa Rồi bây giờ mình sẽ sang chều hợp thứ ba ch thầy là gì đây mẫu có nhiều nghiệm đơn hay là các nghiệm phân biệt đấy nghiệm đơn hay gọi nó nghiệm phân biệt được chưa Đấy nghiệm ké là dạng bình phương nghiệm đơn là từng nghiệm một vụ x - 2 x + 3 nghĩ là từng nhiề nghiệm hiểu không nhiều nghiệm nó có thể là hai nghiệm hoặc có thể là ba nghiệm mình đều thể làm được nhá rồi phương pháp của chúng ta sẽ như sau câu 3 này tính mẫu có hai nghiệm phân biệt thì cái phương pháp của em sẽ tách thôi cũng là tách thôi Các em nhìn thầy như sau này mẫu các em nhìn này mẫu là x + 2 và x - 3 có đúng không Nhưng mà
+
+[74:54] chúng ta sẽ không có công thức để tính được nguyên hàm của cái mẫu nhân với nhau như này đúng không Các em chúng ta chỉ có duy nhất một công thức là gì đây nguyên hàm của 1 tr ax + b bằng
+
+[75:06] gì bằng ln tuyệt đối của ax + b chia gì nhở chia a c Chúng ta có một công thức này thôi đúng không Các em à Vậy các em ơi vậy thì ước gì Hai Thằng này bị vậy thì Ước gì Hai Thằng này
+
+[75:23] bị tách ra thành hai cái phân số như này thì tốt quá nhỉ a trx + 2 cộng b trx - 3
+
+[75:33] thì tốt quá thì mình sẽ tính được thì các em có tính được không Nếu thầy tách như này thì x + 2 x - 3 tách ra riêng này có tính được nguyên hàm không đúng Các em thì nó sẽ bằng là gì nhỉ Bằng A hệ số cứ để im thôi ln tuyệt đối của x + 2 đúng không cộng b nhân gì đây
+
+[75:51] len tuyệt đối của gì nhở x - 3 V cộng thêm C có đúng không Các em nào thôi tập trung nào tự nhên ồn thế nào đúng không Vậy thì ước gì nó được tách ra như này thì tốt quá vậy thì nếu mình tách thì mình phải tìm a và b như thế nào à các em Nếu thầy tách ra thầy Tìm a và b như thế nào Các em tìm
+
+[76:13] như thế nào thì các em chú ý này giả sử thầy tách như này đúng không thầy thch quy đồng lên nhá cách tìm a và b nhá Tìm a và b tìm a b như sau thẽ có hai cách
+
+[76:24] cách một là các em sẽ nhân chéo này các em ơi các em nhân chéo cho thầy đi nhân chéo lên này được gì đây có là từ thằng này thầy tách ra đây đúng không Vậy thì từ thằng này thầy phải biến đổi được ra bằng này đây các em có nhân chéo thầy được gì đây các em nhân chéo này a nh x - 3 cộng đúng không
+
+[76:50] nhân chéo lên không nhân chéo quy đồng lên không cộng bao nhiêu đây nhân chéo lên là B nhân x + 2 có đúng không chia mấy gì đây mẫu chung là nhân với nhau là x + 2 nhân x - 3 đ không bằng bao nhiêu các em ơi
+
+[77:06] nhân tung ra thầy bằng mấy đây là ax - 3A cộng bx trừ đi bx + 2B đi đúng không chia mẫu là mấy x + 2 nhân x - 3 có đúng này
+
+[77:23] không vậy các em nhóm cho thầy ra ngoài đi nhóm chữ a ra ngoài được gì Các em ơi À nhóm x ra ngoài được gì đây nhóm x ra ngoài được gì nhở a + b nh x đúng không
+
+[77:33] cộng bao nhiêu nữa các em ơi cộng bao nhiêu nhỉ cộng với cả -3a + 2B -3a + 2B đúng không Đấy chia cho mẫu đúng không mẫu là x + 2 nhân x - 3 qu như này không và cái vậ ban đầu của mình là gì nhở ban đầu của mình là gì đây 3x - 2 chia cho x + 2 x - 3 đúng không bằng
+
+[77:57] 3x đây nó sẽ bằng là 3x - 2 3x trừ đi 2 chia mấy x + 2 x - 3 rồi Ok vậy để cho
+
+[78:06] hai thằng này bằng nhau thì sao các em ơi để hai thằng này bằng nhau thì sao khi đó A như nào b như nào Các em ơi nào a b như nào vậy là a + bx phải bằng
+
+[78:16] là 3 không được nhở t vì để cho hai này bằng h giống hệt nhau mà mẫu giống hệt nhau chưa mẫu giống nhau chưa vậy phải tử giống nhau đúng không vậy A + B phải bằng mấy a + b = 3 và gì
+
+[78:30] nhở - 3A cộng 2b bằng mấy
+
+[78:35] -2 không Các em có bấm được máy tính giải ra hệ không bấm máy tính cho thầy xem a bằng mấy B bằng mấy à a bằ mấy B bằng mấy bấm máy tính đi đ Rồi cả lớp mình sẽ bấm má tính này là 8/5 bằ mấy 7/5 đúng không A = 8/5 và
+
+[78:51] B = 7/5 đúng không Từ đó Vậy thì các em thay vào đây được không Vậy thì a 8/5 b 7/5 Vậy kết quả của mình là gì đây các em ơi vậy Thay vào kết quả xem bằng gì nhỉ bằng bao nhiêu đây A là 8/5 B 7/5
+
+[79:02] không thì nó chính là hai cái số trên đây luôn đúng không Vậy sẽ là 8/5 này ln của tuyệt đối x + 2 cộng bao nhiêu đây b là mấy 7/5 len tuyệt đối của x - 3 cộng c Ok vậy thì quan trọng nhất
+
+[79:20] các em phải tìm a và tìm b ch thầy là xong c l có hiểu không nhở th Hệ số là trước x là 1 nên thầy không chia nhá thầy chia cho 1 thì cũng B bỏ qua nhá nào cái Lớp mình có hiểu cách tìm AB B này không tách ra A và B không Mình phải nhân chéo lên không nhân chéo lên này đấy gi quy đồng tách hết ra quy đồng đấy xong giải này thằng có bằng bao nhiêu thì các em sẽ cho hệ số trướ x bằng bấy nhiêu thôi Hệ số tự do bằng -2 giải ra nhưng cả lớp mình thấy cái này dài không Cái này rất là dài đúng không thì chúng ta sẽ không lựa chọn cho làm cách này Đâu nhưng mà thầy vẫn phải làm cách này cho các em biết lại sao không đây bản chất của nó như vậy đúng không Vậy thì thầy sẽ hướng dẫn cả lớp mình một cách thứ hai Cách thứ hai ok Cách
+
+[80:01] thứ hai này sẽ là các em thầy nhẩm ra luôn thay vì các em làm dài dằng này các em thầ nhẩm trong vòng mất khoảng vài giây là ra luôn nào Các em C tin mình có thể nhẩm ra không nhẩm ra Các em thể tin mình nhẩm ra luôn không ra luôn kết quả ra được A là 8/5 và b ằng 7/5 ông nào cái phương
+
+[80:20] phương pháp nhẩm như sau nhá các em nhìn nào Các em nhìn nhá thầy th hướng dẫn như sau này Đây là 3x - 2 tr x + 2 nh x - 3 đúng không Các em nhì mình sẽ nhẩm như sau nhá chắc chắn là các em sẽ tách cho thầy thành hai cái này Đây nhá thầy sẽ cách hai thầy giảm cho các em đây cách hai nhá nguyên hàm của 3x trừ đi 2
+
+[80:38] chia cho x + 2 x - 3 ok chưa DX chắc
+
+[80:44] chắn chúng ta phải Tách thành hai cái ham đúng không Đấy gì đó chia cho x + 2 cộng gì đó trên x - 3 DX tch Thành A và V đúng không Nhưng thầy sẽ không viết tại vì thầy chắc chắn sẽ nhẩm ra luôn nhì này muốn tìm hệ số chữ x + 2 nhá Đây
+
+[81:01] muốn tìm hệ số chữ x cộng 2 Đúng không các em sẽ lấy cái tay các em che cho thầy đi Che x+ 2 đi được không các em che đi đây các em che đi x + 2 đi Xóa đúng không thì chúng ta chỉ còn phần lại là phần này không phần còn này không Các em ơi phần này không vậy thì sau khi che đi thì cái nhiệm vụ các em là các em phải thay nghiệm của nó vào Thay -2 vào phần còn lại thay -2 vào phần còn lại các em lấy các em che đi xóa thì chỉ còn phần lại là 3x - 2 chia cho x - 3 đúng không Rồi các em thay nghiệm và phần còn lại thay -2 vào đây các em nhìn này 3 nh -2 bằng mấy -6 trừ -2 là mấy -8 OK này à
+
+[81:42] -2 - 3 là mấy -2 - 3 -5 -8 ch -5 bằng mấy 8/5
+
+[81:50] vậy chính là kết quả của chúng ta 8/5 à ra chưa xong rồi có hiểu rất ảo không tương tự nhá nào tương tự nào tương tự nhá Ok Bây giờ muốn tìm hệ số của x - 3 đúng không muốn tìm nó đúng không Vậy tao gạch đi này tao gạch ta đi và nghiệm của nó là mấy 3 gạch đi thì
+
+[82:15] phải đn nhớ để lại nghiệm nhá Ok đấy Rồi sau đó các em thay vào phần còn lại cho thầy nào 3x trừ đ 2 nào 3 x là mấy 9 - 2 là mấy 3 + 2 là mấy 5 à 7/5 Chuẩn
+
+[82:31] chưa Thế bảo là 7/5 ok vậy ra kết quả chưa 8/5 len của gì đây X + 2 Đấy cộng 7/5 len của x - 3
+
+[82:44] cộng c rồi cái lớ mình hình có hiểu cái này không đấy nhá Vậy thì nếu bạn nào khi che đi bạn nào không biết nhẩm thì hãy nhập vào máy tí rồi phím cal hiểu không biết che thì nhập vào máy tính thôi nhá Đấy có hiểu không thấy
+
+[83:01] nhá các em nhớ nhá Cái thần chú thầy nhá nào Cái mình có thể nhẩm nhá Thì cái công thức của mình là xóa đi Muốn tìm cái gì Xóa cái đó đi và thay nghiệm vào phần còn lại thay nghiệm vào phần còn lại vào phần còn lại được chưa Đấy muốn tìm hệ số của
+
+[83:20] thằng nào thì các em xóa thằng đó đi thôi đúng không Đấy câu e này các em nhìn thấy thì muốn câu này nhá Nhìn tập trung này phải câu e này nguyên hàm của 2x + 1 chia cho x - 2 x - 3 và x + 1 DX
+
+[83:32] đúng không mẫu là có nhiều nghiệm chưa nhiều nghiệm phân biệt chưa vậy chắc chắn thẽ tách thành là gì đây A trên thầy không ghi A đâu một cái g đó chia cho x - 2 cộng một cái g đó chia cho x - 3 cộng một cái t đó chia cho x +
+
+[83:50] 1 ok không Các em ơi đúng không Bây Gi thầy cần tìm hệ số trước x - 2 hệ số trước x - 3 và hệ số trước x + 1 có đúng không Các em rồi phương pháp nhá Muốn tìm cái gì tao gạch đi thì tao gạch x - 2 đi ok chưa Và khi đó nghiệm là
+
+[84:08] mấy để đỡ nhầm Hãy ghi ở bên cạnh là nghiệm số mấy đây số 2 được chưa vậy nhiệm vụ cả lớp mình là thay ha vào phần còn lại được chưa nhưng mà đôi lúc thay vào cũng th được thôi nhưng mà đôi lúc nhân chia đ Đôi lúc mình hay bị nhầm không thì dành cho Người nào bị nhầm nhập cho thầy phần còn lại máy tính đi nào phân số 2x + 1 chia cho x - 3 nhớ ngặc vào nhân x + 1
+
+[84:37] ok x + 1 nhá Đúng không các em cal ấ nút cal nào thay x = 2 vào chưa nghiệm kết quả là mấy - 5/3 chưa thì đây chưa kết quả luôn - 5/3 hình dù không rồi tiếp
+
+[84:52] tục như vậy nhá nào tiếp tục như vậy nào thầy muốn tìm đây thầy xóa đi nhá tiếp tục như vậy này thầy muốn tìm hệ số trước x - 3 đúng không thầy xóa cái x - 3 đi xóa như mà xóa
+
+[85:05] đi nhớ phải để lại nghiệm đúng không là mấy nghiệm là 3 các em thay 3 vào phần còn lại CH thầy bằng mấy nào thê 3 đi cal này nhớ nhá 2x + 1 x - 2 x + 1 đúng
+
+[85:15] không cal x 3 chưa bao nhiêu 7/4 không Rồi Ok vậ quả 7/4 V có hiểu không
+
+[85:25] Rồi tương tự này thầy muốn tìm hệ số của x + 1 đúng không thầy xóa cái x + 1 đi xóa và nghiệm của nó là mấy các em ơi nghiệm là mấy nghiệm là -1 chưa nghiệm -1 đúng không Rồi sau đó mình làm gì Các em ơi mình thay -1 vào phần còn lại đúng không Mình sẽ nhập cái phần này vào máy tính không Đây nhập cái cục này vào máy tính giống y được chưa hiểu không xong mình ấn nú cal x = -1 thay chính cái nghiệm này hiểu không khi nó bị gạch đi nó để
+
+[85:58] lại cái nghiệm của nó hiểu không Ok rồi kết quả CN tr-1 th bằng mấy - 1/12 đấy đúng không Ok rồi bằng
+
+[86:11] bao nhiêu đây - 5/3 len của x - 2 đúng không cộng 7/4 len của bao nhì đây x - 3
+
+[86:21] đúng không trừ đi bao nhiêu đây 1 PH 12 ln của x + 1 cộng c cá lớ mình đã hiểu
+
+[86:30] chưa đấy tương tự các bài khác cũng thế thôi nào Các em nhìn này câu b này nguyên hàm của 4 - x chia cho x + 2 nhân 2x + 1 đúng không Thì cách làm như sau đầu tiên chắc chắn câu b thầy sẽ Tách thành hai cái nguyên hàm là gì đây một cái mẫu là x - 2 một cái mẫu là gì đây
+
+[86:48] 2x + 1 DX có hiểu không bây thầ cần tìm hai cái hệ số ở trên đầu này đúng không Thì bây giờ phương pháp thôi Muốn tìm cái gì thì mình che cái đó đi ok x tr-2 che đi Ok
+
+[87:04] để lại thằng nghiệm của nó là thằng mấy để lại nghiệm là mấy 2 Ok nhờ phần còn lại thay vào đi nào Thay vào cho thầy đi thật ra thầy có thể nhẩm được luôn đúng không các em bài này nhẩm được luôn không có hai th đây đúng không 4 - 2 là
+
+[87:20] 2 phần này thay 2 vào đây là 2 nh là 4 c 1 là 5 2/5 có đúng không Mình thể nhẩm được luôn đúng không Nhưng phải là cái nào cũng nhẩm ví dụ người ta cho phân số thì các em thay vào nhẩm khá là khó hiểu không Thế mình bấm máy tính nhá Ok thầy muốn tìm hệ số của 2x + 1
+
+[87:37] đúng không thầy xóa 2x + 1 đi ok chưa để lại nghiệm là mấy â 1/2 và nhiệm vụ của thầy là phải thay vào phần còn lại các em hiểu không nhở thay dùng cal thôi máy tính đâu bật lên nhập này phần còn lại cho thầy là 4 - x 4 tr-x này chia
+
+[87:57] cho x + 2 x - 2 x - 2 c này x bằ - 1/2 chưa là
+
+[88:05] mấy bằng - 9/5 đúng không ng là máy tính sẽ giúp mình tính toán những cái phức tạp hơn đúng không -9 ph5 - 9/5 Vậy cái lớp chúng ta kết quả chưa Rồi v bằng bao nhiêu đây bằng 2/5
+
+[88:21] ln của x - 2 cộng này - 9/5 là - 9/5
+
+[88:26] được chưa Đúng không nhân len của gì nhở 2x + 1 cộng c đúng không này đúng hay sai vì mình thiếu gì nhở Đúng rồi mình hệ số trước x nữa đúng không hàm hợp nhớ mình chia cho hệ số trướ x là chia cho 2 ok chưa thế Đúng rồi Thế thôi Các em dễ không câu c này câu C là
+
+[88:48] nguyên hàm của x + 3 đúng không nguyên hàm của x + 3 chia mấy đây 2x bình cộ 5x 2x bình trừ đi 5x + 2 DX rồi Các em ơi
+
+[89:00] đầu tiên các em này mẫu số của thầy đã được viết Thới dạng là các biểu thức nhân với nhau chưa Bây giờ các em phải biến đổi đầu tiên các em phải nhập máy tính cho thầy 2x B - 5x + 2 bằng gì
+
+[89:12] đầu tiên mình sẽ nhập phương trình đúng không nhập hệ số thầy Lào bao nhiêu đây 2 - 5 và 2 được mấy có nghệa là mấy 2 và
+
+[89:22] bao nhiêu 1/2 đúng không thì các em ơi các em nhớ công thức cho thầy là gì đây ax b c+ bx c bằng gì nhở a nhân x -
+
+[89:32] X1 x - X2 các nhớ công thức này không vậy Cái 2x bình trừ 5x + 2 thầy biến đổi thành gì bằng 2 phải để hệ số A ở ngoài được chưa 2 không Nhân X nghiệm là mấy x
+
+[89:48] - 2 x - 1/2 cái mình có hiểu không Tại
+
+[89:53] vì nhiều bạn nhá nhiều bạn rất là hay các em bỏ mất số 2 thầy các em để ý là nghiệm 2 cả 1/2 các em x - 2 x - 1/2 là sai Có hiểu không nhở khi mình nhân tung lại nó phải ra đúng cái này Vậy thì thằng này được viết lại thằng gì đây 2 thì nhân vào trong đây được không Nó bằc gì x - 2 nhân mấy 2x - 1 cái Lớp
+
+[90:16] mình có hiểu không nghĩa là cái 2x bình này - 5x + 2 nó phải bằng x - 2 nh 2x - 1 cácem hiểu không nhở nghiệm của mình là 1/2 mà X tr 1/2 mà mình phải nhân 2 trong đây để thành như này chứ dúng không vậy thì bài này bằng bao nhiêu đây bằng là nguyên hàm của x + 3 chia
+
+[90:36] mấy x - 2 nhân 2x - 1
+
+[90:42] DX cả lớ mình hiểu chỗ này chưa và bằng gì Các em ơi bằng gì đây bằng gì đây Thế Tách thành hai cái ng hàm một cái là gì đây X - 2 một cái gì đây 2x - 1 2x - 1
+
+[90:56] chưa DX rồi bây giờ nhá kể lớp mình tìm hệ số cho thầy nào muốn tìm hệ số của x - 2 đúng không Vậy các em che x trừ - 2 đi rồi thay hai vào phần còn lại được chưa Đúng không phải nghiệm này là nghiệm 2 này là 1/2 không đúng Vậy các em che đi rồi thay vào phần còn lại đi nhớ nhá chỉ nhớ là che cái gì phải thay nghiệm của nó nào thay cho thầy đi bao nhiêu đây nào Nhầm thầy đi thay 2 vào đồ mấy nào nhập và đi x - 2
+
+[91:28] đúng không nào Các em che gạch này đi nhá Đúng không thay vào phần còn lại là mấy x + 3 chia cho 2x - 1 cal nào x bằng
+
+[91:38] 2 đúng không kết quả bao nhiêu đây 5/3 chưa có hiểu chưa tương tự
+
+[91:47] này bây gi Muốn tìm hệ số của 2x - 1 đúng không thì các em che cái 2x - 1 đi nhưng khi mình che nó đi nhá che nó đi đúng không thì mình phải thay vào phần còn lại thay vào phần còn lại phần này hiểu không thay nghiệm là 1/2 của nó nhá x + 3 tr x - 2 că x = 1/2 Thay vào được
+
+[92:04] bao nhiêu đây - 7/3 hiểu không kết quả bao nhiêu đây 5/3 len tuyệt đối của x - 2 trừ đi
+
+[92:17] 7/3 nhân len của gì nhở 2x - 1 chia cho mấy nữa chia cho 2 rồi cộng c lớ mình hiểu chưa đấy nhá các em chữa ở Thầy điem thê và nhá Nhìn câu D này câu D là một câu mà sai kinh điển này câu rất là dễ sai tại sao nhiều bạn sẽ làm như này là bằng x bình cộng 1 nguyên hàm X bình + 1 này chia cho x - 1 này x
+
+[92:42] - 2 đúng không Các này biến đổi ra x - 1 x - 2 đúng không ĐX xong em tách luôn đúng không x - 1 x - 2 đúng không biến
+
+[92:52] đổi này đúng không là sai tại sao sai tại vì các em quên mất cái quy luật của chúng ta rồi ru của chúng ta gì nhở luật chơi chúng là gì bậc tử C bậc mẫu đi nào bằng nhau thì
+
+[93:06] các em phải làm gì trước chia Đúng rồi Các em quên mất luật rồi ok chia đi x b + 1 nào x bình + 1 đúng không chia cho x bình Ừ 3x + 2 chia nào X bình chia
+
+[93:23] x bình là mấy 1 nhân lại là x bình trừ 3x + 2 các em trừ đi là mấy x bình trừ x bình là hết không âm anh thành dương là 3x 1 - chia tiếp bằng mấy có chia được nữa không chia nữa thì bây giờ mình mới viết lại có hiểu không nhở đấy bằng gì Các em ơi bằng gì đây Đúng rồi nó thẽ
+
+[93:46] chia ra đúng không th còn 1 nữa Phả viết lại như sau B như đây sẽ bằng là nguyên hàm của mấy 1 không cộng bao nhiêu 3x - 1 chia cho x bình trừ 3x + 2 đúng không
+
+[94:01] viết luôn là x - 1 nhân x -
+
+[94:07] 2 hiểu chỗ này chưa đúng không đấy được biến đổi luôn mà phải chia đã rồi sẽ bằng gì đây hàm của 1 này cộng Bây giờ mình mới tách này x - 1 x - 2 DX
+
+[94:21] các em ơi thực hiện nào che và thay nghiệm nào Các em ơi che và thay nghiệm nào muốn tìm hệ số của x - 1 đúng không thầy che cái x -1 đi và phải thay bao nhiêu nghiệm vào phần còn lại các em ơi thay số mấy che cái gì phải thay nghiệm đó nhá che x - 1 phải thay 1 đúng không th chy 1 và phần lại là mấy thay 1 đi thầy nhẩm được 3 x 1 là 3 - 1 là 2 này
+
+[94:47] 2 chia -1 là thành -2 đúng không đ là thay 1 và phần còn lại hiểu không thay 1 phần còn lại tiếp tục này muốn tìm hệ số trước x - 2 không muốn tìm cái gì phải che cái đó được chưa muốn tìm cái gì phải che cái đó đi Che và thay nghiệm của mình là mấy 2 em thay 1 làm sao được
+
+[95:06] thay 1 vào đây thì mẫu 1 - bằng 0 mẫu bị vô lý à phải thay nghiệm cái qua lại chứ đúng không thay 2 và được mấy 3 x 2 là 6 - 1 là 5 đúng không 5
+
+[95:18] chia 1 là 5 Lâm hiểu không vậy quả sẽ bằng là Nguyên ha bằng 1 là gì x cộng trừ đi 2 len tuyệt đối của x - 1 cộng 5 len trệt đối của x - 2 cộng c rồi lên đ cho an có
+
+[95:35] hiểu chưa Rồi đớ nhớ luật của chúng ta là gì đây khi bậc tử mà bằng bậc mẫu thì chúng ta phải làm gì trước phải chia được chưa đừng quên cái luật đó nhá Tại vì nếu mà các em quên thì các em có thể bị sai được chưa Rồi đi Vậy thì chúng ta
+
+[95:52] đã xong chiều Tứ ba đúng không là chiều từ ba là gì đây mẫu có nhiều nghiệm đơn nhưng mà thường thì chúng ta chỉ là hai nghiệm đơn thôi Ít khi hỏi ba lắm nhá Đấy thì mình đã xong ba dạng đầu tiên đúng không Mình đến cho thầy một dạng cuối cùng dạng đặc biệt dạng này cực kỳ mạnh nhá rất là mạnh đấy nhá này rất là mạnh VIP cũng quan trọng Đấy nào mẫu đạo
+
+[96:17] hàm bằng k lần tử số được chưa Mẫu đạo hàm bằng k lần tử số nhìn cho thầy cái dạng này cực kỳ hay gặp mẫu đạo hàm bằng k lần tử số nhá thì nó sẽ bằng gì Chú ý
+
+[96:28] nào chú ý rồi Thầy hỏi các em này cái chươ hợp 4 này là mẫu đạo hàm hàng K lần tử đúng không Thì bây giờ thầy hỏi các em lớp 11 mình học len u đ bằng gì len u đ
+
+[96:43] bằng gì u' tr u có đúng không C nhớ len u Đạo Hà bằng u' tr u không Ví dụ như ln của 2x + 1 Đạo Hà bằng gì ch đối là như không thì Đạ án vẫn thế
+
+[97:04] nhá Đạ len của 2+ 1 đ bằng gì u' là mấy 2 chia cho 2x + 1 có đúng không ln của x
+
+[97:14] bình đ x bình cộ 3 đ hàm bằng gì đạo hàm là 2x chia bao nhiêu x bình cộ 3 có đúng không À vậy Các em ơi bây giờ ngược lại thôi mình học nguyên hàm mà các em nhìn này Vậy ngược lại này kẻ len của x bình + 3 đạo hàm bằng 2x
+
+[97:33] chia cho x bình cộng 3 không Vậy ngược lại nguyên hàm của 2x trên x + 3 bằng gì ln của x bình + 3 có hiểu không nhở đây phải là u' tr u các em nhớ thầy công
+
+[97:47] thức nhá ln u' tr u đấy ln u sẽ bằng u' tr u Vậy ngược lại nhá nguyên hàm của u' trên u được chưa Tại vì có phải là đây mẫu là đạo hàm không đấy ok thì sẽ bằng là ln trều đối của u cộng c các em nhớ thầy Công thức này nhá Công thức này Đấy Công thức này nhá cực kỳ mạnh
+
+[98:09] luôn nguyên hàm của u' tr u nó chính bằng len truyệt đối của u được chưa đy u' tr u đây phải là mẫu không đạo hàm bằng tử không Đây mẫu phải tử là u' không phải tử là mẫu đạo hàm không thì l mình thử kiểm tra cho thầy xem cái mẫu nhớ nhá phải check nhá
+
+[98:29] check xem hết dai rồi check nhá che này check xem mẫu đạo hàm mẫu đạo
+
+[98:38] hàm sẽ có bằng tử hay không được chưa hoặc bằng k lần tử cũng được thì mình sẽ thêm mớt nhá mẫu đạo hàm bằng k lần tử không đấy mẫu đạo hàm bằng tử hay là nhân với cả hàng số nào không nhá phải check xem mẫu đạo hàm của bằng tử hay là mẫu Đạ hàm bằng k lần tử thì đây chính là dạng này em hiểu không nhỉ nhá Đấy các em phải check cho thầy xem được không Thì bài dễ cực luôn Ví dụ nhá nguyên hàm của Ờ thầy là thầ các em có
+
+[99:06] thể tự bị đề bài nhá ví dụ đề bài thầy là x mũ 3 cộng 2 x đi thì tử của thầy thẽ bao nhiêu tử bao nhiêu mẫu là x mũ 3 c 2x thì đạo hàm từ là mấy u' tr u mà ừ 3 x
+
+[99:23] bình cộng mấy 2 thì các em biết kết quả bằng bao nhiêu chưa u' tr u bằng len u chưa len mẫu không bằng bao nhiêu len của x mũ 3 cộ 2x C có hiểu không nhở
+
+[99:37] vậy kết quả chí là len mẫu nhá Nhớ cho thầy Nếu mẫu đạo hàm bằng tử thì kết quả sẽ bằng len mẫu được chưa Nhớ nhá chốt lại này nếu mẫu Đạ Hà bằng tử thì kết quả đây kết quả bằng len mẫu kết quả bằng len mẫu đúng không phải len mẫu
+
+[99:52] không mẫu là u đúng không Chuẩn còn gì Mẫu phải là mẹ không là u chuẩn chưa quá Đúng còn gì Mẫu phải là mẹ không của mình phải là u của mình không Thầy U cha mẹ là thầy u là gì đây nhớ nhá u' tr u thế kết quả sẽ bằng len u nhá len truyệt đối cu là len mẫu nhá Ok chưa đấy nhớ cho thầy dạng này các em nhìn cho thầy như sau này nào Các em nhìn câu a này nhìn câu a nhá mẫu đạo hàm bằng k lần tử nhá Tại vì K lần tử để thầy mở rộng hơn hiểu không Thế mẫu Đo hàm bằng tử len mẫu thì dễ quá rồi Các em nhìn này x đào bằng mấy x đ bằng 1 chuẩn chưa thì thẽ bằng len mẫu là len của mấy x + c th vì x đào
+
+[100:29] bằng 1 chưa Câ này câu b check nào x bình cộng 1 đ Hà bằng gì 2x ô mẫu đ hàng bằng tử chưa kết quả bằng len
+
+[100:44] mẫu đúng không mẫu đo bằng thử kết quả bằng len mẫu luôn nhớ chưa Mẫu đạo hàm bằng tử kết quả bằng len mẫu đây đúng không mẫu x đạo h bằng 1 chưa kết quả lên mẫu chưa x bình c 1 à bằng 2x chưa kết quả lên mẫu chưa Tiếp tục này các em ơi câu D cũng thế x mũ 7 + x
+
+[101:03] x m 7 + x đạo hàm bằng gì bao nhiêu
+
+[101:08] 7x mũ 6 cộng mấy 1 mẫu Đo hàm bằng tử chưa kết quả bằng len mẫu ln của mẫu x mũ 7 cộ
+
+[101:20] x l có hiểu không nhở mẫu Đạo Hàm Tử kết Quảng lên mẫu nhớ thầy nhá mẫu Đạ Hàm Tử kết quả lên mẫu Nhưng mà như thế thì dễ quá vậy chúng ta câu c này nó sẽ hơi phải suy nghĩ hơn một xíu nào Các em nhìn Thầy đi câu c này các em đừng nghĩ đến việc các em quả bấm máy tính thì nghiệm này cũng đẹp đấy nhưng mà nó sẽ không nhanh bằng cách này đâu Cá này sẽ nhanh hơn rất là nhiều nhìn nhá Đây là những cái trường hợp đặc biệt Hiểu không đặc biệt rất là hiếm hiểu
+
+[101:47] không Seo đầm đúng hiể Tại vì nếu mà nó rơi vào trường hợp này các em ra kết quả luôn được chưa nhá các em ơi các em đào hàm cho thầy câu C đi 3x bình cộng 4x trừ đi 7 đo hàm bằng gì 6X + 4 Ồ vậy thì tử mình phải nhân
+
+[102:04] mấy nhân 2 lên không Ok vậy câu c thì nguyên hàm của 3x cộng 2 chia cho 3x bình cộng 4x Ừ 7 không thì phải nhân 2 lên à nhưng mà cuộc đời làm gì cho ai không Mình phải Ờ có cái này phải mất cái kia đúng không được Cái này phải mất cái kia đúng không Vậy chúng ta nhân thêm 2 chúng ta phải làm sao đúng rồi phải chia cho 2 và nhân
+
+[102:30] 2 lên 6X + 4 có hiểu không Vy mình nhân 2 lên Nhưng mình phải chia cho 2 thì nó mới hoa chứ đúng không Chứ mình tự nhiên mình lấy không à Mình phải trả người ta chứ đúng không Mình lấy xong mình phải trả chứ đúng không Đấy 3x bình cộng
+
+[102:45] 4x trừ đi 7 đúng không đấy đúng không Nhớ nhá mình nhân thêm 2 thì mình phải chia cho 2 không thì kết quả bao nhiêu các em ơi 1/2 của gì Đúng là mẫu đ hàm bằng tử chưa th mẫu
+
+[103:00] đ hàm bằng tử chưa vậ C bằng len gì mẫu chưa Đúng rồi đấy ngĩa là sẽ thêm một chút hiểu không đấy khác biệt một xíu đấy C nó về cơ bản dễ như thế thôi nhớ nhá mẫu đạo hàm bằng tử kết quả bằng gì len mẫu được chưa Đấy
+
+[103:19] Ok Thế thôi đ đấy nhớ nhá nhân thêm mình phải bớt đi nhá Ok Đấy câu e các em ơi bằng gì nguyên hàm của tan x đúng không nguyên hàm của tan x bằng gì đây phải phân số không Các em ơi ng đ một tan nó
+
+[103:36] phải phân số không nhìn chả giống phân số nhở nhưng mà th ra phân số mà tan bằng gì nhở bắt được của tan sin nằm trên cos đúng không sin nằm trên cos Bắt được quả tan này phi nằm trên cos phân số chưa phân số rồi Ok Nào bây Gi Lên
+
+[103:53] check cho thầy cos đạo hàm bằng gì Mẫu đạo hàm bằng gì phải cos đạo hàm bằng trừ ph đúng không Nhưng tử của thầy chỉ là gì thôi ph thầ phải làm gì thêm dấu trừ Đúng rồi có hiểu chỗ này không nhân dấu trừ
+
+[104:11] để cho cos Đạ hàm bằng trừ sin chưa có hiểu không bằngo nhiêu đây trừ của Len mẫu th nà bằng tử kết quả bằng len mẫu chưa rồi trừ len cosx hiểu không mẫu là cos đạo hàm bằng trừ sin chưa Mẫu đạo hàm bằng tử kết quả bằng len mẫu chưa rồi Thế thôi vậy Mình đã biết nguyên hàm của tan bằng gì chưa Đấy nó không có trong bảng nguyên hàm nhưng các em nhớ đây ch công thức của nguyên hàm của tan đây này rồi câu f nguyên hàm của cotan bằng
+
+[104:47] gì Bắt được qu tan sin nằm trên cos cotan cãi lại cos nằm trên sin Đúng
+
+[104:57] không Đúng cos nằm trên sin là cotan đúng không À em ơi mình kiểm tra nhé check nào mẫu Đạ hàm bằng gì tin Đạ Hà bằng gì tin đ bằng cos Chuẩn chưa rồi Vậy kết quả bng gì luôn len mẫu Đúng rồi lens
+
+[105:16] Sin có hiểu chưa nhở đấy đây một dạng rất đặc biệt rất đặc biệt luôn câu g này câu g C cả lớp mình tập trung thầy nào hàm phân thức không phân thức chưa cácem Nhìn này 2x - 3 nghe Nếu mà không phải
+
+[105:34] dạng ba trên đầu được chưa Nếu ba dạng trên đầu các em không làm được các em thử kiểm tra xem phải dạng thừ 4 không Các em chỉ kiểm tra xem mẫu đợ hàm bằng bao nhiêu lần tử có bằng tử không Nếu Bằng Tử 0 thì kết quả bằng len mẫu luôn đúng không Nhưng thường nó thẽ bằng k lần tử để khó hơn một chút nào Các em đạo hàm đi 2 sin x trừ 3 Đo hàm bằng gì
+
+[105:53] 2x trừ 3 là bằng gì nhỉ sin nào bằng gì cos đúng không Vy bằng 2 cosx Không đâu đây đạo hàm mà -3 là bằng 0 có hiểu cái đạo hàm ngược lại mình đang tính nguyên hàm thì mới thành 3x hiểu không đạo hàm thì bằng 0 không Ok nhá Đây là mình đang tính đạo hàm nhá đạo Ok vậy Các em ơi tử của mình
+
+[106:18] đang là chỉ gì thôi cos mà khi mẫu đạo hàm bằng mấy cos 2 vậy mình phải làm gì để xuất hiện 2 cos nhân thêm 2 đúng không nào B bao nhiêu đây sẽ bằng là nguyên hàm của gì đây các em phải
+
+[106:34] nhân thêm 2 nhưng phải chia cho 2 đúng không 1/2 2 cos sin x - 3 có đúng này không đúng chưa vậy bằng bao nhiêu các em ơi bằng 1/2 lên mẫu không Tại vì 2 sinx - 3 đạo
+
+[106:53] hàm bằng 2 cosx chưa Mẫu đạo hàm bằng tử chưa kết quả bằng len mẫu không len mẫu 2 sinx trừ đi 3 cộng c rồi cá Lớp mình
+
+[107:04] có hiểu chưa đấy nhá mình còn nhớ kiểm tra check lại xem mẫu có đạo hàm bằng tử hoặc K lần tử cũng được nhá K lần tử thì mình làm gì nhở nhân thêm bớt hiểu không để cho giống đấy nhân k chia
+
+[107:17] thôi qu vị đây mình phải nhân 2 chia này đúng không em chưa đi rồi ok I

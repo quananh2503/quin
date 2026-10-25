@@ -5,7 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 	"time"
@@ -34,30 +37,25 @@ type Client struct {
 }
 
 func New(ctx context.Context, key string, pdf PDFProcessor) (*Client, error) {
+	keys := LoadAvailableAPIKeys()
 	key = strings.TrimSpace(key)
-	if key == "" {
+	if key != "" {
+		found := false
+		for _, k := range keys {
+			if k == key {
+				found = true
+				break
+			}
+		}
+		if !found {
+			keys = append([]string{key}, keys...)
+		}
+	}
+	if len(keys) == 0 {
 		return nil, errors.New("chưa cấu hình Gemini API key")
 	}
 
-	// Khởi tạo client theo chuẩn Google Gen AI SDK
-	client, err := genai.NewClient(ctx, &genai.ClientConfig{
-		APIKey:  key,
-		Backend: genai.BackendGeminiAPI,
-	})
-	if err != nil {
-		return nil, fmt.Errorf("khởi tạo Google GenAI SDK thất bại: %w", err)
-	}
-
-	pool, err := NewKeyPool(ctx, []string{key})
-	if err != nil {
-		return nil, fmt.Errorf("khởi tạo KeyPool thất bại: %w", err)
-	}
-
-	return &Client{
-		client: client,
-		pool:   pool,
-		pdf:    pdf,
-	}, nil
+	return NewWithPool(ctx, keys, pdf)
 }
 
 func NewWithPool(ctx context.Context, apiKeys []string, pdf PDFProcessor) (*Client, error) {
@@ -408,10 +406,64 @@ func (c *Client) Generate(ctx context.Context, title string, materials []lesson.
 		return nil, errors.New("danh sách study material không được để trống")
 	}
 
+	// 1. Chuyển đổi toàn bộ StudyMaterial (PDF, YouTube, Mistake) thành các DocumentInput riêng biệt nén N-Up 4
+	var docs []DocumentInput
+	pdfIdx := 1
+	ytIdx := 1
+
+	for _, m := range materials {
+		switch source := m.(type) {
+		case lesson.PDFMaterial:
+			pdfPath := source.FilePath()
+			var data []byte
+			var readErr error
+			if len(source.Pages()) > 0 && c.pdf != nil {
+				data, readErr = c.pdf.ExtractPages(ctx, pdfPath, source.Pages())
+			} else {
+				data, readErr = os.ReadFile(pdfPath)
+			}
+			if readErr != nil {
+				return nil, fmt.Errorf("không thể đọc file PDF %s: %w", pdfPath, readErr)
+			}
+			nupBytes, err := CompressPDFToNUp4(data)
+			if err != nil {
+				nupBytes = data
+			}
+			docs = append(docs, DocumentInput{
+				DocID:    fmt.Sprintf("DOC_PDF_%d", pdfIdx),
+				FileName: filepath.Base(pdfPath),
+				RoleHint: fmt.Sprintf("Tài liệu PDF tham khảo [%d]: %s", pdfIdx, filepath.Base(pdfPath)),
+				RawPDF:   nupBytes,
+			})
+			pdfIdx++
+
+		case lesson.YouTubeMaterial:
+			docID := fmt.Sprintf("DOC_YOUTUBE_%d", ytIdx)
+			ytDoc, err := NewDocumentInputFromYouTube(ctx, docID, source.SourceURL(), fmt.Sprintf("Video bài giảng YouTube [%d]: Trích xuất mẹo giải nhanh, casio và phương pháp tư duy", ytIdx))
+			if err != nil {
+				return nil, fmt.Errorf("xử lý tài liệu YouTube %s thất bại: %w", source.SourceURL(), err)
+			}
+			docs = append(docs, ytDoc)
+			ytIdx++
+
+		case lesson.MistakeMaterial:
+			docs = append(docs, DocumentInput{
+				DocID:       "DOC_MISTAKE",
+				FileName:    "mistake_context.txt",
+				RoleHint:    "Mục tiêu khắc phục lỗi sai của học sinh",
+				TextContent: fmt.Sprintf("Chủ đề cần khắc phục: %s | Nguyên nhân: %s", source.Topic(), source.Reason()),
+			})
+		}
+	}
+
+	if len(docs) > 0 {
+		return c.generateFromPipelineDocs(ctx, title, docs, materials, model, prompt)
+	}
+
 	parts := make([]*genai.Part, 0)
 	var materialSummaries []string
 
-	// 1. Duyệt qua toàn bộ danh sách materials (xử lý đa file PDF và đa video YouTube)
+	// 2. Duyệt qua toàn bộ danh sách materials (xử lý đa file PDF và đa video YouTube cho flow cũ)
 	for idx, mat := range materials {
 		switch source := mat.(type) {
 		case lesson.YouTubeMaterial:
@@ -487,7 +539,7 @@ func (c *Client) Generate(ctx context.Context, title string, materials []lesson.
 				blocks = append(blocks, block)
 			}
 
-			topic, err := lesson.NewTopic(toDomainContent(topGen.Title), blocks)
+			topic, err := lesson.NewTopic(toDomainContent(topGen.Title), blocks, nil)
 			if err != nil {
 				return nil, err
 			}
@@ -579,8 +631,102 @@ func (c *Client) Generate(ctx context.Context, title string, materials []lesson.
 	}
 	lessonOverview := toDomainContent(generated.Overview)
 
+	// Gán danh sách bài tập vào topic đầu tiên của section đầu tiên nếu có
+	if len(exercises) > 0 && len(sections) > 0 && len(sections[0].Topics()) > 0 {
+		firstSec := sections[0]
+		firstTop := firstSec.Topics()[0]
+		newTop, errTop := lesson.NewTopic(firstTop.Title(), firstTop.Blocks(), exercises)
+		if errTop == nil {
+			updatedTopics := append([]lesson.Topic{newTop}, firstSec.Topics()[1:]...)
+			updatedSec, errSec := lesson.NewSection(firstSec.Title(), updatedTopics)
+			if errSec == nil {
+				sections[0] = updatedSec
+			}
+		}
+	}
+
 	// Khởi tạo Lesson Domain Entity với mảng materials
-	return lesson.NewLesson(lessonTitle, lessonOverview, sections, exercises, materials)
+	return lesson.NewLesson(lessonTitle, lessonOverview, sections, materials)
+}
+
+func (c *Client) generateFromPipelineDocs(
+	ctx context.Context,
+	title string,
+	docs []DocumentInput,
+	materials []lesson.StudyMaterial,
+	model, prompt string,
+) (*lesson.Lesson, error) {
+	keys := LoadAvailableAPIKeys()
+	if len(keys) == 0 {
+		return nil, errors.New("không tìm thấy Gemini API Key nào khả dụng")
+	}
+
+	pipelineModel := ModelGemma4_31B
+	if strings.Contains(strings.ToLower(model), "gemini") {
+		pipelineModel = model
+	}
+
+	pipeline, err := NewStandardLessonPipeline(ctx, keys, pipelineModel)
+	if err != nil {
+		return nil, fmt.Errorf("khởi tạo StandardLessonPipeline thất bại: %w", err)
+	}
+
+	tmpDir, err := os.MkdirTemp("", "quin_pipeline_*")
+	if err != nil {
+		return nil, fmt.Errorf("tạo thư mục tạm thất bại: %w", err)
+	}
+	defer func() {
+		if rmErr := os.RemoveAll(tmpDir); rmErr != nil {
+			log.Printf("dọn dẹp thư mục tạm %s thất bại: %v", tmpDir, rmErr)
+		}
+	}()
+
+	instruction := prompt
+	if strings.TrimSpace(instruction) == "" {
+		instruction = "Biên soạn bài giảng toán chuyên sâu, phân dạng chi tiết bám sát tài liệu nguồn."
+	}
+
+	req := PipelineRequest{
+		Documents:       docs,
+		UserInstruction: instruction,
+		OutputDir:       tmpDir,
+	}
+
+	output, err := pipeline.Execute(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf("pipeline biên soạn bài giảng thất bại: %w", err)
+	}
+
+	mapper := NewDefaultPipelineLessonMapper()
+	lsn, err := mapper.ToDomainLesson(output.Plan, output.Workers, materials)
+	if err != nil {
+		return nil, fmt.Errorf("chuyển đổi kết quả sang Lesson thất bại: %w", err)
+	}
+
+	return lsn, nil
+}
+
+func (c *Client) generateFromPDFPipeline(
+	ctx context.Context,
+	title string,
+	pdfPaths []string,
+	materials []lesson.StudyMaterial,
+	model, prompt string,
+) (*lesson.Lesson, error) {
+	var docs []DocumentInput
+	for idx, p := range pdfPaths {
+		data, readErr := os.ReadFile(p)
+		if readErr != nil {
+			return nil, fmt.Errorf("không thể đọc file PDF %q: %w", p, readErr)
+		}
+		docs = append(docs, DocumentInput{
+			DocID:    fmt.Sprintf("DOC_%d", idx+1),
+			FileName: filepath.Base(p),
+			RoleHint: fmt.Sprintf("Tài liệu tham khảo [%d]", idx+1),
+			RawPDF:   data,
+		})
+	}
+	return c.generateFromPipelineDocs(ctx, title, docs, materials, model, prompt)
 }
 
 // ============================================================================

@@ -90,13 +90,29 @@ export const GradingView: React.FC<GradingViewProps> = ({ onOpenGradingDetail, o
                   </td>
                   <td className="py-3.5 px-5 text-right space-x-2">
                     {a.student_page_web_url && (
-                      <button onClick={() => api.openExternalURL(a.student_page_web_url)} className="text-xs font-semibold text-slate-600 hover:text-slate-900">
+                      <button
+                        type="button"
+                        onClick={() => api.openExternalURL(a.student_page_web_url)}
+                        className="px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded border border-slate-200 transition-colors cursor-pointer"
+                        title="Mở bài làm học sinh trên OneNote"
+                      >
                         Mở HS
                       </button>
                     )}
+                    {a.teacher_page_web_url && (
+                      <button
+                        type="button"
+                        onClick={() => api.openExternalURL(a.teacher_page_web_url)}
+                        className="px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded border border-slate-200 transition-colors cursor-pointer"
+                        title="Mở trang giáo viên trên OneNote"
+                      >
+                        Mở GV
+                      </button>
+                    )}
                     <button
+                      type="button"
                       onClick={() => onOpenGradingDetail(a.assignment_id)}
-                      className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold"
+                      className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold transition-colors cursor-pointer"
                     >
                       Chấm bài
                     </button>
