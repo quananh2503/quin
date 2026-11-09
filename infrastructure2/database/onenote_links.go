@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"net/url"
 	"strings"
 	"time"
 	"uuid"
@@ -87,6 +88,7 @@ func (r OneNoteLinks) GetPage(ctx context.Context, assignmentID uuid.UUID, audie
 		return PageBinding{}, false, err
 	}
 	b.AssignmentID, b.Audience = assignmentID, audience
+	b.PageURL = NormalizeOneNoteWebURL(b.PageURL)
 	return b, true, nil
 }
 
@@ -94,7 +96,8 @@ func (r OneNoteLinks) SavePage(ctx context.Context, b PageBinding) error {
 	if b.AssignmentID == uuid.Nil() || b.Audience == "" || b.AccountID == "" || b.PageID == "" || b.NotebookID == "" || b.SectionID == "" {
 		return errors.New("page binding thiếu thông tin")
 	}
-	_, err := r.Store.DB.ExecContext(ctx, `INSERT INTO assignment_pages(assignment_id,audience,account_id,page_id,page_url,notebook_id,section_id) VALUES(?,?,?,?,?,?,?) ON CONFLICT(assignment_id,audience) DO UPDATE SET page_id=excluded.page_id,page_url=excluded.page_url,notebook_id=excluded.notebook_id,section_id=excluded.section_id`, b.AssignmentID.String(), b.Audience, b.AccountID, b.PageID, b.PageURL, b.NotebookID, b.SectionID)
+	pageURL := NormalizeOneNoteWebURL(b.PageURL)
+	_, err := r.Store.DB.ExecContext(ctx, `INSERT INTO assignment_pages(assignment_id,audience,account_id,page_id,page_url,notebook_id,section_id) VALUES(?,?,?,?,?,?,?) ON CONFLICT(assignment_id,audience) DO UPDATE SET page_id=excluded.page_id,page_url=excluded.page_url,notebook_id=excluded.notebook_id,section_id=excluded.section_id`, b.AssignmentID.String(), b.Audience, b.AccountID, b.PageID, pageURL, b.NotebookID, b.SectionID)
 	return err
 }
 
@@ -148,4 +151,73 @@ func (r OneNoteLinks) SaveLastChapter(ctx context.Context, studentID uuid.UUID, 
 		return fmt.Errorf("lưu tên chương cuối cùng thất bại: %w", err)
 	}
 	return nil
+}
+
+// NormalizeOneNoteWebURL chuẩn hóa các URL OneDrive OneNote trả về từ Microsoft Graph (dạng redir.aspx hoặc /edit)
+// thành URL Doc.aspx hiện đại của Office Online / SharePoint.
+// Định dạng đích:
+// https://onedrive.live.com/personal/{cid}/_layouts/15/Doc.aspx?sourcedoc={guid}&action=edit&wd={wd}&wdorigin=NavigationUrl
+func NormalizeOneNoteWebURL(rawURL string) string {
+	trimmed := strings.TrimSpace(rawURL)
+	if trimmed == "" {
+		return ""
+	}
+
+	u, err := url.Parse(trimmed)
+	if err != nil {
+		return rawURL
+	}
+
+	// Chỉ xử lý các domain onedrive.live.com
+	host := strings.ToLower(u.Host)
+	if host != "onedrive.live.com" && host != "www.onedrive.live.com" {
+		return rawURL
+	}
+
+	// Nếu đã là Doc.aspx thì không cần chuẩn hóa
+	pathLower := strings.ToLower(u.Path)
+	if strings.Contains(pathLower, "/doc.aspx") || strings.Contains(pathLower, "/doc2.aspx") {
+		return rawURL
+	}
+
+	q := u.Query()
+	cid := q.Get("cid")
+	resid := q.Get("resid")
+	if resid == "" {
+		resid = q.Get("id")
+	}
+	wd := q.Get("wd")
+
+	if cid == "" || resid == "" {
+		return rawURL
+	}
+
+	// Trích xuất UUID từ resid (ví dụ: "1C22E0B2FF1DBE1B!sfcbc70e0842e4c9e9a1224633fe5f29b")
+	var hexStr string
+	idx := strings.Index(strings.ToLower(resid), "!s")
+	if idx != -1 {
+		hexStr = resid[idx+2:]
+	} else if len(resid) == 32 {
+		hexStr = resid
+	}
+
+	if len(hexStr) != 32 {
+		return rawURL
+	}
+
+	hexStr = strings.ToLower(hexStr)
+	guid := fmt.Sprintf("%s-%s-%s-%s-%s", hexStr[0:8], hexStr[8:12], hexStr[12:16], hexStr[16:20], hexStr[20:32])
+
+	var wdParam string
+	if wd != "" {
+		// Encode và thay thế dấu cộng thành %20 theo chuẩn Microsoft OneNote deep-linking
+		encodedWD := strings.ReplaceAll(url.QueryEscape(wd), "+", "%20")
+		wdParam = "&wd=" + encodedWD
+	}
+
+	return fmt.Sprintf("https://onedrive.live.com/personal/%s/_layouts/15/Doc.aspx?sourcedoc={%s}&action=edit%s&wdorigin=NavigationUrl",
+		strings.ToLower(cid),
+		guid,
+		wdParam,
+	)
 }

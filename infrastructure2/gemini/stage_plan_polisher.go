@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 )
 
 // =============================================================================
@@ -15,18 +16,21 @@ import (
 // với chiến lược dự phòng mô hình phân cấp (Cascading Model Fallback Strategy).
 //
 // Cơ chế vận hành:
-//   - Mô hình chính (PrimaryModel, mặc định: "gemini-3.5-flash"): Ưu tiên chạy đầu tiên
+//   - Mô hình chính (PrimaryModel, mặc định: "gemini-3.8-flash"): Ưu tiên chạy đầu tiên
 //     với khả năng phân tích ranh giới sư phạm hạt mịn, tự động xoay tua qua các API Key
 //     trong KeyPool khi gặp 429/503.
+//   - Giới hạn thời gian (Timeout): Nếu mô hình chính phản hồi lâu hơn 1.5 phút (90s),
+//     hệ thống tự động ngắt và chuyển tiếp sang mô hình Gemma dự phòng.
 //   - Danh sách mô hình dự phòng (FallbackModels, ví dụ: "gemma-4-31b-it", "gemma-4-26b-a4b-it"):
-//     Nếu mô hình chính bị quá tải trên toàn bộ các Key, hệ thống tự động chuyển tiếp
+//     Nếu mô hình chính bị quá tải hoặc quá thời gian chờ, hệ thống tự động chuyển tiếp
 //     yêu cầu sang mô hình dự phòng mà không làm gián đoạn pipeline.
 //   - Graceful Fallback: Nếu toàn bộ chuỗi mô hình đều không thể phục vụ, hệ thống giữ
 //     nguyên kế hoạch gốc ban đầu để đảm bảo an toàn cho bài giảng.
 type DefaultPlanPolisherStage struct {
-	llm            LLMProvider
-	primaryModel   string
-	fallbackModels []string
+	llm             LLMProvider
+	primaryModel    string
+	fallbackModels  []string
+	perModelTimeout time.Duration
 }
 
 var _ PlanPolisherStage = (*DefaultPlanPolisherStage)(nil)
@@ -34,12 +38,21 @@ var _ PlanPolisherStage = (*DefaultPlanPolisherStage)(nil)
 // NewDefaultPlanPolisherStage khởi tạo một PolisherStage với mô hình chính.
 func NewDefaultPlanPolisherStage(llm LLMProvider, primaryModel string) *DefaultPlanPolisherStage {
 	if primaryModel == "" {
-		primaryModel = "gemini-3.5-flash"
+		primaryModel = ModelGeminiFlash
 	}
 	return &DefaultPlanPolisherStage{
-		llm:          llm,
-		primaryModel: primaryModel,
+		llm:             llm,
+		primaryModel:    primaryModel,
+		perModelTimeout: 90 * time.Second, // Mặc định 1.5 phút cho mỗi mô hình
 	}
+}
+
+// WithTimeout cấu hình thời gian chờ tối đa cho mỗi mô hình trước khi tự động fallback
+func (p *DefaultPlanPolisherStage) WithTimeout(timeout time.Duration) *DefaultPlanPolisherStage {
+	if timeout > 0 {
+		p.perModelTimeout = timeout
+	}
+	return p
 }
 
 // WithFallback cấu hình chuỗi mô hình dự phòng theo thứ tự ưu tiên (Fluent API).
@@ -173,9 +186,29 @@ func (p *DefaultPlanPolisherStage) Polish(ctx context.Context, plan *LessonPlan)
 			JSONSchema:      GetRefinedTopicsSchemaBytes(),
 		}
 
-		resp, err := p.llm.GenerateJSON(ctx, req)
+		var callCtx context.Context
+		var cancel context.CancelFunc
+		// Chỉ áp dụng timeout 1.5 phút đối với Primary Model (Gemini Flash).
+		// Các mô hình Fallback (Gemma) chạy với context bình thường không bị ép ngắt 1.5 phút.
+		if attemptIdx == 0 {
+			modelTimeout := p.perModelTimeout
+			if modelTimeout <= 0 {
+				modelTimeout = 90 * time.Second
+			}
+			callCtx, cancel = context.WithTimeout(ctx, modelTimeout)
+		} else {
+			callCtx = ctx
+			cancel = func() {}
+		}
+
+		resp, err := p.llm.GenerateJSON(callCtx, req)
+		cancel()
 		if err != nil {
-			lastErr = err
+			if attemptIdx == 0 && callCtx.Err() == context.DeadlineExceeded {
+				lastErr = fmt.Errorf("mô hình %s phản hồi quá %v (timeout 1.5 phút)", model, p.perModelTimeout)
+			} else {
+				lastErr = err
+			}
 			continue
 		}
 

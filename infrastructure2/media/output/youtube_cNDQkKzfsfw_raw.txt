@@ -1,0 +1,2725 @@
+[00:00] nào đ thầy bài hai đi bài
+[00:02] 2 bài 2 tích phân và ứng dụng tích phân
+[00:07] tích phân và ứng
+[00:14] dụng rồi cácem Ghi bài thầy nào Bài 2
+[00:17] tích phân và ứng dụng của tích phân nhá
+[00:20] Ok tích phân và ứng dụng của tích phân
+[00:23] rồi cái bài tích phân này thì cách làm
+[00:27] nó giống như nguyên hàm thôi nhưng nó sẽ
+[00:29] thêm cận vào lâ nh thầy 1 định nghĩa
+[00:32] tích phân định nghĩa như sau thế nào là
+[00:37] tích phân thì lớp mình chú ý cho thầy
+[00:38] như sau hôm trước là mình học nguyên hàm
+[00:41] này nguyên hàm của FX DX bằng gì Các em
+[00:45] nhở nguyên hàm của FX DX bằng gì nhỉ
+[00:48] nguyên hàm của f sẽ bằng gì nhở FX đúng
+[00:50] không cộng c chưa đấy Vậy thì bài này là
+[00:55] tích phân tích phân thì mình sẽ có thêm
+[00:58] gì nhở Có thêm cận nhá nhìn này tích
+[01:01] phân cận từ A đến B của FX DX sẽ bằng
+[01:05] này cạn nhá sự khác biệt giữa nguyên hàm
+[01:08] và tích phân nhá Đây nguyên hàm này Ok
+[01:11] đây tích phân khác biệt như nào nguyên
+[01:14] hàm nguyên hàm là hàm đúng không Thì Kết
+[01:18] quả nó sẽ là hàm số và các em cộng thêm
+[01:20] C đúng chưa Còn tích phân tích phân thì
+[01:24] kết quả nó sẽ là một một số cụ thể thì
+[01:27] tích phân thì bước một các em sẽ tính
+[01:29] cho thầy nguyên hàm thôi là tính gì đây
+[01:32] tính fx như bình thường nguyên hàm FX
+[01:34] như bình thường Nhưng thay vì cộng c
+[01:38] được chưa thay vì cộng c cả lớp mình sẽ
+[01:40] chèn cận vào cận của mình từ A đến B
+[01:42] đúng không Thì em sẽ gạch một cái này
+[01:45] cận từ A đến B được chưa ạ Đấy nó sẽ
+[01:47] bằng gì đây nó sẽ bằng này các em thay b
+[01:50] vào đây là fb cận trên trừ cận
+[01:54] dưới
+[01:56] đấy Okay chưa Nhá thay cận vào bước M
+[02:00] vẫn Tính nguyên hàm bình thường đấy xong
+[02:02] mình sẽ thay cận vào b vào đây A th đây
+[02:04] được chưa thay cận vào là xong tích phân
+[02:08] nhá Ok vẫn Tính nguyên hàm như bình
+[02:11] thường
+[02:13] rồi và các em chú ý cho thầy như sau này
+[02:16] A là người ta gọi là gì biết không a là
+[02:20] cận dưới b là cận gì cận trên nhá a là
+[02:23] cận dưới này là cận dưới được chưa cận
+[02:26] dưới này cận
+[02:28] dưới b là cận
+[02:34] trên A là cận dưới b sẽ là cận trên được
+[02:38] chưa A là cận dưới b là cận trên được
+[02:41] chưa nhá a là cận dưới b là cận
+[02:48] trên đúng chưa Rồi và các em
+[02:53] ơi mở rộng nhá nào chú ý
+[02:57] này Nốt này có phải là nguyên hàm của f
+[03:01] bằng f không vậy thì có những bài ta sẽ
+[03:03] cho đây là f' nguyên hàm của f'x đúng
+[03:05] không Thì cái gì đạo hàm ta f' hả các em
+[03:08] cái gì đạo hàm ra f' nhỉ là FX chứ Đúng
+[03:12] đúng không phải là nguyên hàm f bằng f
+[03:15] không vì f lớ phải đạo hàm ra f Nhỏ
+[03:17] không vậy đặc biệt nguyên hàm của f' là
+[03:19] gì Cái gì đạo hàm ra f' nó chính là FX
+[03:22] đúng không Vậy nó chính bằng FX này
+[03:23] nguyên hàm đúng không f' nguyên hàm bằng
+[03:25] FX chưa f nguyên hàm bằng f lớ chưa Đấy
+[03:28] đây Cận là từ A đến B thì các em thay
+[03:30] vào được gì nhỉ thay b vào đúng không
+[03:32] cần từ A đến B bằng gì Các em f gì nhở
+[03:36] fb cho
+[03:38] F3 Ok fb chia F3 nhá Đấy nhớ chú ý nếu f
+[03:44] nguyên hàm thành f lớ còn f' thì nguyên
+[03:48] hàm thành f được chưa tích phân là chúng
+[03:50] ta thêm cận thôi cực kỳ
+[03:53] dễ nhá Ok thầ lấy ví dụ như sau các em
+[03:56] ơi ví dụ nhá
+[04:00] nào thầy tính muốn tích phân của x bình
+[04:01] đi các em thích cận từ M đến mấy từ 1
+[04:03] đến 2 nhá bằng DX bằng gì đây em muốn
+[04:07] tính tích phân thì bản thân mình Tính
+[04:08] nguyên hàm nhá và tích phân thì các em
+[04:10] có thể bấm được máy tính tại vì trong
+[04:11] máy tính có chức năng bấm tích phân mà
+[04:13] đúng không đấy nhưng có một số bài các
+[04:15] em lại không bấm được Tại sao Tại vì
+[04:16] người ta sẽ cố tình trồ một máy tính thì
+[04:19] đầu tiên muốn tìm tích phân Bước 1 Tính
+[04:22] nguyên hàm đúng không nguyên hàm của x
+[04:23] bình là gì x mũ 3 trên mấy trên 3 đúng
+[04:27] không Các em chèn cận vào thôi Cận là từ
+[04:29] 1 đến 2 2 vậy các em thay vào được mấy
+[04:31] nhở thay 2 vào đây được mấy 23/2 là à
+[04:35] thay 2 vào đây được mấy 2 3 là 8 8/3 trừ
+[04:39] đi mấy cái phân số cái này để ý cũng
+[04:41] được thay 1 vào đây là mấy 1/3 đúng
+[04:43] không 8 - 1/3
+[04:46] 7/3 có Đúng chưa Đúng không Mình thay 2
+[04:49] vào đây thay 1 vào đây là m tím được
+[04:51] chưa đấy Cái l mình có hiểu không B này
+[04:55] tương tự nguyên hàm
+[04:58] của
+[05:00] à
+[05:01] TDT đấy TDT Cận là từ 0 đến 1 bằng gì
+[05:07] TDT thì các em nhìn này ẩn của mình là
+[05:10] ẩn gì đây ẩn t đúng không thì các em nhớ
+[05:13] này nguyên hàm của TDT hay là tích phân
+[05:16] của tích phân của TDT ấ nó chính là tích
+[05:18] phân của xdx 0 đến 1 của xdx hai này sẽ
+[05:22] bằng nhau nhá Đúng không Tại vì dù ẩn là
+[05:25] gì thì cái lớp mình vẫn phải nhập vào
+[05:26] máy tính là chữ X cái Lớp mình có hiểu
+[05:28] không nhở đy tính chất của của tích phân
+[05:30] là như vậy TDT hay là xdx như nhau hết
+[05:32] các em Tính nguyên hàm bằng gì nhở gì
+[05:34] đây x bình trên 2 không Cận là từ 0 đến
+[05:37] 1 bằng mấy nhở Thay 1 vào được
+[05:40] mấy là thành 1/2 chưa thay 0 và được 0
+[05:45] không có là 1/2 đúng chưa các em 1/2
+[05:49] nghĩa là TDT thì nó chính bằng xdx luôn
+[05:52] đúng không hoặc các em nhìn này nguyên
+[05:55] hàm của vụ thầy cho là cho là t bình
+[05:57] cộng Ờ à thô này thầy cho là 2T đi hoặc
+[06:01] là -2t đi dt đi Cận là từ 0 đến 3 đi thì
+[06:06] vẫn thế Em hiểu không ẩn T hay ẩn x thì
+[06:09] các em vẫn làm như nhau cả lớp mình có
+[06:10] thể đổi về ẩn x cho thầy như này được
+[06:12] chưa hoặc cả lớp mình có để y cũng được
+[06:14] Nguyễn hàm của -2t là gì nhỉ vậy mình sẽ
+[06:18] để -2 để im không nguyên hàm của t là gì
+[06:21] nhỉ t bình tr2 đấy Các em chèn cận vào
+[06:24] là 0 đến 3 cá lớ có hiểu không nhở đấy
+[06:27] đúng không T hay là x x đều như nhau hết
+[06:30] nhá Thay vào là bao nhiêu đây - 2/2 này
+[06:33] để dầ trừ ra ngoài t mũ 3 là t mũ 3 là à
+[06:38] thay 3 vào đúng không 3 bình là 9 thay 0
+[06:42] vào là 0 9 - 0 là
+[06:45] -9 đúng không đấy thì chúng ta dễ dàng
+[06:48] Tính nguyên hàm rồi thay cận vào thôi và
+[06:50] tất cả này cả lớ bấm máy tính một phát
+[06:52] là ra luôn tại vì trong máy tính đúng
+[06:54] không Trong máy tính có tính năng tính
+[06:55] tích phân mà đúng không cái nốt này đấy
+[06:58] có hai cục này này các em điền vào đấy
+[07:01] đúng không xong Điền FX này xong chữ DX
+[07:03] này điền vào xem ấn bằng là được ngay
+[07:05] nhá cái Lớp mình thử lấy máy tính bấm đi
+[07:08] xem đúng không nhá trong máy tính chúng
+[07:10] ta sẽ có cái chức năng bấm máy tính bấm
+[07:12] rồi nhưng không phải bài nào cũng bấm
+[07:15] được đâu nhá không phải bài nào bấm được
+[07:17] có những bài số rất to hoặc là người ta
+[07:19] cố tình cho ẩn AB thì an em sẽ không bấm
+[07:21] được đấy nào sang Thy phần tiếp theo
+[07:24] phần hai tính chất
+[07:33] phần hai tính chất tích phân như sau
+[07:34] tích phân sẽ có những cái tính chất sau
+[07:36] đây các lớp mình cần chú ý này thứ
+[07:39] nhất tính nhất thứ nhất của tích phân là
+[07:42] như nào lớ nhìn này tích phân của một
+[07:45] Tổng hay một
+[07:47] hiệu đúng không tích phân của Tổng hay
+[07:49] một hiệu đấy Vì cận là từ A đến B đúng
+[07:52] không Đấy nó sẽ bằng gì Các em ơi tích
+[07:56] phân của một tổng với một hiệu nó chính
+[07:57] bằng tổng hiệu của tích phân đó nhá FX
+[08:01] tích phân FX DX đấy Các em tính từng cái
+[08:05] một cộng GX
+[08:09] DX Đấy được chưa Đấy tích phân của tổng
+[08:12] hiệu thì bằng tổng hiệu của tích phân nó
+[08:14] Okay chưa đấu cộng th
+[08:18] hai nhá tích phân của một số k nhên FX
+[08:24] này Đấy DX nó sẽ bằng các em bỏ dấ k ra
+[08:29] ngoài k nhân FX tích phân từ A đến
+[08:35] bx ok chưa
+[08:38] Đấy k bằng bao nhiêu cũng đúng nó khác
+[08:40] với nguyên hàm nhá nguyên hàm thì điều
+[08:42] kiện K khác 0 Nhưng mà bài này là k
+[08:44] thuộc R luôn được
+[08:46] chưa ok nhá phân biệt cho thầy các em
+[08:51] luôn đúng Tại sao nếu K ằ 0 nhá K ằ 0
+[08:54] nhá K ằng 0 là sao Nhớ cho thầ phân biệt
+[08:57] nhá cái này mình nói luôn phân biệt này
+[08:59] Phân phân biệt phân biệt luôn là gì đây
+[09:01] phân biệt với thầy là nguyên hàm của
+[09:04] k nhân FX DX sẽ sẽ bằng k nhân nguyên
+[09:10] hàm của FX DX khi chỉ khi với k khác 0
+[09:15] hai thằng này Phân biệt ch thầy nhá Cái
+[09:18] lớ thử Tại sao lại phân biệt vậy ở trên
+[09:20] nhá tích phân kết quả phải một một số
+[09:23] không một số đúng không Vậy thì khi K =
+[09:26] 0 thì tích phân của thằng này nó sẽ bằng
+[09:28] là nguyên hàm nó là C đúng không nguyên
+[09:31] hàm của có phải là 0 thì nguyên hàm là C
+[09:34] không Tại vì C là bằng 0 mà Thì chèn cận
+[09:37] vào thì nó vẫn là C Ừ c ấy chèn a chèn b
+[09:40] vào cũng là C chèn A vào cũng là C vậy
+[09:42] khi chèn vào thì thằng này bằng 0 tất
+[09:44] nhiên tích phân này cũng bằng 0 rồi thì
+[09:46] thì thầy khi cho bằng 0 vào đây thì 0
+[09:48] nhân bao nhiêu cũng bằng 0 thì hai về
+[09:49] đều bằng 0 chưa đều bằng nhau không
+[09:51] Nhưng mà khi nguyên hàm thì khác nguyên
+[09:53] hàm thì khác biệt nhá các em phân biệt
+[09:56] thầy kỹ này K nh FX DX nó sẽ bằng này
+[09:59] khi phải ghi K khác 0 Tại vì sao nếu các
+[10:02] em thay 0 vào đây thì kết quả sẽ bằng
+[10:04] một hằng số C tại vì 0 nhân FX sẽ bằng 0
+[10:08] cái Hôm trước thầy nó có nói rồi đấy Thì
+[10:10] đấy 0 nhân f = 0 thì nguyên hàm của 0 sẽ
+[10:12] bằng C còn đôi bên này là 0 nhân bao
+[10:14] nhiêu cũng bằng 0 hết Hiểu không c = 0
+[10:16] là vô lý được chưa không đúng còn đâu
+[10:19] tích phân thì chắc chắn là k ch r nhá K
+[10:21] = 0 cũng chuẩn đấy nhá Không tin thì các
+[10:24] em thể bấm máy tính nhưng nói chung là
+[10:26] phân biệt được cho thầy Hai thằng này là
+[10:27] được để câu hỏi đúng s sai người ta cho
+[10:30] các em rất là dễ bị nhầm nhá các em thử
+[10:32] suy nghĩ đi Tại sao nó như vậy có thể
+[10:34] hỏi lại thầy nhá phân biệt cái này trước
+[10:37] ở cái bài giảng nguyên hàm thầy cũng nói
+[10:38] kỹ rồi vì K = 0 thì nguyên hàm thằng này
+[10:40] bằng C còn bên này vẫn bằng 0 C = 0 là
+[10:44] chưa
+[10:44] đúng C là một số rất là C là một số một
+[10:49] số gì một số rất là V dụ c có thể là 1 2
+[10:52] 3 4 5 6 7 8 đúng không Đấy đấy phân biệt
+[10:56] thầy cái này nhá tính chất tính chất
+[10:58] tiếp theo tính chất trèn điểm của
+[11:01] Vectơ là gì đây Tính chất trè điểm như
+[11:04] sau là tích phân này từ A đến B của FX
+[11:06] DX sẽ bằng này các em sẽ chèn điểm thầy
+[11:09] như sau các em sẽ chèn điểm C vào cho
+[11:11] thầy chèn điểm C như nào Các em nhìn nhá
+[11:14] thầy chèn điểm C vào này từ A đến B đúng
+[11:16] không T A đến B đúng không Đây từ A đến
+[11:18] B này từ A đến B đúng không Các em Phả
+[11:21] chè điểm C vào nó sẽ bằng gì đây tích
+[11:23] phân từ A đến C cộng tích phân từ C đến
+[11:26] B Các lâ hiểu không nhở đấy nhá nó sẽ
+[11:29] bằng là tích phân từ A đến C của
+[11:32] fxx cộng tích phân từ C đến B
+[11:39] fxx L có hiểu không đấy nhá
+[11:44] Rồi và một tính chất cuối cùng này tích
+[11:48] phân của x của FX
+[11:50] DX FX DX này từ a đến b sẽ bằng tích
+[11:56] phân của Fu
+[12:00] từ A đến B đấy sẽ bằng tích phân từ A
+[12:04] đến B của
+[12:07] fdt đấy bằng chấm chấm rất là nhiều ngĩ
+[12:10] là sẽ không phụ thuộc vào gì Các em ơi
+[12:12] nó không phụ thuộc vào biến dù là chữ X
+[12:14] hiểu Không hay dù là chữ u hay dù là chữ
+[12:18] T đều kết quả bằng nhau hết được chưa
+[12:20] Tại vì khi mình nhập vào máy tính thì
+[12:21] mình vẫn sẽ là nhập chữ X các em hiểu
+[12:23] không nhở đấy thì nhớ thầy nhá ft DT
+[12:26] fudu fxdx như nhau các em hình dúng
+[12:28] không giống như cái này này đây này em
+[12:31] ví dụ đây này 0 đến 1 của TDT thì các em
+[12:35] thể thay chữ t bằng chữ gì nhở chữ X
+[12:36] thoi mái nhá 0 đến 1 của xdx kiểu như
+[12:40] vậy được chưa tính chất tích phân đây là
+[12:42] bốn cái tính chất tích phân C lớp mình
+[12:43] cần nhớ thầy 1 này 2 này 3 4 chp lý tiết
+[12:47] vào đi làm bài tập nào l nhìn ví dụ 1
+[12:50] nhá Rồi ví dụ 1 này ví dụ 1 Tính tích
+[12:52] phân đn đúng không Rồi Ok có hai cách
+[12:56] đúng không cách một là hai bài này chẳng
+[12:58] hạn này cả lớp mình có thể áp dụng theo
+[13:00] công thức Hoặc là các em thầy bấm máy
+[13:02] tính vụ những bài này có thầy bấm máy
+[13:03] tính này ok chưa giả sử thầy bấm máy
+[13:05] tính trước rồi làm bằng tay sau nhá nào
+[13:07] bập máy tính cho thầy đi Nhớ đổi về
+[13:08] radian nhá đổi radian nhá Ok chưa radian
+[13:12] là mấy đây
+[13:13] Ờ tích phân này Ok từ 0 đến pi của sin
+[13:17] 3x nhập giữ sin 3x vào đúng
+[13:20] không từ 0 đến
+[13:23] pi Ok Bằng nào bằng thầy bằng bao nhiêu
+[13:26] đây còn là 2/3 luôn không đấy Cái bằng
+[13:29] 2/3 luôn đ là D luôn đúng không Nếu mà
+[13:31] chúng ta những bài này có những bài
+[13:33] chúng ta thể bấm được máy tính tất nhiên
+[13:34] bài nào mình bấm thì mình không không
+[13:36] nên làm bằng tay đúng không và sẽ có
+[13:38] những bài mình không bấm được máy tính
+[13:40] rồi vị câu hai này bấm được không có
+[13:42] đúng không Vậy câu ha các em bấm máy
+[13:44] tính luôn cho thầy đi mấy OK là bấm tính
+[13:47] thầy bằng mấy đây tích phân từ âm mi tr2
+[13:50] đến pi tr6 đây nhá trong máy tí có chức
+[13:53] năng tính tích phân thì bài nào bấm được
+[13:54] thì chúng ta cứ bấm đi chứ không phải
+[13:57] mình cứ cố chấp là có những này Mình rõ
+[13:59] ràng bấm ra rồi mình lại làm bằngng tay
+[14:00] đâu được chưa mình linh hoạt nhá từ â pi
+[14:03] tr2 đến pi tr6 â pi tr2 đến pi
+[14:10] tr6 pi chia 6 cho thầy nào bằng mấy đây
+[14:13] à cá Phả bằng -3 ph4 chưa 3/4 rồi Đ c
+[14:17] rồi đúng không C nó bạn nào thích làm
+[14:19] bằng tay thì Hôm trước thầy dạy rồi bằng
+[14:20] gì đây các em tính cho thầy nguyên hàm
+[14:22] của sinb là gì nhở sin đạo hàm bằng cos
+[14:24] đúng không Vậy nguyên hàm sẽ là gì nhở
+[14:27] là trừ cos
+[14:29] Ok và các em chia cho mấy nhá Hệ số là 3
+[14:34] Vem phải chia cho 3 chưa đúng không đấy
+[14:36] thầ lấy Cận là từ 0 đến pi Thay vào này
+[14:39] thay pi vào đây được gì đây cos của 3 pi
+[14:42] là mấy cos 3 pi sẽ bằng
+[14:44] là 0 này pi này 2 pi 3 pi là -1 âm âm
+[14:49] thành dương 1/3 đúng không thay 0 vào
+[14:52] cos0 là là 1 chưa cos0 là 1 không vậy là
+[14:57] - 1/3 đúng không cos 0 là 1 thì kết quả
+[15:00] là - 1/3 chưa trừ trừ thành cộng là
+[15:03] 2/3 cái Lớp mình có hiểu không đấy mình
+[15:06] linh hoạt nhá Bấm được thì C bấm thôi
+[15:08] câu này thì thôi mình ra kết quả luôn đ
+[15:12] c nhá next thầy đi câu này tương tự
+[15:14] nguyên hàm của sin là gì đây tương tự
+[15:16] này bằng này câu 2 nhá ví dụ ha muốn
+[15:18] giải tay đúng không sin đạo hàm bằng cos
+[15:20] thì nguyên hàm bằ trừ
+[15:22] cos 2x và chia cho 2 này cos đạo hàm
+[15:26] bằng trừ sin vậy nguyên hàm sẽ bằng sin
+[15:29] sin đúng không Đây cos đ hàm bằng trừ
+[15:32] sin Tính nguyên hàm bằng sin nhá chia 3
+[15:35] chưa Sau khi Tính nguyên hàm xong rồi
+[15:37] mình chèn cận vào thôi â pi tr2 đến mấy
+[15:40] - pi tr2 đến pi tr6 hiểu không Rồi mình
+[15:43] sẽ thay pi tr 6 vào đây rồi trừ đi â pi
+[15:45] tr2 theo đây đúng không kết quả thì thế
+[15:47] hơi dài một tí đúng không Nói chung bài
+[15:49] nào bấm được thì mình cứ bấm nhá rồi Các
+[15:51] em sẽ ra C cho thầy đấy ok a c nhá ví dụ
+[15:54] 3 tính tích phân 0 đến 1 của e mũ tr-x
+[15:57] DX đúng không Thì cái này rất là dễ thôi
+[15:59] nguyên hàm của e mũ trừ x bằng gì nhở
+[16:01] Bằng chính nó và chia cho hệ số - x thì
+[16:04] là -1 chưa chèn cận vào là 0 đến 1 bằng
+[16:07] mấy các em ơi thay 1 vào được mấy là e
+[16:11] mũ trừ 1 đúng không thay 1 vào e mũ tr-1
+[16:13] chia -1 này trừ đi này thay 0 vào là e
+[16:17] mũ 0 là 1 1/1 cảng m đây
+[16:22] à sẽ là gì nhở e mũ tr-1 là 1 tr e vậy
+[16:26] là -1 tr e
+[16:29] trừ trừ thành cộng cộng 1 bằng nhiêu đây
+[16:31] mẫu chung là e e - 1 tr
+[16:34] e c hiểu không Tất nhiên là chúng ta thể
+[16:38] bấm máy tính được so thấy kết quả đúng
+[16:39] không Nhưng mình đang nói là mình làm
+[16:41] bằng tay nhá Ok ch giờ mình sẽ linh hoạt
+[16:44] nh C nào cảm thấy nong nhằng quá thì
+[16:46] thôi ta bấm máy tính rồi câu số 4 này
+[16:48] tính tích phân của hàm số này đúng không
+[16:50] Rồi Cách thứ nhất là lớ Mình sẽ bấm máy
+[16:52] tính rồi so đáp án cể không nhở mình bấm
+[16:54] máy tính xem thằng này ra bao nhiêu rồi
+[16:56] mình cũng bấm kiểm tra các đáp án xem đá
+[16:59] án bao nhiêu nhưng mà ai là mình sẽ nếu
+[17:02] mà người ta cố tình cho dấu thì mình sẽ
+[17:03] không làm được được chưa vậy mình sẽ làm
+[17:05] như sau nào thầy sẽ giải bằng tay thôi
+[17:08] vậy tích phân th thay kiếu bằng chữ y
+[17:10] nhá thì sẽ bằng gì đây x mũ 4 1/3 này 4
+[17:15] x4 chia x là x mũ 3 đúng không trừ đi 3
+[17:19] cộng 5 trx đúng không
+[17:23] DX đúng không Mình sẽ chia đi đấy để đưa
+[17:26] về tính được nguyên hàm nó làm sao để
+[17:28] tính được nguyên hàm nguyên hàm nh thì
+[17:29] mình đã học rồi hai bài trước rồi x mũ 3
+[17:32] nguyên hàm là x m 4/4 đúng không trừ đi
+[17:35] này nguyên hàm của 3 là 3x Nguyên làm
+[17:39] của 5 trx là gì nhỉ 5 len trừ ĐX không
+[17:42] đúng chưa Đấy mình sẽ chèn cận vào là 1
+[17:46] và đến 3 bằng bao nhiêu đây đúng không
+[17:50] Tính nguyên
+[17:51] hàm bây giờ bắt đầu chèn cận nhá nhìn
+[17:54] Thầy chèn số 3 vào đây là 3 4/4 là mấy
+[17:57] link bấm máy tiếnh cho thầy đi 34 là 81
+[18:01] 81/4 81/4 nhá thay 3 vào đây Thành -9
+[18:04] này thôi thầy không cần đâu cộng 5 Thay
+[18:08] vào đây 5 l 3 Đúng chưa trừ đi Này các
+[18:12] em thay 1 vào đây được gì em thay đi nào
+[18:17] Thay 1 vào đây được mấy 1/4
+[18:21] không thay vào đây là -3 đúng
+[18:25] không thay 1 vào đây len 1 bằng mấy Bằng
+[18:28] 0 rồi ok cộng 5 nh 0 là 0 nhá cộng 0
+[18:31] luôn bằng này các em trừ nhá 81/4 mà trừ
+[18:35] đi 1/4 là thành 80/4 20 20 - 9 11 trừ đi
+[18:41] 3 tiếp à Trừ trừ thành cộng 14 đúng
+[18:43] không 14 C bao nhiêu 5 l 3
+[18:49] đấy ok đây Cách thứ nhất Thầy đang muốn
+[18:52] giải bằng tay được chưa Tất nhiên là
+[18:54] thầy bảo có bạn bảo Thầy ơi em không
+[18:56] thích thàng tay An thích bấm máy tính
+[18:57] thì các em vẫn có thể bấm được và kiểm
+[18:59] tra đáp án không bây giờ thầy check xem
+[19:00] có chuẩn không nhá Lào máy tính đâu lên
+[19:02] sàn rồi ok nào bấm máy tính nào tích
+[19:05] phân từ 1 đến 3 bấm đi tích phân từ 1
+[19:08] đến 3 của x mũ 4 các em sẽ nhập hàm
+[19:10] trước nhá trong bài tính người ta yêu
+[19:13] cầu các em nhập hàm trước nhá - 3x + 5
+[19:17] chia cho x cận của mình sẽ là 1 đến
+[19:20] 3
+[19:22] bằng 19,49 đúng không s xì
+[19:26] 19,49 rồi L mình mình bấm thầy đi 14 + 5
+[19:30] că 5 l 3 xem em có đúng không d này
+[19:32] chuẩn không bấm đi 14 + 5 l 3 chuẩn
+[19:36] không 14 + 5 l 3 đúng là 19,49 không
+[19:39] chuẩn chưa các em ơi chuẩn luôn vậy
+[19:41] chứng tỏ mình làm đúng rồi vậy nếu mà
+[19:43] các em khi chúng ta giải ra mà các em
+[19:47] bấm máy tính bị sai Chứng tỏ là các em
+[19:48] làm sai được chưa mình thể check lại
+[19:50] bằng máy tính hính Dung không Đấy chưa
+[19:53] đi các lớp nh thầy câu ví dụ 5 ví dụ 6
+[19:55] đi các lớp mình thử nghĩ cho thầy hai
+[19:58] câu này này bấm được máy tính không H
+[20:00] Các ạ bấm được máy tính theo cái bình
+[20:02] thường không không Tại vì tính tích phân
+[20:05] từ pi tr3 đến pi tr2 cos x người ta có
+[20:07] cho các em số đâu mà mình cho đáp án
+[20:10] đúng không Mà người ta cho dượng là a +
+[20:12] b căn 3 thì tất nhiên là mình phải gì
+[20:14] nhở mình phải gì nhở mình phải giải tay
+[20:16] ra đúng không Nhớ nhá AB tối giản nhá Ok
+[20:18] rồi vậy các em tính luôn y bằng gì
+[20:21] đây nguyên hàm cos đạo hàm bằng gì nhở
+[20:24] nhớ nh nguyên hàm thế ngược lại đạo hàm
+[20:26] đúng không cos đạo hàm bằng gì bằng trừ
+[20:28] sin đúng không Vậy nguyên hàm sẽ là
+[20:31] sin sin x ok chưa chèn cận vào thôi cận
+[20:36] thầy sẽ là pi tr3 đến pi tr2 bao nhiêu
+[20:40] đây thay pi tr2 vào đây được mấy sin pi
+[20:43] tr2 là mấy là 1 sin pi tr3 là mấy thay
+[20:47] pi tr3 vào là bao nhiêu nhỉ trừ đi căn
+[20:52] 3/2 thì sin 60 độ mà Ok vậy các em so
+[20:56] sánh đi vậy A bằng mấy nhở
+[20:59] a bằng mấy a ằng 1 chưa b căn3 b bằng
+[21:04] mấy nhở - 1/2 Đúng chưa đấy đúng không a
+[21:09] bằng 1 đây cộng b căn3 - 1/2 căn3 chưa
+[21:13] Rồi từ đó mình tính được t bằng gì đây
+[21:16] 2A + 6B bằng
+[21:18] mấy 2A là 2 cộng 6B là thành 2 - 3 là
+[21:23] thành -1 chuẩn không B ké l ch ta B chưa
+[21:28] đấy có những cái rất là dễ chúng ta vẫn
+[21:30] phải biết làm bằng tay được chưa đấy có
+[21:33] những cái không bấm được thì mình phải
+[21:34] làm bằng tay tất nhiên là các em sẽ có
+[21:36] những cách bấm nhá Nhưng thầy không nói
+[21:38] Nói chung là mình cách bấm nó còn giải
+[21:39] hơn làm bằng tay cơ nào Ví hụ sáu Thầy
+[21:42] hỏi cả lớp mình ví hụ sá bấm được máy
+[21:44] tính không Em thử bấm máy tính em nhập
+[21:46] máy tính cho thầy đi 0 đến 2018 của 2 mũ
+[21:48] x xem nào bấm V máy tính không không có
+[21:51] tham số AB BC rồi nhá nào bấm đi xem
+[21:53] được không 0 đến 2018 2 MX Xem máy tí nó
+[21:57] bảo gì không đấy nó Chử mình không lỗi
+[21:59] phép tính lỗi phép tính tại sao Nhàn
+[22:02] biết tại sao lại lỗi phép tính không Thế
+[22:05] Ngọ anh biết tại sao biết lỗi phép tính
+[22:06] không các bạn nào biết tại sao lại lỗi
+[22:08] pháp tính
+[22:09] không đúng rồi tại vì số quá to 2 mũ 28
+[22:13] nó không thể tính được hiểu không Nhưng
+[22:14] mà câu này làm bằng tay quá dễ luôn
+[22:16] nguyên hàm của 2 mũ x bằng gì nguyên hàm
+[22:18] của 2 mũ x bằng gì nhở a mũ x bằng
+[22:21] gì sẽ bằng gì nhở a mũ x chia mấy chia
+[22:25] cho len a cộng c không vậy bài này y
+[22:28] bằng mấy đây đây bước một Tính nguyên
+[22:30] hàm của 2 MX là gì là 2 mũ x chia cho
+[22:33] len 2 không Cận là mấy từ 0 đến
+[22:38] 2018 bằng mấy thay 0 vào được mấy à đầu
+[22:43] tiên mình phể thay cận trên vào trước
+[22:45] nhá Đấy 2018 thay và đây được mấy 2 mũ
+[22:48] 2018 thay 0 vào được mấy 2 mũ 0 là mấy
+[22:53] là 1 đúng không trừ đi 2 mũ 0 là 1 chia
+[22:56] cho cái len 2 này Nó là một hàng số thì
+[22:59] các em nhóm ra ngoài đi thì mình sẽ coi
+[23:01] như là nó nhân tử chung luôn ý đúng
+[23:02] không đấy thì bằng len 2 chia cho ln 2 Ở
+[23:05] dưới có hiểu không thại Vì thay 2018 vào
+[23:09] có phải là 2 mũ 2018 chia lên 2 trừ đi 1
+[23:14] tr N2 không thì thôi mình nhóm luô cái
+[23:16] số thừ số tự do ra ngoài không hiểu
+[23:18] không coi như đây là k mà đúng không Vẫn
+[23:20] nó ra ngoài thôi vậy đá là gì Các em ơi
+[23:24] baby đấy Em hiểu chưa Đấy bài Bật chập
+[23:28] mộ m Tính th thì phải làm như này Lữ
+[23:29] nhìn Thầy Câu 7 nhá Câu 7 như sau này
+[23:32] biết tích phân từ 1 đến 2 của x mũ 3 cộ
+[23:34] 2x mũ 2 - 3x chia x bình dx = a trb + c
+[23:38] L2 biết a trb là phân số tối giản tính
+[23:41] giá trị biểu thức này đúng không Câu này
+[23:43] tương tự thôi Các em ở đây là phép chia
+[23:45] đúng không Các em nhớ nhá bây giờ cái
+[23:47] chương trình mới của chúng ta thầy đã
+[23:49] cắt bớt tất cả những bài hàm hợp hay là
+[23:51] những cái thôi Bây giờ mình chỉ tập
+[23:52] trung những cái Cơ bản mình sẽ sang bài
+[23:53] toán thực tế luôn Đểu không trong sách
+[23:54] giáo khoa cũng thế bỏ bỏ rất là nhiều
+[23:57] cái phương pháp tính tích phân nhá nhá
+[23:58] OK nào lớp mình tính cho thầy đi nào y
+[24:01] bằng mấy các em chia đi tích phân của
+[24:04] này 1 đến 2 đúng không x mũ 3 chia x
+[24:06] bình là mấy x cộng này 2x bình chia cho
+[24:10] x bình là
+[24:11] 2 trừ 3 tr x đúng không 3x chia cho x
+[24:15] bình không - 3 trx không
+[24:17] DX rồi bằng như đây nguyên hàm của x là
+[24:22] gì Các em ng hàm X là gì nhở x bình tr 2
+[24:26] nguyên hàm quả 2 là 2x ng của 3 tr X là
+[24:29] 3 len tryt đối của x đúng không Đấy mình
+[24:32] sẽ chèn cận vào 1 đến 2 vào
+[24:35] đấy mấy ví dụ đầu thầy cố tình cho các
+[24:38] em bấm đú máy tính nhưng các ví dụ sau
+[24:39] mình bắt phải làm tay được chưa Đấy bằng
+[24:41] bao nhiêu đây nào Minh Anh trè điểm 2
+[24:45] vào đây đ m Đọc thầy kết quả nào 2 bình
+[24:47] là 4 4 chia 2 là 2 cộng mấy cộng 4 chưa
+[24:52] 2 l 4 trừ đi mấy 3 L 2 trừ đi
+[24:58] Sau đó các em s thay gì nhở Thay 1 vào
+[25:01] đây đúng không là được mấy 1/2 thay 1
+[25:04] vào đây được mấy cộng 2 này thê 1 vào
+[25:08] đây là hết không l 1 bằng 0 không bỏ qua
+[25:10] nhá bằng bao nhiêu đây các tính cho thầy
+[25:14] nào 2 + 4 là 6 6 - 2 là 4 4 trừ đi 1/2
+[25:20] là
+[25:21] mấy 7/2 đúng không
+[25:25] 7/2 trừ đi 3 L2
+[25:29] chuẩn không các em các bạn ở dưới check
+[25:32] cho thầy xem chuẩn không 2 của 4 là 6 6
+[25:35] đúng không 6 trừ đi
+[25:37] 2,5 chuẩn chưa rồi OK Từ đó các em nhìn
+[25:41] các em so sánh ra trên đâ đi vậy AB bằng
+[25:43] mấy AB bằng mấy
+[25:47] nhở A mấy 7/2 đây a tr b a = 7 B bằng 2
+[25:56] c bằng mấy C lên 2 mà c l 2 c -3 Vậy còn
+[26:00] tính được cho thầy là t bằ a c
+[26:03] không bằng
+[26:05] mấy cộng đi được mấy 7 + 2 - 3 là
+[26:10] 6 xong chưa Rồi đ là
+[26:14] d Hiểu chưa Đấy mình tính rất là cơ bản
+[26:17] thôi đấy thầy vào không gì khó cả chưa
+[26:19] đi là vụ 8 cho tích phân từ 0 đến 1 của
+[26:22] X bình chia cho x m 3 + 1 DX bằ 1 tr B L
+[26:26] A với AB là số Nguyên tối giản giá trị
+[26:29] của AB là bao nhiêu nào đầu tiên các em
+[26:32] quan sát cho thầy nào Câu này các em
+[26:34] thấy quen thuộc không đây làm phân thức
+[26:36] đúng không có thầy quen thuộc không Thầy
+[26:38] hỏi các em Len u đà bằng gì bằng gì u'
+[26:42] trên cho u có đúng không u' tr u không
+[26:46] vậy Các em ơi Vậy thì nếu mà Nguyên
+[26:47] ngược lại vậy thì đạo hàm ra thằng này
+[26:50] Vậy ngược lại nguyên hàm của u' udx sẽ
+[26:53] bằng ln
+[26:54] u cộng c cái lớp có hiu hiểu không Đúng
+[26:59] không u' tr u Vậy thì mẫu phải đạo hàm
+[27:02] bằng tử không tử nó chính là đạo hàm
+[27:04] bằng mẫu không vậy các em quan sát này x
+[27:06] 3 + 1 à bằng gì x 3 + 1 à bằng gì bằng
+[27:10] 3x bình có đúng không phậ x mũ 3 mẫu này
+[27:15] các em quan sát mẫu đi x mũ 3 1 đạo hàm
+[27:16] 3x bình không x mũ 3 cộng 1 đạo hàm bằng
+[27:19] 3x bình có đúng này không vậy thì cái
+[27:23] chỗ này chỉ có x bình không vậy thiếu số
+[27:24] 3 không đúng không thiếu 3 không vậy
+[27:27] thầy nhân thêm 3 được không nhân 3 chia
+[27:29] 3 vậy y bằng gì đây nhân 3 chia 3 1/3
+[27:32] của tích phân từ 0 đến 1 3x bình chia
+[27:35] cho x 3 +
+[27:39] 1 có hiểu không thì đây là u' tr u không
+[27:43] Đây u' tr u DX bằng ln u c c không nhưng
+[27:47] mà mình tính tích phân mà Thì không phải
+[27:49] cộng c nữa vậy nó sẽ bằng gì đây u' tr u
+[27:53] đây u' tr u chưa bằng ln này 1/3 để im
+[27:56] ln của try đối x m 3 + 1 cộng c th 0
+[28:02] cộng c nữa chèn cận luôn 0 đến 1 bằng
+[28:06] mấy các em bằng mấy đây thay 1 vào được
+[28:10] mấy 1/3 để ra ngoài nhá Thay 1 vào được
+[28:14] mấy 1 m 3 1 c 1 là 2 l 2 thay 0 vào được
+[28:21] mấy l 1 bằ 0 Ok K là 1/2 l 3 1/3 L2 đúng
+[28:26] không Vậy kết quả thầy là mấy đây đấy
+[28:29] Vậy mình sẽ có kết quả là 1/3 l 2 vậy A
+[28:34] bằng mấy B bằng
+[28:38] mấy a bằng Ừ A bằng lên 2 đúng không a =
+[28:43] 2 1/3 b = 3 vậy AB = 6
+[28:49] nhá đáp án của mình là gì đây A rồi V 8
+[28:54] Thầy thẽ là a nhá các em chơ đi tương tự
+[28:57] ví dụ chí Em ơi cho tích phân pi tr3 đến
+[29:00] pi tr2 của sinx trên cosx + x c 2 DX
+[29:04] bằng a L5 + B L2 với AB thộc Z Mệnh đề
+[29:07] nào dễ đúng câu này cũng rất là dễ thôi
+[29:09] Cái lớ mình nhận xét đi phân số đúng
+[29:12] không cosx + 2 là bằng
+[29:15] gì cosx + 2 là bằng gì Các em ơi bằng gì
+[29:19] nhở cos A bằng gì trừ sin x đúng không
+[29:22] trừ sinx đúng không phải cosx mẫu này
+[29:26] Vậy thầy viết lại được không sẽ bằng gì
+[29:28] đây Y sẽ bằng đây là trừ sin x mà đề bài
+[29:32] là có sin x thôi đúng không Vậy thầy làm
+[29:34] gì thêm dấu gì nhở dấu trừ đúng không
+[29:36] trừ pi tr3 đ pi tr2 của trừ sinx chia
+[29:42] cosx + 2 DX sẽ bằng gì đây trừ này u' tr
+[29:49] u kết quả bằng ln u chưa Đấy u' tr u đây
+[29:52] u' tr u đây len
+[29:55] u chèn cận vào là mấy pi tr3 và Pi
+[30:02] tr2 bằng mấy đây các em nhì thầy nhá
+[30:06] thay pi tr2 vào được mấy đấu trừ để im
+[30:09] thôi để ngoài cos pi tr2 bằng 0 l 2 này
+[30:14] 0 + 2 là l 2 nhá trừ đi này cos của Pi
+[30:18] tr3 là mấy 1/2 1/2 + 2 là 5/2 trừ đi len
+[30:24] của
+[30:26] 5/2 bằng gì đây trừ len 2 trừ thành cộng
+[30:31] cộng len của
+[30:33] 5/2 bằng trừ len 2
+[30:37] này rồi học rồi ln A phầ B đúng không
+[30:41] bằng ln A thì ln B không đúng không có
+[30:45] nhớ này không l a chia B bằng l a chia L
+[30:47] B không ok chưa Đấy 5/2 l 5/2 sẽ bằng l
+[30:53] 5 trừ đi
+[30:55] L2 cái bằng mấy nhở l 5 trừ đi mấy 2 L2
+[31:01] vậy A bằ mấy B bằng mấy các em ơi A bằng
+[31:04] mấy B bằng mấy nhở l 5 - 2 L2 đúng không
+[31:08] l 5 đây A bằng
+[31:10] mấy l 5 đúng không a l 5 a = 1 - 2 l 2 B
+[31:16] bằng mấy - 2 vậy kết quả gì Các em ơi
+[31:20] nhân đôi lên là 2a cộng b bằ 0 đúng
+[31:23] không 2A là 2 2 + -2 bằ 0 chưa 2a + b =
+[31:27] 0
+[31:28] à Ok phần hai phần hai này ứng dụng tích
+[31:34] phân ứng dụng tích
+[31:39] phân trong vật lý trong bài toán quãn
+[31:42] đường nhá trong bài toán vất
+[31:46] lý vận tốc quãng đường đi vs ok chưa Ứng
+[31:51] dụng tích phân trong bài toán thức tế V
+[31:53] và s đúng không Các em nhìn này quãng
+[31:56] đường và vận tốc nhá các em học rồi có
+[31:59] phải là gì đây quãng đường đạo hàm bằng
+[32:01] gì Các em quãng đường đạo hàm bằng gì
+[32:04] bằng vận tốc đúng không Ok vậy khi đó
+[32:07] tích phân tại vì các em nhìn này bản
+[32:10] thân quãng đường quãng đường là gì quãng
+[32:13] đường nó sẽ là một gì nhở là gì biết
+[32:15] không quãng đường bản chất là một cái số
+[32:18] vậ quãng đường từ nhà đến trường Vy là
+[32:20] một hàng số không Từ Hà Nội ra Hồ Chí
+[32:23] Minh phải là hàng số không vậy quãng
+[32:25] đường bản chất là hàng số vậy khi chúng
+[32:27] ta tính quãng đường
+[32:28] thì cái kết quả em mong muốn là gì nhở
+[32:30] là một số đúng không có đúng không có đâ
+[32:34] khi Tính nguyên hàm Thế làt ra một hàm
+[32:35] số Còn khi ta tính tích phân thì sẽ ra
+[32:38] một gì nhở một số cụ thể cái lớp có hiểu
+[32:40] không tích phân kết quả sẽ một số thì
+[32:42] mình chèn cận trên cận dưới vào mà Vậy
+[32:44] thì quãng đường nó sẽ bằng gì đây quãng
+[32:46] đường sẽ bằng này sẽ bằng này tích phân
+[32:49] từ thời gian t1 đến thời gian T2 của hàm
+[32:52] vận
+[32:54] tốc Em nhớ thầy như sau quãng đường
+[32:58] sẽ bằng quãng đường sẽ bằng tích phân từ
+[33:02] thời điểm t1 đến thời điểm t2 được chưa
+[33:05] rồi Các em nhớ nhá Đấy T1 là thời điểm
+[33:08] thứ nhất T2 là thời điểm thứ hai tính
+[33:11] quãng đường vật chúng ta chỉ cần tìm có
+[33:14] hàm vận tốc thì các em sẽ tìm được quãng
+[33:17] đường từ t1 đến t ví dụ từ dây thứ mấy
+[33:19] đến dây thứ mấy hiểu không Chúng ta sẽ
+[33:20] cho các em biết ngay tiếp tục này vận
+[33:24] tốc thì Đạ hàm bằng gì Các em
+[33:26] ơi tốc đ bằng gì bằng da tốc đúng không
+[33:29] Từ đó cả lớp mình xy ra vận tốc thầy sẽ
+[33:31] bằng gì đây nhớ này vận tốc
+[33:35] nghe quãng đường thì luôn cố định đúng
+[33:38] không Từ nhà đến trường không bao giờ
+[33:40] thay đổi luôn dù 10 năm nữa ha 100 năm
+[33:43] nữa Trừ khi cái trường và cái nhà nó
+[33:44] biến đổi biến mất thôi chứ nhưng mà
+[33:46] quãng đường từ nhà đến trường không bao
+[33:47] giờ thay đổi đúng không Nhưng vận tốc
+[33:49] thì luôn thay đổi tại vì mình cảm thấy
+[33:52] đi chậm thì mình phóng cái ga gá nó đi
+[33:53] nhanh lên khi nào mà tắc đường mình lại
+[33:55] dừng lại đi chậm đúng không Đấy mình lúc
+[33:57] nào gặp trướng ngại vật thì mình phanh
+[33:58] lại như vận tốc này lúc tăng lúc giảm
+[34:00] đúng không Vậy vận tốc của chúng ta nó
+[34:02] sẽ là một hàm số hiểu không s một nguyên
+[34:05] hàm của gia
+[34:07] tốc ok chưa Còn đ quãng đường là một số
+[34:11] cụ thể thấy không nó sẽ một Hằng một số
+[34:13] cụ thể nhể không đấy một số đây một hàm
+[34:17] số ok đấy nhớ chưa Đấy quãng đường thì
+[34:21] thầ nó sẽ là tính ra một số cụ thể
+[34:24] khoảng cách là bao nhiêu ý hiểu không Nó
+[34:26] vận tốc thì người ta hay là một hàm số
+[34:27] đúng không Ok làm ta tốc nhá rồi và các
+[34:32] em chú
+[34:33] ý khi chúng ta vật dừng lại thì vận tốc
+[34:36] bằng mấy nhở vật dừng lại thì vận tốc
+[34:38] bằng
+[34:40] mấy thì vận tốc của thầy sẽ bằng mấy nhở
+[34:42] V = 0 nhá bật dừng lại thì vận tốc bằng
+[34:46] 0
+[34:48] ok
+[34:50] Rồi khi tăng tốc khi tăng tốc khi tăng
+[34:54] tốc hay tẳng tăng tốc này hay PH
+[34:59] thì thì em sẽ bắt đầu lại t sẽ bằng 0 T1
+[35:04] sẽ bằng 0 nhá Được chưa khi chúng ta bắt
+[35:07] đầu tăng tốc hay phanh thì cái quãng
+[35:11] đường đó cả lớ phải bắt đầu tính cho
+[35:12] thầy t = 0 T1 = 0 Các em biết tại sao
+[35:15] không khi chúng ta tăng tốc thì hỏi các
+[35:18] em vận tốc lúc đó có thay đổi không vận
+[35:20] tốc có thay đổi đúng không Vậy thì khi
+[35:22] đó thì em phải tính lại cho thầy mốc
+[35:24] thời gian giữ nhá Em đang đi bình thường
+[35:25] đúng không vì quãng đường là F1 là đi
+[35:27] bình thường vận tốc đều đều cớ hiểu
+[35:30] không bắt thời điểm này thời điểm phanh
+[35:32] hoặc tăng tốc nhá ví dụ thầy phanh lại
+[35:34] phanh lại được chưa Thì khi đó cái cái
+[35:37] thời điểm thầy tính thì bắt đầu lại khi
+[35:39] phanh thì nó sẽ dừng lại không Các l
+[35:41] hiểu không khi phanh sẽ dừng lại không
+[35:42] khi phanh nó sẽ dừng lại vậy thì chắc
+[35:44] chắn cái thời điểm này các em phải tính
+[35:45] lại cho thầy vận tốc đây hàm V ph một
+[35:48] hàm vận tốc mới còn đâ quãng đường S1
+[35:50] đang đi bình thường thì vận tốc nó sẽ là
+[35:51] khác m hiểu không khi bắt đầu phanh thì
+[35:54] vận tốc của thầy sẽ bị giảm điểu không
+[35:57] nhở thì hạ V tốc Nó sẽ thay đổi đấy thì
+[35:58] khi đó mình phải bắt đầu tính là t1 đến
+[36:00] lúc dừng lại là t2 chẳng hạn đấy thì cái
+[36:02] quãng đường của mình sẽ là
+[36:04] S2 Nói chung là vào bài cụ thể các em sẽ
+[36:07] hiểu rõ hơn mà thầy nói qua một xíu
+[36:09] trước khi phanh hay tăng tốc thì vận tốc
+[36:13] sẽ thay đổi Và khi đó mình phải tính lại
+[36:14] thì mốc thời gian là sẽ T1 nhá bằng 0
+[36:16] nhá tính lại mốc thời gian bằng 0 ấ
+[36:19] reset mốc thời gian ấ hiểu không Chưa đi
+[36:21] Ví dụ 10 một ô tô đang chạy với vận tốc
+[36:24] là 18 m tr giây nhìn nhá một ô tô mình
+[36:29] bài toán tế mình vẽ thường ra n đang
+[36:30] chạy với vận tốc 18 tr giây 18 m tr
+[36:34] Giây quã đường đúng không Rồi thì bắt
+[36:39] đầu hãm phanh hãm phanh hiểu không nhưng
+[36:42] thầ hỏi các em khi chúng ta bóp cái
+[36:44] phanh cái xe có dừng lại luôn
+[36:46] không Các em không thể lại dừng lại luôn
+[36:49] thì đầu em Chắc là bốc đầu dừng lại phát
+[36:51] thì chắc là em lộn cổ bằng sao mất thì
+[36:52] nó hơi phải hơi dê dê một xíu đúng không
+[36:54] bó phanh cái nó phải hơi già dà nó phải
+[36:56] hơi di chuyển một xíu đây là chỗ này chỗ
+[36:57] phanh nhá bắt đầu bóp phanh nhá bóp nhá
+[36:59] bắt đầu bóp phanh thôi bóp phanh bóp
+[37:03] phanh thì tất nhiên là mình phải mất một
+[37:04] khoảng thời gian khoảng một lúc thì em
+[37:06] mới dừng lại đây lúc dừng nhá nó dừng
+[37:08] này ok chưa dừng đấy đúng không Chứ các
+[37:11] em không thể bóp phanh cái dừng luôn đâu
+[37:13] nhá Đấy từ lúc bóp phanh đến lúc dừng
+[37:15] thì nó sẽ làm bất bao nhiêu giây đây Ok
+[37:18] sau khi hãm phanh ô tô sẽ chuyển động
+[37:20] chậm lần đều với vận tốc là VT = 18 -
+[37:23] 36t nghĩa là cái quãng đầu tiên là 18 m
+[37:26] Đây là cái quãng đường đầu tiên cả lớp
+[37:27] mình hiểu không nhở khi hãm phanh thì
+[37:29] vận tốc thay đổi chưa đúng không khi đó
+[37:31] vận tốc v của mình bằng mấy đây bằng mấy
+[37:33] nhở 18 trừ đi bao nhiêu
+[37:38] 36t cá l hiểu không nhở đây đầu tiên là
+[37:41] V đang vận tốc bình thường là 18 m tr
+[37:43] dây đang chuyển động rất là đều bắt đầu
+[37:44] bóp phanh cái bóp phanh thì một xíu cái
+[37:46] nó dưng lại đúng không khi bóp phanh thì
+[37:49] bắt đầu quãng đường cái vận tốc sẽ thay
+[37:51] đổi ok rồi
+[37:54] xét ok bắt đầu hãm phanh này xét tính
+[37:57] đúng sai Của Các mệnh đề sau Ok câu a
+[38:00] thời gian Kể từ lúc hãm phanh đ lúc dừng
+[38:02] hẳn là bao nhiêu các em ơi câu a nhá Lúc
+[38:05] dừng thì v bằng mấy phải khi chúng ta
+[38:08] dừng thì vận tốc của thầy sẽ bằng 0 đúng
+[38:10] không Ok vậy thì khi à Xe dừng này thì
+[38:12] vận tốc bằng 0 the từng hẳn này theo V =
+[38:17] 0 nhá tương đương gì đây VT = 0 vậy các
+[38:22] em thay cho hàm này bằng 0 chưa 18 Ừ 36t
+[38:25] bằng 0 vậy t bằng mấy nhở
+[38:28] 1/2 đúng không là 0,5 giây 0,5 giây đúng
+[38:31] không đấy Vậy thì từ lúc bóp phanh đấy
+[38:33] là t = 0 T1 bằ 0 đến lúc dừng hẳn là các
+[38:36] em mất bao nhiêu giây nhở T2 sẽ bằng 0,5
+[38:40] nhá 0,5
+[38:42] giây Ok cái này sai nhá cái sai C Câ A
+[38:47] là sai này câu b quãng đường xe được sau
+[38:51] 0,3 giây Kể từ lúc hãm phanh là mấy mét
+[38:54] các em ơi quãng đường xe đi đường được
+[38:57] từ bao nhiêu đây sau bao nhiêu giây các
+[38:59] em ơi 0,3 giây đúng không có nghĩa là
+[39:02] khi hãm phanh thầy sẽ tính là mốc là 0
+[39:05] đúng không đến 0,3 giây nghĩ là khoảng
+[39:08] 0,5 giây mới dừng cơ thì 0,3 giây khoảng
+[39:10] này t sẽ bằng 0,3 giây
+[39:12] đây hiểu không nhở thì nó sẽ khoảng giữa
+[39:14] này vậy mình sẽ tính là từ 0 đến 0,3
+[39:17] thôi tính đây quãng đường đi quãng đường
+[39:19] sẽ bằng là gì đây tích phân từ mấy bóp
+[39:21] phanh làn tính từ 0 chưa đến
+[39:24] 0,3 của vận tốc thôi hàm vận tốc là mấy
+[39:28] 18 -
+[39:30] 36t cả lớp mình lấy m Tính bấm cho thầy
+[39:33] xem bằng mấy rồi tích phân từ 0 đến 0,3
+[39:36] của 18 - 36t bấm máy tính đi tích phân
+[39:40] 18 - 36t vẫn bấm vào X được chưa cho th
+[39:42] chữ DT vào thê chữ DT vào ok
+[39:46] nào 0 đến
+[39:48] 0,3 đến 0,3
+[39:52] bằng
+[39:55] fd 3 PH 78 không bằng
+[39:59] 3,78 đơn vị là mé đúng không Ok kết quả
+[40:02] bao nhiêu các em ơi 3 m có này sai chưa
+[40:05] các em ơi 3 m là sai vậy của chúng ta
+[40:07] phải là 3,78 m cơ đúng không cùng lắm là
+[40:09] tròn lên 4 m c này sai nhá Sai này câu c
+[40:13] nhá quãng đường từ lúc hãm phanh đến lúc
+[40:16] dừng hẳn đây các em ơi hãm phanh là từ 0
+[40:18] giây đúng không Tính là 0 đến lúc dừng
+[40:19] hẳn là mất bao nhiêu giây các em ơi 0,5
+[40:21] giây đúng không vậy suy ra S sẽ bằng gì
+[40:23] đây tích phân từ 0 đến 0,5 giây là dừng
+[40:26] nhá của của hàm vận tốc thôi 18 trừ đi
+[40:29] 36t rồi bấm máy tính cho thầy bằng mấy
+[40:33] rồi bấm máy tính đi rồi tích phân từ 0
+[40:35] đến 0,5 của 18 từ 36t các em vẫn đn nhập
+[40:38] chữ X nhá Tại vì TDT xx như nhau bằng
+[40:41] bao nhiêu
+[40:42] đây 9/2 là 4,5 không chính xác chưa các
+[40:46] em ơi chính xác rồi đế lúc dừng hẳn là
+[40:49] 4,5 m chính xác nhá đúng câu D nhá gia
+[40:54] tốc này gia tốc nó chính là đạo hàm vận
+[40:56] tốc thôi V phẩy là mấy làm đi hàm vận
+[40:59] tốc là 18 - 36t
+[41:02] không đạo hàm mấy các em ơi bằng mấy
+[41:06] Bằng là -36 cơ đúng không Vậy là gia
+[41:10] thốc mình sẽ là -36 m tr giây nghĩa là
+[41:12] nó đang chuyển động mình nó cái gia tốc
+[41:13] này nó đang làm do giảm cái tốc độ
+[41:15] chuyển động mình hiểu không Tức Thời
+[41:17] Nghĩa là các em hiểu là gì nó khác với
+[41:19] tốc độ nhá nghĩa là nó nó khác với độ
+[41:20] lớn nhưng nó vẫn phải tính là âm ra tốc
+[41:23] tức thời nghĩa là mình xét xem chiều nó
+[41:25] là nó đang giảm hay là tăng âm nghĩa là
+[41:26] mình đ đang làm cho nó giảm giảm cái vận
+[41:29] tốc lại Dương là làm cho vận tốc đang
+[41:31] tăng thêm đúng không Ok vậy Cái này là
+[41:33] sai
+[41:36] nhá Ok -36 m tr Giây cơ m tr giây bình
+[41:41] cơ Ok -36 m tr giây bình nhá rồi sang
+[41:43] câu tiếp theo ví dụ 11 nhá Một chất điểm
+[41:46] chuyển động trên trục Ox với vận tốc
+[41:48] thay đổi theo thời gian đúng không vận
+[41:49] tốc đang thay đổi theo thời gian VT V bằ
+[41:53] ft trong đó đơn vị của thời gian là t
+[41:55] giây đơn vị của thời gian là t giây đây
+[41:58] biết V = ft bằ 30 - 5t Các mệnh đề sau
+[42:02] đúng hay sai Các em nhìn này người ta
+[42:05] cho hàm vận tốc đúng không vận tốc chưa
+[42:08] Rồi câu a này quã đường st chất điểm đó
+[42:11] chuyển động trên trục OX OX đây đúng
+[42:15] không tại điểm nào đó thời điểm thời
+[42:19] điểm t thỏa mãn st bằng ft đúng hay sai
+[42:22] Các em ơi s' đ bằng f đúng không Vại sao
+[42:24] ft bằng v không cái công này đúng không
+[42:26] Các em
+[42:28] Đúng rồi Các em chỉ cần nhớ thầy là s
+[42:31] đạo hàm bằng v Đúng chưa Đúng rồi là
+[42:33] đúng rồi ok nhá
+[42:35] Đấy câu b quãng đường chất điểm đó
+[42:39] chuyển động trên trú Ox từ thời điểm t1
+[42:41] đến t2 t1 đến t2 đúng
+[42:44] không công thức Thầy vừa cho rồi S bằng
+[42:47] tích phân từ t1 đến t2 của vận tốc không
+[42:50] vận tốc nó chính là ST đây vận tốc bằng
+[42:52] ft chưa Chuẩn chưa Đúng rồi công thức
+[42:54] Quá đúng luôn Ok vậy Xong rồi nhá câu
+[42:58] này cũng đúng b là đúng câu b đúng nhá
+[43:01] đây các em nhìn này đúng không Đúng lý
+[43:03] thuyết không quãng đường thì đạo hàm
+[43:04] bằng vận tốc không còn đâu quãng đường
+[43:07] sẽ bằng tích phân từ t1 đến t2 của hàm
+[43:09] vận tốc ok chưa đấy Thì đúng là lý
+[43:12] thuyết thôi ý tiếp theo ý C này quãng
+[43:15] đường chất điểm đó chuyển động trên trục
+[43:17] Ox từ thời điểm nào đó đến thời điểm t
+[43:21] là s = 30t - 5t Bình cộ c trong đó đơn
+[43:26] vị của s là m c là một hàng số nào đó đố
+[43:29] các em cái này đúng hay sai thế chữa các
+[43:31] em nhá như sau
+[43:32] này rõ ràng thử ơ Thầy vừa dạy đây là
+[43:36] tích phân mà quãng đường là tích phân
+[43:37] thì sao đây dạy cho là nguyên hàm nhở
+[43:40] thì các em nhìn vào đây thầy như sau nhá
+[43:43] quãng đường chất điểm từ thời điểm nào
+[43:45] đó đúng không sometime đúng không thời
+[43:48] điểm nào đó đ thời điểm t v thầy cho t0
+[43:50] đi nào ta có này câu c nhá nào quãng
+[43:53] đường quãng
+[43:54] đường quãng đường từ gì đây từ thời điểm
+[43:59] nào đó đúng không Các em lấy là từ t0 đi
+[44:02] đến T thì vận tốc của thầy bằng gì Các
+[44:05] em ơi S bằng gì một thời điểm nào đó
+[44:08] đúng không Cứ cho t0 đi đúng không nào
+[44:10] đó mà cứ cho t0 bất kỳ nhá đến t nào nó
+[44:14] phải tích phân từ t0 đến T không đúng
+[44:17] không
+[44:18] đấy của hàm vận tốc
+[44:21] không C này không em bằng này t0 đến t
+[44:26] vận tốc là bao nhiêu không 30 - 5t không
+[44:30] 30 - 5t DT bằng gì đây các em nhìn này
+[44:36] nguyên hàm của 30 là mấy 30 t trừ đi 5t
+[44:42] Bình tr 2 đúng không nguyên hàm mà 5t
+[44:45] bình tr2 không cận của mình là mấy từ
+[44:48] một điểm t0 nào đó đến t Đúng chưa bng
+[44:51] nhiu đây bằng này các em nhìn nhá thay t
+[44:55] vào đây thì vẫn là y hệt nó nó đúng
+[44:57] không đ tay t vào đây vẫn y hiệt nó đúng
+[44:59] không
+[45:01] 30t trừ đi 5t Bình tr2 rồi Các em ơi trừ
+[45:06] đi t0
+[45:09] t0 t0 đúng không thay t0 vào đây không
+[45:11] phải là gì đây 30 t0 30 t0 đúng
+[45:16] không Đúng không trừ đi 5 t0 Bình 5 t0
+[45:21] bình chia mấy chia 2 có đúng này Không
+[45:25] các em à Vậy thầy đặt thằng này bằng C
+[45:27] không Tại vì t0 một thời điểm nào đó
+[45:29] đúng không Vậy t0 là xác định v t0 là 1
+[45:32] t0 là 2 thì khi t0 là một số khác xác
+[45:35] định rồi thì thay vào đây thì đây phải
+[45:36] là một hằng số không C là một hằng số
+[45:38] nào đó mà một hằng số nào đó một số nào
+[45:40] đó đúng không Thì khi chúng ta thay t0
+[45:42] là một cái giá trị bất kỳ thì nó sẽ được
+[45:44] một hằng số Thy t 0 1 thì được một hằng
+[45:46] số không thì đây đúng không 30t - 5t
+[45:49] bình 30t - 5 t bình đấy nhưng mà chỗ này
+[45:52] phải là gì đây kết quả sẽ bằng là gì đây
+[45:53] là 30t trừ đi 5t Bình tr2 phải cộng phải
+[45:57] cộng thêm C Coi đây là hằng số đây nhá
+[45:59] Đây là C được chưa vậy thì bài này là
+[46:01] thiếu chữ hai này các em ơi là sai chưa
+[46:04] Còn đâu nếu mà chỗ này là 30t - 5t Bình
+[46:07] tr 2 + c là đúng nhá hiểu không đấy C
+[46:09] một hàng số nào đó mà bao nhiêu thì
+[46:11] chúng ta chưa biết hiểu không đấy Ok vậy
+[46:14] câu này câu sai nhá Sai Tại vì đây này
+[46:17] 5t bình nó phải chia cho 2 cơ hiểu không
+[46:19] t mà chia cho 2 đây này chia cho 2 cộng
+[46:22] c không đâ một hằng số nào đó chưa tùy
+[46:25] vào t0 thì mình sẽ được một kết quả khác
+[46:26] nhau nhau tí đúng không Rồi câu D câu D
+[46:32] này quãng đường chất điểm đó đi được từ
+[46:35] điểm t1 bằng 1 giây đến thời điểm t2 2
+[46:38] giây là 2,5 m quá dễ rồi s sẽ bằng T1 là
+[46:42] mấy 1 giây đến th điểm 2 giây của hàm
+[46:46] vận tốc đúng không vận tốc đây 30 - 5t
+[46:51] DT Ok lớ mình bấm máy tính thầy bằng mấy
+[46:54] nhá kết quả bằng 22,5 m ch được chưa Ok
+[46:58] đúng rồi vậ đá làm đúng nhá Đúng vậy câu
+[47:01] D là đúng Ok lên mình đã hiểu chưa đấy
+[47:04] nhá câu c sai tại vì nó là thiếu chữ ha
+[47:08] th Coi đây là C đúng không Đây là -3
+[47:11] bằng 30t trừ đi 5t bình chia 2 cơ rồi
+[47:13] cộng c xem một hàng số nào đó ok chưa đi
+[47:16] Ví dụ
+[47:17] 12 Một vật chuyển động với gia tốc à bài
+[47:21] này thì người ta cho gia tốc nhá 2 cos t
+[47:24] m tr giây bình Các mệnh đề sau đúng hay
+[47:26] sao
+[47:27] câu a này tại thời điểm bắt đầu chuyển
+[47:29] động thì vật có vận tốc bằng 0 ngĩ này
+[47:31] ta cho là tại lúc mới chuyển động thì
+[47:33] vận tốc bằng 0 nghĩ v0 bằng 0 nhá v0
+[47:35] bằng 0 nhá rồi khi đó vận tốc của vật
+[47:38] được biểu diễn bởi hàm số VT bằng 2 sin
+[47:41] t qua quá dễ luôn nào Các em ơi vận tốc
+[47:44] bằng gì quay lại lý thuyết nào v' thì
+[47:47] bằng gì nhở vận tốc đ Hà bằng gia tốc
+[47:48] đúng không Và khi chúng ta muốn tính vận
+[47:50] tốc chúng ta phải làm gì nhở Tính nguyên
+[47:53] hàm của gia tốc được chưa Tính nguyên
+[47:55] hàm của gia tốc nhá rồi quay trở lại bài
+[47:58] nào vậy vận tốc là nguyên hàm của gia
+[48:00] tốc chưa Đây gia tốc đây Tính nguyên hàm
+[48:03] đi nguyên hàm của at DT bằng mấy đây
+[48:06] Nguyên hào của này 2C
+[48:10] t
+[48:11] DT Ok nguyên hàm của cos là gì Các em
+[48:15] ơi cos đạo hàm bằng trừ sin vậy nguyên
+[48:18] hàm là ngược lại là sin 2 sin t đúng
+[48:23] không Nhưng nguyên hàm phải cộng thêm gì
+[48:25] cộng thêm C
+[48:28] nhưng người ta lại bảo là gì bắt đầu
+[48:30] chuyển động Có nghĩa là tại thời điểm t
+[48:32] ằ 0 bắt đầu chuyển động T = 0 thì vận
+[48:36] tốc sẽ bằng 0 hiểu không Nghĩa là thời
+[48:39] điểm t bằng 0 thì vận tốc bằng 0 nghĩa
+[48:41] là thay vào nhá Khi t = 0 thì V = 0
+[48:45] tương đương là gì Các em ơi Thay vào đi
+[48:47] Nhìn nhá Đúng không phải đây hàm vận tốc
+[48:50] của thầy đây có vẻ bằng 2 sin t c c
+[48:54] không khi thời điểm t bằng 0 thầy tay t
+[48:57] bằng 0 và đây đúng không thì vận tốc đó
+[48:59] bằng 0 chưa vậy 0 sẽ bằng 2 sin
+[49:03] 0 cộng c Vậy tương đương C bằng mấy
+[49:07] nhở sin 0 bằng 0 không 0 bằng 0 hết rồi
+[49:11] vậy c = 0 nhá c = 0 từ đó mình sẽ có ha
+[49:14] vận tốc là mấy vận tốc của thầy sẽ bằng
+[49:17] là 2 sin t
+[49:18] thôi cộng thêm c thì c bằng 0 rồi mất
+[49:21] chưa rồi mất rồi
+[49:24] xong xong bài rồi vậy 2 sin t chuẩn chưa
+[49:28] đúng
+[49:30] luôn câu b câu
+[49:33] b quãng đường vật đi được từ thời
+[49:38] điểm t = 0 đến thời điểm t = Pi à Không
+[49:43] câu nhầm câu b đọc sai rồi Câu B Vận tốc
+[49:47] của vật tại thời điểm t bằ pi tr2 là gì
+[49:51] quá dễ luôn câu b đúng không t = pi tr2
+[49:55] thì v là mấy
+[49:58] em thay đi thay pi tr2 vào đây đúng
+[49:59] không là 2 nhân sin của t là pi
+[50:04] tr2 sin pi tr2 là 1 1 nh 2 = 2 2 m tr
+[50:09] giây đúng hay sai câu này sai nhá sai
+[50:12] luôn đúng không sai luôn 1 m Sai rồi câu
+[50:17] c quãng đường vật đi được từ thời điểm t
+[50:20] = 0 đến thời điểm t bằ pi đúng không quá
+[50:23] dễ luôn quãng đường sẽ bằng tích phân
+[50:26] thờ điểm t = 0 đến thờ điểm t bằ pi đúng
+[50:30] không của hàm vận tốc chưa vận tốc đây
+[50:32] hàm vận tốc không 2 sin
+[50:35] t bấm máy tính ch thầy bằng mấy l mình
+[50:39] tính bấm đi bằng bao nhiêu 0 đến pi của
+[50:42] 2 sin t
+[50:44] DT Nhớ đổi về radian nhá
+[50:47] bằng bằng 4 4 4 4 4 m nhá Chuẩn chưa các
+[50:52] em ơi Rồi đề bài cho 4 m chuẩn chưa đúng
+[50:55] luôn
+[50:57] 4 m chính xác câu D đúng không đng 4 m
+[51:01] không kẻ lớp mình thấy chuẩn chưa Rồi
+[51:04] quãng đường vật di chuyển từ t = pi tr2
+[51:07] đến 3 pi tr4 bấm máy tính nốt Rồi s sẽ
+[51:10] bằng tích phân từ pi tr2 đến 3/4 thôi và
+[51:15] vận tốc 2 sin t DT các em chỉ được thay
+[51:20] số thôi thay số thay cận thôi đúng không
+[51:22] thay cận đi Bấm đi 2 sin t thay cận thôi
+[51:25] nhá cận đi Cận là mấy pi tr2 đến
+[51:30] 3/4 3 Pi tr4 bằng
+[51:35] mấy 1,41 chưa t phải làng Đúng là căn 2
+[51:39] chưa Chuẩn luôn 1,1 là căn 2 nhá căn2
+[51:43] m vậy câu d 2 m là sai rồi Ok vậy Kết
+[51:47] quả của thầy là gì đây đúng sai đúng sai
+[51:50] em chơi đi ok K lớp nhìn nhá nào nghe
+[51:54] thầy câu anh Nam nhảy dù nào đây một câu
+[51:55] rất là hay nhìn nhá câu này thì thầy sẽ
+[51:57] áp dụng hai cái tính chất này từ đầu giờ
+[52:00] thầy chưa Xóa bảng đâu Đây này bây giờ
+[52:02] mình dùng đấy này thứ nhất nguyên hàm
+[52:04] của fdt à tích phân tích phân của fdt nó
+[52:08] bằng tích phân của fxdx đúng không Thì
+[52:10] cái này các em biết rồi đúng không Bây
+[52:11] giờ thầy sẽ sử dụng cái công thức này
+[52:12] thầy đã nói từ đầu rồi nhưng bây giờ
+[52:14] mình mới sử dụng này đây thầy sẽ chèn
+[52:16] những chè đây chèn những chè gì đây
+[52:19] vectơ ấy tích phân từ A đến B của FX DX
+[52:22] bằng tích phân từ A đến C cộng tích phân
+[52:24] từ C đến B Thậm chí các em thể chén
+[52:26] nhiều điểm hơn vậy các em nhìn này nhìn
+[52:29] ví dụ 13 nhá Giả sử anh Nam nhảy dù Ok
+[52:32] đâ đây một cái chiếc trưng thăng đây ok
+[52:34] chưa ch thang đây nhá Anh Nam ở đây đúng
+[52:37] không anh Nam đây anh sẽ nhảy dù anh Nam
+[52:39] sẽ nhảy dù đúng không Rồi đây mặt đất
+[52:42] đây
+[52:45] nhá OK vào thời điểm 19 giây sau khi rời
+[52:49] khỏi trực thăng đây anh Nam ở đây đúng
+[52:51] không 19 giây 19 giây nhá 19 giây đây 19
+[52:55] giây nhảy khỏi trực thăng đúng không Thế
+[52:58] anh Nam sẽ làm gì Các em
+[53:00] ơi anh Nam sẽ mở chiếc dù trong 2 giây
+[53:04] đúng không nhảy xuống đái 19 giây bật dù
+[53:08] đúng không bật dù thì khi đó mất trong 2
+[53:11] giây ha giây để bật dù đây 2 giây để bật
+[53:14] dù ok chưa Tại vì khi chúng ta nhảy
+[53:17] xuống thì vận tốc sẽ khác nhá các em bật
+[53:19] cái dù lên Phật một phát lên thì khi đó
+[53:21] nó kéo người mình lên đúng không thì vận
+[53:23] tốc n đó mình sẽ bị giảm đi cái lớp hiểu
+[53:26] không bật cái dù lên thì nó bị sức cản
+[53:28] không khí rồi sau khi bật dù lên thì anh
+[53:30] ý sẽ làm gì nhở sẽ chạm đất đấy khi bật
+[53:33] dù lên đ lúc bật dù xong anh sẽ bắt đầu
+[53:37] rơi xuống đất mất bao nhiêu giây nữa các
+[53:38] em ơi 19 giây nữa đúng không Đây anh Nam
+[53:43] chạm đất sau 19 giây Kể từ lúc bung dù
+[53:46] đây lúc bung dù đấy nhá Đây là bật dù
+[53:48] này bật dù này bật dù này đây lúc bung
+[53:51] này bung dù này đây Bật dù được chưa Đấy
+[53:54] đây lúc nhảy nhá
+[53:57] đy lúc chạm đất chạm
+[54:00] đất vậy Các em ơi anh ấ có mấy giai đoạn
+[54:03] hả các em mấy giai đoạn nhở nhảy xuống
+[54:07] 19 giây bật dù đến lúc bung dù là 2 giây
+[54:10] đúng không bung dù xuống chạm đất là 19
+[54:13] giây chưa vậy anh ý sẽ có ba giai đoạn
+[54:15] và ba giai đoạn này thì vận tốc sẽ khác
+[54:17] nhau đúng không nhảy xuống vận tốc khác
+[54:19] bật dù phát bật dù và bung dù vận tốc nó
+[54:22] sẽ khác nhau và từ lúc bung dù thì anh
+[54:25] ấy sẽ hạ từ từ từ từ từ từ từ từ xuống
+[54:27] có hiểu không đấy đang nhảy xuống đấy tự
+[54:30] nhiên bung dù cái người giật lên xíu đấy
+[54:33] Xong rồi khi bung dù dùng dù bung ra rồi
+[54:35] thì ông anh sẽ hạ từ từ từ từ từ xuống
+[54:37] vậy thì các em nhìn này và người ta sẽ
+[54:39] nói như sau tại thời điểm t dây vị trí
+[54:42] của anh Nam cách mặt đất một khoảng HT
+[54:44] HT bản chất nó chính là quãng đường các
+[54:46] em ơi quãng đường HT đây đúng không
+[54:50] chiều cao Nó chí là quãng đường đúng
+[54:52] không Các em chiều cao bản chất chí là
+[54:53] quãng đường thôi nó không nằm ngang mà
+[54:55] đây nó nằm dọc chưa rồi và vận tốc rơi
+[54:58] của anh Nam tính bằng m trên giây đây là
+[55:00] hàm vận tốc của anh ý đây hàm vận tốc
+[55:02] của anh ý là chia làm ba hàm chưa Ba
+[55:05] giai đoạn là ba hàm chưa Rồi độ cao vị
+[55:09] trí của anh Nam khi bắt đầu là độ cao từ
+[55:11] lúc nhảy đến lúc chạm đất người là quãng
+[55:13] đường là bao nhiêu đúng không Vậy quãng
+[55:15] đường bằng gì Các em quãng đường HT đúng
+[55:18] không đây chiều cao sẽ bằng này có phải
+[55:21] từ lúc ông ý nhảy đến lúc anh ý Ông ý
+[55:25] không dù không vậy sẽ có nhiêu đây nó sẽ
+[55:28] có gì đây Nhìn nhá HT sẽ bằng tích phân
+[55:30] bình thường nó sẽ là tích phân từ từ lúc
+[55:33] nhảy đúng không tổng cộng mất 40 giây mà
+[55:35] 19 giây 20 giây và 19 giây không đúng
+[55:38] không Các
+[55:39] em 19 giây đây là từ đây tổng bao nhiêu
+[55:43] dây nhở tổng bao nhiêu dây tổng 19 cng
+[55:46] 2+ 19 là mấy 40 giây đúng
+[55:50] không tổng sẽ là 14 40 giây đúng không
+[55:53] Vậy các em tính cho thầy đi HT sẽ bằng
+[55:55] này
+[55:56] từ 0 giây đến 40 giây là tiếp đất đúng
+[56:00] không Nhưng hàm vận tốc của thầy nó bị
+[56:03] chia ra nhiều cái nay đúng không Vậy
+[56:05] mình sẽ tính như sau nó sẽ bằng tích
+[56:07] phân từ 0 đến 19 của hàm vận tốc là như
+[56:10] này 0 đến 19 hàm vận tốc nó chia ba hàm
+[56:14] mà của -80 DT cộng từ 19 đến
+[56:21] 21 19 là 21
+[56:24] 37t đúng không cái là hàm vận tốc khác
+[56:28] nhau trừ 3
+[56:33] 783 cộng bao nhiêu các em ơi đúng không
+[56:36] cộng từ 21 đến 40 không thì mình sẽ lấy
+[56:38] hàm vận tốc là hàm này không
+[56:40] đấy 21 đến 40 giây của hàm vận tốc là -6
+[56:45] DT nào lấy máy tính bấm thầy đi bằng mấy
+[56:49] tất cả lớp mình sẽ bấm chữ t thành chữ x
+[56:51] hết đúng không Rồi bấm m Tính đi cộng
+[56:52] lại đi tại vì quãng đường là tích phân
+[56:55] của hàm vận tốc nhưng vận tốc khác nhau
+[56:57] thì phải lấy tích phân khác nhau được
+[56:58] chưa B máy tính thầy bằ
+[57:00] mấy bấn
+[57:07] đi Bấm
+[57:11] đi nào 0 đến 19 của -80 DT
+[57:16] cộng 19 đến 21 37t trừ
+[57:20] 783 37x - 783 tích phân từ 19 đến 21
+[57:26] rồi cộng bao nhiêu đây tích phân từ 21
+[57:29] đến 40 của
+[57:31] -6 đúng
+[57:33] không 21 đến 40 xem ra đáp án
+[57:37] không 17 20 đúng không - 172 Tại sao vậy
+[57:42] Cái đó mình hiểu t âm nghĩa là gì - 1720
+[57:46] các em biết tại sao là âm không Tại vì
+[57:49] sao dấu âm trong Toán học à trong vật lý
+[57:52] thể hiện điều gì vậy là mình dành ra vận
+[57:54] tốc là âm đúng không Vậy các em đang
+[57:55] chuyển đ ngược chiều chc ngược chiều
+[57:57] chuyển động ra tốc âm nghĩa là mình đang
+[58:00] đi ngược chiều lại Tại sao lại âm quá là
+[58:02] dễ các em nhìn này người ta lúc nào đây
+[58:04] là 0 Các em nhìn nó thầy chụp của mình
+[58:06] thẽ là Ox Oy đúng không đều âm thể điện
+[58:11] đều gì nào bạn nó biết âm thể hiện điều
+[58:12] gì không Chúng ta đang mình đang ngược
+[58:15] chiều chuyển động Hiểu không Mình đang
+[58:17] từ vị trí cao mình tụt xuống vị trí thấp
+[58:19] tại vì chiều động đây từ 0 nó phải cao
+[58:21] dần không đúng không Vậy nó đang nhảy
+[58:23] xuống Chứng tỏ là chiều chuyển động của
+[58:24] ông ý ra đang đang đi xuống hiểu không
+[58:26] nhở vậy thì quãng đườngng của chúng ta
+[58:27] bao nhiêu đây h sẽ bằng độ cao sẽ bằng
+[58:30] là 17
+[58:33] 20
+[58:35] m c Lân có hiểu chưa nhở đấy độ âm thể
+[58:39] hiện là mình đang nhảy xuống là bị ngược
+[58:41] chiều chuyển động ngược chiều mà Hệ quy
+[58:43] chiếu mình đã đặt ra được chưa mặt đất
+[58:45] chính là 0 mà Cao lên Đang giảm xuống ok
+[58:48] chưa vào thầy nhá bạn Minh ngồi trên máy
+[58:51] bay đi du lịch này và vận tốc chuyển
+[58:53] động của máy bay là V Ok mình có V rồi
+[58:56] đúng không có V rồi rồi có V tính quãng
+[59:00] đường là tìm s quãng đường là s đúng
+[59:02] không Ok từ dây thứ 4 đến giây thứ 10
+[59:06] thời gian là cận thì ta cho từ t mấy từ
+[59:09] 4 đến mấy rồi đến 10 đúng không Vậy thì
+[59:12] quãng đường sẽ bằng gì đây quãng đường
+[59:15] là tích phân của vận tốc đúng không sva
+[59:17] Thì V lấy tích phân là được tích phân từ
+[59:20] 4 đến
+[59:21] 10 của hàm vận tốc nhá 3t Bình C 5
+[59:26] DT Em bấm máy tính th ra đáp
+[59:29] án Ok đáp án là gì Các em 9566 à m đ là
+[59:36] D nhá 1D được chưa ngĩ có vận tốc thì
+[59:39] các em lấy tích phân ra S luôn được chưa
+[59:41] có vận tốc tính giá quãng đường luôn nào
+[59:44] câu hai này Một vật chuyển động với vận
+[59:46] tốc thay đổi theo thời gian được tính V
+[59:48] Công thức này đây vận tốc thay đổi theo
+[59:51] thời gian đâyy Ok quãng đường vật di
+[59:54] chuyển được di chuyển được theo đơn vị m
+[59:58] Tính quãng đường đi được trong 10 giây
+[59:59] đầu tiên à thời gian người ta cho 10
+[60:01] giây đầu tiên có nghĩa là từ dây thứ 0
+[60:03] đến giây thứ 10 nhá 10 giây đầu tiên là
+[60:05] bắt đầu từ 0 nhá vậy s sẽ bằng là tích
+[60:08] phân 10 giây là từ 0 đến 10 này của vận
+[60:11] tốc 5t cộng 1 DT các em bấm máy tính sẽ
+[60:16] ra là gì nhở 260 đúng không
+[60:19] m đ là D nhá
+[60:22] 2D rồi câu 3 này một vật di chuyển dần
+[60:26] đều với vận tốc đây vận tốc đây đúng
+[60:28] không Rồi tính quãng đường vật di chuyển
+[60:31] được trong thải gian từ thời điểm t bằng
+[60:34] 0 cận đầu tiên là bằng 0 đến thời điểm
+[60:37] mà vật dừng lại đúng không T1 có rồi vậy
+[60:40] các em xem dừng lại khi nào thì dừng lại
+[60:42] nhở Khi nào Dừng lại rồi Dừng lại thì
+[60:45] vận tốc bằng 0 đúng không em chỉ cần cho
+[60:46] vận tốc bằng 0 thôi tính được là t t
+[60:49] bằng mấy T bằng 16 Đúng rồi Vậy mẽ tính
+[60:53] từ 0 đến 16 của hàm này được chưa này
+[60:56] thế thôi dừng lại là vận tốc bằng 0 đấy
+[60:58] vậy Ghi cho anh này dừng lại thì vận tốc
+[61:00] bằng 0 dừng này thì V = 0 Các em giải ra
+[61:05] thôi tương đương với 160 trừ 10t bằng 0
+[61:10] bấm máy tính sẽ ra t bằng bằng 16 ok
+[61:13] chưa 16 Ok vậy thì từ thời điểm t = 0
+[61:17] đến thờ thiểm dừng lại là từ 0 đến 16
+[61:20] nhá nào quãng đường sẽ bằng tích phân
+[61:24] của vận tốc nhá
+[61:27] Ok s của V được chưa vận tốc
+[61:32] 160 trừ đi 10t Đ Cận là từ 0 đến 16 nhá
+[61:38] DT ok
+[61:41] chưa bằng gì
+[61:44] đây các em bấm máy tính sẽ ra là 1 2 80
+[61:48] đúng
+[61:50] không Đó là B nhá 3b 4 này một ô tô
+[61:56] chuyển động vận tốc là 10 m tr giây đúng
+[61:58] không Thì bắt đầu đạp phanh tại thời
+[62:01] điểm đó ô tô chuyển động chậm dần đều
+[62:03] với vận tốc Ok có vận tốc rồi Hỏi quãng
+[62:07] đường ô tô di chuyển được từ giây thứ
+[62:09] hai nhem bắt đầu từ t bằ 2 nhá đến lúc
+[62:13] dừng lại đúng không Thì anh vừa bảo rồi
+[62:15] Dừng lại thì cho V = 0 thôi đúng không
+[62:16] cho V = 0 Thôi nào V = 0
+[62:19] dừng thì V = 0 đúng không thì các em
+[62:23] tính được là -2t
+[62:26] cộng 10 ằ 0 thì t bằng 5 đúng không Vậy
+[62:30] chúng ta là tính từ dây thứ hai đến dây
+[62:33] thứ 5 nhá vậy các em lấy tích phân thôi
+[62:35] s sẽ bằng tích phân của V nhá Ừ 2T cộ
+[62:41] 10 DT từ dây thừ 2 đến dây 5 Đúng không
+[62:46] các em bằng mấy đây 9 đúng
+[62:49] không đ là B xong nhá B Ok 4B nhá
+[62:56] Một vật chuyển động chậm đần đều với vận
+[62:58] tốc đây v bằng từng này đúng không v =
+[63:02] 16 160 - 10t tính quãng đường vật di
+[63:06] chuyển trong 5 giây cuối cùng 5 giây
+[63:08] cuối cùng Đúng không Trước khi dừng lại
+[63:10] Ok vậy các em dừng lại xem bao giờ thì
+[63:13] dừng lại nhá dừng thì V = 0 này các em
+[63:17] tính được t bằng mấy 16 đúng không Vậy
+[63:20] thì ng ta là gì đây 5 giây cuối cùng
+[63:23] Chứng tỏ là 16 giây thì dừng lại đúng
+[63:25] không lùi 15 giây là từ bao nhiêu nhở 16
+[63:27] - 5 là 11 đúng không Vậy thì quãng đường
+[63:30] sẽ bằng nã tính từ dây thứ 11 đến dây
+[63:33] thứ 16 nhá đến giây thứ 16 thì dừng lại
+[63:36] lùi về 5 giây đúng không 5 giây C lui về
+[63:39] 5 giây là dây T1 đúng không Rồi vậy là
+[63:42] sẽ bao nhiêu đây của
+[63:45] 160 trừ đi
+[63:48] 10t các em bầm mà tính sẽ bằng bao nhiêu
+[63:51] đây 100 bao nhiêu nhở 25 đúng không
+[63:56] B
+[63:57] nhá B nhá Ok chưa các nhìn câu s này một
+[64:02] ô tô đang chạy với vận tốc là 190 đúng
+[64:05] không Thì người lái hãm phanh ô tô di
+[64:08] chuyển chậm dần đều với vận tốc như này
+[64:11] các em nhìn nhá Đây này ô tô đang di
+[64:14] chuyển đây ô tô đây ô tô đây nhá ô tô
+[64:17] đây đang di chuyển đúng không Thì bắt
+[64:19] đầu hãm phanh hãm phanh đây vận tốc ban
+[64:22] đầu là v0 bằng mấy 19 m tr giây thì hãm
+[64:26] phanh nhá ví dụ đây chỗ chỗ này là hãm
+[64:28] phanh đây phanh đây nhá Đúng không phanh
+[64:31] đúng không Thì khi phanh thì vận tốc của
+[64:33] em có thay đổi không có th bị nh chậm đi
+[64:36] đúng không Nhưng mà thường các em phanh
+[64:38] ấ không bao giờ các em dừng lại luôn đâu
+[64:41] mà nó phải mất một thời gian Khoảng kả
+[64:43] vài giây sau là mới dừng lại đúng không
+[64:45] Chứ không không hay là dừng luôn đâu nào
+[64:46] khi phanh vận tốc là mấy đây
+[64:50] -38 t c 19 nhá Đúng không phanh một lúc
+[64:54] thì nó sẽ dừng lại dừng đây đúng không
+[64:57] dừng lại nhá phanh đến dừng thì người ta
+[65:00] hỏi là gì đây Hỏi từ lúc hãm phanh Hỏi
+[65:03] từ lúc hãm phanh nghĩa là từ thời điểm
+[65:05] phanh đúng không bắt đầu phanh thì cái
+[65:07] vận tốc của em có thay đổi không có thì
+[65:09] nó sẽ bắt đầu tính từ khoảng thời gian
+[65:11] mới là t = 0 nhớ chưa Từ lúc phanh thì
+[65:14] vận tốc nó ph Khác Rồi trước khi phanh
+[65:16] vận tốc khác thế nên các em luôn nhớ này
+[65:19] bắt đầu từ lúc phanh hoặc tăng tốc thì T
+[65:21] luôn tính bằng 0 nhá reset lại từ đầu t
+[65:24] bằng 0 nhớ chưa
+[65:26] đến khi dừng lại đến khi dừng đây nào
+[65:28] Dừng lại thì các em tính nhanh t bằng
+[65:30] mấy nào Dừng lại thì V =
+[65:32] 0 đúng
+[65:34] rồi nào vậy các em cho này bằng 0 nhá đ
+[65:38] t bằng mấy -
+[65:41] 38t vậy t bằng 1 phầ t = 0,5 đúng không
+[65:46] Ok có nghĩa là từ lúc phanh là 0 0 nhá
+[65:50] mất 0,5 giây để dừng đúng không Thì đây
+[65:52] cho là t bằng 0 phẩ 5 đúng không đúng
+[65:55] không Vậy bắt đầu tính từ lúc phanh đến
+[65:58] lúc dừng là các em lấy tích phân của gì
+[65:59] đây nào Các em ở đây có hai vận tốc đúng
+[66:02] không Các em Vậy cácem lấy tích phân của
+[66:04] vận tốc này hay vận tốc này cái thứ hai
+[66:07] đúng không Tại vì túc phanh yếu dừng thì
+[66:09] đây hàm vận tốc đây đấy vậy nó sẽ là
+[66:11] tích phân
+[66:12] từ 0 đến
+[66:15] 0,5 của hàm vận tốc đây nhá - 38
+[66:20] t cộng
+[66:22] 19 t nà bấm máy tí c mấy các em bấm máy
+[66:26] tính ra bao
+[66:28] nhiêu 4,75 à đá là gì nhở a nhá k a nhá
+[66:35] Rồi Ok kem chưa vào nào Các em đi câu 8
+[66:39] này một ô tô đang chạy với vận tốc là
+[66:43] bao nhiêu đây 20 m thì đạp phanh đúng
+[66:45] không Các em vẽ vẽ cái sơ đồ ra nhá nào
+[66:48] Một ô tô đây sơ đô ra nhá một ô tô này
+[66:51] một ô tô đây nhá đang di chuyển và tốc đ
+[66:54] bao nhiêu các em nhở v bằng mấy
+[66:56] 20 m tr giây đúng không Thì bắt đầu làm
+[66:59] gì Các
+[67:00] em thì đp phanh đây cho chỗ phanh đây
+[67:03] nhá Đây đang di chuyển thì chỗ này phanh
+[67:05] nhá phanh
+[67:07] đây ok chưa phanh này sau khi đặp phanh
+[67:11] thì ô tô chuyển động với vận tốc mới là
+[67:13] gì Các em nhở -4t c 2 đúng không v mới
+[67:17] sẽ bằng là -40 t cộng 20 đây vận tốc mới
+[67:21] nhá phanh một lúc thì mới dừng lại đây
+[67:23] chỗ dừng Đây nhá dừng đây đok em vậy các
+[67:27] em tính cho anh xem từ lúc phanh là RT
+[67:30] là t = 0 nhá Tại vì nó là Giang Sang
+[67:32] rang V mới thôi để với cũ đúng không
+[67:34] nắng nhên nó sẽ có hai giai đoạn phanh
+[67:36] là tính từ t bằ 0 đúng chưa nào từ lúc
+[67:39] phanh lúc dừng mất bao nhiêu giây phanh
+[67:42] núc Dừng bao dây nào dừng cho V = 0
+[67:45] đi Đúng rồi Dừng các em tính này V = 0
+[67:48] vậy t mấy cho này bằng 0 nhá t bằng 0,5
+[67:53] giây
+[67:56] có đúng không Đây nhá từ lúc phanh đến
+[67:58] lúc dừng dừng thì t bằng 0 thì vận tốc
+[68:00] bằng 0 đây các em b cho em bằng 0 thì t
+[68:03] bằng 0,5 không vậy t bằ
+[68:06] 0,5 ok chưa Đấy từ lúc phanh nếu dừng
+[68:10] mất 0,5 giây nào mà như người ta bảo bao
+[68:12] nhiêu giây người ta hỏi quã đường ta hỏi
+[68:14] gì Các em nhở hỏi 3 giây cuối cùng 3
+[68:18] giây cuối cùng Đúng không Trước khi dừng
+[68:20] lại dừng lại đây dừng đây đúng không nào
+[68:22] Các em ngược về quá khứ cho anh 3 giây
+[68:24] nào thì được được gì nhở nào rừng Này
+[68:28] ngược về quá khứ từ đây rừng này đến lúc
+[68:30] phanh là bao nhiêu giây 0,5 giây đúng
+[68:32] không Vậy từ lúc phanh nó nhưng mà vẫn
+[68:34] thiếu ng giờ 3 giây đúng không Vậy còn
+[68:36] bao nhiêu giây nữa các em nhở 2,5 giây
+[68:40] nữa với vận tốc là 20 m tr giây có đúng
+[68:44] không 3 giây cuối cùng Mà từ rừng này
+[68:46] lùi về 3 giây không thì các em lùi không
+[68:49] Phả 5 giây thì sẽ được ra cái Quãng
+[68:51] đường phanh nhá Tại vì nó sẽ là hai giai
+[68:53] đoạn khác nhau mà đúng không Vậy thì sé
+[68:55] là bao nhiêu các em nhở nào quãng đường
+[68:57] gì đây nào vậy Thy ra 3 giây cuối diện
+[69:00] tích quãng đường bằng gì đây S1 c s mấy
+[69:03] S2 quãn đường này là 0,5 giây nhá Thì
+[69:07] cái quãn đường trước phải là 2,5 giây
+[69:09] nữa thì mới lui 3 giây mà đúng không Từ
+[69:11] này lùi 3 giây vậy kia 2,5 là gì nhở từ
+[69:14] 0 đến N1 C S2 này N1 là bao nhiêu giây
+[69:19] đây 2,5 giây đi với 20 đúng không Vậy
+[69:23] mình sẽ tính
+[69:24] từ 0 đến 2,5 đến 2,5 này của mấy của 20
+[69:30] này DT này cộng này bấm máy tính từ 0
+[69:34] đến
+[69:36] 0,5 của S2 là mấy - 40t cộng
+[69:44] 20 bấ máy tính nào xem mấy nó là hai
+[69:47] quãng đường nhá từ lúc dừng lùi lại 3
+[69:50] giây thì nó bị lùi hẳn ra cái phần sau
+[69:52] luôn đúng
+[69:53] không Nó bị lùi hẳn ra phần sau mà cò nó
+[69:56] bài trước lùi dây lùi lùi ra còn mấy bài
+[69:58] trước nó chỉ lùi ra đến vẫn là vẫn là
+[70:00] giai đoạn thứ hai Giai đoạn m hai đúng
+[70:02] không còn đây lùi hẳn về kế trước luôn
+[70:04] nào vậy em bấm m tí không mấy 55 Đúng
+[70:07] không Đán là gì c nhá c đ chưa Đấy từ
+[70:13] lúc rừng lùi về 3 giây thì h Sau đó 0,5
+[70:16] giây ở Quãng đường từ lúc phanh còn đâu
+[70:18] 2,5 giây là trước đó nhá câu 9 nhá một ô
+[70:22] tô đang chạy với vận tốc là 20 m m đúng
+[70:25] không Thì đạp phanh câu lại giống câu
+[70:27] trên sau khi đạp phanh thì ô tô chuyển
+[70:29] động vận tốc là như này đúng không Trong
+[70:31] đó tên là khoảng thời gian tế bằng dây
+[70:33] ok rồi từ lúc đạp phanh đến lúc dừng lại
+[70:35] à vận đến lúc ô tô còn bao nhiêu đây còn
+[70:38] 5 m ô tô di chuyển được bao nhiêu đúng
+[70:41] không Vậy thì nó b từ lúc đạp phanh đúng
+[70:43] không Từ lúc đạp phanh đúng không Vậy
+[70:45] thì em quên phần đầu đi chỉ quan tâm đến
+[70:47] lúc đạp phanh thôi là như này đúng không
+[70:49] đây lúc đp phanh đây sau khi đp phanh
+[70:51] đây đây cho đến lúc vận tốc còn 5 m vận
+[70:55] tố bằng 5 m Vậy thì các em cho V bằng 5
+[70:57] Thôi vậy t bằng mấy này giả ra đi Ừ 40t
+[71:02] cộng 20 bằng 5 nhá vậy t bằ mấy 3/8 đúng
+[71:07] không Đúng không t 3/8 vậy thì từ lúc
+[71:10] đạp phanh là sẽ tính là t bằ 0 luôn nhớ
+[71:12] thế đạp phanh là bằng 0 Vậy thì các em
+[71:15] chỉ cần tính tích phân từ mấy 0 đến 3/8
+[71:20] của cái kia là được đúng không
+[71:25] B máy tính ra bao nhiêu
+[71:28] đây
+[71:30] 75/16 m đúng không là B nhá Đấy xong rồi
+[71:35] ngĩ là bắt đầu tính từ lúc đạp phanh là
+[71:37] thời gian t bằng 0 từ lúc đạp phanh nhá
+[71:41] người lái xe ô tô một người lái ô tô này
+[71:44] đang chạy vận tốc bao nhiêu đây 20 m Vẽ
+[71:47] sơ đồ nhá một người lái ô tô đây đang
+[71:50] chạy đây vận tốc v0 sẽ bằng 20 m nhá
+[71:54] trên giây
+[71:55] thì người đó làm gì đây thì phát hiện có
+[71:58] gì nhở hàng rào đúng không phát hiện có
+[72:00] hàng rào đây hàng rào
+[72:02] đây hàng rào đây nhá hàng rào đây đúng
+[72:06] không cách bao nhiêu mét các em nhở 45 m
+[72:08] đúng không 45 m tính từ đầu X nghĩ là
+[72:12] tính từ đây đến đây là bao nhiêu đây đầu
+[72:14] X là khoảng An là 45 m nhá 45 m Đúng
+[72:18] chưa rồi Vì vậy người ta đạp phanh nghĩa
+[72:22] là nhìn phát đạp phanh luôn CH này phanh
+[72:24] nhá phanh nhá
+[72:25] đúng không nhìn phát phanh luôn thầ 45 m
+[72:27] là phanh luôn đúng
+[72:29] không vì vậy người này sẽ là phanh từ
+[72:32] thời điểm đó xe chuyển động chậm Tần đều
+[72:35] đây chuyển động chậm dần đều đây con
+[72:36] đường đây nó sẽ chậm Tần đều đây đúng
+[72:38] không đến với vận tốc v mới đây của V
+[72:41] mới rồi V mới sẽ bằng - 5t C 20 đúng
+[72:45] không Đây vận tốc mới đây vận tốc mới
+[72:48] đây trong đó t là khoảng thời gian tính
+[72:50] bằng dây Hỏi từ lúc đạp phanh đến lúc
+[72:52] dừng hẳn phe aô tô cách hàng rào bao
+[72:56] nhiêu mét đúng không ngĩ là khi em đặp
+[72:58] phanh đây các em sẽ lên lên lên lên lên
+[73:00] một tí xong đến cho này mới dừng đúng
+[73:02] không cho này dừng nhá dừng đây đúng
+[73:04] không ngĩ đạp phanh lúc dừng hẳn đây vậy
+[73:07] các em cần phải tính cái quãng đường này
+[73:08] này là bao nhiêu rồi lấy 45 m trừ đi
+[73:12] quãng đường đúng không Từ lúc đọc phanh
+[73:14] này đến lúc rừng là các em thẽ tính được
+[73:16] khoảng cách mình cách hàng rào không có
+[73:18] đúng không Vậy thì các em phải tính
+[73:20] khoảng cách từ lúc phanh đến lúc rừng là
+[73:22] bao nhiêu rồi 45 m trừ đi khoảng cách đó
+[73:25] sẽ ra cái gì nhở Cái khoảng cách cách
+[73:27] còn lại đúng rồi nào Các em lúc dừng Xem
+[73:30] t bằng mấy dừng lại thì t bằng
+[73:33] mấy V = 0 này thì t bằng mấy các em tính
+[73:38] t bằng mấy đi nào cho V = 0 4 đúng không
+[73:41] Vậy tại điểm t bằ 4 vậy quãng đường từ
+[73:44] lúc phanh đến lúc dừng s nó sẽ bằng tích
+[73:47] phân từ 0 đến 4 phanh là bắt đầu là tính
+[73:49] từ 0 nhá nào s sẽ bằng là từ 0 đến 4
+[73:54] đúng không của vận tốc này - 5t cộng 20
+[74:00] đok đấy bằng mấy các em nhở bao nhiêu 40
+[74:05] m đúng
+[74:06] không Từ đây từ đầu đến 45 này vậy đoạn
+[74:10] này là 40 m vậy trừ đi đạn này còn 5 m
+[74:13] đúng không Vậy Khoảng cách sẽ bằng
+[74:15] khoảng
+[74:17] cách bằng 45 -
+[74:20] 40 bằng 5 m nhá Ok chưa 45 này trừ đi 40
+[74:26] đ này là 40 nhá Đấy ý là người ta phát
+[74:28] tính từ khoảng từ lúc phanh đến lúc dừng
+[74:30] là bao nhiêu đá án là a nhá đ không a
+[74:34] nhá rồi 10A các em chư qua đi Câu 11 là
+[74:38] sang dạng hai nhá là nếu anh cho V thì
+[74:41] các em tính tích phân phát ra S không
+[74:42] thì là dễ nhá Bây em sẽ cho gia tốc thì
+[74:45] em phải nguyên hàm ra V rồi từ v mình
+[74:47] lại làm gì Tính tích phân ra S được chưa
+[74:49] nào vậy Thứ nhất các em nhìn cho anh câu
+[74:51] 11 nhá nào một vận động viên đua xe F1
+[74:55] đang chạy với vận tốc là mấy đây 10 đúng
+[74:59] không 10 này Ok thì anh ta tăng tốc đang
+[75:03] chạy đây nhá Vẽ sơ đồ nào đang chạy vận
+[75:06] tốc là 10 đây đây vận đòng viên đây F1
+[75:09] đây đang chạy vận tốc là mấy 10 m đúng
+[75:13] không trên giây thì anh ta tăng tốc thì
+[75:16] anh ta tăng tốc đây tăng tốc chỗ này
+[75:18] tăng tốc nhá tăng tốc tăng
+[75:21] tốc ok chưa tăng tốc này thời điểm này
+[75:24] là tăng tốc nhá Đang chạy thì tăng tốc
+[75:27] với at là mấy đây at là cái này 6t đúng
+[75:31] không at bằ
+[75:32] 6t Tho t nhá Ok rồi trong đó t là khoảng
+[75:37] thời gian tí bằng giây nhớ khi tăng tốc
+[75:40] thì lúc đó các em phải tính lại thời
+[75:42] gian là mấy các em nhở là 0 Tại vì khi
+[75:45] tăng tốc vận tốc sẽ thay đổi thì luôn
+[75:46] luôn reset lại thành 0 rồi Hỏi quãng
+[75:50] đường xe của anh ta đi được trong thời
+[75:53] gian 10 giây Kể từ lúc tăng tốc vậy tăng
+[75:56] tốc là 0 đúng không 10 giây sau là t
+[75:59] bằng mấy nhở t bằng 10 đúng thôi Vậy thì
+[76:02] các em phải tính tích phân từ 0 đến mấy
+[76:04] 0 đến 10 đúng không của hàm vận tốc
+[76:07] nhưng mà các em thấy có vận tốc chưa
+[76:09] chưa có vận tốc đúng không Mà người ta
+[76:11] chỉ cho gia tốc vậ em làm gì đây đây lý
+[76:12] thuyết đây nào nào Các em nhìn này nếu
+[76:16] ngườ ta cho gia tốc Đúng không các em
+[76:17] phải làm gì nhở nguyên hàm ra vận tốc
+[76:19] Được chưa Rồi có vận tốc mình lại tính
+[76:21] tích phân đấy nhá Cho gia tốc là phải
+[76:25] Tính nguyên hàm ra vận tốc được chưa nào
+[76:27] Ok nguyên hàm nhá các em Tính nguyên hàm
+[76:29] đi Nào Nào ta sẽ có vận tốc mình Tính
+[76:32] nguyên hàm từ t0 đến T10 nhá vận tốc sẽ
+[76:35] bằng nguyên hàm của gia tốc nhá nào
+[76:38] nguyên hàm của mấy đây
+[76:41] 6t bằng mấy các em nhở 6t nguyên hàm là
+[76:45] mấy 6t bình tr 2 Vậy là 3t bình đúng
+[76:49] không Các em nhưng nguyên hàm phải cộng
+[76:51] thêm gì nhở cộng c Đúng rồi Các em phải
+[76:54] cộng thêm C nhá nhá cộng thêm C Nếu em
+[76:56] không cộng thêm C các em bị sai thì các
+[76:58] em biết C nà chính là gì không Các em
+[77:01] Đúng rồi C nó chính là vận tốc ban đầu
+[77:02] nói đúng không vận tốc ban đầu đây đây
+[77:05] cho vận tốc ban đầu bao nhiêu các em ơi
+[77:08] 10 m tr giây đây nhá C nó chia 10 m tr
+[77:11] dây được chưa vận tốc ban đầu nó có đây
+[77:12] này nào ta sẽ có này đúng không tại t =
+[77:16] 0 thì vận tốc là 10 không Tại thời điểm
+[77:18] tăng tốc nó đang là 10 nhá t = 0 đây vận
+[77:21] tốc là 10 vận tốc là 10 vậy c ằng 10 nhá
+[77:24] mà C = 10 là vận tốc ban đầu nhá v0 ấ
+[77:29] bằng v0 nhá vậy các em sại có được gì
+[77:32] đây các em vậy ta có v bằng mấy 3t bình
+[77:37] cộng 10 hàm V đây nhá Được chưa các em C
+[77:42] là gì C là cái v0 ban đầu bây giờ mới
+[77:44] dùng đến v0 đây này rồi Có V rồi tính
+[77:47] được s không s sẽ bằng gì nhở tích phân
+[77:50] từ từ mấy từ 0 đến 10 nhá 0 đến 10 của
+[77:55] hàm vận tốc 3t bình cộ 10 DT cái bài này
+[78:00] nó chuộng thi biết tại sao không Tại vì
+[78:02] nó vừa phải Tính nguyên hàm vừa phải
+[78:03] tính tích phân thế ta hay chuộng thi nhá
+[78:05] bằng mấy nh các em nhở
+[78:08] 1100 m đúng không Ok A nhá rồi chư các
+[78:14] em nhớ cái vận tốc ban đầu nó chính là
+[78:16] cái cái v0 ấ v0 là cái c Đấy Ok chưa Đấy
+[78:19] ch vào đi câu 12 nhá Một vật đang chuyển
+[78:23] động với vận tốc 10 m tr giây được chưa
+[78:26] v0 các em nhá v0 đây nó chính là cái Tí
+[78:28] nữa mình tính nó sẽ là gì nhở C đấy nhớ
+[78:31] chưa đang chuyển động với 10 m tr giây
+[78:34] thì đây v0 là C đấy với gia tốc at bằ 3t
+[78:37] c t bình Đúng chưa 3t c t bình đây rồi
+[78:42] tính quãng đường mà vật đi được trong
+[78:44] khoảng thời gian 10 giây 10 giây Kể từ
+[78:47] lúc bắt đầu Giang tốc đúng không nào vậy
+[78:49] ta sẽ tính này đầu tiên tính v sẽ bằng
+[78:52] gì nhỉ nguyên hàm của A nhá
+[78:55] 3t cộ t bình bằng
+[78:57] mấy DT sẽ
+[79:00] bằng bằng Thay vào đây được mấy đây nhở
+[79:03] là thành là 3t bình tr2 trừ đi t mũ 3/3
+[79:08] cộ t 3/3 cộ C nhá đúng các em đấy mà C
+[79:13] được chưa vận tốc ban đầu đúng không đấy
+[79:16] em thay t bằ 0 vào này v0 nhá v0 là thời
+[79:19] điểm ban đầu ấ thay t = 0 vào đây thì
+[79:21] rút gọn hết đúng không Thì chứng hỏ C nó
+[79:23] chính là gì nhở vận tốc v luôn tại vì t
+[79:26] = 0 thì mất hết này đúng không Thì C nó
+[79:29] chính là vận tốc luôn vậy c bằng mấy mà
+[79:31] C sẽ bằng v0 sẽ bằng 10
+[79:35] nhá vậy suy ra quãng đường sẽ bằng gì
+[79:38] đây s sẽ bằng là tích phân từ 10 giây là
+[79:42] từ 0 đến 10 của hàm vận tốc nhá 3t bình
+[79:46] tr2 cộng t mũ 3/3 cộng c đúng không C là
+[79:51] 10 nhá nào bấm máy tính bằng vậy
+[79:56] et sẽ bằng là C đúng không
+[80:00] 44300 PH3
+[80:03] m c nhá Ok chưa Thế thôi 12c chư bạ Câu
+[80:10] 13 ta cho gì Các em nhở người ta cho là
+[80:12] một chất điểm đang chuyển động với vận
+[80:14] tốc ban đầu Ok đang chuyển động với vận
+[80:16] tốc ban đầu đây đây chứ là v0 nhá Nó
+[80:19] chính là C đúng không Các em C nhá thì
+[80:22] đột ngột thay đổi gia tốc at ok at tính
+[80:25] quãng đường chất điểm đi được từ thời
+[80:28] điểm tăng từ thời điểm thay đổi gia tốc
+[80:30] là tính từ t bằng mấy các em nhở bằng 0
+[80:32] đúng không thay đổi gia tốc là t = 0 đến
+[80:35] thời điểm vận tốc lớn nhất V max V max
+[80:39] đúng không Đấy có nghĩa là các em phải
+[80:41] tìm cho anh gì nhở tính quãng đường là
+[80:43] phải tính s đúng không bằng tích phân
+[80:45] của vận tốc Nói chung phải tìm vận tốc
+[80:47] đã nà vận tốc bằng mấy các em VT bằng
+[80:50] mấy V bằ nguyên hàm của mấy đây nguyên
+[80:52] hàm của A đúng không nguyên hàm của bao
+[80:54] nhiêu đây 4 -
+[80:56] t bằng mấy các em 4T trừ gì nhở t bình
+[81:01] tr2 cộng c không đúng không Các em thì
+[81:05] khi nó đang chuyển động thì cái C này nó
+[81:06] chính là gì nhỉ là v0 nhá C chính là v0
+[81:09] đấy thì các em tính là C bằng mấy nhở C
+[81:11] bằ 30 đúng không Vậy thì hàm mình là bao
+[81:14] nhiêu đây hàm mình sẽ bằng là v sẽ bằng
+[81:18] nhá Nó đang chuyển động thì V v0 30 nhá
+[81:22] Đấy v0 30 đấy vì các em thay Không vào
+[81:25] thì sẽ mất hết nó chỉ còn C thôi C nó
+[81:27] chia số đây luôn nhá v sẽ bằng là bao
+[81:29] nhiêu đây v sẽ bằng là
+[81:32] 4t trừ t bình tr 2 cộng bao nhiêu 30
+[81:37] Okay chưa đây làm V đây nhá và người ta
+[81:40] hỏi gì nhở người ta hỏi là từ thời điểm
+[81:43] thay đổi gia tốc là t = 0 đến thời điểm
+[81:47] vận tốc max vận tốc max vậy V max Khi
+[81:50] nào các em nào Hào này max Khi nào các
+[81:52] em nhở max Khi nào
+[81:55] max khi đây là hàm Babol đúng không Các
+[81:57] em Babol max Khi nào các em hàm bol mà
+[82:00] có có cái bình phương này này thì max
+[82:02] khi nào đây b b đây úp xuống đúng không
+[82:04] max tại đâu Đúng rồi t max bằng - B tr
+[82:08] 2a - b tr 2A Ok đúng không bằng mấy các
+[82:12] em tính đi đúng các em đây hàm bar mà
+[82:15] bằng bao nhiêu trừ b là trừ mấy -4 này
+[82:17] chia 2A đúng không -4 chia
+[82:20] cho -4 này chia Cho 2a 2 nh Ừ 1/2 bằng
+[82:25] mấy Bằng 4 nhá t max bằng 4 giây Đúng
+[82:29] chưa thì hàm par bol nhá Đấy hoặ cách
+[82:32] hai em tính đạo hàm cũng được nhưng mà
+[82:34] mình nhìn nhanh luôn vậy suy ra quãng
+[82:37] đường bằng gì Các em nhở tích phân từ
+[82:39] mấy từ t bằng 0 đến vận tốc lớn nhất là
+[82:43] bằng 4 được chưa V max đấy T tại điểm
+[82:47] max này bằng mấy các em nhở của 4t trừ t
+[82:51] bình trên 2 cộng 30 bằ mấy
+[82:56] k mấy 424 PH3 đúng
+[83:01] không Xong rồi nhá các em chớp ạ Đán là
+[83:05] B B nhá rồi nghe là hàm bậc hai thì các
+[83:09] em nhớ max min nó sẽ xảy ra ở Cái gì nhỉ
+[83:12] Cái đỉnh cái đỉnh là Â B tr 2A nhá rồi
+[83:15] Các em chư vào còn đâu các em phải thích
+[83:17] tính đạo hàm cũng được nhá Đấy K chư đi
+[83:20] Một vật chuyển động với gia tốc là như
+[83:22] này Một vật chuyển động gia tốc như này
+[83:24] đúng không Ok khi t bằ 0 khi t = 0 thì
+[83:28] vận tốc của vật là 30 cái 30 này nó
+[83:31] không phải là là C đâu nhá các biết lại
+[83:33] sao không t = 0 phải thay t bằ 0 vào mà
+[83:36] biết là bao nhiêu nhá cái nó đang chuyển
+[83:38] động thì thì mới là C Nói chung là khi
+[83:41] người ta t bằ 0 này các em phải thay
+[83:43] Thay vào phải thay số đấy thay vào đấy
+[83:44] Tí phải thay đấy tí nữa thì thay nhá
+[83:47] tính quãng đường vật đi được sau 2 giây
+[83:51] sau 2 giây thì là từ 0 đến 2 rồi đúng
+[83:53] không thì bây gi các em tìm v là xong
+[83:55] nào v bằng gì nguyên hàm của
+[83:58] -20 1 + 2T mũ tr-2 DT nào nguyên hàm này
+[84:04] bằng gì Các em nhở bằng gì Các em nào
+[84:07] Các em nhớ cái công thức này này Công
+[84:08] thức này nhá ax + b nguyên mũ n nguyên
+[84:13] hàm bằng gì Các em bằng gì nhỉ ax + b mũ
+[84:16] n nguyên hàm bằng gì nhở tăng lên một
+[84:19] đơn vị là ax + b n c 1 chia cho mấy chia
+[84:24] n cộng 1 nhân với cả hệ số a nhớ chưa
+[84:27] nhân cả hệ số a nhá cộng c đúng
+[84:31] không Các em nhớ công thức này không hàm
+[84:34] hợp nhá vậy thằng này bằng gì Các em nhở
+[84:37] -20 Vứt ra ngoài không -20 vớt ra ngoài
+[84:41] nhá ta được gì
+[84:42] đây 1 c 2T mũ -2 thì tăng lên 1 là gì
+[84:46] nhở mũ tr-1 này chia cho bao nhiêu chia
+[84:50] cho -1 đúng không t nhân với cả hệ số a
+[84:52] này này Thành - mấy - 2 cộng c ok chưa
+[84:57] đấy nhá
+[85:00] đok tương đương v bằng gì đây nào -20
+[85:04] chia cho 2 là bằng 10 chia cho các em
+[85:08] tụt xuống mẫu nhá 1 + 2T cộ C đúng không
+[85:14] K đấy C nh không đúng không Các em -20
+[85:20] cả 2i -2 rút gọn các em bị tụt xuống nhá
+[85:23] C bằng mấy các em nhở nào Các em thay
+[85:25] vào đây này nào thay t bằng 0 vào đây
+[85:27] nhá thay t bằ 0 vào đây nó không bị mất
+[85:29] đâu nó còn mấy các em nhở thay t bằng 0
+[85:31] vào đây đi nó không giống như bài trước
+[85:34] là thay t = 0 mất hết nào thay t = 0 vào
+[85:36] đấy nào thay t =
+[85:38] 0 thay t = 0 bằ thì v bằng v = 30 nhá nà
+[85:47] Em thay đi được gì đây nào thay t = 0 và
+[85:50] V = 30 nhá 30 sẽ bằng nào thay t = 0 và
+[85:54] đây đúng không Vào đây thì là 10 tr 1 là
+[85:57] 10 + c Đấy t Thay vào 0 đ còn lòi ra số
+[86:01] 10 cơ đúng không đấy thế thôi vậy c bằ
+[86:06] 20 20 ok C = 20 chưa C C bằ 20 vậy các
+[86:11] em tính được quãng đường chưa quãng
+[86:13] đường bằ gì nhở bằng tích phân từ mấy
+[86:16] đến mấy từ 0 đến 2 của hàm này nhá 10 tr
+[86:22] 1+ 2T cộng c là cộng 20 em bấ Máy tính
+[86:28] đi bằng là 48 Đúng
+[86:33] không các em đấy là B nhá Đấy các em nhớ
+[86:38] các em phải người ta cho t bằ 0 thi t bằ
+[86:41] 0 thì vận tốc bằng 30 nghĩa là thay vào
+[86:44] trong đây các em tìm được gì nhở tìm
+[86:45] được C được chưa Đấy 15 như sau này một
+[86:48] ô tô chuyển động nhanh dần đều đúng
+[86:50] không với vận tốc là mấy đây 7t đúng
+[86:52] không đi được 5 D dây thì người đó phát
+[86:55] hiện chướng ngại vật và phanh cấp các em
+[86:58] C vẽ hình nhá một ô tô này chuyển động
+[87:00] nhanh Tần đều đây ô tô đây nhá đang đi
+[87:02] nhanh dần đều ở đây đang đi nhanh dần
+[87:05] đều đúng không vận tốc v bằng mấy v bằng
+[87:08] 7t đúng không đi được mấy giây các em
+[87:11] nhở 5 giây 5 giây nhá 5 giây 5 giây dây
+[87:16] từ 5 đây 5 giây nhá 5 giây thì Ngà đó
+[87:20] làm gì đây bó phanh đúng không bó phanh
+[87:24] ch phanh nhá phanh Đúng không Đúng không
+[87:28] và tiếp tục chuyển động chậm lần đều với
+[87:31] gia tốc là mấy đây - 70t - 7 đúng không
+[87:35] khi phanh thì nó sẽ đi chậm chậm thì là
+[87:38] a - 70 đây ok rồi rồi nó sẽ bị dừng lại
+[87:44] đúng không chậm đều đy chỗ dừng nhá đúng
+[87:47] không trậm Thì phải đi dừng lại đúng
+[87:49] không phanh thì tính lại thời điểm t = 0
+[87:51] nhá phanh thì t = 0 nhá rồi Dừng đúng
+[87:55] không dừng Ok Đấy tính quãng đường của ô
+[88:00] tô đi được từ lúc bắt đầu chuyển bánh
+[88:03] đến khi dừng hẳn từ lúc bắt đầu chuyển
+[88:05] bánh này đúng không đến khi dừng hẳn
+[88:07] đúng không nào bắt đầu chuyển bánh là
+[88:09] chỗ này đây Bắt đầu di chuyển đây di
+[88:12] chuyển đúng không Các em chuyển bánh đây
+[88:15] di chuyển được 5 giây thì dừng 5 giây
+[88:17] thì phanh phanh thì sẽ bị dừng lại đúng
+[88:19] không Vậy nó bắt tính cho em quãng đường
+[88:21] từ lúc di chuyển này đến lúc dừng lại
+[88:23] đúng không Vậy nó có mấy giai đoạn các
+[88:25] em nhở hai giai đoạn đúng không giai
+[88:27] đoạn thứ nhất là từ lúc bắt đầu di
+[88:29] chuyển được 5 giây thì được bao nhiêu
+[88:31] quãng đường đ bao nhiêu nhỉ nào tính
+[88:33] nhanh nào S1 bằng mấy hai quãng đường
+[88:36] nhá quãng đường đầu tiên là được 5 giây
+[88:38] có vận tốc chưa rồi OK quãng đường sẽ
+[88:41] bằng tích phân của vận tốc 5 giây có
+[88:43] thời gian rồi từ 0 đ5 đúng không 0 đ5
+[88:46] của hàm vận tốc hả Chưa 70 7t bằng mấy
+[88:50] tính nào bao nhêu quang đường th nhất
+[88:53] bằng Mệnh
+[88:55] tính bằng mấy đây
+[88:57] 87,5 m các em bấm máy tính thử đi xem
+[89:00] đúng không nhá từ 5 giây đầu tiên với
+[89:03] vận tốc là 7t anh Thế anh hỏi các em nhá
+[89:06] Vậy khi nó di chuyển như vậy đ đến thời
+[89:09] điểm phanh thì vận tốc nó là bao nhiêu
+[89:12] tại khi phanh nó phải có vận tốc ban đầu
+[89:13] đúng không Đang di chuyển với vận tốc
+[89:15] bao nhiêu thì đồ các em tại điểm phanh
+[89:17] vận tốc là bao nhiêu Đúng rồi này V = 5t
+[89:20] À 7t mà đi được 5 giây đúng không thay
+[89:24] số 5 vào đây là được mấy 5 nh 7 là mấy
+[89:27] 35 vậy tại điểm phanh thì v0 sẽ bằng 35
+[89:31] có hiểu không nhở v0 sẽ bằng 35 Tại thời
+[89:34] điểm này là V = 35 nhá thì nó sẽ phanh
+[89:36] đúng không thay 7t thay 5 vào đây này đi
+[89:39] được 6 giây thay 6 vào đây đi được 10
+[89:42] giây thay 10 vào đây Ok Vậy vận tốc của
+[89:45] giai đoạn thứ hai đây từ lúc phanh lúc
+[89:48] dừng nào Các em phải tính V để tính
+[89:50] quãng đường đúng không nào v bằng gì đây
+[89:52] giai đoạn 2
+[89:56] nào v bằng gì
+[89:58] đây v sẽ bằng
+[90:00] là v sẽ bằng là nguyên hàm của A đúng
+[90:03] không -70 BT bằng mấy các em nhỉ - 70t
+[90:08] đúng không cộng mấy các em cộng c đúng
+[90:10] không cộng
+[90:12] c nào vậy c bằng mấy các em nhở nào Thời
+[90:16] điểm v0 thì bằng 35 đây thay t c 0 vào
+[90:19] đây thì được mấy nhở t 0 đây mất không
+[90:21] Các em vậy c nó chính là V luôn không v0
+[90:24] luôn không Tại vì Thay vào đây là mất
+[90:26] rồi nhá Đấy vậy vậy v0 vậy c = 35 suy ra
+[90:30] C =
+[90:32] 35 m tr giây được chưa Ok vậy v bằng -
+[90:37] 70t C C C = 35 đây nhá Đúng không thời
+[90:40] điểm ban đầu ấy đúng không phải tìm C
+[90:44] nhá C là 35 lấy 5 x 7 bằ 35 là vận tốc
+[90:47] ban đầu Ok vậy vậy Su ra v bằng mấy các
+[90:51] em nhở v sẽ bằng là
+[90:54] 70t cộng 35 nào vậy Lúc dừng lại thì mất
+[90:58] bao nhiêu giây các em T lúc phanh nó
+[91:00] dừng mất bao nhiêu giây rồi cho bằng 0
+[91:03] Đi cho bằng 0 để dừng lại này dừng lại
+[91:07] dừng V bằ 0 suy ra Các em tính được t sẽ
+[91:11] bằng 0,5 đúng không Đấy có nghĩa là từ
+[91:16] lúc phanh lúc dừng mất 0,5 giây 5 giây g
+[91:20] chưa Từ lúc phanh thì nó dừng mất 0,5
+[91:22] giây đấy h V đây vậy các em tính được S2
+[91:25] không vậy S2 sẽ
+[91:28] bằng S2 sẽ bằng gì đây tích phân từ 0
+[91:33] đến 0,5 giây của hàm vận tốc không t đây
+[91:38] nhá nào tích phân từ 0 đến 0,5 tầy mất
+[91:43] 0,5 tây để phanh mà 0 đ 0,5 của thằng
+[91:46] này nhá - 70t cộng 35 cái m mới tính ra
+[91:52] mấy
+[91:54] Ồ ra mấy nhở 8,75 đúng không m Đấy được
+[91:59] chưa k vậy s Từ đó các em tính được kết
+[92:02] luận là s sẽ bằng s1 + s2 nhá Đúng không
+[92:06] hai quãng đường cộng với nhau Quãng
+[92:08] đường này cộng Quãng đường này quãng
+[92:09] đường này thì có vận tốc rồi tính luôn
+[92:11] quãng đường này thì có gia tốc thì phải
+[92:12] tính gì nhở tính vận tốc bằng cách
+[92:14] nguyên hàm nguyên hàm nhưng C là cái gì
+[92:16] c nó chính là 35 là thay 5 vào
+[92:19] đây các em tính đi bằng bao nhiêu 96 phẩ
+[92:23] 25 m
+[92:24] ok chưa vậy đá là gì đây D nhá chư vào
+[92:30] ok các em chữa vào nhá D nào Các nhìn
+[92:32] câu 17 này 17 là một chuyển động với vận
+[92:35] tốc là v này có gia tốc là bao nhiêu đây
+[92:39] at bằ 1 ph t + 1 đúng không vận tốc ban
+[92:42] đầu của vật là 8 m tr giây là v0 hỏi vận
+[92:46] tốc của vật sau 9 giây bằng bao nhiêu
+[92:48] đúng không Sau 9 Giây bằ bao nhiêu nào
+[92:50] đầu tiên các em tính vận tốc người ta
+[92:52] hỏi vận tốc đúng không người ta cho gia
+[92:54] tốc người ta cho gia tốc khỏi vận tốc
+[92:56] các em làm gì nhở Tính nguyên hàm thôi
+[92:58] là v bằng nguyên hàm của A nguyên hàm
+[93:01] của A này 1 tr t+ 1 DT bằng mấy các em
+[93:05] thay vào được mấy len của t+ 1 không
+[93:09] cộng c nhá Ok chưa v bằng cái này đúng
+[93:12] không Vậy người ta hỏi gì đây vận tốc
+[93:15] ban đầu là 8 m tr giây ngĩa là các em
+[93:17] thay t = 0 vào thì vận tốc sẽ bằng 8 nào
+[93:20] t = 0 thì V = 8
+[93:24] các em thử Thay vào đây để tím được C C
+[93:25] bằng mấy th bằng mấy nào t ằ 0 Thay vào
+[93:28] đây thay 0 là len ln 1 là 0 đúng không t
+[93:33] bằ 0 mất chưa mất rồi Vậy còn C thôi C
+[93:35] bằng gì luôn bằng 8 luôn bằng v luôn
+[93:38] đúng không C = 8 Ok vậy hàm vận tốc là
+[93:41] gì đây hàm vận tốc là v bằng v bằng len
+[93:47] của t+ 8 1 cộng mấy cộng 8 chưa Rồi V
+[93:53] đây hàm V đây
+[93:55] nhá Về đây nhá Ok rồi nào hỏi vận tốc
+[94:00] sau 9 giây đúng không Vậy các em thay t
+[94:02] = 9 là được nào thay t bằng 9 đi V9 bằng
+[94:05] mấy thay 9 vào đây được mấy đây len của
+[94:09] nào 9 + 1 = 10 lên 10 cộng 8 vậy Đán là
+[94:15] gì đây B nhá thôi đấy chư bằng B đok ta
+[94:20] hỏi vận tốc thôi không phải tính quãn
+[94:21] đường gì cả đâu nhá vận tốc thì K điển
+[94:23] Tính nguyên hàm là xong Đấy thấy chưa
+[94:26] nào câu 18 nhìn nào nào Các em nhìn câu
+[94:29] 18 nhá nào Một vật chuyển động theo quy
+[94:32] luật là s đúng không Đây Nào s đây Một
+[94:36] vật chuyển động quy luật S bằng - 0,5 t
+[94:39] mũ 3 cộng 9t Bình đúng không nào hỏi
+[94:42] trong khoảng thời gian 10 giây nghĩa là
+[94:45] t thuộc từ 0 đến 10 nhá t thuộc từ 0 đến
+[94:48] 10 đúng không 10 giây rồi từ lúc bắt đầu
+[94:51] chuyển động thì vận tốc lớn nhất là nhêu
+[94:54] đâyy câu lớp 11 đây câu lớp 11 nhá vận
+[94:57] tốc cho quãng đường Hỏi vận tốc vậy Từ
+[95:00] vận tốc làm sao ra quãng đường à từ
+[95:02] quãng đường đây các em nhìn này nào nào
+[95:04] từ quãng đường làm sao do vận tốc đây
+[95:07] đạo hàm đạo hàm đúng không đạo hàm do
+[95:09] vận tốc nào tính đạo hàm đi s' bằng mấy
+[95:12] s' Bằng đạo hàm nào đạo hàm đi cho anh -
+[95:16] 1,5 t bình cộng mấy cộng 18t ok chưa rồi
+[95:22] Đây là vận bằng v không
+[95:24] hàm V nhá Ok chưa Rồi và người ta hỏi V
+[95:28] max đúng không v max thì em phải tìm V
+[95:31] max tại thời điểm t bằng mấy nào V max
+[95:33] tại đâu các em đây là hàm bậc mấy bậc 2
+[95:37] chưa vậy V max tại đâu tại đỉnh Không
+[95:40] tại t bằng bằng bao nhiêu các em đỉnh
+[95:44] bao
+[95:45] nhiêu tại vì a âm đỉnh bar nó bị quay úp
+[95:49] xuống dưới đúng không Vậy max tại đỉnh
+[95:51] chưa nào Các em tính đi t bao nhiêu - B
+[95:54] tr 2A nào tính đi -18 trên
+[95:58] 2A Ừ trên trên 3 đúng không - 3 bằng 6
+[96:02] chưa vậy t max vậy V max tại t bằng mấy
+[96:06] T bằng 6 vậy các em t thay t bằng 6 vào
+[96:08] đây có tính được v không vậy Ra V6 sẽ
+[96:12] bằng v max tại thời điểm t = 6 nhá thay
+[96:16] V6 vào đây được mấy các em thay 6 vào
+[96:18] đây đi Đ mấy thay 6 đây trừ 1,5 mũ 6
+[96:24] nhân 6 Bình này cộng với 8 nh 6 bao
+[96:26] nhiêu 54 đúng
+[96:28] không Rồi Đán là gì đây a a nhá xong OK
+[96:34] chưa
+[96:35] 78a Thế th V max Hà parabol max tại đỉnh
+[96:40] nhá Maxx tại đỉnh Min cũng tại
+[96:42] đỉnh Min thì nó sẽ quay lên max thì nó
+[96:46] sẽ quay xuống úp như này nào chữa 18 đi
+[96:49] các nhìn Câu 19 nhá nào Câu 19 phải tóm
+[96:52] rát được đề bài để làm được bài nào Câu
+[96:54] 19 này tại một nơi không có gió không có
+[96:58] gió
+[96:59] nhá một chiếc khí cầu đang đứng yên một
+[97:03] chiếc khinh khí cầu đang đứng im nào Các
+[97:05] em nhìn nhá một nơi không có gió một
+[97:07] chiếc khinh khí cầu Đứng im ok chưa thì
+[97:10] nghĩ câu đy nhá cách mặt đất bao nhiêu
+[97:12] đây độ cao là 162 m 162 m đ OK 162 m 162
+[97:21] m là quãng đường từ cái khi nì cầu đến
+[97:25] mặt đất nhá rồi nào được phi công phi
+[97:30] công làm gì đây phi công đặt chế độ đi
+[97:33] xuống nó sẽ rơi rơ rơi xuống đúng không
+[97:35] Nó đi xuống đi đi xuống nhá chuyển động
+[97:38] theo phương thẳng đứng Ok đi xuống này
+[97:40] vận tốc có chưa các em rồi vận tốc có
+[97:42] rồi vận tốc đây 10t trừ t bình vận tốc
+[97:46] đây nhau vận tốc
+[97:48] bằng vận tốc sẽ bằng là 10t trừ t bình
+[97:53] OK nhá vận tốc và
+[97:56] rồi tiếp tục này gì nữa
+[97:59] đâyy thời gian Ok mấy câu này không nói
+[98:02] gì cả tính theo đơn vị m phút Ok hỏi khi
+[98:05] bắt đầu tiếp đất khi bắt đầu tiếp đất
+[98:07] vận tốc của vật là bao nhiêu nào khi
+[98:11] tiếp đất khi bắt đầu Ri xuống thì thời
+[98:14] gian bằng mấy các em nhở bằng 0 hỏi khi
+[98:16] tiếp đất vận tốc là bao nhiêu đúng không
+[98:18] vận tốc là gì Các em nhở các em muốn
+[98:20] tính được vận tốc các em phải tính cái
+[98:22] gì vận tốc thì theo theo ẩn là gì đây ẩn
+[98:26] là gì nhở ẩn là t đúng không muốn tính
+[98:28] được vận tốc Em phải tìm được cái gì Tìm
+[98:30] t thay t vào đây tính được vận tốc không
+[98:32] có vậy các em phải thờ Tìm xem thời gian
+[98:34] tiếp Đất là bao nhiêu Được chưa t = a
+[98:38] được chưa các em phải gọi thời gian tiếp
+[98:40] đất là A được chưa Thì có phải tích phân
+[98:42] từ 0 đến A thì bằng bao nhiêu các em nhở
+[98:45] 100 bao nhiêu 62 quãng đường đúng không
+[98:47] bằng tích phân từ 0 đến A của vận tốc
+[98:49] chưa nào em trình bày nhá Gọi thời gian
+[98:52] tiếp tiếp đất gọi thời gian tiếp
+[98:57] đất t = a nhá t = a được
+[99:01] chưa nào vậy ta sẽ có công thức là gì
+[99:04] Các em nhở quãng đường bằng gì đây bằng
+[99:07] tích phân từ 0 đến A đúng không 0 đến A
+[99:10] 0 đến A của Gì Đây của h vận tốc nhá 10t
+[99:15] trừ t bình DT bằng mấy các em nhở 162
+[99:21] đúng không quang đường di chuyển 162
+[99:23] nhưng là hàng dọc chứ nó không ngang như
+[99:25] mấy bài trước đúng không nào Vậy tính
+[99:28] với anh
+[99:29] nào nào nguyên hàm của 10t là gì nhở ngy
+[99:33] hàm 10t bằng gì 5t bình rồi 10t bình tr
+[99:37] 2 là 5t bình trừ t mũ 3 tr 3 đúng không
+[99:41] Cận là từ 0 đến A của
+[99:46] 162 ok chưa rồi Các em thay cận trên vào
+[99:49] thay cận dưới vào đằ mấy 5A Bình này
+[99:54] đúng không trừ đi bao
+[99:56] nhiêu 5A Bình thay A vào đây trừ đi a mũ
+[100:00] 3 trên mấy tr 3 đúng không trừ đi thay 0
+[100:04] vào thay 0 vào được mấy 0 đúng không k
+[100:08] bằ 162 các em bấm máy tính đi xem a bằng
+[100:11] mấy chọn số đẹp Thôi bấm máy tính đi a
+[100:14] bằng mấy đúng không S bằng tích phân từ
+[100:17] 0 từ dây 0 đến dây a là dây tiếp đất đấy
+[100:20] của vận tốc thì bằng 162 được chưa bài
+[100:24] phải tính bằng tay bấm đi A mấy Bấm đi A
+[100:27] bằ mấy Bấm
+[100:32] đi mấy 9 đúng không a 9 là số đẹp chưa
+[100:37] số đẹp rồi bấm ra 9 nhá a bằng 9 vậy thì
+[100:39] có A bằng 9 có tính được thời gian không
+[100:41] Các em có vậy suy ra v bằng mấy V9 bằng
+[100:45] mấy các em thay 9 vào đây 10 nh 9 trừ đi
+[100:49] 9 Bình kết quả là 9 m tr giây xong chưa
+[100:52] vậy vận T cốc tiếp đất đó chính là 9 m
+[100:54] tr giây đá là gì đây C nhá Đấy các em
+[101:00] hình dung được không nhở mình gọi thời
+[101:02] gian tiếp là a từ 0 đến A nó chính tích
+[101:04] phân nó chính 162 ch đó tính được a nhá
+[101:07] có a Tính được v rồi Chư và đi nà các em
+[101:10] nhì câu 20 nào nhìn này một viên Đạ được
+[101:14] bắn lên từ mặt đất theo phương gì Các em
+[101:16] nhở thẳng đứng nhá một viên đạn bắn lên
+[101:19] mặt đất theo phương thẳng đứng đây đúng
+[101:21] không với vận tốc ban đầu bằng 25
+[101:25] m/s sau đó viên đạn tiếp tục chuyển động
+[101:27] với vận tốc này đúng không Đấy tiếng
+[101:31] bằng dây g là g dốc trọng trường là 98
+[101:34] cho đến đi rớt lại xuống mặt đất đúng
+[101:37] không Hỏi sau bao lâu Đạt độ cao lớn
+[101:40] nhất Chiều cao là max Đúng chưa nào Các
+[101:44] em bắn đạn nhá Đây viên đạn đây đúng
+[101:46] không bắn này chiu chiu chiu chiu xong
+[101:48] rơi xuống đấy Dong rơi xuống đất không
+[101:50] đúng không Các em vậy Khi nào thì độ cao
+[101:52] lớn nhất các em
+[101:54] nhở Khi nào Đội cao lớn nhất khi bắn đạn
+[101:58] này xong nó rơi xuống Khi nào Đội cao
+[102:00] lớn nhất đoán đi khi nó dừng lên cao
+[102:02] không phải khi nó dừng lại thì phải vận
+[102:05] cốc cao nhất đâ Tại vì nếu mà vận tốc nó
+[102:07] còn nó mà có vận tốc Nó còn cao hơn nữa
+[102:09] đúng không Rồi khi vận tốc bằng 0 Thì
+[102:11] lần sò sẽ cao nhất tại vì nó mà còn vận
+[102:14] tốc nó còn chiu lên trên trên K đúng
+[102:15] không khi h max thì cái vận tốc tại thời
+[102:18] điểm này bằng mấy Bằng 0 V = 0 đ không
+[102:21] Các em V = 0 vậy em cho V ằng 0 đi suy
+[102:24] ra đ nhở 25 trừ đi GT ch g là 9,8 t bằng
+[102:30] 0 suy ra t bằng mấy bao nhiêu đây
+[102:36] 125/49 xong đặt là a nhá ạ Thế thôi đúng
+[102:42] không khi vận tốc lớn nhất à khi cái cái
+[102:44] độ cao lớn nhất thì vận tốc nó sẽ bằng 0
+[102:46] nó đứng im tụt tụt xuống nhá Ok chưa Đấy
+[102:49] h max thì vận tốc bằng 0 được chưa Tại
+[102:52] vì nếu có vận tốc nó còn đi lên nữa đấy
+[102:54] Các em chữa vào đi Đạ câu 20 nhá chữa
+[102:56] vào phần 3 này là các phương pháp tính
+[102:59] tích phân các phương pháp tính tích
+[103:05] phân nào các phương pháp tính tích phân
+[103:08] chúng ta sẽ có hai cái phương pháp chính
+[103:10] để tính tích phân các em biết là hai
+[103:11] phương pháp gì không là phương pháp gì
+[103:13] nhở đặt ẩn phụ được chưa là t ấ và
+[103:17] Phương áp thứ hai là Phương áp gì đây
+[103:18] tích phân từng phần được chưa nào phươ á
+[103:21] mình sẽ là đặt ẩn T đặt t là đổi biến
+[103:27] đấy cái dạng thứ hai là mình sẽ gì nhở
+[103:31] tích phân từng phần pháp từng phần nhá
+[103:33] từng phần là mình đặt udv có nhớ không
+[103:36] udv kẻ Cột ý Kẻ cột nhớ không nhớ pháp
+[103:39] kẻ cột không kẻ cột không đấy kẻ cột
+[103:42] đường chéo ấy pháp kẻ cột đấy đường chéo
+[103:45] nhớ
+[103:46] không nhá có hai cách một là đặt t hai
+[103:49] là đổi biến thôi Nó giống hệ nguyên hàm
+[103:51] đúng không nguyên hàm mình làm như thế
+[103:52] nào thì tích phân mình làm y hệt như thế
+[103:53] Hiểu không Các em nhở các bạn chỉ cần
+[103:55] biết Tính nguyên hàm nhá điều kiện là
+[103:57] biết Tính nguyên hàm xong các em thay
+[103:58] cận vào là xong được chưa rồi còn đâu
+[104:01] cái bài thứ hai là bài tích phân hàm ẩn
+[104:02] mới là khó nhá sẽ có hai phần một là
+[104:04] tính tích phân bình thường hai là tích
+[104:06] phân hàm ẩn hàm ẩn là bài 8+ 99+ trong
+[104:08] đề thi nhá Còn đồ bài này thì thi nó chỉ
+[104:10] tầm khoảng d vào khoảng 8 điểm thôi 7 8
+[104:13] điểm thôi nhá nào anh dạng 1 này đặt
+[104:17] t phương pháp đổi biến
+[104:24] biến này thì l mình sẽ đặt t bằng gì nhỉ
+[104:26] Mình có thể đặt t bằng t bằng căn được
+[104:28] chưa t bằng căn nhá hoặc t đặt t bằng
+[104:30] một biểu thức dướ mũ nhá V dụ t bằng
+[104:32] biểu thức dướ mũ nhá biểu thức dướ
+[104:39] mũ ok chưa đặt t là biểu thức giấy mũ
+[104:42] nhá ví dụ là các em có thấy là x - 1 mũ
+[104:45] 1000 chẳng hạn thì mình sẽ đặt t bằng gì
+[104:48] đây Ừ t x - 1 mình đặt t bằng biểu thức
+[104:51] ở dưới mũ chứ mình không không đặt t
+[104:53] bằng mũ được chưa mình không đặt t là C
+[104:56] cụm đâu mình chỉ chơi cái đoạn ở dưới
+[104:57] thôi nhớ chưa đặt ở dưới thôi đấy hoặc
+[105:01] đối với mối một số dạng các phải nhớ Tho
+[105:02] thh một cái tính chất như sau C bài Em
+[105:04] đặt t bằng mẫu t bằng mẫu có những bài
+[105:07] mình đặt t bằng mẫu có những bài mình sẽ
+[105:09] đặt t bằng mẫu nhá t bằng căn t bằng
+[105:12] biểu thức dấy mũ hoặc t bằng mẫu nhá Tất
+[105:15] nhiên là sẽ có nhiều cái cách đặt khác
+[105:17] nhau tùy từng bài nhưng mà các em nhìn
+[105:18] phát là các em thể đoán là mình đặt t
+[105:20] bằng cái gì nhá nào và các em nhớ thêm
+[105:22] một cái tính tí chất như sau nhớ một cái
+[105:24] tính chất nhá Sao Nhỏ này nếu mẫu mà đạo
+[105:27] hàm bằng k lần tử mẫu mà đạo hàm bằng k
+[105:30] lần tử C tử nhá thì lớp mình cho anh kết
+[105:35] quả nguyên hàm sẽ bằng gì với đâu mẫu
+[105:37] bằng k lm tử C Công thức này gặp nhiều
+[105:39] lắm luôn mẫu là C thử biết bằng gì không
+[105:42] sẽ bằng len mẫu chia
+[105:47] K cộng c nhá Đấy rồii nhớ th tính chất
+[105:51] nhá Nếu mẫu đạo hàm bằng lần tử thì kết
+[105:54] quả sẽ bằng len mẫu chia K được chưa cái
+[105:57] tính chất này gặp nhiều lắm luôn ấ để
+[105:59] Tính nguyên hàm cho dễ nh Thay vì mình
+[106:01] phải là t bằng mẫu hiểu không mất thời
+[106:03] gian để tính các Khả các em nhớ đính
+[106:04] chất luôn nhá mẫu đ hàm bằng k lần tử
+[106:07] thì kết quả sẽ bằng l của mẫu chia cho
+[106:09] mấy chia K được chưa rồi k
+[106:13] đi và rất nhiều bạn quên nhá đổi biến
+[106:17] thì phải đổi cận nhá Nhớ đổi biến phải
+[106:18] đổi cận nhá đổi biến phải đổi cận đổi
+[106:21] biến phải đổi cận phải đổi cận
+[106:25] nhá nhều bạn quên không đổi cận đấy biến
+[106:30] khác thì cận nó sẽ khác nhá Ok ví dụ 8
+[106:34] này trong các tích phân sau tích phân
+[106:36] nào có cùng giá trị với y = 1 đến 2 x mũ
+[106:39] 3 nhân căn của x bình - 1 đúng không Câu
+[106:42] này sẽ có hai cách cách một là mình bấm
+[106:44] máy tính cho thầy kết quả bấm máy tính
+[106:46] Tất cả đáp án Xem kết quả bằng nhau
+[106:47] không được chưa Nhưng mà thôi Mình không
+[106:49] bấm máy tính nhá cách một là các em bấm
+[106:51] máy tính tất cả đ án này đều bằng bằ
+[106:53] nhau hết nhớ nhá chữ t trong máy tính
+[106:55] mình cũng sẽ nhầm là chữ gì nhở chữ X
+[106:57] chữ T cũng bấm máy tính là chữ X nhá
+[106:58] cách một là bấm máy tính tất cả Xem đáp
+[107:00] án bằng nhau không Nhưng thôi mình anh
+[107:01] sẽ không B máy tính mà anh sẽ đạt bình
+[107:03] phụ nhá nào anh đặt t bằng gì Các em ơi
+[107:05] đặt t bằng căn không k đó mình thấy có
+[107:08] căn không đặt t bằng căn nào ta có gì
+[107:10] đây đặt t bằng căn căn của x bình trừ 1
+[107:15] chưa nào các em đặt t bằng căn của x
+[107:18] bình - 1 chưa sa khi mình đặt t xong thì
+[107:20] mình làm sao nhỉ Mình Phương lên nào DT
+[107:24] bình phương lên Thầy Tính đạo hàm luôn
+[107:25] thì hơi xấu t bình bằng x bình - 1 đâu
+[107:29] nào t bình đạo hàm bằng gì 2tt Đúng rồi
+[107:33] bằng bao nhiêu đây Ừ 2x
+[107:36] DX Đúng chưa Rồi mình rút gọn đi vậy TDT
+[107:41] bằng xdx nhá xdx bằ TDT đúng không rút
+[107:46] gọn 2 đi mà rồi nhưng các em nhớ này đổi
+[107:48] biến thì chúng ta phải nhớ đổi cận các
+[107:50] em phải đổi cận nhá X và T nhá đặt cận X
+[107:52] và T này đấy đổi biến Nhớ đổi cận nhá X
+[107:55] của mình đang là Từ mấy đến mấy đây 1
+[107:58] đến 2 đúng không 1 đến 2 vậy t của mình
+[108:01] phải Từ mấy đến mấy các em nhở nào thay
+[108:04] điểm 1 vào đây 0 21 đ 21 Thay 1 vào đây
+[108:06] thay 1 vào đây thay 1 đây được mấy 1
+[108:10] bình là 1 - 1 bằng 0 không t bằng 0 rồi
+[108:14] x = 2 rồi đây được mấy 2 bình là 4 4 trừ
+[108:18] 1 Đúng rồi căn3 từ 0 đến căn 3 ok chưa
+[108:22] vậy tích phân của mình nó trở thành gì
+[108:23] Các em ơi y sang gì đây nào biến đã đổi
+[108:26] thành t rồi đúng không cận cũng đổi rồi
+[108:28] đúng không Vậy cận của mình chỉ Thành
+[108:30] còn bao nhiêu đây 0 đến căn3 chưa Nhớ
+[108:33] đổi biến phải đổi cận đúng không Đấy 0
+[108:35] đến căn 3 0 đến căn3 các em loạn luôn
+[108:38] đáp án ch hạn C đúng không 0 đến căn3
+[108:40] này chỉ mỗi C thôi a từ 1 đến 2 sai này
+[108:43] 1 4 sai này đúng không 1 căn3 sai chưa
+[108:45] Thôi mình vẫn giải đến cuối nhá Nào Các
+[108:49] em nhìn này x DX đúng không x DX đây các
+[108:51] em nhìn chỗ này x 3 đúng không Vậy nó
+[108:53] chưa có x ĐX không Vậy anh phải tách
+[108:56] Đúng rồi tách thành là tích phân từ 1
+[108:57] đến 2 của x bình nhân căn x bình trừ đi
+[109:01] 1 nhân x DX mình vất vào xuống dưới đi
+[109:03] đúng không tách x bình x 3 này cái l
+[109:06] Mình tách thành x bình nhân x không đúng
+[109:09] không X3 x bình nhấ tại sao như thế Tại
+[109:11] vì để của xuất hiện xdx này các em ơi
+[109:13] xdx này xất x xdx không mình thay bằng
+[109:16] TDT không đấy x bình thì bằng gì Các em
+[109:19] ơi x bình bằng bao nhiêu đây x bình Bình
+[109:22] rút ra bằng mấy đây x bình mấy T Ừ x
+[109:25] bình sẽ bằng t bình + 1 mình có thể rút
+[109:28] ra nhá hoặ cá mình rút ra trong đầu cũng
+[109:30] được hiểu không rút ra trong đầu luôn
+[109:32] nhá x bình đây bằng t bình + 1 t bình c
+[109:36] 1 nhân gì Các em ơi căn là t không nhân
+[109:40] gì Các em x DX bằng mấy ừ x DX đây X DX
+[109:46] bằng t ĐT không Rồi vậy mình sẽ đan chưa
+[109:50] cá quả sẽ bằng tích phân từ 0 đến căn b
+[109:52] A của t bình cộng 1 nhân mấy đây t nh t
+[109:57] t bình â
+[109:58] DT ok đấy đẹp trai rồi nào l nhìn ví dụ
+[110:03] 9 nhá nào Tính tích phân 1 đến 5 của DX
+[110:06] trên x căn 3x + 1 đúng không Ok được kết
+[110:10] quả là a L3 + B L5 vậy chúng ta phải tìm
+[110:13] giá trị của A Bình cộ AB cộ 3b Bình đúng
+[110:16] không Bây giờ nếu chúng ta bấm máy tính
+[110:18] thì nó sẽ ra một cái số cụ thể đúng
+[110:19] không Nhưng mà đáp án l là dạng A và B
+[110:21] đúng không Thì mình sẽ không thể nào bấm
+[110:23] máy tính một phát được luôn được Đúng
+[110:24] chưa Mình bắt buộc mình phải tính bằng
+[110:26] tay nào mình tính bằng tay như sau nào
+[110:28] mình đặt t bằng gì đây đặt t bằng căn
+[110:32] đúng không căn của 3x cộ 1 Rồi sau đó
+[110:36] các em sẽ bình phương lên đúng không Chứ
+[110:37] mình không đạo hàm luôn phương pháp đổi
+[110:40] biến nhá t bình sẽ bằng 3x + 1 không vậy
+[110:44] đạo hàm gì nh 2T DT bằng
+[110:47] mấy 3dt 3dx đúng không Rồi lên mình đạo
+[110:53] hàm ra này đúng không Rồi mình rút ra DX
+[110:54] chưa Vậy dx sẽ bằng
+[110:57] là 2T DT tr3 rồi Mình đã rút ra DX chưa
+[111:02] theo ần t rồi ok nhưng chúng ta đổi biến
+[111:05] thì chúng ta nhớ đổi cận nhá nào X và T
+[111:08] nào nào x của mình cận Từ mấy đến mấy
+[111:11] đây 1 đến 5 đúng
+[111:13] không cận của mình t là mấy đây đổi đi 1
+[111:18] đ 5 thay 1 vào
+[111:20] đây Ừ kết quả là bằng 2 này thay 5 vào
+[111:23] đâyy được 4 ok rồi vậy c của mình cận là
+[111:27] từ 2 đến 4 nhá nào vậy biểu thức y của
+[111:29] mình bằng bao nhiêu đây y của mình sẽ
+[111:31] bằng tích phân từ 2 đến 4 không mình đổi
+[111:34] biến phải đổi cận nhá nào mình phân tích
+[111:36] mình Thay tất cả những số vào đây nào DX
+[111:39] chưa DX thay bằng
+[111:41] gì 2T DT chia 3 chưa Rồi 2T DT
+[111:46] tr3 Ok nhân với này X thì thay bằng gì
+[111:51] DX mình thay rồi nhá nào đ x th gì đây X
+[111:53] bằng gì đây rút ra X này rút ra x nhá
+[111:56] Đấy rút ra x sẽ bằng là chuyển v t bình
+[111:58] - 1/3 đúng rồii t bình -
+[112:00] 1/3 đúng này Không b bán này tiếp tục
+[112:04] nhân với này căn thì thay bằng gì t Đúng
+[112:07] rồi cụng này Không Đấy mình Thay tất cả
+[112:11] những cái vào đây DX này thay này X này
+[112:13] cũng thay này căn này cũng thay nốt ba
+[112:15] cái đâ thay DX này X này và T Được chưa
+[112:20] nào Các em rút gọn cái gì không tích
+[112:22] phân từ 2 đến 4 của gì nhở nào Các em
+[112:25] nhìn đi phải là chỗ này 3 của 3 D gọn
+[112:27] hết nhá 3 3 D gọn hết được chưa Đúng
+[112:30] không t cả t rú gọn hết không tên tử cả
+[112:33] tên mẫu dú gọn hết chưa nó chỉ trên mẫu
+[112:35] chỉ gọn là 2dt thôi 2dt trên
+[112:39] mấy ừ t bình - 1 đúng không t bình - 1
+[112:42] tách thành t - 1 nhân t trừ mấy ừ t+
+[112:46] 1 ok rồi đến chỗ này cả lớp mình cò nhớ
+[112:49] không bài hôm trước mình học rồi đây
+[112:50] dạng phương trình có hai nghiệm đúng
+[112:52] không Chúng ta những phương pháp tre để
+[112:54] tách thành ra thành hai cái hai cái phân
+[112:55] thức không đấy nghĩa là dạng nhân với
+[112:58] nhau tích thì mình trách ra đúng không
+[113:00] tách ra thành Gì Đây của t - 1 này t + 1
+[113:05] nào còn nhớ cách che không nào thầy che
+[113:08] nhá nào che này các em Lời máy tính nào
+[113:12] t - 1 đúng không Mình che t - 1 đi thì
+[113:15] nghiệm nó là mấy nghiệm là 1 t - 1 phải
+[113:18] nghiệm là 1 không đầu tiên mình xem
+[113:19] nghiệm nó là 1 không che và thay nghiệm
+[113:21] vào phần ngọt lại 2 trên t 1 đ 1 + 1 là
+[113:25] 2 2 chia 2 là mấy 1 vậy kết quả số này
+[113:29] sẽ là 1 ok chưa Giờ lại bài hôm trước
+[113:32] xem nhá tiếp tục nghiệm Thằng này là mấy
+[113:34] -1 che đi thay -1 Ph phần còn lại được
+[113:37] mấy -1 -1 là -2 2 chia -2 là thành -1
+[113:42] đúng rồi đấy Có hiểu không Các em nhớ
+[113:45] nhá che nghiệm và thay vào phần còn lại
+[113:47] che nghiệm Rồi thay vào phần còn lại nhá
+[113:49] Giờ lại bài hôm trước không biết làm mỗi
+[113:51] tỷ nào nào bao nhiêu
+[113:55] đây Cái này len truyệt đối của t - 1
+[114:00] này trừ đi len tuyệt đối của t + 1 nào
+[114:05] Các em có công hiện này không Rồi sau đó
+[114:07] các em ngoặc vuông lại các em lấy cận
+[114:09] cho thầy Từ mấy đến
+[114:11] mấy đúng rồi mình sẽ Tính nguyên hàm
+[114:13] bình như bình thường đúng không Mình lấy
+[114:14] cận từ 2 đến 4 rồi đấy cận trên cận dưới
+[114:18] được chưa rồi cận 2 đến 4 nhá bằng B
+[114:22] nhiêu đây bằng này các em thay 4 vào đây
+[114:27] đúng không thay 4 vào đây được mấy nhở l
+[114:30] 3 Thy 4 vào đây được mấy trừ l 5 không
+[114:35] Ngọc vào nhá Đây l 3 trừ l 5 là thay 4
+[114:38] và được chưa Tiếp tục mình trừ đi này fb
+[114:42] trừ f thay 2 vào đây được mấy 2 - 1 là
+[114:45] bằng 1 lên 1 bằng mấy Bằng 0 rồi thay 2
+[114:48] vào đây 3 ừ rồi 0 trừ lên 3
+[114:52] rồi kết quả sẽ bằng bao nhiêu đây 2 Ừ 2
+[114:57] l 3 trừ l
+[115:00] 5 rồi Vậy mình sẽ ấy thôi kết quả như
+[115:03] đây 2 l 3 trừ l 5 nhá các em thay vào
+[115:05] đây a l 3 cộng b l 5 không Vậy tính được
+[115:09] a và b chưa A lên 3 2 l 3 được chưa b sẽ
+[115:14] bằng -1 chưa đấy Vậy suy ra mình sẽ có
+[115:17] gì đây a = 2 b = -1 vậy ta có biểu thức
+[115:22] chưa a bình cộng
+[115:25] AB bằng mấy các em nhở 4 bằ 5 4 -
+[115:32] 2 cộng 3 5 đúng không Rồi đ án b là B
+[115:37] nhá rồi tạng hai tích phân từng phần nhá
+[115:41] tích phân từng phần tích phân từng
+[115:48] phần nào trong sách giáo khoa một công
+[115:50] thức như sau cô làm udv này cận từ A đến
+[115:54] v b sẽ bằng này lý thuyết nhá bằng u nh
+[115:57] V trừ
+[115:59] vdu đây A đ B chèn cận vào
+[116:03] này đây trong sách giáo khoa ra Công
+[116:06] thức này Đúng chưa nguyên hàm của tích
+[116:09] phân từ A đến B của udv bằng UV cần từ A
+[116:13] đến B trừ vdu nhưng chúng ta không cần
+[116:15] phải nhớ công thức này đâu các em thấy
+[116:17] nó khá là nói chung dài dài dòng mà
+[116:18] chúng không đặt udv nhá mình sẽ kẻ cột
+[116:20] cho anh rất là đơn giản được chưa mình
+[116:22] sẽ sử dụng phương pháp kẻ cột được chưa
+[116:24] mình sẽ dùng cái phương pháp đ cách một
+[116:26] nhá cách hai là phương pháp kẻ
+[116:30] cột là gì nhở nhất lô nh đa Tam lượng từ
+[116:34] gì nhở lượng
+[116:39] mũ đúng không thứ tự đặt u nhá Đây thứ
+[116:42] tự đặt u nhá thứ tự đặt u thứ tự đặt
+[116:47] u là lô đa lượng mũ của đớ nhớ không lô
+[116:50] đa lượng mũ larit đa thức lượng giáp vào
+[116:54] Mũ đây thứ tự đặt u nhá mình sẽ chia làm
+[116:56] hai cột udv không Mình sẽ không nhớ T
+[116:58] Công thức này nhá Đấy mình sẽ hai cột
+[117:00] cột này mình sẽ đạo hàm cột này mình sẽ
+[117:02] làm gì nhở đạo hàm không cột này sẽ
+[117:05] Nguyên gì nhở nguyên hàm không Rồi đầu
+[117:07] tiên dấu dương dấu âm đam dấu tương tự
+[117:09] không thích các đường chéo th mình sẽ
+[117:12] lấy ví dụ đi nào quý vị 14 nhìn vào đây
+[117:14] nhá nào lớp nhìn cho th câu 14 này biết
+[117:17] rằng tích phân từ 0 đến 1 của 2x + 1 e
+[117:20] mũ x DX bằ a+ be đúng không Tính tích a
+[117:24] nhân b nào có thầ làm như nào các em các
+[117:26] em quan sát này có phải là dạng từng
+[117:29] từng phần không có nghĩa là nguyên hàm
+[117:30] của gì Các em ơi Một tích ấy cái dạng Y
+[117:32] sẽ bằng gì đây FX nhân
+[117:34] GX hiểu không Đây nguyên hàm của m tích
+[117:38] này mình sẽ dùng tích phân từng phần
+[117:39] hiểu không nhở dạng mụ tích đây mụ tích
+[117:42] này này là thằng này nhân thằng này kiểu
+[117:44] hai hàm khác nhau ấy mình sẽ dùng từng
+[117:46] phần nhớ không đấy mình sẽ đặt u là một
+[117:49] cột đạo hàm một cột nguyên hàm nhá Ok là
+[117:51] thầy sẽ h dẫn cách làm đây tích phân từ
+[117:54] 0 đến 1 của 2x + 1 e mũ x đúng không thứ
+[117:56] tự đặt u là gì nhỉ lô lượng mũ được chưa
+[118:00] không có logarit được chưa Thì phải viết
+[118:02] gì trước viết đa thức viết trước Lào 2x
+[118:05] cộng
+[118:06] mấy cái thì tiếp theo đây đúng không đầu
+[118:10] tiên mình làm
+[118:11] gì đạo hàm là 2 mình sẽ đạo hàm luôn hết
+[118:15] đi dạng đa thức viết trước này mình Đạ
+[118:17] hàm bằng Đến Chết thì thôi bằng 0 thì
+[118:19] thôi MX bằng gì đây e m x chưa lấy các
+[118:23] đường chéo
+[118:25] không đường chéo không dòng đầu tiên sẽ
+[118:27] là dấu dữ cộng chéo nhất dấu cộng chéo
+[118:29] thứ hai dấu trừ nhá auto như vậy được
+[118:33] chưa cộng trừ cộng trừ đ x Thôi vậy cái
+[118:36] y của mình bằng bao nhiêu các em ơi y
+[118:37] mình bao nhiêu đây 2x + 1 nhân e mũ x
+[118:44] không - 2E X có đúng này Không không
+[118:48] phải là mình đã tính xong nguyên hàm
+[118:50] chưa Rồi sau đó mình sẽ ngoặc vào và
+[118:53] mình sẽ chèn Cận là mấy 0 đến mấy 0 đến
+[118:57] 1 nào cái đ có hiểu chưa bằng mấy đây
+[119:01] các em thay 1 vào đây cho thầy được
+[119:06] mấy rồi 3E mũ 1 chứ đúng không thay 1
+[119:11] đây được mấy trừ đi
+[119:12] mấy trừ đi này đúng không phải thay 1
+[119:15] vào đúng không rồi trừ đi thay 0 vào
+[119:17] đúng không thay không vào được mấy
+[119:22] - e mũ 0 là 1 thay 0 vào đây mất đúng
+[119:25] không E 0 là 1 còn 1 thôi thay 0 và đây
+[119:29] tiếp tục bằng mấy e mũ 0 là 1 trừ đi 2 1
+[119:33] - 2 kết quả bao nhiêu các em ơi 3E - 2
+[119:37] là
+[119:39] 1e cộng 1 rồi Dễ chưa vậy chúng ta sẽ So
+[119:43] sánh ban đầu là a + b a bằng mấy B bằng
+[119:47] mấy Lào so đi e c 1 với cả A c b a bằng
+[119:52] mấy các em ừ a bằng 1 B bằng
+[119:57] mấy 1 chưa vậy a 1 b = 1 chưa vậy Mình
+[120:01] có kết quả chưa các em vậy ta sẽ có a nh
+[120:05] B bằng mấy
+[120:08] ừ C đúng chưa Đây dạng đa thức với cả
+[120:12] hàm mũ mình đa thức hàm mũ nhớ nhá bạn
+[120:15] nào quên thì nhớ phải xem lại cho anh
+[120:16] cái bài Nguyên làm từng phần nhớ nhá
+[120:19] tích phân từng phần làm giống với hệt
+[120:20] Nguyên làm từng phần nó khác biệt mỗi
+[120:21] thêm cái gì nhỉ thêm cận đúng không thay
+[120:24] vì cộng c mình thêm cận có nghĩa là ai
+[120:25] làm tốt nguyên hàm thì sẽ làm được tốt
+[120:27] tích phân còn đ Bạn nào mà không học tốt
+[120:29] nguyên hàm thì tích phân đây bả Ơ thại
+[120:32] sao lại như thế này nhỉ Nhớ là nguyên
+[120:34] hàm thì giống tích phân thôi 15 này biết
+[120:37] rằng tích phân Tằng 0 đế pi tr2 của x +
+[120:39] 1 sin 2x đúng không bằng này đúng không
+[120:42] AB các số nguyên tính p bằ a + b nào
+[120:45] nhất lốc nhì đa Tam lượng từ mũ nhất lốc
+[120:48] không có lốc đúng không Thì phải viết gì
+[120:50] trước đa thức viết trước đúng không là x
+[120:52] + 1 đây nhì đ đúng không Các em đa gì
+[120:55] nhở sin à nhân nhất lốc không còn nhì đ
+[120:59] đúng không Không có lố thì viết đa trước
+[121:00] rồi xong mình sẽ viết phần còn lại là
+[121:02] sinx
+[121:04] chưa nào đúng này chưa rồi tiếp tục này
+[121:07] x + 1 đ bằng gì Các em ừ 1 tiếp tục Lào
+[121:10] bằng mấy 0 rồi sinx nguyên hàm bằng
+[121:13] gì đây mình có thể viết đây sin này trừ
+[121:16] sin trừ cos và cos đúng không sin nguyên
+[121:20] hàm là trừ cos ngược kim đồng hồ mà nh
+[121:22] kim đồng hồ sin ng là trừ cos trừ cos n
+[121:24] là trừ sin được kim đồng hồ nhá trừ cosx
+[121:26] tr2 cos 2x tr2 đúng không tiếp tục bao
+[121:29] nhiêu nữa đây nhở nguyên hàm tiếp đúng
+[121:31] không ngược kim đồng hồ trừ sin 2x tr4
+[121:35] đúng không nguyên hàm của dạng ax + b
+[121:37] này mình phả chia cho A không chia 4 này
+[121:39] rồi mình lấy tích các đường chéo thôi
+[121:41] tích các đường chéo dấu cộng tiếp theo
+[121:43] dấu gì đây dấu trừ à vậ kết quả y mấy
+[121:46] đây nào tí cá đường chéo bao nhiêu trừ
+[121:50] bao nhiêu đây trừ x cộng 1 nhân cos 2x
+[121:55] tr2 đúng không cosx tr2 không cosx thì
+[121:58] tất cả chia 2 nh Đúng chưa đây dấu trừ
+[122:02] không rồi trừ trừ thành cộng không cộng
+[122:08] sin trên 4 không Mình chèn cận vào
+[122:12] nào cận Mình là mấy đây 0 đến pi tr2
+[122:16] chưa nào Ok cái bước phức tạp nhất là
+[122:20] mình phải thay thay số vào này pi tr2
+[122:23] Thay vào đây được mấy nào thay pi tr2
+[122:26] vào đây được mấy trừ pi tr2 c 1 không
+[122:29] rồi trừ pi tr 2 +
+[122:31] 1 được chưa ngặc vuông Hoà nhá nào th b
+[122:35] tr2 vào đây bằng mấy cos của 2 nh pi tr2
+[122:38] lấy mình bấm cho thầy bao nhiêu không
+[122:41] phải bằng 0 đâu lấy mình tính bấm này pi
+[122:43] tr2 nhân 2 là bằng cos pi cos pi là -1 -
+[122:46] 1/2 hiểu không lấy m Tính bấm nhá Thay
+[122:50] vào đây hiểu không Sin pi tr 2 sin pi
+[122:53] mới bằng 0 đây này 2 nh pi tr2 là pi sin
+[122:57] Pi bằng 0 lấy máy tính bấm nhá các tự
+[123:00] các em bấm nhá Cái này dễ ợt luôn thay
+[123:02] số trẻ con làm được Thay vào Thay b vào
+[123:04] đây bằng 0 nhá tự máy tính bấm rồi mất
+[123:07] rồi trừ đi
+[123:08] này nào thay 0 vào đây được mấy 0 vào
+[123:13] đây
+[123:14] thì mất rồi còn trừ 1
+[123:16] này nào th 0 vào đây là mấy cos0 bằng
+[123:20] bằng 1 đúng không cos0 bằng 1 không 1/2
+[123:26] rồi Đúng chưa tay 0 đấy được mấy 0 rồi
+[123:32] đây 0 nhá rồi Kết quả đây vậy kết quả y
+[123:35] bằ mấy
+[123:37] đây nào em thay viết lên trên đi thay
+[123:40] bao nhiêu đây trừ trừ thành cộng không
+[123:42] thành là pi
+[123:44] tr4 đúng không cái này nhẩm nh tính toán
+[123:47] cơ bản thôi trừ trừ thành cộng này
+[123:51] Nhưng đây là pi tr4 cộng với cả pi tr2
+[123:55] đúng không trừ trừ thà Cộng rồi cộng pi
+[123:57] tr2 cộng 1/2 đúng không cộng 1/2 rồi ok
+[124:02] trừ đi chỗ này trừ trừ thành cộng không
+[124:04] cộng bao nhiêu V quả bao nhiêu đây B
+[124:08] trên 4 cộng mấy cộng 1 không Rồi pi tr4
+[124:12] cộng 1 thì các em ơi sao đáp án nào pi
+[124:15] tra c 1 trb vậy A bằng mấy B bằng
+[124:18] mấy đây so thánh hai này đi
+[124:22] ằng 4 b bằng mấy rồi vậy kết quả bằng
+[124:25] mấy a + b bằng mấy 5 Ừ bằng 5 rồi đáp án
+[124:30] mình là D rồi chệ và 16 nhá nào khẳng
+[124:35] định nào xây đúng về kết quả 1 đến E của
+[124:38] x mũ 3 ln x DX = 3 nhân e mũ a + 1 trb
+[124:42] với AB là các số nguyên được chưa nào
+[124:44] những câu này không bấm máy tính được
+[124:46] tại cho A và B đúng không các em đấy
+[124:48] mình bấm máy tính chỉ là mò mò kiểu mình
+[124:49] không không không chuẩn nào mình sẽ
+[124:52] phải biến đổi bằng tay đúng không nào
+[124:54] nhất lô nh đa có logit không có vậy Viết
+[124:58] logit trước được chưa nhất lô nhì ra x 3
+[125:02] vết sau nào dòng đầu tiên mình làm gì
+[125:05] nhở đạo hàm đúng không Ok 1 trx l x đà
+[125:10] là 1 trx không X3 nguyên hàm bằng gì
+[125:13] dòng thứ hai nguyên hàm 4/4 đúng không
+[125:18] nào tích chéo xuống nhưng các em ơi
+[125:21] chú
+[125:23] ý đây là trườ hợp đặc biệt của nguyên
+[125:26] hàm từng phần đúng không Các em không
+[125:28] thể đạo hàm bằng 0 được tại vì 1 trx đạo
+[125:30] hàm cà càng phức tạp nó sẽ không thể
+[125:32] bằng 0 được đúng không Vậy chúng ta sẽ
+[125:35] đúng rồi mình sẽ dùng nguyên hàm mình sẽ
+[125:38] lấy mình phải giữ lại dấu nguyên hàm nhá
+[125:39] tích chéo xuống trừ nguyên hàm Sang A
+[125:41] được chưa các l nhớ trường hợp đặc biệt
+[125:43] này không nhá Đối với dạng logit đứng
+[125:45] trước thì chúng ta chỉ làm hai dòng thôi
+[125:48] và lấy tích chéo xuống chừa Nguyên làm
+[125:49] sang A đúng chưa Đấy đ đối cái lô thì
+[125:52] mình phải lấy ng hàm sang ngang để triệt
+[125:54] tiêu được chưa đã chờ đặc biệt của nhá
+[125:56] từng phần nhá nào y bằ bao nhiêu đây Y
+[125:59] mấy nhở em tính đi tích chéo xuống trừ
+[126:02] nguyên hàm Sang A đúng không Chứ mình
+[126:03] không thể đạo hàm bằng 0 được đâu nên
+[126:05] mình không cố chấp đạo hàm bằng gì cả
+[126:06] hiểu không nào x bao nhiêu đây x mũ 4
+[126:09] trên mấy trên 4 Len
+[126:12] X ok chưa mình cứ Tính nguyên hàm đi
+[126:14] mình Tính nguyên hàm bình thường đi nào
+[126:16] trừ đi nguyên hàm của mấy trừ Nguyên Hà
+[126:19] của mấy đây bao nhiêu đây nhân chéo vào
+[126:22] đây được mấy x4 tr4 nhân cả đây nhân
+[126:25] chéo không là mình nhân ngang không nhân
+[126:27] sang ngang này Nguyên làm sang ngang
+[126:30] chia x là thành còn x 3 đúng không Ừ X
+[126:35] 3/4 có đúng không Ok vậy suy ra y mấy
+[126:39] đây X 4/4 này l x được chưa nào Nguyên H
+[126:44] bằng bao
+[126:46] nhiêu tăng lên thế mà mũ x 4/4 là thành
+[126:49] 16 chưa Ok đến chỗ này lớ mình đã Nguyên
+[126:52] làm xong chưa Rồi giầu trừ cả lớn mình
+[126:55] đã Nguyên làm xong rồi đúng không Nguyên
+[126:57] làm xong rồi mình mới chèn cận được chưa
+[126:59] nhớ nguyên hàm xong rồi Đây là bài hôm
+[127:01] trước nhá nguyên hàm xong rồi mình chèn
+[127:03] cận đi chèn cận này cận Từ mấy đến mấy
+[127:05] thay vì cộng c đúng không Mình sẽ trèn
+[127:08] Cận là Từ mấy đến mấy 1 đến E chưa
+[127:12] Rồi mình trèn cận 1 đến E chưa bằng mấy
+[127:15] các em nhở nà Thay vào đây tha e vào đây
+[127:18] bằng mấy gi phải tính V làm như bình
+[127:20] thường hiểu không xong mình với chen cận
+[127:22] vào bao nhiêu đây e 4/4 lên E là mấy 1
+[127:27] trừ đi thay vào
+[127:30] đây trừ đi này thay 1 và đây được
+[127:34] mấy vậy Thằng này mất không 1 l 1 bằng 0
+[127:38] mất rồi thành -
+[127:40] 1/16 đúng không thay 1 vào đây là mất
+[127:43] này thay 1 vào đây là thành - 1/16 ok
+[127:46] chưa Đấy fb chia F3 nào kết quả bao
+[127:48] nhiêu các em ơi quy đồng lên nào t đồng
+[127:51] lên bao nhiêu đây nhân 4 lên 4 chia đi 1
+[127:55] là 3 3E mũ 4 chia cho mấy 16 không đúng
+[127:59] chưa rồi trừ đi 1 thành trừ thành cộng
+[128:02] luôn nhóm mẫu luôn đúng không Mình nhóm
+[128:05] mẫu chung luôn không Rồi Ok vậy đá án là
+[128:07] gì Các em ơi Nhìn đây Thằng này bằng
+[128:09] thằng này chưa Thằng này với thằng này
+[128:11] không nào vậy ta thẽ có a bằ
+[128:19] mấy đúng vậy mình sẽ có chưa A nh B bằng
+[128:22] mấy a b 64 nhá D đúng không nào Nhữ câu
+[128:26] 17 nào cho tích phân từ 0 đến pi của e
+[128:29] mũ x nhân cos 2x đúng không
+[128:32] Rồi kết quả bằng e mũ pi C A trb Khi đó
+[128:35] a + b bằng bao nhiêu nào Các em nhìn này
+[128:37] Nguyên làm từng phần nó sẽ có ba trường
+[128:39] hợp đúng không trường hợp thứ nhất là mũ
+[128:41] với logarit à mũ với cả gì nhở Cái
+[128:43] trường hợp thứ nhất là trường đo hợp đạo
+[128:45] bằng 0 được chưa trường hợp thứ hai là
+[128:47] len đường trước thì mình làm gì len
+[128:49] đường trước thì mình làm gì nhở mình sẽ
+[128:50] tích dùng hai hai dòng không tích chéo
+[128:52] xuống chừ nguyên hàm sang ngang được
+[128:53] chưa Chiều thứ ba là gì nhở mũ cả
+[128:55] logarit là nguyên hàm luân hồi còn nhớ
+[128:57] là nguyên hàm luân hồi không Chiều thứ
+[128:59] ba thì mình sẽ làm gì nhỉ loda lượng mũ
+[129:01] viết cái gì trước loda lượng mũ ok viết
+[129:05] lượng trước nhá cos2x này tiếp tục e mũ
+[129:08] x chưa đúng không Loga lượng mũ rồi CN
+[129:12] dòng này mình thích tính đạo hàm đúng
+[129:13] không cos A bằng gì trừ sin mình tính
+[129:17] đạo hàm mà phải Phả nhân thêm 2 không
+[129:20] tiếp tục đạo hàm tiếp sin nà bằng gì nhở
+[129:23] Ừ trừ cos đúng không - 4 l cos 2x bên
+[129:26] này f mũ x e mũ x chưa đúng không riêng
+[129:30] cái hàm Luân Hồi này C lớ mình phải làm
+[129:32] cho thầy ba dòng ba dòng nhá Tại vì sao
+[129:35] các em có đạo hàm mãi thì nó cũng chỉ là
+[129:37] sin cos thôi Hiểu không Mình đạo hàm ba
+[129:39] dòng để làm gì để cái dòng thứ ba nó
+[129:41] chính là nguyên hàm đề bài hiểu không
+[129:43] nào vậy nó bằng gì Các em ơi tích chéo
+[129:45] xuống này tích tréo Xuống OK chưa dấu
+[129:49] trừ chưa trừ nguyên hàm sang a các em ơi
+[129:52] đây trừ cộng trừ Ok cái dòng cuối cùng
+[129:55] sang ngang auto dùng nguyên hàm hiểu
+[129:56] không Các em cầ nhớ sang ngang auto
+[129:58] nguyên hàm nhá và các em ơi Cái nguyên
+[130:01] hàm đề bài đây e mũ x nhân cos 2x đây e
+[130:04] mũ x nhân cos nó chính là đề bài y không
+[130:06] chên đề bài không đấy Đúng không các em
+[130:08] thấy cái dòng nguyên làm sang ngang trên
+[130:10] đề bài không vậy y bằ mấy các em ơi y bằ
+[130:12] mấy đây nà các em tính cho thầy bằng bao
+[130:14] nhiêu đây tích chéo xuống tích chéo
+[130:16] xuống không là mấy cosx nhân e mũ x
+[130:21] Đúng chưa trừ trừ thành cộng không cộng
+[130:25] mấy trừ thành cộng không cộng 2 sin xx
+[130:32] không đúng không nào Các em b trừ Nguyên
+[130:35] làm nguyên làm sang Aang không th các em
+[130:36] thầ mình Tính nguyên hàm sang ngang
+[130:38] không rây dấu cộng không rây dấu trừ
+[130:40] không thì thành trừ hay cộng -4 vất cái
+[130:43] hệ số ra ngoài -4 cos 2x và FX các em ơi
+[130:46] cos 2x và FX nó chính là cái gì ban đầu
+[130:49] y ban đầu đúng không đấy trừ
+[130:52] 4y có hiểu không kểu X -4y đây e nhân
+[130:56] cos 2x đây đây ch ban đầu đây CH này
+[130:59] nhưng có một -4 nữa -4y rồi chuyển về
+[131:02] sang là mấy nhở -4 sang bằ mấy y đây 5y
+[131:06] vậy Mình chia 5 luôn nhá 1/5 chia 5 luôn
+[131:09] nhá e mũ x cos 2x cộng sin
+[131:14] 2x ok chưa Cận là từ M mấy ch cận đi cận
+[131:18] từ M mấy 0 đến pi chưa
+[131:23] ok chưa Đấy mình trèn cận luôn kết quả
+[131:26] mấy các em ơi thay pi vào 2 CX à Ừ đây
+[131:30] nào th vào đây được mấy 1/5 Vứt ra ngoài
+[131:33] nhá tr bằng mấy đây e mũ pi đúng không
+[131:37] nhân mấy đây cos 2 pi là đây là
+[131:42] 1 1/5 t ngoài này e mũ x e mũ pi này
+[131:47] nhân này cos 2 pi là
+[131:48] 1 k bằng 0 0 này bắt rồi ok trừ đi thay
+[131:54] 0 vào là e mũ 0 là 1 này đúng không cos
+[131:58] 0 là 1 em mất rồi ok vết quả như này quả
+[132:03] xem bao nhiêu đây 1/5 e mũ pi - 1 rồi
+[132:08] Vậy mình tính được a và b chưa A bằ mấy
+[132:11] B bằng mấy các em ơi nào e mũ pi c a tr
+[132:15] b cộng a trb Vậy bao nhiêu các em ơi B
+[132:19] bằng mấy rồi B bằng 5 rồi
+[132:22] a bằng mấy e mũ B -1 chưa cộng a e mũ b
+[132:27] cộng a thì là -1 đâu vậy Kết quả là bao
+[132:30] nhiêu vậy A B bằng mấy đúng
+[132:34] rồi Xong bà C nhá rồi Các em chơi đi Đấy
+[132:39] nghĩa là đầu tiên mình vẫn phải Tính
+[132:40] nguyên hàm bất kỳ đúng không anh cho bốn
+[132:42] ví dụ là bốn cái nguyên hàm đặc biệt đấy
+[132:44] bốn ngm đặc biệt nhá bốn trường hợp đặc
+[132:46] biệt nhớ nguyên hàm từng phần nhá các em
+[132:48] muốn làm được tích phân nhớ làm nguyên
+[132:49] hàm nhá

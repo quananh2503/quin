@@ -1,0 +1,240 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{geometry}
+\geometry{a4paper,left=1.5cm,right=1.5cm,top=1.5cm,bottom=1.5cm}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+
+\begin{document}
+
+\begin{center}
+    \Large \textbf{\textcolor{red}{CHUYÊN ĐỀ: TỔNG VÀ HIỆU CỦA HAI VECTƠ TRONG KHÔNG GIAN}} \\
+    \vspace{0.2cm}
+    \large \textbf{Mức độ: Thông hiểu}
+\end{center}
+
+\vspace{0.5cm}
+
+% ================= KHỐI 1 =================
+\section*{KHỐI 1: DẤU HIỆU NHẬN DIỆN DẠNG TOÁN}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=\textbf{Nhìn phát biết ngay}]
+\begin{itemize}
+    \item \textbf{Từ khóa đề bài:} Đề bài yêu cầu ``Tính tổng'', ``Tính hiệu'', ``Chứng minh đẳng thức'', ``Rút gọn biểu thức'' xuất hiện các vectơ có dấu $+$ hoặc $-$ (Ví dụ: $\vec{AB} + \vec{BC}$, $\vec{AC} - \vec{AD}$).
+    \item \textbf{Dấu hiệu nhận diện hình học:}
+    \begin{itemize}
+        \item Có \textbf{hình hộp, hình lập phương}: Nghĩ ngay đến \textbf{Quy tắc hình hộp}.
+        \item Có \textbf{tứ diện, hình chóp, các vectơ chung gốc}: Nghĩ ngay đến \textbf{Quy tắc ba điểm (chèn điểm)}.
+        \item Có \textbf{hình bình hành, hình chữ nhật, hình thoi}: Nghĩ ngay đến \textbf{Quy tắc hình bình hành}.
+    \end{itemize}
+\end{itemize}
+\end{tcolorbox}
+
+% ================= KHỐI 2 =================
+\section*{KHỐI 2: QUY TRÌNH 3 BƯỚC GIẢI CHUẨN (Step-by-Step)}
+\begin{tcolorbox}[colback=green!5!white,colframe=green!55!black,title=\textbf{Quy trình hành động}]
+\textbf{\textcolor{blue}{Bước 1: Nhẩm/Vẽ hình và xác định vectơ liên tiếp}}
+\begin{itemize}
+    \item Nhìn vào biểu thức, tìm cách đưa các vectơ về dạng ``đuôi của vectơ này trùng với đầu của vectơ kia'' (tính nối tiếp). Nếu chưa nối tiếp, ta dùng phép \textbf{chèn điểm} (ví dụ: chèn điểm $O$ vào $\vec{AB} = \vec{AO} + \vec{OB}$) hoặc dùng các vectơ bằng nhau để thay thế.
+\end{itemize}
+
+\textbf{\textcolor{blue}{Bước 2: Lắp công thức then chốt}}
+\begin{itemize}
+    \item \textbf{Quy tắc ba điểm:} $\vec{AB} + \vec{BC} = \vec{AC}$ (cộng) và $\vec{OA} - \vec{OB} = \vec{BA}$ (trừ - ``chung đầu lộn ngược'').
+    \item \textbf{Quy tắc hình bình hành:} $ABCD$ là hình bình hành $\Rightarrow \vec{AB} + \vec{AD} = \vec{AC}$.
+    \item \textbf{Quy tắc hình hộp:} $ABCD.A'B'C'D'$ là hình hộp $\Rightarrow \vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$.
+\end{itemize}
+
+\textbf{\textcolor{blue}{Bước 3: Rút gọn và chốt đáp số}}
+\begin{itemize}
+    \item Triệt tiêu các cặp vectơ đối nhau: $\vec{a} + (-\vec{a}) = \vec{0}$ (ví dụ: $\vec{AB} + \vec{BA} = \vec{0}$).
+    \item Nếu yêu cầu tính độ dài: Dùng định lý Pythagore trong tam giác vuông hoặc dùng máy tính Casio.
+\end{itemize}
+\end{tcolorbox}
+
+% ================= KHỐI 3 =================
+\section*{KHỐI 3: BÍ QUYẾT CASIO \& MẸO LOẠI TRỪ TRẮC NGHIỆM}
+\begin{tcolorbox}[colback=orange!5!white,colframe=orange!75!black,title=\textbf{Bí quyết bấm máy \& Mẹo chọn đáp án}]
+\textbf{1. Bấm máy tính Casio fx-580VNX / fx-880BTG với Vectơ:}
+\begin{itemize}
+    \item \textbf{Bật chế độ Vectơ:} Bấm \texttt{MENU} $\rightarrow$ \texttt{5} (Vectơ).
+    \item \textbf{Khai báo Vectơ:} Chọn \texttt{1} (VctA). Nhập tọa độ 3 chiều của Vectơ (nếu có hệ trục Oxyz) hoặc độ dài, hướng (không khuyến khích).
+    \item \textbf{Thực hiện phép toán:} Bấm \texttt{MENU} $\rightarrow$ \texttt{5} $\rightarrow$ \texttt{3} (VctA) $\rightarrow$ \texttt{+} hoặc \texttt{-} $\rightarrow$ \texttt{4} (VctB) $\rightarrow$ \texttt{=}.
+    \item \textbf{Tính độ dài:} Bấm \texttt{SHIFT} $\rightarrow$ \texttt{)} (Abs) để lấy độ lớn: \texttt{Abs(VctAns)}.
+\end{itemize}
+
+\textbf{2. Mẹo loại trừ 2/4 đáp án trắc nghiệm trong 5 giây:}
+\begin{itemize}
+    \item \textbf{Mẹo “Chung gốc”:} Thấy hiệu $\vec{OA} - \vec{OB}$, kết quả luôn là $\vec{BA}$ (đuôi lộn ngược). Nếu đáp án nào ghi $\vec{AB}$ $\rightarrow$ \textbf{Loại ngay}.
+    \item \textbf{Mẹo “Hình hộp”:} Thấy hình hộp, hễ thấy tổng 3 vectơ xuất phát từ 1 đỉnh, kết quả luôn là đường chéo chính xuất phát từ đỉnh đó. Ví dụ: $\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'}$ (nhìn đỉnh A, đường chéo là AC').
+\end{itemize}
+\end{tcolorbox}
+
+\newpage
+
+% ================= KHỐI 4 =================
+\section*{KHỐI 4: CÁC VÍ DỤ MINH HỌA MẪU}
+
+\subsection*{Biến thể 1: Tính độ dài vectơ tổng (Quy tắc ba điểm \& hình bình hành)}
+\textbf{Ví dụ 1 (SGK - VD3 trang 50):} Cho hình lập phương $ABCD.A'B'C'D'$ có độ dài mỗi cạnh bằng $1$. Tính độ dài của vectơ $\vec{BC} + \vec{DD'}$.
+
+\noindent\textbf{\textcolor{blue}{[Bước 1]}} Xác định các vectơ. Ta thấy $DD'$ là cạnh bên của hình lập phương. Theo tính chất hình lập phương, tứ giác $DD'C'C$ là hình bình hành nên $\vec{DD'} = \vec{CC'}$.
+
+\noindent\textbf{\textcolor{blue}{[Bước 2]}} Thay vào biểu thức và áp dụng quy tắc ba điểm:
+\[
+\vec{BC} + \vec{DD'} = \vec{BC} + \vec{CC'} = \vec{BC'}
+\]
+
+\noindent\textbf{\textcolor{blue}{[Bước 3]}} Tính độ dài. Ta cần tính $|\vec{BC'}| = BC'$.
+Xét tam giác $BCC'$ vuông tại $C$ (vì $CC' \perp (ABCD)$), có $BC = 1$, $CC' = 1$.
+Áp dụng định lý Pythagore: $BC' = \sqrt{BC^2 + CC'^2} = \sqrt{1^2 + 1^2} = \sqrt{2}$.
+Vậy $|\vec{BC} + \vec{DD'}| = \sqrt{2}$.
+
+\noindent\textbf{[💡 Mẹo \& Góc nhìn nhanh]:} Khi thấy tổng hai vectơ không chung điểm, hãy tìm cách thay thế vectơ này bằng một vectơ bằng nó để tạo thành đường gấp khúc liên tiếp (quy tắc 3 điểm).
+
+\vspace{0.5cm}
+
+\subsection*{Biến thể 2: Chứng minh đẳng thức vectơ (Chèn điểm / Biến đổi tương đương)}
+\textbf{Ví dụ 2 (SGK - VD4 trang 50):} Cho tứ diện $ABCD$. Chứng minh rằng $\vec{AC} + \vec{BD} = \vec{AD} + \vec{BC}$.
+
+\noindent\textbf{\textcolor{blue}{[Bước 1]}} Định hướng: Vế trái có $AC$ và $BD$, vế phải có $AD$ và $BC$. Ta dùng quy tắc ba điểm chèn điểm $D$ vào vectơ $\vec{AC}$ hoặc chèn điểm $C$ vào $\vec{BD}$.
+
+\noindent\textbf{\textcolor{blue}{[Bước 2]}} Biến đổi vế trái (VT) bằng cách chèn điểm $D$:
+\[
+VT = \vec{AC} + \vec{BD} = (\vec{AD} + \vec{DC}) + \vec{BD}
+\]
+Nhóm lại: $= \vec{AD} + (\vec{BD} + \vec{DC})$
+
+\noindent\textbf{\textcolor{blue}{[Bước 3]}} Áp dụng quy tắc ba điểm cho ngoặc sau: $\vec{BD} + \vec{DC} = \vec{BC}$.
+Suy ra: $VT = \vec{AD} + \vec{BC} = VP$ (Điều phải chứng minh).
+
+\noindent\textbf{[💡 Mẹo \& Góc nhìn nhanh]:} Quy tắc chèn điểm là ``vũ khí'' tối thượng. Muốn chèn điểm nào, bạn chỉ cần viết vectơ đó thành tổng 2 vectơ đi qua điểm đó. Ví dụ: $\vec{AC} = \vec{AD} + \vec{DC}$.
+
+\vspace{0.5cm}
+
+\subsection*{Biến thể 3: Quy tắc hình hộp}
+\textbf{Ví dụ 3 (SGK - VD5 trang 50):} Cho hình hộp $ABCD.A'B'C'D'$. Chứng minh rằng $\vec{BC} + \vec{DC} + \vec{AA'} = \vec{AC'}$.
+
+\noindent\textbf{\textcolor{blue}{[Bước 1]}} Nhận diện hình hộp. Ta cần đưa các vectơ về chung gốc $A$ để dùng quy tắc hình hộp.
+
+\noindent\textbf{\textcolor{blue}{[Bước 2]}} Thay thế các vectơ bằng vectơ bằng nó xuất phát từ $A$:
+\begin{itemize}
+    \item Vì $ABCD$ là hình bình hành nên $\vec{DC} = \vec{AB}$.
+    \item Vectơ $\vec{BC}$ đã chung gốc $A$ thông qua $\vec{AD}$: $\vec{BC} = \vec{AD}$.
+\end{itemize}
+Thay vào biểu thức:
+\[
+VT = \vec{AD} + \vec{AB} + \vec{AA'}
+\]
+
+\noindent\textbf{\textcolor{blue}{[Bước 3]}} Áp dụng quy tắc hình hộp cho ba cạnh xuất phát từ đỉnh $A$:
+\[
+\vec{AB} + \vec{AD} + \vec{AA'} = \vec{AC'} \quad (\text{điều phải chứng minh})
+\]
+
+\noindent\textbf{[💡 Mẹo \& Góc nhìn nhanh]:} Với hình hộp, muốn cộng 3 vectơ, hãy biến đổi sao cho chúng xuất phát từ CÙNG MỘT ĐỈNH. Kết quả luôn là đường chéo chính xuất phát từ đỉnh đó.
+
+\vspace{0.5cm}
+
+\subsection*{Biến thể 4: Phép trừ vectơ và vectơ đối}
+\textbf{Ví dụ 4 (SGK - VD6 trang 52):} Cho hình chóp $S.ABCD$ có đáy $ABCD$ là hình bình hành. Gọi $M, N$ lần lượt là trung điểm của $AB, CD$. Chứng minh rằng:
+\begin{enumerate}
+    \item $\vec{AM}$ và $\vec{CN}$ là hai vectơ đối nhau.
+    \item $\vec{SC} - \vec{AM} - \vec{AN} = \vec{SA}$.
+\end{enumerate}
+
+\noindent\textbf{\textcolor{blue}{[Bước 1]}} Vẽ hình. Nhận thấy $AM$ và $CN$ là hai đoạn thẳng song song, ngược hướng và bằng nhau (do $ABCD$ là hình bình hành, $M,N$ là trung điểm).
+
+\noindent\textbf{\textcolor{blue}{[Bước 2]}} 
+\begin{enumerate}
+    \item Vì $M,N$ là trung điểm của $AB, CD$ và $ABCD$ là hình bình hành nên $AM = CN$ và $AM \parallel CN$. Hơn nữa hướng từ $A$ đến $M$ ngược với hướng từ $C$ đến $N$. Do đó $\vec{AM} = -\vec{CN}$ hay $\vec{AM}$ và $\vec{CN}$ là hai vectơ đối nhau.
+    \item Từ câu a, ta có $\vec{CN} = -\vec{AM}$. Thay vào biểu thức:
+    \[
+    \vec{SC} - \vec{AM} - \vec{AN} = \vec{SC} + \vec{CN} - \vec{AN} = \vec{SN} - \vec{AN}
+    \]
+\end{enumerate}
+
+\noindent\textbf{\textcolor{blue}{[Bước 3]}} Áp dụng quy tắc trừ ``chung đầu lộn ngược'': $\vec{SN} - \vec{AN} = \vec{SN} + \vec{NA} = \vec{SA}$.
+Vậy đẳng thức được chứng minh.
+
+\noindent\textbf{[💡 Mẹo \& Góc nhìn nhanh]:} Phép trừ vectơ thực chất là cộng với vectơ đối: $\vec{a} - \vec{b} = \vec{a} + (-\vec{b})$. Khi thấy dấu trừ, hãy nghĩ ngay đến việc đảo chiều mũi tên của vectơ phía sau.
+
+\newpage
+
+% ================= KHỐI 5 =================
+\section*{KHỐI 5: BÀI TẬP RÈN LUYỆN TƯƠNG TỰ}
+
+\subsection*{Dạng 1: Tính độ dài vectơ tổng (Tương tự Ví dụ 1)}
+\textbf{Bài 1:} Cho hình lập phương $ABCD.A'B'C'D'$ có độ dài mỗi cạnh bằng $1$. Tính độ dài của vectơ $\vec{AC} + \vec{C'D'}$.
+\vspace{0.2cm}
+
+\textbf{Bài 2:} Cho hình lập phương $ABCD.A'B'C'D'$ có độ dài mỗi cạnh bằng $1$. Tính độ dài của vectơ $\vec{AB} + \vec{AD} + \vec{AA'}$.
+
+\subsection*{Dạng 2: Chứng minh đẳng thức vectơ (Tương tự Ví dụ 2)}
+\textbf{Bài 3:} Cho tứ diện $ABCD$. Chứng minh rằng $\vec{AB} + \vec{CD} = \vec{AD} + \vec{CB}$.
+\vspace{0.2cm}
+
+\textbf{Bài 4:} Cho hình chóp $S.ABCD$ có đáy $ABCD$ là hình chữ nhật. Chứng minh rằng $\vec{SA} + \vec{SC} = \vec{SB} + \vec{SD}$.
+
+\subsection*{Dạng 3: Quy tắc hình hộp (Tương tự Ví dụ 3)}
+\textbf{Bài 5:} Cho hình hộp chữ nhật $ABCD.A'B'C'D'$. Chứng minh rằng $\vec{BB'} + \vec{CD} + \vec{AD} = \vec{BD'}$.
+\vspace{0.2cm}
+
+\textbf{Bài 6:} Cho hình hộp $ABCD.A'B'C'D'$. Chọn đẳng thức đúng:
+\begin{enumerate}[label=\Alph*.]
+    \item $\vec{AC'} = \vec{AB} + \vec{AB'} + \vec{AD}$
+    \item $\vec{DB'} = \vec{DA} + \vec{DD'} + \vec{DC}$
+    \item $\vec{AC'} = \vec{AC} + \vec{AB} + \vec{AD}$
+    \item $\vec{DB} = \vec{DA} + \vec{DD'} + \vec{DC}$
+\end{enumerate}
+
+\subsection*{Dạng 4: Phép trừ vectơ (Tương tự Ví dụ 4)}
+\textbf{Bài 7:} Cho tứ diện $ABCD$. Gọi $M, N$ lần lượt là trung điểm của $AB, CD$. Trong các khẳng định sau, khẳng định nào \textbf{sai}?
+\begin{enumerate}[label=\Alph*.]
+    \item $\vec{AB} + \vec{CD} = \vec{CB} + \vec{AD}$
+    \item $2\vec{MN} = \vec{AB} + \vec{DC}$
+    \item $\vec{AD} + 2\vec{MN} = \vec{AB} + \vec{AC}$
+    \item $2\vec{MN} = \vec{AB} + \vec{AC} + \vec{AD}$
+\end{enumerate}
+
+\textbf{Bài 8:} Trong không gian, khẳng định nào sau đây là khẳng định \textbf{sai}?
+\begin{enumerate}[label=\Alph*.]
+    \item $\vec{AB} + \vec{BC} = \vec{AC}$
+    \item $\vec{OA} - \vec{OB} = \vec{BA}$
+    \item $\vec{AB} - \vec{AC} = \vec{BC}$
+    \item $\vec{MA} + \vec{MB} = \vec{0}$ (với $M$ là trung điểm $AB$)
+\end{enumerate}
+
+\vspace{0.5cm}
+\subsection*{BẢNG ĐÁP ÁN VÀ HƯỚNG DẪN VẮN TẮT}
+\begin{center}
+\begin{tabularx}{\textwidth}{|c|X|}
+\hline
+\textbf{Bài} & \textbf{Đáp án / Hướng dẫn vắn tắt} \\
+\hline
+1 & $|\overrightarrow{AC} + \overrightarrow{C'D'}| = |\overrightarrow{AC} + \overrightarrow{CD}| = |\overrightarrow{AD}|$. Độ dài $= 1$ (vì $\overrightarrow{C'D'} = \overrightarrow{CD}$). \\
+\hline
+2 & Theo quy tắc hình hộp: $\overrightarrow{AB} + \overrightarrow{AD} + \overrightarrow{AA'} = \overrightarrow{AC'}$. Độ dài $AC' = \sqrt{1^2 + 1^2 + 1^2} = \sqrt{3}$. \\
+\hline
+3 & Biến đổi tương đương: $\overrightarrow{AB} - \overrightarrow{AD} = \overrightarrow{CB} - \overrightarrow{CD} \Leftrightarrow \overrightarrow{DB} = \overrightarrow{CB} + \overrightarrow{DC} \Leftrightarrow \overrightarrow{DB} = \overrightarrow{DB}$ (đẳng thức luôn đúng). \\
+\hline
+4 & Chèn điểm $S$: $VT = \overrightarrow{SA} + \overrightarrow{SC}$, $VP = \overrightarrow{SB} + \overrightarrow{SD}$. Với $O$ là tâm hình chữ nhật, $VT = 2\overrightarrow{SO} = VP$. \\
+\hline
+5 & Biến đổi: $\overrightarrow{BB'} + \overrightarrow{CD} + \overrightarrow{AD} = \overrightarrow{BB'} + \overrightarrow{BA} + \overrightarrow{AD} = \overrightarrow{BB'} + \overrightarrow{BD} = \overrightarrow{BD'}$ (do $\overrightarrow{CD}=\overrightarrow{BA}$, $\overrightarrow{BB'}=\overrightarrow{DD'}$). \\
+\hline
+6 & \textbf{Chọn B.} Quy tắc hình hộp đối với đỉnh $D$: $\overrightarrow{DA} + \overrightarrow{DC} + \overrightarrow{DD'} = \overrightarrow{DB'}$. \\
+\hline
+7 & \textbf{Chọn D.} Đẳng thức D sai do VT là tổng 3 cạnh, VP là đường chéo. Thực tế $2\overrightarrow{MN} = \overrightarrow{AD} + \overrightarrow{BC}$ (hoặc $\overrightarrow{AC}+\overrightarrow{BD}$). \\
+\hline
+8 & \textbf{Chọn C.} Quy tắc trừ chung gốc: $\overrightarrow{AB} - \overrightarrow{AC} = \overrightarrow{CB}$, không phải $\overrightarrow{BC}$. \\
+\hline
+\end{tabularx}
+\end{center}
+
+\end{document}

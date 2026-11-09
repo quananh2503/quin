@@ -42,8 +42,20 @@ export function V2CreateLesson(arg1) {
   return window['go']['wails']['App']['V2CreateLesson'](arg1);
 }
 
+export function V2ExportBothLessonPDFs(arg1) {
+  return window['go']['wails']['App']['V2ExportBothLessonPDFs'](arg1);
+}
+
+export function V2ExportLessonPDF(arg1) {
+  return window['go']['wails']['App']['V2ExportLessonPDF'](arg1);
+}
+
 export function V2GenerateRemediation(arg1) {
   return window['go']['wails']['App']['V2GenerateRemediation'](arg1);
+}
+
+export function V2GetAPIKeys() {
+  return window['go']['wails']['App']['V2GetAPIKeys']();
 }
 
 export function V2GetAssignment(arg1) {
@@ -120,6 +132,14 @@ export function V2PublishPDFLesson(arg1) {
 
 export function V2PushAssignmentFeedback(arg1) {
   return window['go']['wails']['App']['V2PushAssignmentFeedback'](arg1);
+}
+
+export function V2SaveAPIKey(arg1, arg2) {
+  return window['go']['wails']['App']['V2SaveAPIKey'](arg1, arg2);
+}
+
+export function V2SaveDocumentData(arg1, arg2) {
+  return window['go']['wails']['App']['V2SaveDocumentData'](arg1, arg2);
 }
 
 export function V2SaveLastChapter(arg1) {

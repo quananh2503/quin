@@ -18,7 +18,7 @@
     #text(size: 17pt, weight: "bold", fill: rgb("#0f766e"))[PHIẾU BÀI TẬP HỌC SINH]
   ]
   \ #v(2pt)
-  #text(size: 13pt, weight: "bold")[Bài kiểm tra Self-Healing] \
+  #text(size: 13pt, weight: "bold")[Bài test SafetyNet] \
   #text(size: 9.5pt, style: "italic", fill: rgb("#475569"))[Tổng quan]
 ]
 #v(6pt)
@@ -29,17 +29,9 @@
 #v(3pt)
 #card(title: "I. Lý thuyết & Ghi nhớ")[
   - Lý thuyết  #mi(`x > 0`) 
+  #v(4pt)
+  #block(fill: rgb("#f0fdf4"), stroke: (left: 4pt + rgb("#22c55e")), inset: 8pt, width: 100%)[
+    #text(weight: "bold", fill: rgb("#15803d"))[💡 Mẹo giải nhanh:] Dùng  #mi(`\ncos(\alpha)`)  chia cho  #mi(`P`) .
+  ]
 ]
 #v(4pt)
-#card(title: "IV. Bài tập tự luyện")[
-  #if IS_TEACHER [*Bài 1.*] else [*Bài 1.*] Tính giá trị  #mi(`x + y có thiếu đô la`) 
-    #if IS_TEACHER [
-      #v(2pt) #text(fill: rgb("#15803d"))[→ Lời giải: Ta có  #mi(`x + y = 10`) ] \
-    ] else [
-      #v(2pt)
-      #block(stroke: (paint: rgb("#94a3b8"), dash: "dashed"), inset: 6pt, height: 50pt, width: 100%)[
-        #text(size: 8.5pt, fill: rgb("#94a3b8"))[✍️ Bài làm:]
-      ]
-    ]
-]
-#v(6pt)

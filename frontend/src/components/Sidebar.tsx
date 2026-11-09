@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../api';
 import { normalizeError } from '../utils';
-import { BookOpen, Sparkles, FileText, CheckSquare } from 'lucide-react';
+import { BookOpen, Sparkles, FileText, CheckSquare, Settings } from 'lucide-react';
 
 interface SidebarProps {
   currentView: string;
@@ -54,6 +54,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, showT
     { id: 'lessons', label: 'Soạn bài với AI', icon: Sparkles },
     { id: 'documents', label: 'Tài liệu', icon: FileText },
     { id: 'grading', label: 'Chấm bài', icon: CheckSquare },
+    { id: 'settings', label: 'Cài đặt', icon: Settings },
   ];
 
   return (
@@ -107,7 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, showT
         <nav className="space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const active = currentView === item.id;
+            const active = currentView === item.id || (item.id === 'lessons' && currentView === 'lesson-editor');
             return (
               <button
                 key={item.id}

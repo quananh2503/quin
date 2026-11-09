@@ -177,7 +177,7 @@ func (r ReadStore) ListDrafts(ctx context.Context) ([]application2.DraftView, er
 		if err != nil {
 			return nil, err
 		}
-		view, err := r.GetDraft(ctx, id)
+		view, err := r.getDraftInternal(ctx, id, false)
 		if err != nil {
 			return nil, err
 		}
@@ -185,8 +185,19 @@ func (r ReadStore) ListDrafts(ctx context.Context) ([]application2.DraftView, er
 	}
 	return result, nil
 }
+
 func (r ReadStore) GetDraft(ctx context.Context, id uuid.UUID) (application2.DraftView, error) {
-	draft, err := (Drafts{Store: r.Store}).GetByID(ctx, id)
+	return r.getDraftInternal(ctx, id, true)
+}
+
+func (r ReadStore) getDraftInternal(ctx context.Context, id uuid.UUID, includeLessonData bool) (application2.DraftView, error) {
+	var draft *lesson.LessonDraft
+	var err error
+	if includeLessonData {
+		draft, err = (Drafts{Store: r.Store}).GetByID(ctx, id)
+	} else {
+		draft, err = (Drafts{Store: r.Store}).GetSummaryByID(ctx, id)
+	}
 	if err != nil {
 		return application2.DraftView{}, err
 	}
@@ -245,7 +256,10 @@ func (r ReadStore) GetDraft(ctx context.Context, id uuid.UUID) (application2.Dra
 		Materials:    materialsView,
 		CreatedAt:    draft.CreatedAt(),
 		UpdatedAt:    draft.UpdatedAt(),
-		LessonData:   application2.LessonToView(draft.Lesson()),
+	}
+
+	if includeLessonData {
+		view.LessonData = application2.LessonToView(draft.Lesson())
 	}
 
 	if value := draft.ErrorString(); value != nil {

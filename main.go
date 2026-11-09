@@ -4,10 +4,13 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
+	"sync"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -15,6 +18,8 @@ import (
 
 	application2 "meet-attendance-clean/application2"
 	"meet-attendance-clean/config"
+	"meet-attendance-clean/domain2/assignment"
+	"meet-attendance-clean/domain2/lesson"
 
 	// "meet-attendance-clean/infrastructure/onenote"
 	database2 "meet-attendance-clean/infrastructure2/database"
@@ -26,6 +31,10 @@ import (
 	"meet-attendance-clean/infrastructure2/pdf"
 	"meet-attendance-clean/infrastructure2/renderer"
 	wailsAdapter "meet-attendance-clean/infrastructure2/wails"
+
+	"meet-attendance-clean/infrastructure2/AI/deepseek"
+	"meet-attendance-clean/infrastructure2/AI/pipeline"
+	"meet-attendance-clean/infrastructure2/media"
 )
 
 // ============================================================================
@@ -167,11 +176,63 @@ func buildApplicationServices(
 	meetGateway := googlemeet.NewAdapter(meetClient, database2.ExternalLinks{Store: db})
 	// pdfProcessor := document2.NewPopplerProcessor()
 	pdfProcessor := pdf.NewProcessor()
-	ai, err := gemini2.New(context.Background(), geminiKey, pdfProcessor)
-	if err != nil {
-		return nil, fmt.Errorf("khởi tạo Gemini AI client thất bại: %w", err)
+
+	// Quản lý API Key lưu trong SQLite DB
+	apiKeysRepo := database2.APIKeys{Store: db}
+
+	// Tự động gán ban đầu nếu DB chưa có key
+	dbGeminiKey, errGemKey := apiKeysRepo.GetKey(context.Background(), "gemini")
+	if errGemKey == nil && dbGeminiKey == "" {
+		fallbackGem := strings.TrimSpace(geminiKey)
+		if fallbackGem == "" {
+			fallbackGem = strings.TrimSpace(os.Getenv("GEMINI_API_KEY"))
+		}
+		if fallbackGem != "" {
+			if sErr := apiKeysRepo.SetKey(context.Background(), "gemini", fallbackGem); sErr != nil {
+				log.Printf("cảnh báo: lưu gemini key mặc định vào DB: %v", sErr)
+			}
+			dbGeminiKey = fallbackGem
+		}
 	}
-	// defer cancel()
+
+	dbDeepseekKey, errDSKey := apiKeysRepo.GetKey(context.Background(), "deepseek")
+	if errDSKey == nil && dbDeepseekKey == "" {
+		fallbackDS := strings.TrimSpace(os.Getenv("DEEPSEEK_API_KEY"))
+		if fallbackDS != "" {
+			if sErr := apiKeysRepo.SetKey(context.Background(), "deepseek", fallbackDS); sErr != nil {
+				log.Printf("cảnh báo: lưu deepseek key mặc định vào DB: %v", sErr)
+			}
+			dbDeepseekKey = fallbackDS
+		}
+	}
+
+	activeGeminiKey := dbGeminiKey
+	if activeGeminiKey == "" {
+		activeGeminiKey = geminiKey
+	}
+	var ai *gemini2.Client
+	if activeGeminiKey != "" {
+		var initErr error
+		ai, initErr = gemini2.New(context.Background(), activeGeminiKey, pdfProcessor)
+		if initErr != nil {
+			log.Printf("cảnh báo: khởi tạo Gemini AI client: %v (vui lòng cấu hình key trong Cài đặt)", initErr)
+		}
+	}
+
+	dynGemini := &dynamicGeminiGenerator{
+		client:       ai,
+		pdfProcessor: pdfProcessor,
+		apiKeys:      apiKeysRepo,
+	}
+	dynGrader := &dynamicGrader{
+		client:       ai,
+		pdfProcessor: pdfProcessor,
+		apiKeys:      apiKeysRepo,
+	}
+
+	// Router điều phối: chọn giữa DeepSeek Pipeline mới và Gemini cũ (đọc key động từ SQLite)
+	dsGen := &dynamicDeepSeekGenerator{apiKeys: apiKeysRepo}
+	dualGen := pipeline.NewDualLessonGenerator(dynGemini, dsGen)
 
 	// Document Handlers
 	uploadHandler, err := application2.NewUploadDocumentHandler(documents, storageRoot)
@@ -182,29 +243,43 @@ func buildApplicationServices(
 
 	return &wailsAdapter.Application2Services{
 		ListAIModels: func(ctx context.Context) ([]wailsAdapter.ModelView, error) {
-			models, err := ai.ListModels(ctx)
-			if err != nil {
-				return nil, err
-			}
-			result := make([]wailsAdapter.ModelView, 0, len(models))
-			for _, m := range models {
-				result = append(result, wailsAdapter.ModelView{
-					ID:          m.ID,
-					DisplayName: m.DisplayName,
-					Description: m.Description,
-				})
+			result := []wailsAdapter.ModelView{
+				{
+					ID:          "deepseek-flash",
+					DisplayName: "DeepSeek Flash (Pipeline mới - 30 Workers)",
+					Description: "5-Stage Pipeline, 30 workers song song, phân dạng hạt mịn, mẹo Casio, bước giải chi tiết.",
+				},
+				{
+					ID:          "gemini-3.8-flash",
+					DisplayName: "Gemini 3.8 Flash (Pipeline cũ - Native PDF)",
+					Description: "Pipeline cũ: Xử lý trực tiếp tài liệu PDF qua Google Gemini Flash.",
+				},
 			}
 			return result, nil
 		},
+		GetAPIKeys: func(ctx context.Context) (map[string]string, error) {
+			return apiKeysRepo.GetAll(ctx)
+		},
+		SaveAPIKey: func(ctx context.Context, provider, key string) error {
+			provider = strings.ToLower(strings.TrimSpace(provider))
+			if err := apiKeysRepo.SetKey(ctx, provider, key); err != nil {
+				return err
+			}
+			if provider == "gemini" {
+				_ = dynGrader.updateKey(ctx, key)
+				_ = dynGemini.updateKey(ctx, key)
+			}
+			return nil
+		},
 		Queries:                   application2.NewQueries(database2.ReadStore{Store: db}),
 		SyncMeetings:              application2.NewSyncMeetingUsecase(db, meetGateway, sessions, students),
-		GenerateLesson:            application2.NewGenerateLessonUsecase(drafts, ai),
-		GenerateRemediationLesson: application2.NewGenerateRemediationLessonUsecase(drafts, ai, graphs),
+		GenerateLesson:            application2.NewGenerateLessonUsecase(drafts, dualGen),
+		GenerateRemediationLesson: application2.NewGenerateRemediationLessonUsecase(drafts, dualGen, graphs),
 		UpdateLessonDraft:         application2.NewUpdateLessonDraftUsecase(drafts),
 		UpdateStudent:             application2.NewUpdateInfoStudentUsecase(students),
 		PreparePublishingTargets:  application2.NewPreparePublishingTargetsUsecase(students, oneNote),
 		AssignLesson:              application2.NewAssignLessonUsecase(students, lessons, assignments, graphs, oneNote),
-		GradeAssignment:           application2.NewGradeAssignmentUsecase(assignments, graphs, oneNote, ai),
+		GradeAssignment:           application2.NewGradeAssignmentUsecase(assignments, graphs, oneNote, dynGrader),
 		Drafts:                    drafts,
 		Lessons:                   lessons,
 		Assignments:               assignments,
@@ -214,6 +289,159 @@ func buildApplicationServices(
 		UploadHandler:             uploadHandler,
 		ExtractHandler:            extractHandler,
 	}, nil
+}
+
+// ============================================================================
+// DYNAMIC DEEPSEEK GENERATOR (NẠP KEY ĐỘNG TỪ SQLITE)
+// ============================================================================
+
+type dynamicDeepSeekGenerator struct {
+	apiKeys database2.APIKeys
+}
+
+func (d *dynamicDeepSeekGenerator) Generate(ctx context.Context, title string, materials []lesson.StudyMaterial, model string, prompt string) (*lesson.Lesson, error) {
+	key, err := d.apiKeys.GetKey(ctx, "deepseek")
+	if err != nil || strings.TrimSpace(key) == "" {
+		key = strings.TrimSpace(os.Getenv("DEEPSEEK_API_KEY"))
+	}
+	if strings.TrimSpace(key) == "" {
+		return nil, fmt.Errorf("chưa cấu hình API Key cho DeepSeek. Vui lòng vào mục 'Cài đặt' để nhập DeepSeek API Key")
+	}
+
+	dsModel := strings.TrimSpace(os.Getenv("DEEPSEEK_MODEL"))
+	if dsModel == "" {
+		dsModel = "deepseek-flash"
+	}
+	dsProvider := deepseek.NewProvider(key, dsModel)
+	dsPlanner := pipeline.NewPlanner(dsProvider, dsModel)
+	dsGenerator := pipeline.NewGenerator(dsProvider, dsModel, 30)
+	dsRepairer := pipeline.NewRepairer(dsProvider, dsModel)
+	dsAssembler := pipeline.NewAssembler()
+
+	dsOrchestrator := pipeline.NewOrchestrator(
+		nil,
+		dsPlanner,
+		dsGenerator,
+		nil,
+		dsRepairer,
+		dsAssembler,
+	)
+	adapter := pipeline.NewOrchestratorLessonGeneratorAdapter(
+		media.NewConverter(),
+		dsOrchestrator,
+		dsAssembler,
+		"",
+		30,
+	)
+	return adapter.Generate(ctx, title, materials, model, prompt)
+}
+
+// ============================================================================
+// DYNAMIC GEMINI GENERATOR & GRADER (NẠP KEY ĐỘNG TỪ SQLITE)
+// ============================================================================
+
+type dynamicGeminiGenerator struct {
+	mu           sync.RWMutex
+	client       *gemini2.Client
+	pdfProcessor gemini2.PDFProcessor
+	apiKeys      database2.APIKeys
+}
+
+func (g *dynamicGeminiGenerator) Generate(ctx context.Context, title string, materials []lesson.StudyMaterial, model string, prompt string) (*lesson.Lesson, error) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
+	key, err := g.apiKeys.GetKey(ctx, "gemini")
+	if err != nil || strings.TrimSpace(key) == "" {
+		key = strings.TrimSpace(os.Getenv("GEMINI_API_KEY"))
+	}
+	key = strings.TrimSpace(key)
+	if key == "" {
+		return nil, errors.New("chưa cấu hình Gemini API Key. Vui lòng vào Cài đặt để thêm key")
+	}
+
+	if g.client == nil {
+		c, errNew := gemini2.New(ctx, key, g.pdfProcessor)
+		if errNew != nil {
+			return nil, fmt.Errorf("không thể khởi tạo Gemini AI: %w", errNew)
+		}
+		g.client = c
+	} else {
+		_ = g.client.UpdateKey(ctx, key)
+	}
+
+	return g.client.Generate(ctx, title, materials, model, prompt)
+}
+
+func (g *dynamicGeminiGenerator) updateKey(ctx context.Context, key string) error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
+	key = strings.TrimSpace(key)
+	if key == "" {
+		return nil
+	}
+	if g.client == nil {
+		c, err := gemini2.New(ctx, key, g.pdfProcessor)
+		if err != nil {
+			return err
+		}
+		g.client = c
+		return nil
+	}
+	return g.client.UpdateKey(ctx, key)
+}
+
+type dynamicGrader struct {
+	mu           sync.RWMutex
+	client       *gemini2.Client
+	pdfProcessor gemini2.PDFProcessor
+	apiKeys      database2.APIKeys
+}
+
+func (g *dynamicGrader) Evaluate(ctx context.Context, gradeItems []assignment.EvaluationRequest, items []assignment.AssignmentItem, pageInk []byte, prompt string, model string) ([]assignment.EvaluationResult, error) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
+	key, err := g.apiKeys.GetKey(ctx, "gemini")
+	if err != nil || strings.TrimSpace(key) == "" {
+		key = strings.TrimSpace(os.Getenv("GEMINI_API_KEY"))
+	}
+	key = strings.TrimSpace(key)
+	if key == "" {
+		return nil, errors.New("chưa cấu hình Gemini API Key. Vui lòng vào Cài đặt để thêm key trước khi chấm bài.")
+	}
+
+	if g.client == nil {
+		c, errNew := gemini2.New(ctx, key, g.pdfProcessor)
+		if errNew != nil {
+			return nil, fmt.Errorf("không thể khởi tạo Gemini AI để chấm bài: %w", errNew)
+		}
+		g.client = c
+	} else {
+		_ = g.client.UpdateKey(ctx, key)
+	}
+
+	return g.client.Evaluate(ctx, gradeItems, items, pageInk, prompt, model)
+}
+
+func (g *dynamicGrader) updateKey(ctx context.Context, key string) error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
+	key = strings.TrimSpace(key)
+	if key == "" {
+		return nil
+	}
+	if g.client == nil {
+		c, err := gemini2.New(ctx, key, g.pdfProcessor)
+		if err != nil {
+			return err
+		}
+		g.client = c
+		return nil
+	}
+	return g.client.UpdateKey(ctx, key)
 }
 
 // ============================================================================

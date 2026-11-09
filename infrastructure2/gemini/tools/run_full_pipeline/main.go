@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"meet-attendance-clean/infrastructure2/gemini"
-	"meet-attendance-clean/infrastructure2/pdf"
 )
 
 func loadAPIKeys() []string {
@@ -54,7 +53,7 @@ func main() {
 	}
 	fmt.Printf("🔑 Đã nạp %d API keys khả dụng cho KeyPool\n\n", len(keys))
 
-	// 2. Danh mục tài liệu đầu vào: nén N-Up 4 độc lập cho từng file để bảo toàn ranh giới trang & DocID
+	// 2. Danh mục tài liệu đầu vào: 2 file PDF kiểm thử theo yêu cầu
 	type inputItem struct {
 		docID    string
 		path     string
@@ -62,65 +61,78 @@ func main() {
 	}
 
 	items := []inputItem{
-		{"DOC_DSD", filepath.Join("infrastructure2", "gemini", "dsd.pdf"), "Tài liệu tóm tắt lý thuyết và kiến thức trọng tâm (dsd)"},
-		{"DOC_SGK_HH12", filepath.Join("infrastructure2", "gemini", "HH12-KNTT- C2-GHEP FULL GIAI.pdf"), "Tài liệu chính: SGK & Bài giải chi tiết Chương II Hình học 12"},
-		{"DOC_ON_VECTO", filepath.Join("infrastructure2", "gemini", "ÔN VEC TƠ KG 10T10.pdf"), "Tài liệu ngân hàng bài tập ôn luyện chuyên đề Vectơ"},
+		{"DOC_MINH_THU", filepath.Join("infrastructure2", "gemini", "pdfs", "tests", "Minh Thư tha6 ..pdf"), "Tài liệu đề thi và bài tập toán ôn luyện (Minh Thư)"},
+		{"DOC_KHAO_SAT_HAM_SO", filepath.Join("infrastructure2", "gemini", "pdfs", "tests", "Cầu 6 Cho hàm số y = f (x) có đồ thị là đường cong trong hình vẽ dưới đây. Hàm số y =  (x) đồng.pdf"), "Tài liệu chuyên đề khảo sát hàm số, đồ thị và bảng biến thiên"},
 	}
 
-	fmt.Println("📂 DANH SÁCH CÁC TÀI LIỆU ĐẦU VÀO ĐƯỢC NÉN N-UP 4 ĐỘC LẬP TỪNG TÀI LIỆU:")
+	fmt.Println("📂 DANH SÁCH CÁC TÀI LIỆU ĐẦU VÀO (TỰ ĐỘNG TỐI ƯU ẢNH SCAN NẾU CẦN):")
 	var docs []gemini.DocumentInput
 
 	for idx, item := range items {
-		nupFile := strings.TrimSuffix(item.path, ".pdf") + "_nup4.pdf"
-		nupBytes, errRead := os.ReadFile(nupFile)
-		if errRead != nil || len(nupBytes) == 0 {
-			fmt.Printf("  🔄 [%d] Đang nén N-Up 4 riêng cho: %s...\n", idx+1, filepath.Base(item.path))
-			proc := pdf.NewProcessor()
-			var errNUp error
-			nupBytes, errNUp = proc.MergeAndNUp(context.Background(), []string{item.path}, 4)
-			if errNUp != nil {
-				log.Fatalf("❌ Lỗi nén N-Up 4 cho %s: %v", item.path, errNUp)
+		optFile := strings.TrimSuffix(item.path, ".pdf") + "_opt.pdf"
+		pdfBytes, errRead := os.ReadFile(optFile)
+		if errRead != nil || len(pdfBytes) == 0 {
+			rawBytes, errRaw := os.ReadFile(item.path)
+			if errRaw != nil {
+				log.Fatalf("❌ Lỗi đọc file %s: %v", item.path, errRaw)
 			}
-			_ = os.WriteFile(nupFile, nupBytes, 0644)
+			if len(rawBytes) > gemini.ScannedPDFThreshold {
+				fmt.Printf("  🔄 [%d] Đang tối ưu nén ảnh PDF scan: %s (%.2f MB)...\n", idx+1, filepath.Base(item.path), float64(len(rawBytes))/(1024*1024))
+				optBytes, errOpt := gemini.OptimizeScannedPDF(rawBytes)
+				if errOpt == nil && len(optBytes) > 0 {
+					pdfBytes = optBytes
+					if errSave := os.WriteFile(optFile, optBytes, 0644); errSave != nil {
+						log.Printf("⚠️ Không thể ghi file cache %s: %v", optFile, errSave)
+					}
+				} else {
+					pdfBytes = rawBytes
+				}
+			} else {
+				pdfBytes = rawBytes
+			}
 		}
-		fmt.Printf("  ✅ [%d] %s -> %s (%.2f MB)\n", idx+1, item.docID, filepath.Base(nupFile), float64(len(nupBytes))/(1024*1024))
+		fmt.Printf("  ✅ [%d] %s -> %s (%.2f MB)\n", idx+1, item.docID, filepath.Base(item.path), float64(len(pdfBytes))/(1024*1024))
 		docs = append(docs, gemini.DocumentInput{
 			DocID:    item.docID,
-			FileName: filepath.Base(nupFile),
+			FileName: filepath.Base(item.path),
 			RoleHint: item.roleHint,
-			RawPDF:   nupBytes,
+			RawPDF:   pdfBytes,
 		})
-	}
-
-	// 2.2 Tích hợp Video YouTube (hỗ trợ cào transcript & nén N-Up 4 tự động)
-	youtubeURL := "https://www.youtube.com/watch?v=7urfQ8s20oY" // Video bài giảng Thầy Nguyễn Phan Tiến
-	if strings.TrimSpace(youtubeURL) != "" {
-		fmt.Printf("\n🎥 Đang tích hợp Video YouTube tự động: %s...\n", youtubeURL)
-		ytDoc, errYT := gemini.NewDocumentInputFromYouTube(context.Background(), "DOC_YOUTUBE", youtubeURL, "Video bài giảng trích xuất mẹo giải nhanh và phương pháp tư duy")
-		if errYT != nil {
-			fmt.Printf("  ⚠️ Không thể nạp YouTube (%v), tiếp tục với các tài liệu PDF\n", errYT)
-		} else {
-			fmt.Printf("  ✅ DOC_YOUTUBE -> %s (%.2f KB)\n\n", ytDoc.FileName, float64(len(ytDoc.RawPDF))/1024)
-			docs = append(docs, ytDoc)
-		}
 	}
 
 	// 3. Khởi tạo Pipeline hoàn chỉnh
 	ctx := context.Background()
+
+	// Bổ sung tài liệu YouTube từ link theo yêu cầu của người dùng
+	youtubeURL := "https://www.youtube.com/watch?v=g1TNk2RqjNM"
+	fmt.Printf("  📺 [3] Đang cào transcript và biên dịch N-Up 4 từ YouTube: %s...\n", youtubeURL)
+	ytDoc, errYT := gemini.NewDocumentInputFromYouTube(ctx, "DOC_YOUTUBE_1", youtubeURL, "Video bài giảng YouTube: Khảo sát hàm số, trích xuất mẹo giải nhanh và tư duy đồ thị")
+	if errYT != nil {
+		log.Printf("⚠️ Cảnh báo: Tải transcript YouTube thất bại (%v), tiếp tục với các file PDF", errYT)
+	} else {
+		fmt.Printf("  ✅ [3] DOC_YOUTUBE_1 -> %s (%.2f KB)\n", ytDoc.FileName, float64(len(ytDoc.RawPDF))/1024)
+		docs = append(docs, ytDoc)
+	}
+
 	pipeline, err := gemini.NewStandardLessonPipeline(ctx, keys, gemini.ModelGemma4_31B)
 	if err != nil {
 		log.Fatalf("❌ Khởi tạo StandardLessonPipeline thất bại: %v", err)
 	}
 
-	outDir := filepath.Join("infrastructure2", "gemini", ".artifacts", "full_pipeline_output")
-	_ = os.MkdirAll(outDir, 0755)
+	runID := fmt.Sprintf("run_%s", time.Now().Format("20060102_150405"))
+	outDir := filepath.Join("infrastructure2", "gemini", ".artifacts", "full_pipeline_output", runID)
+	if errMk := os.MkdirAll(outDir, 0755); errMk != nil {
+		log.Fatalf("❌ Tạo thư mục output thất bại: %v", errMk)
+	}
+	fmt.Printf("📁 Thư mục lưu kết quả xuất bản: %s\n\n", outDir)
 
 	req := gemini.PipelineRequest{
 		Documents: docs,
-		UserInstruction: `Tập trung khai thác kịch bản kết hợp đa tài liệu:
-- Lấy mạch SGK làm khung lý thuyết cốt lõi.
-- Bổ sung bài tập và biến thể từ tài liệu ôn tập và tài liệu tóm tắt.
-- Yêu cầu xuất bài giảng chuyên sâu về Vectơ và Tọa độ trong không gian Oxyz.`,
+		UserInstruction: `Phân tích toàn diện kịch bản kết hợp đa tài liệu (2 file PDF scan và 1 Video bài giảng YouTube):
+- Trích xuất toàn bộ các dạng toán liên quan đến hàm số, tính đơn điệu, cực trị, tiệm cận, đồ thị và bảng biến thiên.
+- Khai thác tối đa mẹo giải nhanh, phương pháp Casio và nhận xét sư phạm từ video bài giảng YouTube để làm giàu phần Mẹo giải nhanh (CalloutTip).
+- Phân chia dạng toán rõ ràng theo chuẩn GDPT 2018.
+- Biên soạn đầy đủ lý thuyết, bài tập mẫu và bài tập rèn luyện tương ứng.`,
 		OutputDir: outDir,
 	}
 

@@ -123,3 +123,9 @@ func containsHelper(s, substr string) bool {
 	}
 	return false
 }
+
+func TestWorkerSchema_ExcludesPedagogicalScratchpad(t *testing.T) {
+	schemaBytes := gemini.GetWorkerSchemaBytes()
+	schemaStr := string(schemaBytes)
+	assert.NotContains(t, schemaStr, "pedagogical_scratchpad")
+}

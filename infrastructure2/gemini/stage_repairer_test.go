@@ -80,6 +80,41 @@ func TestDefaultBatchRepairer_RepairIssues_WithLLMSuccess(t *testing.T) {
 	mockLLM.AssertExpectations(t)
 }
 
+func TestDefaultBatchRepairer_RepairIssues_FuzzyAnchorMatching(t *testing.T) {
+	mockLLM := mocks.NewLLMProvider(t)
+	repairer := gemini.NewDefaultBatchRepairer(mockLLM, "gemini-3.5-flash-lite")
+
+	issues := []gemini.ValidationIssue{
+		{
+			SlotID:  "dang_24.callout",
+			Context: "Mẹo giải nhanh: Bài toán vật lý: Cân bằng lực",
+			Content: "Dùng $\\ncos(\\alpha)$ chia cho $P$.",
+			Reason:  "unknown command \\ncos",
+		},
+	}
+
+	// LLM trả về anchor_id kèm toàn bộ context tiếng Việt đằng sau
+	llmJSON := `{
+		"repaired_items": [
+			{
+				"anchor_id": "dang_24.callout - Mẹo giải nhanh: Bài toán vật lý: Cân bằng lực",
+				"fixed_content": "Dùng $\\cos(\\alpha)$ chia cho $P$."
+			}
+		]
+	}`
+
+	mockLLM.On("GenerateJSON", mock.Anything, mock.Anything).
+		Return(&gemini.LLMResponse{RawJSON: llmJSON}, nil).Once()
+
+	result, err := repairer.RepairIssues(context.Background(), issues)
+	assert.NoError(t, err)
+	assert.Len(t, result, 1)
+	assert.Equal(t, "Dùng $\\cos(\\alpha)$ chia cho $P$.", result["dang_24.callout"])
+
+	mockLLM.AssertExpectations(t)
+}
+
+
 func TestDefaultBatchRepairer_RepairIssues_LLMErrorFallback(t *testing.T) {
 	mockLLM := mocks.NewLLMProvider(t)
 	repairer := gemini.NewDefaultBatchRepairer(mockLLM, "gemini-2.5")
@@ -102,3 +137,4 @@ func TestDefaultBatchRepairer_RepairIssues_LLMErrorFallback(t *testing.T) {
 
 	mockLLM.AssertExpectations(t)
 }
+

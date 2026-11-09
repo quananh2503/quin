@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -18,22 +19,48 @@ type PlannerStage interface {
 
 // DefaultPlannerStage thực thi Giai đoạn 1: Lập kế hoạch bài học
 type DefaultPlannerStage struct {
-	llm       LLMProvider
-	modelName string
+	llm        LLMProvider
+	modelName  string
+	rasterizer PDFRasterizer
 }
 
 // NewDefaultPlannerStage khởi tạo PlannerStage với LLMProvider bất kỳ (Gemini hoặc DeepSeek)
 func NewDefaultPlannerStage(llm LLMProvider, modelName string) *DefaultPlannerStage {
 	return &DefaultPlannerStage{
-		llm:       llm,
-		modelName: modelName,
+		llm:        llm,
+		modelName:  modelName,
+		rasterizer: NewCLITypstCompiler(),
 	}
+}
+
+// WithRasterizer cấu hình rasterizer tùy chỉnh (dùng cho testing/mocking)
+func (p *DefaultPlannerStage) WithRasterizer(rasterizer PDFRasterizer) *DefaultPlannerStage {
+	p.rasterizer = rasterizer
+	return p
 }
 
 // Plan: Phân tích các tài liệu học tập đầu vào và sinh ra LessonPlan có cấu trúc.
 func (p *DefaultPlannerStage) Plan(ctx context.Context, docs []DocumentInput, customPrompt string) (*LessonPlan, error) {
 	if p.llm == nil {
 		return nil, fmt.Errorf("chưa cấu hình LLMProvider cho PlannerStage")
+	}
+
+	// Chuẩn bị tài liệu: Sử dụng Typst để chuyển đổi file PDF thành danh sách ảnh PNG cho AI
+	preparedDocs := make([]DocumentInput, len(docs))
+	copy(preparedDocs, docs)
+	for i := range preparedDocs {
+		if len(preparedDocs[i].PageImages) == 0 && len(preparedDocs[i].RawPDF) > 0 && p.rasterizer != nil {
+			imgs, errRast := p.rasterizer.RasterizePDF(ctx, preparedDocs[i].RawPDF)
+			if errRast != nil {
+				log.Printf("[Stage 1: Planner] Cảnh báo: Rasterize PDF %s bằng Typst thất bại (%v), tiếp tục với PDF gốc",
+					preparedDocs[i].FileName, errRast)
+			} else if len(imgs) > 0 {
+				preparedDocs[i].PageImages = imgs
+				docs[i].PageImages = imgs
+				fmt.Printf("🖼️ [Stage 1: Planner] Typst đã chuyển đổi PDF \"%s\" thành %d trang ảnh PNG\n",
+					preparedDocs[i].FileName, len(imgs))
+			}
+		}
 	}
 
 	prompt := fmt.Sprintf(`BẠN LÀ: Chuyên gia Sư phạm Toán học THPT và Thiết kế Giáo án theo Chương trình GDPT 2018.
@@ -52,12 +79,12 @@ QUY TẮC BẮT BUỘC ĐỂ KHÔNG BỎ SÓT DẠNG TOÁN:
      + Mỗi dạng toán phải tập trung vào đúng một kỹ năng cốt lõi. Không dồn nhiều công thức độc lập vào cùng một dạng.
    - BAO PHỦ VÉT CẠN: Toàn bộ câu hỏi trong tài liệu đều phải xuất hiện trong assigned_question_ids.
 
-Yêu cầu riêng của giáo viên: %s`, len(docs), strings.TrimSpace(customPrompt))
+Yêu cầu riêng của giáo viên: %s`, len(preparedDocs), strings.TrimSpace(customPrompt))
 
 	req := LLMRequest{
 		ModelName:       p.modelName,
 		UserPrompt:      prompt,
-		Documents:       docs,
+		Documents:       preparedDocs,
 		Temperature:     0.2,
 		MaxOutputTokens: 8192,
 		JSONSchema:      GetPlannerSchemaBytes(),

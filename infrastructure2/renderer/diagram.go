@@ -79,6 +79,7 @@ func (r *LocalRenderer) RenderCard(ctx context.Context, title string, typstMarku
 
 	// Biên dịch Typst thẳng ra PNG với độ phân giải 180 PPI siêu nét
 	cmd := exec.CommandContext(ctx, "typst", "compile", "--format", "png", "--ppi", "180", typPath, pngPath)
+	hideConsoleWindow(cmd)
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return nil, fmt.Errorf("typst compile thất bại: %w (chi tiết: %s)", err, string(output))
 	}

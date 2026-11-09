@@ -57,7 +57,7 @@ func (r *DefaultBatchRepairer) RepairIssues(ctx context.Context, issues []Valida
 		if reason == "" {
 			reason = "Lỗi cú pháp toán hoặc thiếu $"
 		}
-		itemsBuilder.WriteString(fmt.Sprintf("Mục %d:\n* Vị trí: %s - %s\n* Nguyên nhân lỗi: %s\n* Đoạn gây lỗi: %s\n* Toàn văn cần sửa: %s\n\n",
+		itemsBuilder.WriteString(fmt.Sprintf("Mục %d:\n* Mã định danh (anchor_id BẮT BUỘC giữ nguyên): %s\n* Ngữ cảnh dạng bài: %s\n* Nguyên nhân lỗi: %s\n* Đoạn gây lỗi: %s\n* Toàn văn cần sửa: %s\n\n",
 			idx+1, issue.SlotID, issue.Context, reason, snippet, issue.Content))
 	}
 
@@ -105,12 +105,28 @@ Danh sách cần sửa:
 	}
 
 	fmt.Printf("✅ [BatchRepairer] LLM đã sửa %d mục\n", len(batchResp.RepairedItems))
+	rawMap := make(map[string]string)
 	for _, item := range batchResp.RepairedItems {
-		resultMap[item.AnchorID] = item.FixedContent
+		cleanAnchor := strings.TrimSpace(item.AnchorID)
+		rawMap[cleanAnchor] = item.FixedContent
 	}
 	for _, issue := range issues {
-		if _, ok := resultMap[issue.SlotID]; !ok {
-			resultMap[issue.SlotID] = FallbackSanitizeLaTeX(issue.Content)
+		targetSlot := strings.TrimSpace(issue.SlotID)
+		if fixed, ok := rawMap[targetSlot]; ok && strings.TrimSpace(fixed) != "" {
+			resultMap[targetSlot] = fixed
+			continue
+		}
+		// Fuzzy match: Nếu AI trả về anchor_id có kèm mô tả context (VD: "dang_24.callout - Mẹo...")
+		found := false
+		for anchorKey, fixed := range rawMap {
+			if strings.HasPrefix(anchorKey, targetSlot) || strings.Contains(anchorKey, targetSlot) {
+				resultMap[targetSlot] = fixed
+				found = true
+				break
+			}
+		}
+		if !found {
+			resultMap[targetSlot] = FallbackSanitizeLaTeX(issue.Content)
 		}
 	}
 

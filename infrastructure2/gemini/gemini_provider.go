@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -136,7 +137,18 @@ func (p *GeminiLLMProvider) callAPI(ctx context.Context, model string, parts []*
 func buildParts(req LLMRequest) []*genai.Part {
 	var parts []*genai.Part
 	for _, doc := range req.Documents {
-		if len(doc.RawPDF) > 0 {
+		if len(doc.PageImages) > 0 {
+			for _, imgData := range doc.PageImages {
+				if len(imgData) > 0 {
+					parts = append(parts, &genai.Part{
+						InlineData: &genai.Blob{
+							MIMEType: "image/png",
+							Data:     imgData,
+						},
+					})
+				}
+			}
+		} else if len(doc.RawPDF) > 0 {
 			pdfData := doc.RawPDF
 			if !bytes.Contains(pdfData, []byte("/Pages")) {
 				pdfData = validMinimalPDF
@@ -154,7 +166,10 @@ func buildParts(req LLMRequest) []*genai.Part {
 }
 
 func buildConfig(req LLMRequest) (*genai.GenerateContentConfig, error) {
-	cfg := &genai.GenerateContentConfig{ThinkingConfig: &genai.ThinkingConfig{ThinkingLevel: genai.ThinkingLevelMinimal}}
+	cfg := &genai.GenerateContentConfig{}
+	if strings.Contains(req.ModelName, "3.5-flash") {
+		cfg.ThinkingConfig = &genai.ThinkingConfig{ThinkingLevel: genai.ThinkingLevelMinimal}
+	}
 	if req.Temperature > 0 {
 		t := req.Temperature
 		cfg.Temperature = &t

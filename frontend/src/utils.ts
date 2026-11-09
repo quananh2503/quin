@@ -54,6 +54,38 @@ export function normalizeError(err: any): string {
   if (typeof err === "string") return err;
   return err.message || JSON.stringify(err);
 }
+
+// Trích xuất chuỗi văn bản thuần an toàn tuyệt đối từ Content Domain Object
+// Xử lý hoàn hảo các định dạng: string, JSON stringified, hoặc object { inline_parts: [{ type: 'text', value: '...' }] }
+export function extractContentText(val: any): string {
+  if (val === null || val === undefined) return '';
+  if (typeof val === 'string') {
+    if (val.trim().startsWith('{') && val.includes('inline_parts')) {
+      try {
+        const parsed = JSON.parse(val);
+        if (Array.isArray(parsed.inline_parts)) {
+          return parsed.inline_parts.map((p: any) => p?.value || '').join('');
+        }
+      } catch (_) {
+        // bỏ qua parse error, trả về chuỗi gốc
+      }
+    }
+    return val;
+  }
+  if (typeof val === 'object') {
+    if (Array.isArray(val.inline_parts)) {
+      return val.inline_parts.map((p: any) => p?.value || '').join('');
+    }
+    if (val.value && typeof val.value === 'string') {
+      return val.value;
+    }
+    if (val.text && typeof val.text === 'string') {
+      return val.text;
+    }
+    return String(val);
+  }
+  return String(val);
+}
 // 1. Hàm định dạng Date object thành chuỗi "YYYY-MM-DD" cho thẻ <input type="date">
 export function formatDateToInput(d: Date): string {
   const year = d.getFullYear();

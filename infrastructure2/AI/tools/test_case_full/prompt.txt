@@ -1,0 +1,4 @@
+Biên soạn theo chương trình GDPT 2018 dành cho học sinh trung bình - yếu mất gốc.
+Tập trung xây dựng các bước giải cầm tay chỉ việc, dễ hiểu nhất, tích hợp các phản xạ nhận diện và mẹo bấm máy tính Casio nếu có.
+Đặc biệt ở mục lời giải mẫu, phải giải chi tiết chia rõ từng bước (Bước 1, Bước 2...) bám sát các bước giải trong công thức để học sinh yếu đối chiếu và dễ hiểu.
+Phân chia các dạng toán rành mạch từ nhận biết cơ bản đến vận dụng giải quyết bài toán.

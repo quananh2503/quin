@@ -84,6 +84,23 @@ func (c *Client) SetKeyPool(pool *KeyPool) {
 	c.pool = pool
 }
 
+// UpdateKey cập nhật trực tiếp Gemini API Key mới và khởi tạo lại KeyPool tương ứng.
+func (c *Client) UpdateKey(ctx context.Context, key string) error {
+	key = strings.TrimSpace(key)
+	if key == "" {
+		return errors.New("gemini api key không được rỗng")
+	}
+	pool, err := NewKeyPool(ctx, []string{key})
+	if err != nil {
+		return fmt.Errorf("khởi tạo KeyPool với key mới thất bại: %w", err)
+	}
+	c.pool = pool
+	if len(pool.slots) > 0 {
+		c.client = pool.slots[0].client
+	}
+	return nil
+}
+
 func (c *Client) Close() error {
 	return nil
 }
@@ -425,6 +442,14 @@ func (c *Client) Generate(ctx context.Context, title string, materials []lesson.
 			if readErr != nil {
 				return nil, fmt.Errorf("không thể đọc file PDF %s: %w", pdfPath, readErr)
 			}
+			if len(data) > ScannedPDFThreshold {
+				optBytes, errOpt := OptimizeScannedPDF(data)
+				if errOpt != nil {
+					log.Printf("tối ưu PDF scan %s thất bại: %v, tiếp tục với file gốc", pdfPath, errOpt)
+				} else if len(optBytes) > 0 {
+					data = optBytes
+				}
+			}
 			nupBytes, err := CompressPDFToNUp4(data)
 			if err != nil {
 				nupBytes = data
@@ -718,6 +743,14 @@ func (c *Client) generateFromPDFPipeline(
 		data, readErr := os.ReadFile(p)
 		if readErr != nil {
 			return nil, fmt.Errorf("không thể đọc file PDF %q: %w", p, readErr)
+		}
+		if len(data) > ScannedPDFThreshold {
+			optBytes, errOpt := OptimizeScannedPDF(data)
+			if errOpt != nil {
+				log.Printf("tối ưu PDF scan %s thất bại: %v, tiếp tục với file gốc", p, errOpt)
+			} else if len(optBytes) > 0 {
+				data = optBytes
+			}
 		}
 		docs = append(docs, DocumentInput{
 			DocID:    fmt.Sprintf("DOC_%d", idx+1),

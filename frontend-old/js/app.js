@@ -397,7 +397,7 @@ async function handleUpdateStudent() {
 
 async function loadAIModels() {
   const select = document.getElementById("lesson-model-select");
-  const defaultModel = "gemini-3.7-flash";
+  const defaultModel = "gemini-3.8-flash";
 
   try {
     const models = await window.go.main.App.V2ListAIModels();
@@ -943,7 +943,7 @@ function copyModelOptions(targetID) {
   const source = document.getElementById("lesson-model-select");
   const target = document.getElementById(targetID);
   target.innerHTML = source.innerHTML;
-  target.value = source.value || "gemini-3.7-flash";
+  target.value = source.value || "gemini-3.8-flash";
 }
 
 async function handleGenerateRemediation() {

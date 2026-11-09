@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
@@ -152,10 +153,17 @@ func (c *Client) publishOne(
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if cErr := resp.Body.Close(); cErr != nil {
+			log.Printf("cảnh báo: lỗi đóng response body: %v", cErr)
+		}
+	}()
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		errBody, _ := io.ReadAll(resp.Body)
+		errBody, readErr := io.ReadAll(resp.Body)
+		if readErr != nil {
+			return fmt.Errorf("OneNote API trả về lỗi HTTP %d (không đọc được body: %w)", resp.StatusCode, readErr)
+		}
 		return fmt.Errorf("OneNote API trả về lỗi HTTP %d: %s", resp.StatusCode, string(errBody))
 	}
 
@@ -173,7 +181,7 @@ func (c *Client) publishOne(
 		Audience:     string(audience),
 		AccountID:    accountID,
 		PageID:       created.ID,
-		PageURL:      created.Links.OneNoteWebURL.Href,
+		PageURL:      NormalizeOneNoteWebURL(created.Links.OneNoteWebURL.Href),
 		NotebookID:   notebook.ID,
 		SectionID:    sectionID,
 	}

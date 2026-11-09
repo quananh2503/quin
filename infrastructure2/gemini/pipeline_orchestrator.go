@@ -3,8 +3,10 @@ package gemini
 import (
 	"context"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -19,6 +21,7 @@ type LessonPipeline interface {
 
 // DefaultLessonPipeline điều phối tuần tự qua các stage
 type DefaultLessonPipeline struct {
+	llm      LLMProvider
 	planner  PlannerStage
 	reviewer PlanReviewerStage // Stage 1.5: Thẩm định và tinh chỉnh dạng toán
 	polisher PlanPolisherStage // Stage 1.75: Sắp xếp sư phạm (Flash Lite)
@@ -43,6 +46,12 @@ func NewDefaultLessonPipeline(
 		visual:  visual,
 		qg:      qg,
 	}
+}
+
+// WithLLM gắn LLMProvider để theo dõi và tổng hợp token usage
+func (p *DefaultLessonPipeline) WithLLM(llm LLMProvider) *DefaultLessonPipeline {
+	p.llm = llm
+	return p
 }
 
 // WithReviewer gắn thêm Stage 1.5 Reviewer vào pipeline
@@ -83,9 +92,13 @@ func (p *DefaultLessonPipeline) Execute(ctx context.Context, req PipelineRequest
 		fmt.Printf("✅ [Stage 1.5: Reviewer] Hoàn tất kiểm định! Danh mục chuẩn: %d dạng toán.\n", len(plan.Topics))
 	}
 
-	// Giai đoạn 1.75: Chuốt và sắp xếp dạng toán theo tiến trình sư phạm (Gemini 3.5 Flash)
+	// Giai đoạn 1.75: Chuốt và sắp xếp dạng toán theo tiến trình sư phạm (Gemini 3.8 Flash / Gemma Fallback)
 	if p.polisher != nil {
-		fmt.Println("👉 [Stage 1.75: Polisher] Đang sắp xếp dạng toán theo tiến trình sư phạm (Gemini 3.5 Flash)...")
+		modelDesc := ModelGeminiFlash
+		if pm, ok := p.polisher.(interface{ PrimaryModel() string }); ok {
+			modelDesc = pm.PrimaryModel()
+		}
+		fmt.Printf("👉 [Stage 1.75: Polisher] Đang sắp xếp dạng toán theo tiến trình sư phạm (%s)...\n", modelDesc)
 		polishedPlan, errPol := p.polisher.Polish(ctx, plan)
 		if errPol == nil && polishedPlan != nil {
 			plan = polishedPlan
@@ -131,6 +144,13 @@ func (p *DefaultLessonPipeline) Execute(ctx context.Context, req PipelineRequest
 			output.Workers = workers
 		}
 		output.Duration = time.Since(start)
+
+		if p.llm != nil {
+			if tracker, ok := p.llm.(interface{ GetAccumulatedUsage() (UsageMetrics, int) }); ok {
+				usage, _ := tracker.GetAccumulatedUsage()
+				output.TotalUsage = usage
+			}
+		}
 	}
 	return output, nil
 }
@@ -157,18 +177,52 @@ func NewStandardLessonPipeline(ctx context.Context, apiKeys []string, modelName 
 	assembler := NewDefaultDocumentAssembler()
 	validator := NewDefaultMathValidator()
 
-	polisherModel := "gemini-3.5-flash"
+	polisherModel := ModelGeminiFlash
 	polisherLLM := NewGeminiLLMProvider(pool, polisherModel)
 	polisher := NewDefaultPlanPolisherStage(polisherLLM, polisherModel).
 		WithFallback(ModelGemma4_31B, ModelGemma4_26B_A4B)
 
-	repairModel := "gemini-3.5-flash-lite"
+	repairModel := ModelGeminiFlashLite
 	repairLLM := NewGeminiLLMProvider(pool, repairModel)
 	repairer := NewDefaultBatchRepairer(repairLLM, repairModel)
 
 	qualityGate := NewDefaultQualityGateStage(assembler, compiler, repairer, validator)
 
 	pipeline := NewDefaultLessonPipeline(planner, author, visual, qualityGate)
+	pipeline.WithLLM(llm)
+	pipeline.WithReviewer(reviewer)
+	pipeline.WithPolisher(polisher)
+	return pipeline, nil
+}
+
+// NewDeepSeekLessonPipeline: Khởi tạo toàn bộ Pipeline production chạy bằng DeepSeek API (deepseek-flash)
+func NewDeepSeekLessonPipeline(apiKey string, modelName string) (*DefaultLessonPipeline, error) {
+	if strings.TrimSpace(apiKey) == "" {
+		return nil, fmt.Errorf("chưa cấu hình DEEPSEEK_API_KEY")
+	}
+	if modelName == "" {
+		modelName = "deepseek-flash"
+	}
+
+	llm := NewDeepSeekLLMProvider(apiKey, modelName)
+	compiler := NewCLITypstCompiler()
+
+	planner := NewDefaultPlannerStage(llm, modelName)
+	auditor := NewDefaultPlanAuditor()
+	reviewer := NewDefaultPlanReviewerStage(llm, auditor, modelName)
+	author := NewDefaultAuthoringStage(llm, modelName, 6) // Concurrency 6 cho DeepSeek
+	visual := NewNoOpVisualStage()
+
+	assembler := NewDefaultDocumentAssembler()
+	validator := NewDefaultMathValidator()
+
+	polisher := NewDefaultPlanPolisherStage(llm, modelName)
+	repairer := NewDefaultBatchRepairer(llm, modelName)
+
+	qualityGate := NewDefaultQualityGateStage(assembler, compiler, repairer, validator)
+
+	pipeline := NewDefaultLessonPipeline(planner, author, visual, qualityGate)
+	pipeline.WithLLM(llm)
 	pipeline.WithReviewer(reviewer)
 	pipeline.WithPolisher(polisher)
 	return pipeline, nil
@@ -179,6 +233,14 @@ func NewDocumentInputFromPDF(docID, filePath, roleHint string) (DocumentInput, e
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return DocumentInput{}, fmt.Errorf("không thể đọc file PDF %q: %w", filePath, err)
+	}
+	if len(data) > ScannedPDFThreshold {
+		optBytes, errOpt := OptimizeScannedPDF(data)
+		if errOpt != nil {
+			log.Printf("tối ưu PDF scan %s thất bại: %v, tiếp tục với file gốc", filePath, errOpt)
+		} else if len(optBytes) > 0 {
+			data = optBytes
+		}
 	}
 	return DocumentInput{
 		DocID:    docID,

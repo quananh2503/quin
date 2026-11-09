@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../api';
-import { normalizeError } from '../../utils';
-import { ArrowLeft, Save, Send, GraduationCap, School } from 'lucide-react';
+import { normalizeError, extractContentText } from '../../utils';
+import {
+  ArrowLeft,
+  Save,
+  Send,
+  GraduationCap,
+  School,
+  Download,
+  ChevronDown,
+  FolderDown,
+  Loader2,
+} from 'lucide-react';
 import { A4PaperLessonView } from '../paper/A4PaperLessonView';
 
 interface LessonEditorViewProps {
@@ -23,6 +33,8 @@ export const LessonEditorView: React.FC<LessonEditorViewProps> = ({
   const [sections, setSections] = useState<any[]>([]);
   const [exercises, setExercises] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
+  const [exportingPDF, setExportingPDF] = useState(false);
+  const [showDownloadMenu, setShowDownloadMenu] = useState(false);
   const [isTeacherMode, setIsTeacherMode] = useState(true);
 
   // Nạp bản nháp chi tiết từ Backend
@@ -31,8 +43,8 @@ export const LessonEditorView: React.FC<LessonEditorViewProps> = ({
       try {
         const res = await api.getLessonDraft(String(draftId));
         setDraft(res);
-        setTitle(res.title || res.lesson_data?.title || '');
-        setOverview(res.lesson_data?.overview || '');
+        setTitle(extractContentText(res.title || res.lesson_data?.title || ''));
+        setOverview(extractContentText(res.lesson_data?.overview || ''));
         setSections(res.lesson_data?.sections || []);
         setExercises(res.lesson_data?.exercises || []);
       } catch (err) {
@@ -69,6 +81,46 @@ export const LessonEditorView: React.FC<LessonEditorViewProps> = ({
       return false;
     } finally {
       setSaving(false);
+    }
+  };
+
+  // Xuất 1 file PDF (GV hoặc HS)
+  const handleExportSinglePDF = async (isTeacher: boolean) => {
+    setShowDownloadMenu(false);
+    setExportingPDF(true);
+    try {
+      // Lưu lại thay đổi trước khi render
+      await handleSave();
+      const lessonId = draft?.lesson_data?.id || draftId;
+      const savedPath = await api.exportLessonPDF({
+        lesson_id: String(lessonId),
+        is_teacher: isTeacher,
+      });
+      if (savedPath) {
+        showToast(`Đã xuất PDF thành công: ${savedPath}`);
+      }
+    } catch (err) {
+      showToast('Lỗi xuất PDF: ' + normalizeError(err), true);
+    } finally {
+      setExportingPDF(false);
+    }
+  };
+
+  // Xuất cả 2 file PDF (GV & HS) vào thư mục
+  const handleExportBothPDFs = async () => {
+    setShowDownloadMenu(false);
+    setExportingPDF(true);
+    try {
+      await handleSave();
+      const lessonId = draft?.lesson_data?.id || draftId;
+      const paths = await api.exportBothLessonPDFs(String(lessonId));
+      if (paths && paths.length > 0) {
+        showToast(`Đã xuất thành công 2 file PDF vào thư mục!`);
+      }
+    } catch (err) {
+      showToast('Lỗi xuất 2 file PDF: ' + normalizeError(err), true);
+    } finally {
+      setExportingPDF(false);
     }
   };
 
@@ -119,6 +171,74 @@ export const LessonEditorView: React.FC<LessonEditorViewProps> = ({
               <Save size={15} /> {saving ? 'Đang lưu...' : 'Lưu bản nháp'}
             </button>
 
+            {/* CỤM NÚT TẢI PDF */}
+            <div className="relative">
+              <button
+                onClick={() => setShowDownloadMenu(!showDownloadMenu)}
+                disabled={exportingPDF}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 rounded-lg text-xs font-semibold transition shadow-2xs"
+                title="Tải bài giảng dưới dạng file PDF"
+              >
+                {exportingPDF ? (
+                  <Loader2 size={15} className="animate-spin text-blue-600" />
+                ) : (
+                  <Download size={15} />
+                )}
+                <span>{exportingPDF ? 'Đang tạo PDF...' : 'Tải PDF'}</span>
+                <ChevronDown size={13} className="text-blue-500" />
+              </button>
+
+              {showDownloadMenu && (
+                <>
+                  <div
+                    className="fixed inset-0 z-20"
+                    onClick={() => setShowDownloadMenu(false)}
+                  />
+                  <div className="absolute right-0 mt-1.5 w-64 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-30 text-xs animate-in fade-in duration-100">
+                    <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                      Xuất file in PDF (Typst Vector)
+                    </div>
+
+                    <button
+                      onClick={handleExportBothPDFs}
+                      className="w-full flex items-start gap-2.5 px-3 py-2 text-left hover:bg-blue-50 text-slate-700 hover:text-blue-700 transition"
+                    >
+                      <FolderDown size={16} className="text-blue-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-semibold text-slate-800">Tải cả 2 bản (GV & HS)</div>
+                        <div className="text-[11px] text-slate-400 font-normal">Lưu cùng lúc 2 file PDF vào một thư mục</div>
+                      </div>
+                    </button>
+
+                    <div className="my-1 border-t border-slate-100" />
+
+                    <button
+                      onClick={() => handleExportSinglePDF(true)}
+                      className="w-full flex items-start gap-2.5 px-3 py-2 text-left hover:bg-blue-50 text-slate-700 hover:text-blue-700 transition"
+                    >
+                      <GraduationCap size={16} className="text-blue-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-semibold text-slate-800">Bản Giáo viên (.pdf)</div>
+                        <div className="text-[11px] text-slate-400 font-normal">Kèm đầy đủ lời giải chi tiết & đáp án</div>
+                      </div>
+                    </button>
+
+                    <button
+                      onClick={() => handleExportSinglePDF(false)}
+                      className="w-full flex items-start gap-2.5 px-3 py-2 text-left hover:bg-teal-50 text-slate-700 hover:text-teal-700 transition"
+                    >
+                      <School size={16} className="text-teal-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-semibold text-slate-800">Bản Học sinh (.pdf)</div>
+                        <div className="text-[11px] text-slate-400 font-normal">Chừa ô kẻ nét đứt để học sinh làm bài</div>
+                      </div>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* NÚT ĐẨY LÊN ONENOTE */}
             <button
               onClick={async () => {
                 onOpenPushOneNote({

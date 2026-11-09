@@ -214,11 +214,10 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
   const [uploading, setUploading] = useState(false);
   const [creating, setCreating] = useState(false);
 
-  const [title, setTitle] = useState('');
   const [prompt, setPrompt] = useState('');
 
   const [selectedModel, setSelectedModel] = useState(
-    'gemini-3.7-flash',
+    'deepseek-flash',
   );
   const [models, setModels] = useState<any[]>([]);
   const promptRef = useRef<HTMLTextAreaElement>(null);
@@ -402,10 +401,6 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       setActivePage(pages.length > 0 ? Math.min(...pages) : 1);
       setScale(1.2);
 
-      setTitle(
-        doc.file_name.replace(/\.[^/.]+$/, ''),
-      );
-
       setPrompt('');
       if (promptRef.current) {
         promptRef.current.value = '';
@@ -506,8 +501,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
         ? Array.from(selectedPages).sort((a, b) => a - b)
         : [];
 
-      // Tiêu đề: dùng tiêu đề người dùng nhập, hoặc tự động lấy tên file bỏ đuôi mở rộng (.pdf)
-      const lessonTitle = title.trim() || currentDoc.file_name.replace(/\.[^/.]+$/, '');
+      // Tiêu đề: lấy tự động theo tên file, hoặc để trống để AI/hệ thống tự tạo theo mã/thời gian
+      const lessonTitle = currentDoc?.file_name ? currentDoc.file_name.replace(/\.[^/.]+$/, '') : '';
 
       const request = new wails.GenerateLessonRequest({
         title: lessonTitle,
@@ -1014,19 +1009,9 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
           </div>
         </div>
 
-        {/* Hàng 2 */}
+        {/* Hàng 2: Yêu cầu tùy chỉnh & Nút tạo */}
         <div className="flex flex-col md:flex-row items-end gap-3">
-          <div className="flex-1 w-full space-y-2">
-            <input
-              type="text"
-              value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
-              placeholder="Tiêu đề bài giảng (VD: Chuyên đề căn bậc hai lớp 9)..."
-              className="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-800 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-emerald-500 transition shadow-sm"
-            />
-
+          <div className="flex-1 w-full">
             <textarea
               ref={promptRef}
               rows={2}
@@ -1045,7 +1030,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
             onClick={
               handleCreateFromPDF
             }
-            className="w-full md:w-auto h-[74px] px-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-600/30 transition disabled:opacity-40 disabled:cursor-not-allowed flex flex-col items-center justify-center gap-1 whitespace-nowrap cursor-pointer shrink-0"
+            className="w-full md:w-auto h-[58px] px-6 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-emerald-600/30 transition disabled:opacity-40 disabled:cursor-not-allowed flex flex-col items-center justify-center gap-1 whitespace-nowrap cursor-pointer shrink-0"
           >
             <div className="flex items-center gap-1.5 text-sm">
               <Sparkles size={16} />

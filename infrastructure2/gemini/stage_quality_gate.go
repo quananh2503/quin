@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -78,6 +79,8 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 	var lastCompilerErr error
 	var teacherPDF string
 	var studentPDF string
+	var compilerIssues []ValidationIssue
+	slotFailureCount := make(map[string]int)
 
 	for attempt := 1; attempt <= maxRetries; attempt++ {
 		gvOpts := CompileOptions{
@@ -114,7 +117,7 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 				}
 			}
 
-			var compilerIssues []ValidationIssue
+			compilerIssues = nil
 			seenSlots := make(map[string]bool)
 
 			for _, diag := range diags {
@@ -124,10 +127,14 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 				}
 				if ok && !seenSlots[slotID] {
 					seenSlots[slotID] = true
+					slotFailureCount[slotID]++
 					if slot, found := asmResult.Registry.Get(slotID); found && slot.Value != nil {
 						reason := diag.ErrorReason
 						if reason == "" {
 							reason = "Lỗi phân tích cú pháp LaTeX qua MiTeX"
+						}
+						if slotFailureCount[slotID] > 1 {
+							reason += fmt.Sprintf(" (LƯU Ý LẶP LẠI %d LẦN: Hãy kiểm tra các lệnh LaTeX viết dính chữ cái như \\ncos thành n \\cos, hoặc viết sai tên lệnh)", slotFailureCount[slotID])
 						}
 						compilerIssues = append(compilerIssues, ValidationIssue{
 							SlotID:        slotID,
@@ -167,6 +174,28 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 							fmt.Printf("⚠️ [QualityGate] Lắp ráp lại thất bại: %v\n", errAsm)
 						}
 					}
+
+					// Lưới an toàn PlainText Fallback:
+					// Nếu nội dung sau sửa không đổi (hoặc ở vòng thử attempt >= 3) mà số lượng lỗi nhỏ (<= 3),
+					// tự động chuyển các vị trí lỗi này sang PlainText an toàn để đảm bảo xuất bản PDF thành công.
+					if len(compilerIssues) <= 3 {
+						fmt.Printf("🛡️ [QualityGate SafetyNet] Phát hiện %d vị trí lỗi nhỏ (<= 3), tự động chuyển sang PlainText an toàn...\n", len(compilerIssues))
+						for _, issue := range compilerIssues {
+							safeContent := ConvertToSafePlainText(issue.Content)
+							asmResult.Registry.Update(issue.SlotID, safeContent)
+							fmt.Printf("🛡️ [QualityGate SafetyNet] Đã chuyển vị trí %s sang PlainText an toàn\n", issue.SlotID)
+						}
+						if reAsm, errAsm := q.assembler.Assemble(plan, workers); errAsm == nil {
+							asmResult = reAsm
+							resRetry, errRetry := q.compiler.Compile(ctx, asmResult.Markup, gvOpts)
+							if errRetry == nil && resRetry != nil && resRetry.Success {
+								teacherPDF = resRetry.PDFPath
+								fmt.Println("✅ [QualityGate SafetyNet] Biên dịch Giáo viên thành công nhờ PlainText Fallback!")
+								break
+							}
+						}
+					}
+
 					fmt.Println("⚠️ [QualityGate] Nội dung sau sửa không đổi, chờ 5s trước khi thử lại...")
 					time.Sleep(5 * time.Second)
 					continue
@@ -174,6 +203,26 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 			}
 		}
 		break
+	}
+
+	if teacherPDF == "" && len(compilerIssues) > 0 && len(compilerIssues) <= 3 {
+		fmt.Printf("🛡️ [QualityGate SafetyNet Cuối] Đang chuyển đổi %d vị trí lỗi nhỏ còn lại sang PlainText an toàn...\n", len(compilerIssues))
+		for _, issue := range compilerIssues {
+			safeContent := ConvertToSafePlainText(issue.Content)
+			asmResult.Registry.Update(issue.SlotID, safeContent)
+		}
+		if reAsm, errAsm := q.assembler.Assemble(plan, workers); errAsm == nil {
+			asmResult = reAsm
+			gvOpts := CompileOptions{
+				IsTeacher:  true,
+				OutPDFPath: filepath.Join(outDir, "GIAO_AN_GIAO_VIEN.pdf"),
+			}
+			resFinal, errFinal := q.compiler.Compile(ctx, asmResult.Markup, gvOpts)
+			if errFinal == nil && resFinal != nil && resFinal.Success {
+				teacherPDF = resFinal.PDFPath
+				fmt.Println("✅ [QualityGate SafetyNet] Biên dịch Giáo viên thành công ở bước an toàn cuối cùng!")
+			}
+		}
 	}
 
 	if teacherPDF == "" {
@@ -197,4 +246,44 @@ func (q *DefaultQualityGateStage) VerifyAndCompile(
 		StudentPDFPath: studentPDF,
 		Duration:       time.Since(start),
 	}, nil
+}
+
+// ConvertToSafePlainText chuyển đổi nội dung công thức toán bị lỗi cú pháp sang dạng văn bản thuần an toàn
+// để Typst biên dịch trực tiếp mà không bị crash qua plugin MiTeX.
+func ConvertToSafePlainText(content string) string {
+	res := content
+	// 1. Vá lỗi dính chữ thường gặp
+	res = strings.ReplaceAll(res, `\ncos`, `n cos`)
+	res = strings.ReplaceAll(res, `\nsin`, `n sin`)
+	res = strings.ReplaceAll(res, `\ntan`, `n tan`)
+	res = strings.ReplaceAll(res, `\cos`, `cos`)
+	res = strings.ReplaceAll(res, `\sin`, `sin`)
+	res = strings.ReplaceAll(res, `\tan`, `tan`)
+	res = strings.ReplaceAll(res, `\alpha`, `α`)
+	res = strings.ReplaceAll(res, `\beta`, `β`)
+	res = strings.ReplaceAll(res, `\gamma`, `γ`)
+	res = strings.ReplaceAll(res, `\theta`, `θ`)
+	res = strings.ReplaceAll(res, `\sqrt`, `sqrt`)
+	res = strings.ReplaceAll(res, `\vec`, ``)
+	res = strings.ReplaceAll(res, `\cdot`, `·`)
+	res = strings.ReplaceAll(res, `\times`, `×`)
+	res = strings.ReplaceAll(res, `\frac`, ``)
+	// 2. Tháo bỏ dấu $ để không bị MiTeX parse
+	res = strings.ReplaceAll(res, "$", "")
+	// 3. Escape ký tự Typst đặc biệt ngoài toán: #, _
+	var sb strings.Builder
+	runes := []rune(res)
+	for i := 0; i < len(runes); i++ {
+		r := runes[i]
+		if r == '#' && (i == 0 || runes[i-1] != '\\') {
+			sb.WriteString(`\#`)
+			continue
+		}
+		if r == '_' && (i == 0 || runes[i-1] != '\\') {
+			sb.WriteString(`\_`)
+			continue
+		}
+		sb.WriteRune(r)
+	}
+	return sb.String()
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../api';
-import { normalizeError } from '../../utils';
-import { X, Send, FileText, BookOpen, GraduationCap, Link2, RefreshCw, FolderOpen, Check } from 'lucide-react';
+import { normalizeError, extractContentText } from '../../utils';
+import { X, Send, BookOpen, GraduationCap, Link2, RefreshCw, FolderOpen, Check, AlertCircle } from 'lucide-react';
 
 export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast: any; onGoGrading: any }> = ({ draft, onClose, showToast, onGoGrading }) => {
   const [students, setStudents] = useState<any[]>([]);
@@ -10,6 +10,7 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
   const [teacherChapter, setTeacherChapter] = useState("");
   const [pageTitle, setPageTitle] = useState("");
   const [pushing, setPushing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // HS Notebook binding states (Audience: HS)
   const [hsNotebook, setHsNotebook] = useState<{
@@ -54,7 +55,7 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
       setStudents(list || []);
       if (list?.length > 0) setStudentId(String(list[0].id));
     });
-    setPageTitle(draft?.title || "Buổi học mới");
+    setPageTitle(extractContentText(draft?.title) || "Buổi học mới");
   }, [draft]);
 
   // Tự động load 2 notebook (HS & GV) và chương gần nhất đang lưu trong SQLite cho học sinh được chọn
@@ -312,6 +313,7 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
     }
 
     setPushing(true);
+    setErrorMessage("");
     try {
       await api.publishPDFLesson({
         lesson_id: String(lessonId),
@@ -324,7 +326,9 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
       onClose();
       onGoGrading();
     } catch (err) {
-      showToast("Lỗi đẩy lên OneNote: " + normalizeError(err), true);
+      const msg = normalizeError(err);
+      setErrorMessage(msg);
+      showToast("Lỗi đẩy lên OneNote: " + msg, true);
     } finally {
       setPushing(false);
     }
@@ -334,12 +338,18 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
 
   return (
     <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl space-y-4 max-h-[92vh] overflow-y-auto">
-        <div className="flex justify-between items-center">
-          <h3 className="font-bold text-purple-800 flex items-center gap-2">
-            <Send size={18} /> Đẩy bài lên OneNote
+      <div className="bg-white rounded-2xl max-w-lg w-full p-5 shadow-2xl space-y-3.5 max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center pb-2 border-b border-slate-100">
+          <h3 className="font-bold text-purple-900 text-base flex items-center gap-2">
+            <Send size={18} className="text-purple-700" /> Đẩy bài lên OneNote
           </h3>
-          <button onClick={onClose}><X size={18} /></button>
+          <button 
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer"
+            title="Đóng"
+          >
+            <X size={18} />
+          </button>
         </div>
 
         <div className="space-y-3">
@@ -534,9 +544,6 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
               onChange={(e) => setStudentChapter(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg text-sm bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
-            <p className="text-[11px] text-slate-500 mt-1">
-              * Nhập tên để tạo chương mới, hoặc bấm <span className="font-semibold text-purple-700">"Chọn chương cũ"</span> để dùng lại chương trong sổ tay.
-            </p>
 
             {/* Danh sách chương cũ của Học sinh */}
             {showHsSections && (
@@ -620,9 +627,6 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
               onChange={(e) => setTeacherChapter(e.target.value)}
               className="w-full px-3 py-2 border rounded-lg text-sm bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
-            <p className="text-[11px] text-slate-500 mt-1">
-              * Nhập tên để tạo chương mới, hoặc bấm <span className="font-semibold text-blue-700">"Chọn chương cũ"</span> để dùng lại chương trong sổ tay.
-            </p>
 
             {/* Danh sách chương cũ của Giáo viên */}
             {showGvSections && (
@@ -691,23 +695,33 @@ export const OneNoteModal: React.FC<{ draft: any; onClose: () => void; showToast
               className="w-full px-3 py-2 border rounded-lg text-sm"
             />
           </div>
-
-          <div className="p-3 bg-purple-50 rounded-lg border border-purple-100 flex items-start gap-2">
-            <FileText size={16} className="text-purple-700 mt-0.5 shrink-0" />
-            <div className="text-xs text-purple-900">
-              <span className="font-semibold">Bản in PDF đính kèm:</span> Hệ thống sẽ tự động xuất bản 2 bản in PDF chất lượng cao (Bản Giáo viên có đáp án & Bản Học sinh làm bài) trực tiếp lên OneNote.
-            </div>
-          </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2">
-          <button onClick={onClose} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-xs font-semibold">
+        {/* Thông báo lỗi trực quan ngay trên modal nếu đẩy bài thất bại */}
+        {errorMessage && (
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 flex items-start gap-2">
+            <AlertCircle size={15} className="text-red-500 shrink-0 mt-0.5" />
+            <div className="flex-1 text-[11px] leading-relaxed break-words">
+              <span className="font-semibold text-red-800">Lỗi khi đẩy bài: </span>
+              {errorMessage}
+            </div>
+          </div>
+        )}
+
+        <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+          <button 
+            type="button"
+            onClick={onClose} 
+            disabled={pushing}
+            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition cursor-pointer"
+          >
             Hủy
           </button>
           <button
+            type="button"
             onClick={handlePush}
-            disabled={pushing}
-            className="flex items-center gap-1.5 px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-xs font-semibold"
+            disabled={pushing || !studentId || !studentChapter.trim() || !teacherChapter.trim() || !pageTitle.trim()}
+            className="flex items-center gap-1.5 px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-xs font-semibold transition disabled:opacity-50 cursor-pointer shadow-xs"
           >
             <Send size={14} /> {pushing ? "Đang đẩy bài..." : "Bắt đầu đẩy bài"}
           </button>

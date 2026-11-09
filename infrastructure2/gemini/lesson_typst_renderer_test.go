@@ -164,3 +164,43 @@ func TestRenderLessonPNGPages_NilLesson(t *testing.T) {
 	_, err := RenderLessonPNGPages(context.Background(), nil, true, 300)
 	require.Error(t, err)
 }
+
+func TestDefaultLessonTypstRenderer_MultilineSolution(t *testing.T) {
+	title := textToContent("BÀI TOÁN HÌNH HỌC")
+	overview := textToContent("Tổng quan")
+
+	exBlock := lesson.NewExampleBlock(
+		textToContent("Ví dụ 1"),
+		textToContent("Cho hình chóp."),
+		textToContent("Bước 1: Tính chiều cao.\\nBước 2: Tính diện tích đáy.\\nBước 3: Tính thể tích."),
+		textToContent(""),
+	)
+	top, err := lesson.NewTopic(textToContent("Dạng 1"), []lesson.Block{exBlock}, nil)
+	require.NoError(t, err)
+	sec, err := lesson.NewSection(textToContent("Phần 1"), []lesson.Topic{top})
+	require.NoError(t, err)
+	mat, err := lesson.NewYouTubeMaterial("https://youtube.com/watch?v=mock")
+	require.NoError(t, err)
+	lsn, err := lesson.NewLesson(title, overview, []lesson.Section{sec}, []lesson.StudyMaterial{mat})
+	require.NoError(t, err)
+
+	renderer := NewDefaultLessonTypstRenderer()
+	typstCode, err := renderer.Render(lsn)
+	require.NoError(t, err)
+
+	// Đảm bảo không còn bị dính .nBước và mỗi bước xuống dòng bằng \ \n
+	assert.NotContains(t, typstCode, ".nBước")
+	assert.Contains(t, typstCode, "Bước 1: Tính chiều cao. \\ \n")
+	assert.Contains(t, typstCode, "Bước 2: Tính diện tích đáy. \\ \n")
+	assert.Contains(t, typstCode, "Bước 3: Tính thể tích.")
+}
+
+func TestFormatTypstMultiline(t *testing.T) {
+	input := "Dòng 1\\nDòng 2\nDòng 3"
+	got := formatTypstMultiline(input)
+	expected := "Dòng 1 \\ \nDòng 2 \\ \nDòng 3"
+	assert.Equal(t, expected, got)
+
+	assert.Empty(t, formatTypstMultiline(""))
+	assert.Empty(t, formatTypstMultiline("   "))
+}

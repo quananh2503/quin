@@ -9,11 +9,12 @@ import "time"
 // DocumentInput đại diện cho tài liệu học tập đầu vào.
 // Thiết kế đa kênh: Hỗ trợ cả Native PDF (Gemini) lẫn Text/Markdown (DeepSeek, OpenAI).
 type DocumentInput struct {
-	DocID       string `json:"doc_id"`       // Mã tài liệu (VD: "DOC_1", "DOC_2")
-	FileName    string `json:"file_name"`    // Tên file gốc (VD: "SGK_Toan_12.pdf")
-	RoleHint    string `json:"role_hint"`    // Vai trò tài liệu (VD: "Tài liệu chính / SGK", "Bài tập ôn tập")
-	RawPDF      []byte `json:"-"`            // Dành cho Gemini (Multimodal PDF Blob nạp trực tiếp)
-	TextContent string `json:"text_content"` // Dành cho DeepSeek / OpenAI (Markdown/Text đã trích xuất)
+	DocID       string   `json:"doc_id"`       // Mã tài liệu (VD: "DOC_1", "DOC_2")
+	FileName    string   `json:"file_name"`    // Tên file gốc (VD: "SGK_Toan_12.pdf")
+	RoleHint    string   `json:"role_hint"`    // Vai trò tài liệu (VD: "Tài liệu chính / SGK", "Bài tập ôn tập")
+	RawPDF      []byte   `json:"-"`            // Dành cho Gemini (Multimodal PDF Blob nạp trực tiếp)
+	PageImages  [][]byte `json:"-"`            // Danh sách ảnh PNG của các trang (Typst rasterization)
+	TextContent string   `json:"text_content"` // Dành cho DeepSeek / OpenAI (Markdown/Text đã trích xuất)
 }
 
 // ToDocumentInput chuyển đổi từ struct cũ PDFDocumentInput sang DocumentInput mới
@@ -28,9 +29,11 @@ func (p PDFDocumentInput) ToDocumentInput() DocumentInput {
 
 // UsageMetrics ghi nhận số lượng token tiêu thụ chuẩn hóa
 type UsageMetrics struct {
-	PromptTokens     int `json:"prompt_tokens"`
-	CandidatesTokens int `json:"candidates_tokens"`
-	TotalTokens      int `json:"total_tokens"`
+	PromptTokens          int `json:"prompt_tokens"`
+	CandidatesTokens      int `json:"candidates_tokens"`
+	TotalTokens           int `json:"total_tokens"`
+	PromptCacheHitTokens  int `json:"prompt_cache_hit_tokens,omitempty"`
+	PromptCacheMissTokens int `json:"prompt_cache_miss_tokens,omitempty"`
 }
 
 // LLMRequest đóng gói yêu cầu gọi AI hoàn toàn độc lập với mọi SDK hãng (Google, OpenAI...)

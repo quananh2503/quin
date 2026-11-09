@@ -38,7 +38,7 @@ export const GradingDetailView: React.FC<GradingDetailViewProps> = ({ assignment
       await api.gradeAssignment({
         assignment_id: String(assignmentId),
         item_ids: Array.from(selectedItems),
-        model: "gemini-3.7-flash",
+        model: "gemini-3.8-flash",
         prompt: ""
       });
       showToast("Đã chấm và ghi nhận xét vào OneNote");

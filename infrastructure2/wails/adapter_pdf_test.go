@@ -13,6 +13,7 @@ import (
 	"meet-attendance-clean/domain2/assignment"
 	sharekernel "meet-attendance-clean/domain2/kernel"
 	"meet-attendance-clean/domain2/lesson"
+	database2 "meet-attendance-clean/infrastructure2/database"
 	"uuid"
 )
 
@@ -91,6 +92,33 @@ func TestRenderLessonPDFBytes_Success(t *testing.T) {
 func TestRenderLessonPDFBytes_NilLesson(t *testing.T) {
 	_, err := RenderLessonPDFBytes(context.Background(), nil, true)
 	require.Error(t, err)
+}
+
+func TestRenderLessonPDFBytes_RealVectorLesson(t *testing.T) {
+	data, err := os.ReadFile("/tmp/vector_lesson.json")
+	if os.IsNotExist(err) {
+		t.Skip("Bỏ qua test nếu không có file dữ liệu thực tế /tmp/vector_lesson.json")
+		return
+	}
+	require.NoError(t, err)
+
+	lsn, err := database2.DecodeLessonFromJSON(data)
+	require.NoError(t, err)
+	require.NotNil(t, lsn)
+
+	// Xuất bản Giáo viên
+	teacherBytes, err := RenderLessonPDFBytes(context.Background(), lsn, true)
+	require.NoError(t, err)
+	assert.NotEmpty(t, teacherBytes)
+	err = os.WriteFile("../../Giao_an_GV_Vectơ_trong_không_gian_-_Hệ_thống_.pdf", teacherBytes, 0644)
+	require.NoError(t, err)
+
+	// Xuất bản Học sinh
+	studentBytes, err := RenderLessonPDFBytes(context.Background(), lsn, false)
+	require.NoError(t, err)
+	assert.NotEmpty(t, studentBytes)
+	err = os.WriteFile("../../Phieu_bai_tap_HS_Vectơ_trong_không_gian_-_Hệ_thống_.pdf", studentBytes, 0644)
+	require.NoError(t, err)
 }
 
 type mockAssignmentRepo struct {
@@ -173,3 +201,36 @@ func TestV2PublishPDFLesson_SavesAssignment(t *testing.T) {
 	assert.Equal(t, "Bài Tập Về Nhà", mockAssign.saved.Title())
 	assert.Equal(t, 1, len(mockAssign.saved.Items()), "Assignment phải gom đúng số lượng bài tập từ Lesson")
 }
+
+func TestV2ExportLessonPDF_Validation(t *testing.T) {
+	app := &App{
+		application2: &Application2Services{},
+	}
+
+	// 1. Invalid lesson ID
+	_, err := app.V2ExportLessonPDF(ExportLessonPDFRequest{LessonID: "invalid-uuid"})
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "lesson_id")
+
+	// 2. Not found lesson ID
+	_, err = app.V2ExportLessonPDF(ExportLessonPDFRequest{LessonID: uuid.New().String()})
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "không tìm thấy nội dung bài học")
+}
+
+func TestV2ExportBothLessonPDFs_Validation(t *testing.T) {
+	app := &App{
+		application2: &Application2Services{},
+	}
+
+	// 1. Invalid lesson ID
+	_, err := app.V2ExportBothLessonPDFs("invalid-uuid")
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "lesson_id")
+
+	// 2. Not found lesson ID
+	_, err = app.V2ExportBothLessonPDFs(uuid.New().String())
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "không tìm thấy nội dung bài học")
+}
+

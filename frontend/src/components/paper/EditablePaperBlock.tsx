@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Pencil, Check, X } from 'lucide-react';
 import { MathText } from './MathText';
+import { extractContentText } from '../../utils';
 
 interface EditablePaperBlockProps {
-  value: string;
+  value: any;
   onChange: (newValue: string) => void;
   placeholder?: string;
   multiline?: boolean;
@@ -13,7 +14,7 @@ interface EditablePaperBlockProps {
   disabled?: boolean;
 }
 
-export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = ({
+export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = React.memo(({
   value,
   onChange,
   placeholder = 'Nhấp để nhập nội dung...',
@@ -23,12 +24,13 @@ export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = ({
   label,
   disabled = false,
 }) => {
+  const cleanValue = extractContentText(value);
   const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(value);
+  const [draft, setDraft] = useState(cleanValue);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
-    setDraft(value);
+    setDraft(extractContentText(value));
   }, [value]);
 
   useEffect(() => {
@@ -44,13 +46,13 @@ export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = ({
 
   const handleSave = () => {
     setIsEditing(false);
-    if (draft !== value) {
+    if (draft !== cleanValue) {
       onChange(draft);
     }
   };
 
   const handleCancel = () => {
-    setDraft(value);
+    setDraft(cleanValue);
     setIsEditing(false);
   };
 
@@ -73,7 +75,7 @@ export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = ({
   if (disabled) {
     return (
       <div className={className}>
-        <MathText content={value || placeholder} className={textClassName} />
+        <MathText content={cleanValue || placeholder} className={textClassName} />
       </div>
     );
   }
@@ -128,7 +130,7 @@ export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = ({
     );
   }
 
-  const isEmpty = !value || value.trim() === '';
+  const isEmpty = !cleanValue || cleanValue.trim() === '';
 
   return (
     <div
@@ -141,7 +143,7 @@ export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = ({
           {isEmpty ? (
             <span className="italic text-slate-400">{placeholder}</span>
           ) : (
-            <MathText content={value} className={textClassName} />
+            <MathText content={cleanValue} className={textClassName} />
           )}
         </div>
         <div className="shrink-0 opacity-0 transition-opacity group-hover/view:opacity-100 text-emerald-600 pl-1">
@@ -150,4 +152,6 @@ export const EditablePaperBlock: React.FC<EditablePaperBlockProps> = ({
       </div>
     </div>
   );
-};
+});
+
+EditablePaperBlock.displayName = 'EditablePaperBlock';

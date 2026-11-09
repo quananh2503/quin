@@ -93,8 +93,12 @@ func main() {
 
 	qg := gemini.NewDefaultQualityGateStage(assembler, compiler, repairer, validator)
 
-	outDir := filepath.Join("infrastructure2", "gemini", ".artifacts", "test_phase3_4_output")
-	_ = os.MkdirAll(outDir, 0755)
+	runID := fmt.Sprintf("run_%s", time.Now().Format("20060102_150405"))
+	outDir := filepath.Join("infrastructure2", "gemini", ".artifacts", "test_phase3_4_output", runID)
+	if errMk := os.MkdirAll(outDir, 0755); errMk != nil {
+		log.Fatalf("❌ Tạo thư mục output thất bại: %v", errMk)
+	}
+	fmt.Printf("📁 Thư mục lưu kết quả xuất bản: %s\n\n", outDir)
 
 	startTime := time.Now()
 	output, err := qg.VerifyAndCompile(ctx, &plan, workers, outDir)

@@ -8,6 +8,10 @@ export default defineConfig({
     tailwindcss(),
   ],
 
+  build: {
+    minify: false,
+  },
+
   resolve: {
     // Đảm bảo toàn bộ dependency dùng chung một React instance
     dedupe: ['react', 'react-dom'],

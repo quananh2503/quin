@@ -151,3 +151,87 @@ func TestQualityGateStage_SelfHealingViaSourceMapAndRAMMutation(t *testing.T) {
 	mockCompiler.AssertExpectations(t)
 	mockLLM.AssertExpectations(t)
 }
+
+func TestQualityGateStage_SafetyNetPlainTextFallbackOnStubbornErrors(t *testing.T) {
+	ctx := context.Background()
+	assembler := gemini.NewDefaultDocumentAssembler()
+	plan := &gemini.LessonPlan{
+		LessonTitle: "Bài test SafetyNet",
+		Overview:    "Tổng quan",
+		Topics:      []gemini.Topic{{TopicID: "dang_1", Title: "Dạng 1"}},
+	}
+	workers := []gemini.WorkerResult{
+		{
+			TopicID:      "dang_1",
+			Title:        "Dạng 1",
+			TheoryPoints: []string{"Lý thuyết $x > 0$"},
+			CalloutTip:   "Dùng $\\ncos(\\alpha)$ chia cho $P$.",
+		},
+	}
+
+	mockCompiler := mocks.NewTypstCompiler(t)
+	mockRepairer := mocks.NewBatchRepairer(t)
+
+	// Lần 1: Compile GV báo lỗi tại dòng callout
+	mockCompiler.On("Compile", mock.Anything, mock.MatchedBy(func(markup string) bool {
+		return strings.Contains(markup, `\ncos`) && !strings.Contains(markup, "// [ISOLATED]")
+	}), mock.MatchedBy(func(opts gemini.CompileOptions) bool {
+		return opts.IsTeacher
+	})).Return(func(ctx context.Context, markup string, opts gemini.CompileOptions) *gemini.CompileResult {
+		lines := strings.Split(markup, "\n")
+		targetLine := 30
+		for idx, line := range lines {
+			if strings.Contains(line, `\ncos`) {
+				targetLine = idx + 1
+				break
+			}
+		}
+		return &gemini.CompileResult{
+			Success:    false,
+			ErrorLines: []int{targetLine},
+			RawStderr:  fmt.Sprintf("error: unknown command: \\ncos at line %d", targetLine),
+		}
+	}, errors.New("compile error")).Twice()
+
+	// Vòng quét ScanAllTypstErrors: khi dòng lỗi bị cách ly bằng // [ISOLATED]
+	mockCompiler.On("Compile", mock.Anything, mock.MatchedBy(func(markup string) bool {
+		return strings.Contains(markup, "// [ISOLATED]")
+	}), mock.MatchedBy(func(opts gemini.CompileOptions) bool {
+		return opts.IsTeacher
+	})).Return(&gemini.CompileResult{
+		Success: true,
+	}, nil).Once()
+
+	// BatchRepairer trả về nội dung không đổi (giả lập trường hợp LLM không sửa được)
+	mockRepairer.On("RepairIssues", mock.Anything, mock.Anything).Return(map[string]string{
+		"dang_1.callout": "Dùng $\\ncos(\\alpha)$ chia cho $P$.",
+	}, nil).Once()
+
+	// Khi nội dung sau sửa không đổi, QualityGate SafetyNet kích hoạt chuyển sang PlainText:
+	// "Dùng n cos(α) chia cho P." và biên dịch thành công!
+	mockCompiler.On("Compile", mock.Anything, mock.MatchedBy(func(markup string) bool {
+		return strings.Contains(markup, "n cos(α)") || strings.Contains(markup, "n cos")
+	}), mock.MatchedBy(func(opts gemini.CompileOptions) bool {
+		return opts.IsTeacher
+	})).Return(&gemini.CompileResult{
+		Success: true,
+		PDFPath: "out/GV_safetynet.pdf",
+	}, nil).Once()
+
+	// HS compile cũng thành công
+	mockCompiler.On("Compile", mock.Anything, mock.Anything, mock.MatchedBy(func(opts gemini.CompileOptions) bool {
+		return !opts.IsTeacher
+	})).Return(&gemini.CompileResult{
+		Success: true,
+		PDFPath: "out/HS_safetynet.pdf",
+	}, nil).Once()
+
+	qg := gemini.NewDefaultQualityGateStage(assembler, mockCompiler, mockRepairer, nil)
+	out, err := qg.VerifyAndCompile(ctx, plan, workers, ".")
+	assert.NoError(t, err)
+	assert.NotNil(t, out)
+	assert.Equal(t, "out/GV_safetynet.pdf", out.TeacherPDFPath)
+
+	mockCompiler.AssertExpectations(t)
+	mockRepairer.AssertExpectations(t)
+}

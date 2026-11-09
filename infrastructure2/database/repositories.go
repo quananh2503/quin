@@ -185,6 +185,63 @@ func (r Drafts) GetByID(ctx context.Context, id uuid.UUID) (*lesson.LessonDraft,
 	)
 }
 
+func (r Drafts) GetSummaryByID(ctx context.Context, id uuid.UUID) (*lesson.LessonDraft, error) {
+	q := dbgen.New(r.Store.DB)
+	row, err := q.GetDraftByID(ctx, id.String())
+	if err != nil {
+		return nil, missing(err, "lesson draft")
+	}
+
+	// 1. Phục hồi Title
+	var titleRec contentRecord
+	var title sharekernel.Content
+	if err := json.Unmarshal([]byte(row.Title), &titleRec); err == nil && len(titleRec.InlineParts) > 0 {
+		title = decodeContent(titleRec)
+	} else {
+		title = sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: row.Title})
+	}
+
+	// 2. Phục hồi Material
+	var materialsData []materialRecord
+	if err := json.Unmarshal([]byte(row.MaterialJson), &materialsData); err != nil {
+		return nil, fmt.Errorf("unmarshal material_json: %w", err)
+	}
+	materials := make([]lesson.StudyMaterial, 0, len(materialsData))
+	for _, materialData := range materialsData {
+		material, err := decodeMaterial(materialData)
+		if err != nil {
+			return nil, fmt.Errorf("decode material: %w", err)
+		}
+		materials = append(materials, material)
+	}
+
+	// 3. Phục hồi thời gian
+	createdAt, err := parseTime(row.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+	var updatedAt *time.Time
+	if row.UpdatedAt.Valid {
+		v, err := parseTime(row.UpdatedAt.String)
+		if err != nil {
+			return nil, err
+		}
+		updatedAt = &v
+	}
+
+	var cause *string
+	if row.ErrorText.Valid {
+		cause = &row.ErrorText.String
+	}
+
+	// Bỏ qua giải mã LessonJson để tối ưu tốc độ cho danh sách tổng quan
+	return lesson.ReconstituteLessonDraft(
+		id, title, row.Model, row.Prompt,
+		lesson.LessonDraftStatus(row.Status),
+		materials, createdAt, updatedAt, cause, nil,
+	)
+}
+
 // -----------------------------------------------------------------------------
 // STUDENTS & SESSIONS
 // -----------------------------------------------------------------------------

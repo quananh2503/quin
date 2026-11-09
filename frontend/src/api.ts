@@ -20,11 +20,13 @@ export const api = {
   createLessonFromURL: (req: any) => GoApp().V2CreateLesson(req),
   listLessonDrafts: () => GoApp().V2ListLessonDrafts(),
   getLessonDraft: (id: string) => GoApp().V2GetLessonDraft(id),
-  saveLessonDraft: (req: any) => GoApp().V2SaveLessonDraft(req),
+  saveLessonDraft: (req: any) => (GoApp()?.V2SaveLessonDraft ? GoApp().V2SaveLessonDraft(req) : Promise.resolve()),
 
   // Module 3: PDF / Documents
   listDocuments: () => GoApp().V2ListDocuments(),
   uploadDocument: () => GoApp().V2UploadDocument(),
+  uploadDocuments: () => GoApp().V2UploadDocuments(),
+  saveDocumentData: (fileName: string, base64Data: string) => GoApp().V2SaveDocumentData(fileName, base64Data),
   getDocument: (id: string) => GoApp().V2GetDocument(id),
   getDocumentPreview: (id: string, page: number) => GoApp().V2GetDocumentPreview(id, page),
   createLessonFromPDF: (req: any) => GoApp().V2CreateLessonFromPDF(req),
@@ -42,6 +44,10 @@ export const api = {
   preparePublishing: (req: any) => GoApp().V2PreparePublishing(req),
   publishLesson: (req: any) => GoApp().V2PublishLesson(req),
   publishPDFLesson: (req: any) => GoApp().V2PublishPDFLesson(req),
+  exportLessonPDF: (req: { lesson_id: string; is_teacher: boolean }) =>
+    GoApp()?.V2ExportLessonPDF ? GoApp().V2ExportLessonPDF(req) : Promise.reject(new Error("V2ExportLessonPDF chưa sẵn sàng")),
+  exportBothLessonPDFs: (lessonId: string) =>
+    GoApp()?.V2ExportBothLessonPDFs ? GoApp().V2ExportBothLessonPDFs(lessonId) : Promise.reject(new Error("V2ExportBothLessonPDFs chưa sẵn sàng")),
   getStudentNotebook: (req: { student_id: string; audience?: string }) => GoApp().V2GetStudentNotebook(req),
   listOneNoteNotebooks: () => GoApp().V2ListOneNoteNotebooks(),
   bindStudentNotebook: (req: { student_id: string; audience?: string; notebook_id: string; notebook_name: string }) => GoApp().V2BindStudentNotebook(req),
@@ -64,7 +70,28 @@ export const api = {
       console.error("Lỗi khi mở URL ngoài:", url, e);
       try {
         window.open(url, '_blank');
-      } catch (_) {}
+      } catch (winErr) {
+        console.error("Lỗi window.open fallback:", winErr);
+        throw e;
+      }
     }
-  }
+  },
+
+  // Settings & API Keys
+  getAPIKeys: async (): Promise<Record<string, string>> => {
+    try {
+      if (GoApp()?.V2GetAPIKeys) {
+        return await GoApp().V2GetAPIKeys();
+      }
+    } catch (e) {
+      console.error("Lỗi getAPIKeys:", e);
+    }
+    return {};
+  },
+  saveAPIKey: async (provider: string, key: string): Promise<void> => {
+    if (GoApp()?.V2SaveAPIKey) {
+      return await GoApp().V2SaveAPIKey(provider, key);
+    }
+    throw new Error("Dịch vụ lưu API Key chưa sẵn sàng");
+  },
 };

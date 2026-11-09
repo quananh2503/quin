@@ -11,8 +11,10 @@ import (
 )
 
 const (
-	ModelGemma4_31B     = "gemma-4-31b-it"
-	ModelGemma4_26B_A4B = "gemma-4-26b-a4b-it"
+	ModelGeminiFlash     = "gemini-3.8-flash"
+	ModelGeminiFlashLite = "gemini-3.5-flash-lite"
+	ModelGemma4_31B      = "gemma-4-31b-it"
+	ModelGemma4_26B_A4B  = "gemma-4-26b-a4b-it"
 )
 
 // PDFDocumentInput hỗ trợ đầu vào nhiều file PDF
@@ -106,7 +108,7 @@ type DrillExercise struct {
 type WorkerResult struct {
 	TopicID               string `json:"topic_id"`
 	Title                 string `json:"title"`
-	PedagogicalScratchpad string `json:"pedagogical_scratchpad" jsonschema:"description=BÀN NHÁP SƯ PHẠM VÀ TOÁN: BẮT BUỘC nháp số liệu và kiểm tra nghiệm các bài toán tự luận và trả lời ngắn để đảm bảo bài toán có nghiệm và giải được trước khi ra đề bài"`
+	PedagogicalScratchpad string `json:"pedagogical_scratchpad,omitempty" jsonschema:"-"`
 
 	TheoryPoints          []string              `json:"theory_points" jsonschema:"description=2-3 ý lý thuyết cốt lõi - toán kẹp trong $"`
 	CalloutTip            string                `json:"callout_tip" jsonschema:"description=Mẹo nhớ siêu tốc hoặc khẩu quyết - toán kẹp trong $"`

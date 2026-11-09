@@ -33,3 +33,32 @@ config/microsoft-oauth.json
 *.lock
 eslintcache
 infrastructure2/gemini/key.txt
+/node_modules
+
+# Tokens & xác thực nhạy cảm
+token_microsoft.json
+token*.json
+*token*.json
+
+# SQLite Databases cục bộ
+*.db
+*.db-shm
+*.db-wal
+quin*.db
+attendance*.db
+
+# File PDF xuất ra và tài liệu lớn tạm thời
+Giao_an_GV_*.pdf
+Phieu_bai_tap_HS_*.pdf
+debug_*.pdf
+qpdf_test_chunk.pdf
+infrastructure2/gemini/pdfs/tests/
+infrastructure2/gemini/.artifacts/full_pipeline_output/
+*.zip
+
+# Document storage
+document-storage/
+
+# Thư mục output media tạm thời
+infrastructure2/media/output/
+

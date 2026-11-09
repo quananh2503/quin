@@ -198,3 +198,42 @@ func TestOneNoteLinks_SqlcQuerier_WithMockery(t *testing.T) {
 	})
 	require.NoError(t, err)
 }
+
+func TestOneNoteLinks_NormalizeLegacyURLOnGetPage(t *testing.T) {
+	ctx := context.Background()
+	store, err := database.Open(":memory:")
+	require.NoError(t, err)
+	defer func() {
+		if cErr := store.Close(); cErr != nil {
+			t.Logf("error closing store: %v", cErr)
+		}
+	}()
+
+	studentID := uuid.New()
+	assignmentID := uuid.New()
+
+	// 1. Tạo student và assignment trong DB
+	_, err = store.DB.ExecContext(ctx, `INSERT INTO students(id, name, class, cycle_start_day, created_at) VALUES(?, ?, ?, ?, ?)`,
+		studentID.String(), "Học sinh A", "10A", 1, "2026-01-01T00:00:00Z")
+	require.NoError(t, err)
+
+	_, err = store.DB.ExecContext(ctx, `INSERT INTO assignments(id, student_id, title, purpose, status, assigned_at, items_json) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+		assignmentID.String(), studentID.String(), "Bài 1", "normal", "ASSIGNED", "2026-01-01T00:00:00Z", "[]")
+	require.NoError(t, err)
+
+	links := database.OneNoteLinks{Store: store}
+
+	// 2. Chèn trực tiếp một link cũ dạng redir.aspx vào bảng assignment_pages
+	legacyURL := "https://onedrive.live.com/redir.aspx?cid=1c22e0b2ff1dbe1b&page=edit&resid=1C22E0B2FF1DBE1B!sfcbc70e0842e4c9e9a1224633fe5f29b&parId=1C22E0B2FF1DBE1B!104&wd=target%28c2.one%7Ca74af308-1da7-4d3a-9d81-1bae26baf729%2F%C3%94n%20t%E1%BA%ADp%20ki%E1%BA%BFn%20th%E1%BB%A9c%20gi%E1%BB%AFa%20h%E1%BB%8Dc%20k%E1%BB%B3%20I%20-%20To%C3%A1n%20%7Ce642a3b0-a45e-44b5-9284-d7beb8642d49%2F%29"
+	_, err = store.DB.ExecContext(ctx, `INSERT INTO assignment_pages(assignment_id, audience, account_id, page_id, page_url, notebook_id, section_id) VALUES(?, ?, ?, ?, ?, ?, ?)`,
+		assignmentID.String(), "student", "ms-acc", "page-1", legacyURL, "nb-1", "sec-1")
+	require.NoError(t, err)
+
+	// 3. GetPage phải tự động chuyển thành Doc.aspx chuẩn
+	page, ok, err := links.GetPage(ctx, assignmentID, "student")
+	require.NoError(t, err)
+	assert.True(t, ok)
+
+	expectedURL := "https://onedrive.live.com/personal/1c22e0b2ff1dbe1b/_layouts/15/Doc.aspx?sourcedoc={fcbc70e0-842e-4c9e-9a12-24633fe5f29b}&action=edit&wd=target%28c2.one%7Ca74af308-1da7-4d3a-9d81-1bae26baf729%2F%C3%94n%20t%E1%BA%ADp%20ki%E1%BA%BFn%20th%E1%BB%A9c%20gi%E1%BB%AFa%20h%E1%BB%8Dc%20k%E1%BB%B3%20I%20-%20To%C3%A1n%20%7Ce642a3b0-a45e-44b5-9284-d7beb8642d49%2F%29&wdorigin=NavigationUrl"
+	assert.Equal(t, expectedURL, page.PageURL)
+}

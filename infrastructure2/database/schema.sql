@@ -157,3 +157,14 @@ CREATE TABLE IF NOT EXISTS student_last_chapters (
   PRIMARY KEY(student_id, audience),
   FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE
 );
+
+-- ============================================================
+-- 8. CẤU HÌNH API KEYS (GEMINI & DEEPSEEK)
+-- ============================================================
+
+CREATE TABLE IF NOT EXISTS api_keys (
+  provider TEXT PRIMARY KEY,       -- 'gemini', 'deepseek'
+  api_key TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+

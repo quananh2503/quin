@@ -25,7 +25,13 @@ export function V2BindStudentNotebook(arg1:wails.BindStudentNotebookRequest):Pro
 
 export function V2CreateLesson(arg1:wails.GenerateLessonRequest):Promise<string>;
 
+export function V2ExportBothLessonPDFs(arg1:string):Promise<Array<string>>;
+
+export function V2ExportLessonPDF(arg1:wails.ExportLessonPDFRequest):Promise<string>;
+
 export function V2GenerateRemediation(arg1:wails.RemediationRequest):Promise<string>;
+
+export function V2GetAPIKeys():Promise<Record<string, string>>;
 
 export function V2GetAssignment(arg1:string):Promise<application2.AssignmentDetailView>;
 
@@ -64,6 +70,10 @@ export function V2PublishLesson(arg1:wails.PublishLessonRequest):Promise<void>;
 export function V2PublishPDFLesson(arg1:wails.PublishPDFLessonRequest):Promise<void>;
 
 export function V2PushAssignmentFeedback(arg1:string):Promise<void>;
+
+export function V2SaveAPIKey(arg1:string,arg2:string):Promise<void>;
+
+export function V2SaveDocumentData(arg1:string,arg2:string):Promise<application2.Document>;
 
 export function V2SaveLastChapter(arg1:wails.SaveLastChapterRequest):Promise<void>;
 

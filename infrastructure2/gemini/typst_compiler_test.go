@@ -206,3 +206,42 @@ func Test_CLITypstCompiler_TeacherAndStudentSwitch_Integration(t *testing.T) {
 	assert.Greater(t, infoGV.Size(), int64(0))
 	assert.Greater(t, infoHS.Size(), int64(0))
 }
+
+func Test_CLITypstCompiler_RasterizePDF_Integration(t *testing.T) {
+	ensureTypstCLI(t)
+	compiler := gemini.NewCLITypstCompiler()
+
+	// 1. Tạo 1 file PDF 2 trang thực tế qua Typst compile
+	markup := `#set page(paper: "a4", margin: 1cm)
+Trang 1: Bảng biến thiên và cực trị.
+#pagebreak()
+Trang 2: Đồ thị hàm số và tiệm cận.
+`
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	pdfBytes, errCompile := compiler.CompileToBytes(ctx, markup)
+	require.NoError(t, errCompile)
+	require.NotEmpty(t, pdfBytes)
+
+	// 2. Chuyển đổi file PDF đó thành danh sách ảnh PNG
+	images, errRast := compiler.RasterizePDF(ctx, pdfBytes)
+	require.NoError(t, errRast)
+	assert.Len(t, images, 2, "Kỳ vọng sinh ra đúng 2 trang ảnh PNG cho tài liệu 2 trang")
+
+	// Đảm bảo mỗi ảnh có dữ liệu hợp lệ (header PNG: 0x89 'P' 'N' 'G')
+	for idx, img := range images {
+		assert.Greater(t, len(img), 1000, "Ảnh trang %d phải có dung lượng > 1KB", idx+1)
+		assert.Equal(t, byte(0x89), img[0], "Trang %d phải có magic byte PNG", idx+1)
+		assert.Equal(t, "PNG", string(img[1:4]), "Trang %d phải có định dạng PNG", idx+1)
+	}
+}
+
+func Test_CLITypstCompiler_RasterizePDF_EmptyInput(t *testing.T) {
+	compiler := gemini.NewCLITypstCompiler()
+	ctx := context.Background()
+
+	_, err := compiler.RasterizePDF(ctx, nil)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "dữ liệu PDF rỗng")
+}

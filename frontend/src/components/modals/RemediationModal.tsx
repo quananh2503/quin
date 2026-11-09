@@ -14,7 +14,7 @@ export const RemediationModal: React.FC<{ mistake: any; onClose: () => void; sho
       await api.generateRemediation({
         student_id: mistake.student_id,
         mistake_id: mistake.id,
-        model: "gemini-3.7-flash",
+        model: "gemini-3.8-flash",
         prompt: prompt.trim()
       });
       showToast("Đã tạo bản nháp bài khắc phục! Hãy mở xem lại trong mục Soạn bài.");

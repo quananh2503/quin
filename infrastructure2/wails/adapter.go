@@ -2,6 +2,7 @@ package wails
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -51,6 +53,8 @@ type Application2Services struct {
 	UploadHandler             *application2.UploadDocumentHandler
 	ExtractHandler            *application2.ExtractPagesHandler
 	DocRepo                   application2.DocumentRepository
+	GetAPIKeys                func(context.Context) (map[string]string, error)
+	SaveAPIKey                func(context.Context, string, string) error
 }
 
 type App struct {
@@ -203,6 +207,20 @@ func (a *App) V2ListAIModels() ([]ModelView, error) {
 	return a.application2.ListAIModels(a.ctx)
 }
 
+func (a *App) V2GetAPIKeys() (map[string]string, error) {
+	if a.application2 == nil || a.application2.GetAPIKeys == nil {
+		return map[string]string{}, nil
+	}
+	return a.application2.GetAPIKeys(a.getContext())
+}
+
+func (a *App) V2SaveAPIKey(provider, key string) error {
+	if a.application2 == nil || a.application2.SaveAPIKey == nil {
+		return errors.New("chưa cấu hình dịch vụ lưu API key")
+	}
+	return a.application2.SaveAPIKey(a.getContext(), provider, key)
+}
+
 // ============================================================================
 // 6. LESSON GENERATION (URL & PDF)
 // ============================================================================
@@ -222,7 +240,7 @@ type GenerateLessonRequest struct {
 func (a *App) V2CreateLesson(request GenerateLessonRequest) (string, error) {
 	title := strings.TrimSpace(request.Title)
 	if title == "" {
-		return "", errors.New("tiêu đề bài học không được để trống")
+		title = fmt.Sprintf("Bài giảng %s", time.Now().Format("02/01/2006 15:04"))
 	}
 
 	materials := make([]lesson.StudyMaterial, 0)
@@ -592,26 +610,44 @@ func (a *App) V2ListDocuments() ([]application2.Document, error) {
 }
 
 func (a *App) V2UploadDocument() (*application2.Document, error) {
+	if a.application2 == nil || a.application2.UploadHandler == nil {
+		return nil, errors.New("dịch vụ tải tài liệu chưa được khởi tạo")
+	}
 	path, err := wailsRuntime.OpenFileDialog(a.ctx, wailsRuntime.OpenDialogOptions{
-		Title:   "Chọn tài liệu PDF hoặc Word",
-		Filters: []wailsRuntime.FileFilter{{DisplayName: "PDF hoặc Word", Pattern: "*.pdf;*.docx"}},
+		Title: "Chọn tài liệu hoặc hình ảnh",
+		Filters: []wailsRuntime.FileFilter{
+			{DisplayName: "Tất cả tài liệu hỗ trợ (*.pdf, *.docx, *.png, *.jpg...)", Pattern: "*.pdf;*.docx;*.doc;*.png;*.jpg;*.jpeg;*.webp"},
+			{DisplayName: "Tài liệu PDF (*.pdf)", Pattern: "*.pdf"},
+			{DisplayName: "Tài liệu Word (*.docx)", Pattern: "*.docx"},
+			{DisplayName: "Hình ảnh (*.png, *.jpg, *.jpeg, *.webp)", Pattern: "*.png;*.jpg;*.jpeg;*.webp"},
+			{DisplayName: "Tất cả file (*.*)", Pattern: "*.*"},
+		},
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("lỗi mở hộp thoại chọn file: %w", err)
 	}
 	if strings.TrimSpace(path) == "" {
 		return nil, nil
 	}
-	return a.application2.UploadHandler.Upload(a.ctx, application2.UploadCommand{SourceFilePath: path})
+	return a.application2.UploadHandler.Upload(a.getContext(), application2.UploadCommand{SourceFilePath: path})
 }
 
 func (a *App) V2UploadDocuments() ([]*application2.Document, error) {
+	if a.application2 == nil || a.application2.UploadHandler == nil {
+		return nil, errors.New("dịch vụ tải tài liệu chưa được khởi tạo")
+	}
 	paths, err := wailsRuntime.OpenMultipleFilesDialog(a.ctx, wailsRuntime.OpenDialogOptions{
-		Title:   "Chọn các tài liệu PDF",
-		Filters: []wailsRuntime.FileFilter{{DisplayName: "PDF", Pattern: "*.pdf"}},
+		Title: "Chọn các tài liệu hoặc hình ảnh",
+		Filters: []wailsRuntime.FileFilter{
+			{DisplayName: "Tất cả tài liệu hỗ trợ (*.pdf, *.docx, *.png, *.jpg...)", Pattern: "*.pdf;*.docx;*.doc;*.png;*.jpg;*.jpeg;*.webp"},
+			{DisplayName: "Tài liệu PDF (*.pdf)", Pattern: "*.pdf"},
+			{DisplayName: "Tài liệu Word (*.docx)", Pattern: "*.docx"},
+			{DisplayName: "Hình ảnh (*.png, *.jpg, *.jpeg, *.webp)", Pattern: "*.png;*.jpg;*.jpeg;*.webp"},
+			{DisplayName: "Tất cả file (*.*)", Pattern: "*.*"},
+		},
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("lỗi mở hộp thoại chọn nhiều file: %w", err)
 	}
 
 	documents := make([]*application2.Document, 0, len(paths))
@@ -619,13 +655,60 @@ func (a *App) V2UploadDocuments() ([]*application2.Document, error) {
 		if strings.TrimSpace(path) == "" {
 			continue
 		}
-		doc, uploadErr := a.application2.UploadHandler.Upload(a.ctx, application2.UploadCommand{SourceFilePath: path})
+		doc, uploadErr := a.application2.UploadHandler.Upload(a.getContext(), application2.UploadCommand{SourceFilePath: path})
 		if uploadErr != nil {
 			return nil, fmt.Errorf("không thể tải file %q: %w", filepath.Base(path), uploadErr)
 		}
 		documents = append(documents, doc)
 	}
 	return documents, nil
+}
+
+// V2SaveDocumentData nhận dữ liệu file base64 từ frontend (hỗ trợ copy-paste ảnh/PDF/Word hoặc kéo thả trực tiếp)
+func (a *App) V2SaveDocumentData(fileName string, base64Data string) (*application2.Document, error) {
+	if a.application2 == nil || a.application2.UploadHandler == nil {
+		return nil, errors.New("dịch vụ tải tài liệu chưa được khởi tạo")
+	}
+
+	cleanName := strings.TrimSpace(fileName)
+	cleanB64 := strings.TrimSpace(base64Data)
+	if cleanB64 == "" {
+		return nil, errors.New("dữ liệu base64 không được để trống")
+	}
+
+	// Tách data URL prefix (VD: data:image/png;base64,iVBOR...) nếu có
+	if idx := strings.Index(cleanB64, ","); idx != -1 {
+		header := cleanB64[:idx]
+		cleanB64 = cleanB64[idx+1:]
+		if filepath.Ext(cleanName) == "" {
+			switch {
+			case strings.Contains(header, "image/png"):
+				cleanName += ".png"
+			case strings.Contains(header, "image/jpeg") || strings.Contains(header, "image/jpg"):
+				cleanName += ".jpg"
+			case strings.Contains(header, "image/webp"):
+				cleanName += ".webp"
+			case strings.Contains(header, "application/pdf"):
+				cleanName += ".pdf"
+			case strings.Contains(header, "wordprocessingml") || strings.Contains(header, "officedocument"):
+				cleanName += ".docx"
+			}
+		}
+	}
+
+	if cleanName == "" {
+		cleanName = fmt.Sprintf("pasted_%s.png", time.Now().Format("20060102_150405"))
+	}
+
+	rawBytes, errDecode := base64.StdEncoding.DecodeString(cleanB64)
+	if errDecode != nil {
+		return nil, fmt.Errorf("giải mã base64 thất bại: %w", errDecode)
+	}
+
+	return a.application2.UploadHandler.UploadBytes(a.getContext(), application2.UploadBytesCommand{
+		FileName: cleanName,
+		Data:     rawBytes,
+	})
 }
 
 func (a *App) V2GetDocument(id string) (*application2.Document, error) {
@@ -1067,6 +1150,136 @@ func RenderLessonPDFBytes(ctx context.Context, lsn *lesson.Lesson, isTeacher boo
 	return pdfBytes, nil
 }
 
+type ExportLessonPDFRequest struct {
+	LessonID  string `json:"lesson_id"`
+	IsTeacher bool   `json:"is_teacher"`
+}
+
+func (a *App) getLessonOrDraft(lessonID uuid.UUID) (*lesson.Lesson, error) {
+	if a.application2 != nil && a.application2.Lessons != nil {
+		foundLesson, getErr := a.application2.Lessons.GetByID(a.getContext(), lessonID)
+		if getErr == nil && foundLesson != nil {
+			return foundLesson, nil
+		}
+	}
+
+	if a.application2 != nil && a.application2.Drafts != nil {
+		draft, draftErr := a.application2.Drafts.GetByID(a.getContext(), lessonID)
+		if draftErr == nil && draft != nil && draft.Lesson() != nil {
+			return draft.Lesson(), nil
+		}
+	}
+
+	return nil, errors.New("không tìm thấy nội dung bài học để xuất PDF")
+}
+
+// V2ExportLessonPDF xuất 1 file PDF (Giáo viên hoặc Học sinh) và cho phép người dùng chọn nơi lưu file qua hộp thoại Save File native.
+func (a *App) V2ExportLessonPDF(request ExportLessonPDFRequest) (string, error) {
+	lessonID, err := parseID(request.LessonID, "lesson_id")
+	if err != nil {
+		return "", err
+	}
+
+	lsn, err := a.getLessonOrDraft(lessonID)
+	if err != nil {
+		return "", err
+	}
+
+	pdfBytes, err := RenderLessonPDFBytes(a.getContext(), lsn, request.IsTeacher)
+	if err != nil {
+		return "", fmt.Errorf("biên dịch Typst PDF thất bại: %w", err)
+	}
+
+	cleanTitle := regexp.MustCompile(`[<>:"/\\|?*\s]+`).ReplaceAllString(strings.TrimSpace(lsn.Title().String()), "_")
+	if cleanTitle == "" {
+		cleanTitle = "Bai_giang"
+	}
+	if len(cleanTitle) > 40 {
+		cleanTitle = cleanTitle[:40]
+	}
+
+	defaultName := fmt.Sprintf("Phieu_bai_tap_HS_%s.pdf", cleanTitle)
+	if request.IsTeacher {
+		defaultName = fmt.Sprintf("Giao_an_GV_%s.pdf", cleanTitle)
+	}
+
+	savePath, err := wailsRuntime.SaveFileDialog(a.ctx, wailsRuntime.SaveDialogOptions{
+		Title:           "Lưu file PDF bài giảng",
+		DefaultFilename: defaultName,
+		Filters: []wailsRuntime.FileFilter{
+			{DisplayName: "Tài liệu PDF (*.pdf)", Pattern: "*.pdf"},
+		},
+	})
+	if err != nil {
+		return "", fmt.Errorf("lỗi mở hộp thoại lưu file: %w", err)
+	}
+	if strings.TrimSpace(savePath) == "" {
+		return "", nil // Người dùng ấn hủy bỏ
+	}
+
+	if !strings.HasSuffix(strings.ToLower(savePath), ".pdf") {
+		savePath += ".pdf"
+	}
+
+	if err := os.WriteFile(savePath, pdfBytes, 0644); err != nil {
+		return "", fmt.Errorf("không thể ghi file PDF: %w", err)
+	}
+
+	return savePath, nil
+}
+
+// V2ExportBothLessonPDFs xuất cả 2 file PDF (Giáo viên & Học sinh) vào cùng một thư mục do người dùng chọn.
+func (a *App) V2ExportBothLessonPDFs(lessonIDStr string) ([]string, error) {
+	lessonID, err := parseID(lessonIDStr, "lesson_id")
+	if err != nil {
+		return nil, err
+	}
+
+	lsn, err := a.getLessonOrDraft(lessonID)
+	if err != nil {
+		return nil, err
+	}
+
+	targetDir, err := wailsRuntime.OpenDirectoryDialog(a.ctx, wailsRuntime.OpenDialogOptions{
+		Title: "Chọn thư mục lưu 2 file PDF (Giáo viên & Học sinh)",
+	})
+	if err != nil {
+		return nil, fmt.Errorf("lỗi mở hộp thoại chọn thư mục: %w", err)
+	}
+	if strings.TrimSpace(targetDir) == "" {
+		return nil, nil // Người dùng bấm Hủy (Cancel)
+	}
+
+	teacherBytes, err := RenderLessonPDFBytes(a.getContext(), lsn, true)
+	if err != nil {
+		return nil, fmt.Errorf("biên dịch PDF Giáo viên thất bại: %w", err)
+	}
+	studentBytes, err := RenderLessonPDFBytes(a.getContext(), lsn, false)
+	if err != nil {
+		return nil, fmt.Errorf("biên dịch PDF Học sinh thất bại: %w", err)
+	}
+
+	cleanTitle := regexp.MustCompile(`[<>:"/\\|?*\s]+`).ReplaceAllString(strings.TrimSpace(lsn.Title().String()), "_")
+	if cleanTitle == "" {
+		cleanTitle = "Bai_giang"
+	}
+	if len(cleanTitle) > 40 {
+		cleanTitle = cleanTitle[:40]
+	}
+
+	gvPath := filepath.Join(targetDir, fmt.Sprintf("Giao_an_GV_%s.pdf", cleanTitle))
+	hsPath := filepath.Join(targetDir, fmt.Sprintf("Phieu_bai_tap_HS_%s.pdf", cleanTitle))
+
+	if err := os.WriteFile(gvPath, teacherBytes, 0644); err != nil {
+		return nil, fmt.Errorf("không thể ghi file Giáo viên: %w", err)
+	}
+	if err := os.WriteFile(hsPath, studentBytes, 0644); err != nil {
+		return nil, fmt.Errorf("không thể ghi file Học sinh: %w", err)
+	}
+
+	return []string{gvPath, hsPath}, nil
+}
+
 func (a *App) V2PublishPDFLesson(request PublishPDFLessonRequest) error {
 	lessonID, err := parseID(request.LessonID, "lesson_id")
 	if err != nil {
@@ -1086,22 +1299,11 @@ func (a *App) V2PublishPDFLesson(request PublishPDFLessonRequest) error {
 	hasStudentPath := strings.TrimSpace(request.StudentPDFPath) != ""
 
 	var lsn *lesson.Lesson
-	if a.application2 != nil && a.application2.Lessons != nil {
-		foundLesson, getErr := a.application2.Lessons.GetByID(a.getContext(), lessonID)
-		if getErr == nil && foundLesson != nil {
-			lsn = foundLesson
-		} else if getErr != nil {
-			log.Printf("không tìm thấy bài học trong Lessons repo: %v", getErr)
-		}
-	}
-
-	if lsn == nil && a.application2 != nil && a.application2.Drafts != nil {
-		draft, draftErr := a.application2.Drafts.GetByID(a.getContext(), lessonID)
-		if draftErr == nil && draft != nil && draft.Lesson() != nil {
-			lsn = draft.Lesson()
-		} else if draftErr != nil {
-			log.Printf("không tìm thấy draft hoặc draft chưa hoàn thành: %v", draftErr)
-		}
+	foundLesson, getErr := a.getLessonOrDraft(lessonID)
+	if getErr == nil {
+		lsn = foundLesson
+	} else {
+		log.Printf("cảnh báo lấy lesson: %v", getErr)
 	}
 
 	if hasTeacherPath && hasStudentPath {
@@ -1338,7 +1540,9 @@ func (a *App) runOAuthFlow(
 		}
 	}()
 
-	wailsRuntime.BrowserOpenURL(a.ctx, authURL)
+	if openErr := openSystemBrowser(a.getContext(), authURL); openErr != nil {
+		log.Printf("không thể mở trình duyệt đăng nhập %s: %v", serviceName, openErr)
+	}
 
 	select {
 	case err := <-resultChan:

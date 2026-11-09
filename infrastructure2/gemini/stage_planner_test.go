@@ -104,3 +104,96 @@ func TestDefaultPlannerStage_Plan_JSONWithLaTeX(t *testing.T) {
 
 	mockLLM.AssertExpectations(t)
 }
+
+type mockRasterizer struct {
+	mock.Mock
+}
+
+func (m *mockRasterizer) RasterizePDF(ctx context.Context, pdfBytes []byte) ([][]byte, error) {
+	args := m.Called(ctx, pdfBytes)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).([][]byte), args.Error(1)
+}
+
+func TestDefaultPlannerStage_Plan_RasterizesPDFToPNGs(t *testing.T) {
+	mockLLM := mocks.NewLLMProvider(t)
+	mockRast := new(mockRasterizer)
+
+	planner := gemini.NewDefaultPlannerStage(mockLLM, "gemini-3.8-flash").
+		WithRasterizer(mockRast)
+
+	pdfBytes := []byte("%PDF-1.4 mock content")
+	fakePNGs := [][]byte{
+		[]byte("fake-png-page-1"),
+		[]byte("fake-png-page-2"),
+	}
+
+	mockRast.On("RasterizePDF", mock.Anything, pdfBytes).Return(fakePNGs, nil).Once()
+
+	validPlanJSON := `{
+		"lesson_title": "Bài tập hình học",
+		"overview": "Tổng quan",
+		"topics": []
+	}`
+
+	mockLLM.On("GenerateJSON", mock.Anything, mock.MatchedBy(func(req gemini.LLMRequest) bool {
+		if len(req.Documents) != 1 {
+			return false
+		}
+		doc := req.Documents[0]
+		return len(doc.PageImages) == 2 &&
+			string(doc.PageImages[0]) == "fake-png-page-1" &&
+			string(doc.PageImages[1]) == "fake-png-page-2"
+	})).Return(&gemini.LLMResponse{
+		RawJSON: validPlanJSON,
+	}, nil).Once()
+
+	docs := []gemini.DocumentInput{
+		{DocID: "DOC_1", FileName: "de_toan.pdf", RawPDF: pdfBytes},
+	}
+
+	plan, err := planner.Plan(context.Background(), docs, "Hướng dẫn chung")
+	assert.NoError(t, err)
+	assert.NotNil(t, plan)
+	assert.Equal(t, "Bài tập hình học", plan.LessonTitle)
+
+	mockRast.AssertExpectations(t)
+	mockLLM.AssertExpectations(t)
+}
+
+func TestDefaultPlannerStage_Plan_RasterizerFailsGracefulFallback(t *testing.T) {
+	mockLLM := mocks.NewLLMProvider(t)
+	mockRast := new(mockRasterizer)
+
+	planner := gemini.NewDefaultPlannerStage(mockLLM, "gemini-3.8-flash").
+		WithRasterizer(mockRast)
+
+	pdfBytes := []byte("%PDF-1.4 corrupt")
+	mockRast.On("RasterizePDF", mock.Anything, pdfBytes).Return(nil, errors.New("typst render error")).Once()
+
+	validPlanJSON := `{
+		"lesson_title": "Fallback",
+		"overview": "Overview",
+		"topics": []
+	}`
+
+	mockLLM.On("GenerateJSON", mock.Anything, mock.MatchedBy(func(req gemini.LLMRequest) bool {
+		doc := req.Documents[0]
+		return len(doc.PageImages) == 0 && string(doc.RawPDF) == string(pdfBytes)
+	})).Return(&gemini.LLMResponse{
+		RawJSON: validPlanJSON,
+	}, nil).Once()
+
+	docs := []gemini.DocumentInput{
+		{DocID: "DOC_1", FileName: "hinh.pdf", RawPDF: pdfBytes},
+	}
+
+	plan, err := planner.Plan(context.Background(), docs, "")
+	assert.NoError(t, err)
+	assert.NotNil(t, plan)
+
+	mockRast.AssertExpectations(t)
+	mockLLM.AssertExpectations(t)
+}

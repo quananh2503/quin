@@ -984,6 +984,7 @@ func compileTypst(ctx context.Context, typPath, pdfPath string, isTeacher bool) 
 		val = "true"
 	}
 	cmd := exec.CommandContext(ctx, resolveTypstCLI(), "compile", "--root", ".", "--input", "teacher="+val, typPath, pdfPath)
+	hideConsoleWindow(cmd)
 	out, err := cmd.CombinedOutput()
 	return string(out), err
 }

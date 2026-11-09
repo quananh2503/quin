@@ -92,7 +92,13 @@ export const GradingView: React.FC<GradingViewProps> = ({ onOpenGradingDetail, o
                     {a.student_page_web_url && (
                       <button
                         type="button"
-                        onClick={() => api.openExternalURL(a.student_page_web_url)}
+                        onClick={async () => {
+                          try {
+                            await api.openExternalURL(a.student_page_web_url);
+                          } catch (err) {
+                            showToast("Lỗi mở liên kết học sinh: " + normalizeError(err), true);
+                          }
+                        }}
                         className="px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded border border-slate-200 transition-colors cursor-pointer"
                         title="Mở bài làm học sinh trên OneNote"
                       >
@@ -102,7 +108,13 @@ export const GradingView: React.FC<GradingViewProps> = ({ onOpenGradingDetail, o
                     {a.teacher_page_web_url && (
                       <button
                         type="button"
-                        onClick={() => api.openExternalURL(a.teacher_page_web_url)}
+                        onClick={async () => {
+                          try {
+                            await api.openExternalURL(a.teacher_page_web_url);
+                          } catch (err) {
+                            showToast("Lỗi mở liên kết giáo viên: " + normalizeError(err), true);
+                          }
+                        }}
                         className="px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded border border-slate-200 transition-colors cursor-pointer"
                         title="Mở trang giáo viên trên OneNote"
                       >

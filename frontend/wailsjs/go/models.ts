@@ -1104,6 +1104,20 @@ export namespace wails {
 		    return a;
 		}
 	}
+	export class ExportLessonPDFRequest {
+	    lesson_id: string;
+	    is_teacher: boolean;
+	
+	    static createFrom(source: any = {}) {
+	        return new ExportLessonPDFRequest(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.lesson_id = source["lesson_id"];
+	        this.is_teacher = source["is_teacher"];
+	    }
+	}
 	export class GenerateLessonRequest {
 	    title: string;
 	    model: string;

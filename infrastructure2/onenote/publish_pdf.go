@@ -204,7 +204,7 @@ func (c *Client) publishPDFOne(
 		Audience:     string(audience),
 		AccountID:    accountID,
 		PageID:       created.ID,
-		PageURL:      created.Links.OneNoteWebURL.Href,
+		PageURL:      NormalizeOneNoteWebURL(created.Links.OneNoteWebURL.Href),
 		NotebookID:   notebook.ID,
 		SectionID:    sectionID,
 	}
@@ -226,10 +226,10 @@ func BuildPNGPagesMultipartBody(pageTitle string, pngPages [][]byte) (string, io
 	var body bytes.Buffer
 	writer := multipart.NewWriter(&body)
 
-	// Xây dựng các thẻ img tham chiếu tới từng part imageBlock
+	// Xây dựng các thẻ img tham chiếu tới từng part imageBlock (kèm data-fullres-src để OneNote giữ trọn độ nét 300 PPI)
 	var imgTags strings.Builder
 	for i := range pngPages {
-		imgTags.WriteString(fmt.Sprintf(`  <p><img src="name:imageBlock%d" width="800" /></p>`+"\n", i+1))
+		imgTags.WriteString(fmt.Sprintf(`  <p><img src="name:imageBlock%d" width="800" data-fullres-src="name:imageBlock%d" data-fullres-src-type="image/png" /></p>`+"\n", i+1, i+1))
 	}
 
 	// Part 1: Presentation HTML
@@ -398,7 +398,7 @@ func (c *Client) publishPNGOne(
 		Audience:     string(audience),
 		AccountID:    accountID,
 		PageID:       created.ID,
-		PageURL:      created.Links.OneNoteWebURL.Href,
+		PageURL:      NormalizeOneNoteWebURL(created.Links.OneNoteWebURL.Href),
 		NotebookID:   notebook.ID,
 		SectionID:    sectionID,
 	}
