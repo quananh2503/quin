@@ -146,6 +146,7 @@ func main() {
 	}
 
 	if isWebMode {
+		app.SetWebMode(true)
 		port := os.Getenv("PORT")
 		if port == "" {
 			port = "8080"

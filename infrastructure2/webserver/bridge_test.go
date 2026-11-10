@@ -41,6 +41,13 @@ func (m *MockApp) PanicAction() error {
 	panic("giả lập lỗi crash")
 }
 
+func (m *MockApp) ServeExportDownload(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/pdf")
+	if _, err := w.Write([]byte("%PDF-1.4 export")); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
 func TestBridgeHandler_Success(t *testing.T) {
 	app := &MockApp{}
 	handler := webserver.NewBridgeHandler(app)

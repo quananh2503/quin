@@ -2,6 +2,8 @@ package wails
 
 import (
 	"context"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"strings"
@@ -233,4 +235,69 @@ func TestV2ExportBothLessonPDFs_Validation(t *testing.T) {
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "không tìm thấy nội dung bài học")
 }
+
+func TestV2ExportLessonPDF_WebMode(t *testing.T) {
+	tempDir := t.TempDir()
+	title := sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "Bài Mẫu"})
+	overview := sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "Tổng quan"})
+
+	optA, err := sharekernel.NewMCOption("A", sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "1"}))
+	require.NoError(t, err)
+	optB, err := sharekernel.NewMCOption("B", sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "2"}))
+	require.NoError(t, err)
+
+	mcq, err := sharekernel.NewMultipleChoiceExercise(
+		"Dạng 1",
+		"Nhận biết",
+		sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "1+1=?"}),
+		[]sharekernel.MCOption{optA, optB},
+		"A",
+		sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "1+1=2"}),
+		sharekernel.Diagram{},
+	)
+	require.NoError(t, err)
+
+	top, err := lesson.NewTopic(sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "Dạng 1"}), nil, []sharekernel.Exercise{mcq})
+	require.NoError(t, err)
+
+	sec, err := lesson.NewSection(sharekernel.NewContent(sharekernel.InlinePart{Type: sharekernel.InlineText, Value: "Phần 1"}), []lesson.Topic{top})
+	require.NoError(t, err)
+
+	mat, err := lesson.NewYouTubeMaterial("https://youtube.com/watch?v=mock")
+	require.NoError(t, err)
+
+	lsn, err := lesson.NewLesson(title, overview, []lesson.Section{sec}, []lesson.StudyMaterial{mat})
+	require.NoError(t, err)
+
+	app := &App{
+		application2: &Application2Services{
+			Lessons:     &mockLessonRepo{lsn: lsn},
+			StorageRoot: tempDir,
+		},
+		isWebMode: true,
+	}
+
+	// 1. Export single PDF in web mode
+	urlPath, err := app.V2ExportLessonPDF(ExportLessonPDFRequest{
+		LessonID:  lsn.ID().String(),
+		IsTeacher: true,
+	})
+	require.NoError(t, err)
+	assert.Contains(t, urlPath, "/api/download/export?file=")
+
+	// 2. Export both PDFs in web mode
+	urls, err := app.V2ExportBothLessonPDFs(lsn.ID().String())
+	require.NoError(t, err)
+	require.Len(t, urls, 2)
+	assert.Contains(t, urls[0], "/api/download/export?file=")
+	assert.Contains(t, urls[1], "/api/download/export?file=")
+
+	// 3. Test ServeExportDownload
+	req := httptest.NewRequest(http.MethodGet, urls[0], nil)
+	rec := httptest.NewRecorder()
+	app.ServeExportDownload(rec, req)
+	assert.Equal(t, http.StatusOK, rec.Code)
+	assert.Equal(t, "application/pdf", rec.Header().Get("Content-Type"))
+}
+
 

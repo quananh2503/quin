@@ -90,6 +90,13 @@ func SetupRoutes(mux *http.ServeMux, app any, assets fs.FS, pdfStreamHandler htt
 		mux.Handle("/pdf-stream", pdfStreamHandler)
 	}
 
+	type exportDownloader interface {
+		ServeExportDownload(http.ResponseWriter, *http.Request)
+	}
+	if ed, ok := app.(exportDownloader); ok {
+		mux.HandleFunc("/api/download/export", ed.ServeExportDownload)
+	}
+
 	if assets != nil {
 		spa := NewSPAHandler(assets)
 		mux.Handle("/", spa)

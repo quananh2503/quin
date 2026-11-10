@@ -63,4 +63,15 @@ func TestSetupRoutes_Integration(t *testing.T) {
 	if recSPA.Body.String() != "<html>Mock UI</html>" {
 		t.Fatalf("Kỳ vọng body '<html>Mock UI</html>', nhận: %q", recSPA.Body.String())
 	}
+
+	// 5. Kiểm tra Route Export Download
+	reqExport := httptest.NewRequest(http.MethodGet, "/api/download/export?file=test.pdf", nil)
+	recExport := httptest.NewRecorder()
+	mux.ServeHTTP(recExport, reqExport)
+	if recExport.Code != http.StatusOK {
+		t.Fatalf("Export Download Route thất bại: %d", recExport.Code)
+	}
+	if recExport.Header().Get("Content-Type") != "application/pdf" {
+		t.Fatalf("Kỳ vọng Content-Type application/pdf, nhận: %s", recExport.Header().Get("Content-Type"))
+	}
 }

@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -62,6 +63,7 @@ type App struct {
 	oneNoteClient *onenote.Client
 	meetClient    *googlemeet.Client
 	application2  *Application2Services
+	isWebMode     bool
 }
 
 func NewApp(oneNoteClient *onenote.Client, meetClient *googlemeet.Client) *App {
@@ -83,6 +85,21 @@ func (a *App) Startup(ctx context.Context) {
 
 func (a *App) SetContext(ctx context.Context) {
 	a.ctx = ctx
+}
+
+func (a *App) IsWebMode() bool {
+	return a.isWebMode
+}
+
+func (a *App) SetWebMode(web bool) {
+	a.isWebMode = web
+}
+
+func (a *App) getStorageRoot() string {
+	if a.application2 != nil && strings.TrimSpace(a.application2.StorageRoot) != "" {
+		return a.application2.StorageRoot
+	}
+	return "./document-storage"
 }
 
 func (a *App) getContext() context.Context {
@@ -435,8 +452,8 @@ type LessonUpdate struct {
 }
 
 type SaveLessonDraftRequest struct {
-	DraftID string       `json:"draft_id"`
-	Lesson  LessonUpdate `json:"lesson"`
+	DraftID string                  `json:"draft_id"`
+	Lesson  application2.LessonView `json:"lesson"`
 }
 
 func (a *App) V2ListLessonDrafts() ([]application2.DraftView, error) {
@@ -451,156 +468,36 @@ func (a *App) V2GetLessonDraft(id string) (application2.DraftView, error) {
 	return a.application2.Queries.GetLessonDraft(a.getContext(), parsed)
 }
 
-// func (a *App) V2SaveLessonDraft(request SaveLessonDraftRequest) error {
-// 	draftID, err := parseID(request.DraftID, "draft_id")
-// 	if err != nil {
-// 		return err
-// 	}
+func (a *App) V2SaveLessonDraft(request SaveLessonDraftRequest) error {
+	draftID, err := parseID(request.DraftID, "draft_id")
+	if err != nil {
+		return err
+	}
 
-// 	// Chuyển đổi dữ liệu sang struct application2.LessonUpdate
-// 	appLesson := LessonUpdate{
-// 		Title:    request.Lesson.Title,
-// 		Overview: request.Lesson.Overview,
-// 	}
+	if a.application2 == nil || a.application2.Drafts == nil || a.application2.UpdateLessonDraft == nil {
+		return errors.New("dịch vụ lưu bài học chưa được khởi tạo")
+	}
 
-// 	for _, s := range request.Lesson.Sections {
-// 		examples := make([]ExampleUpdate, 0, len(s.TeacherExamples))
-// 		for _, e := range s.TeacherExamples {
-// 			examples = append(examples, ExampleUpdate{
-// 				ExampleNum:                 e.ExampleNum,
-// 				Problem:                    e.Problem,
-// 				TeacherSolution:            e.TeacherSolution,
-// 				StudentFriendlyExplanation: e.StudentFriendlyExplanation,
-// 				CommonMistake:              e.CommonMistake,
-// 			})
-// 		}
-// 		appLesson.Sections = append(appLesson.Sections, SectionUpdate{
-// 			SectionTitle:      s.SectionTitle,
-// 			TransitionIntro:   s.TransitionIntro,
-// 			DetailedContent:   s.DetailedContent,
-// 			KeyTakeaway:       s.KeyTakeaway,
-// 			StudentClozeNotes: s.StudentClozeNotes,
-// 			TeacherExamples:   examples,
-// 		})
-// 	}
+	draft, err := a.application2.Drafts.GetByID(a.getContext(), draftID)
+	if err != nil {
+		return fmt.Errorf("không tìm thấy lesson draft: %w", err)
+	}
 
-// 	for _, ex := range request.Lesson.Exercises {
-// 		parts := make([]PartUpdate, 0, len(ex.Parts))
-// 		for _, p := range ex.Parts {
-// 			parts = append(parts, PartUpdate{
-// 				Label:    p.Label,
-// 				Question: p.Question,
-// 				Solution: p.Solution,
-// 				Rubric:   p.Rubric,
-// 			})
-// 		}
+	materials := draft.Materials()
+	if request.Lesson.ID == uuid.Nil() && draft.Lesson() != nil {
+		request.Lesson.ID = draft.Lesson().ID()
+	}
 
-// 		options := make([]OptionUpdate, 0, len(ex.Options))
-// 		for _, opt := range ex.Options {
-// 			options = append(options, OptionUpdate{
-// 				Label:   opt.Label,
-// 				Content: opt.Content,
-// 			})
-// 		}
+	lsn, err := application2.LessonViewToLesson(&request.Lesson, materials)
+	if err != nil {
+		return fmt.Errorf("nội dung bài giảng không hợp lệ: %w", err)
+	}
 
-// 		appLesson.Exercises = append(appLesson.Exercises, ExerciseUpdate{
-// 			Type:        ex.Type,
-// 			Topic:       ex.Topic,
-// 			Difficulty:  ex.Difficulty,
-// 			Question:    ex.Question,
-// 			Options:     options,
-// 			Answer:      ex.Answer,
-// 			Explanation: ex.Explanation,
-// 			Parts:       parts,
-// 		})
-// 	}
-// 	lesson ,err:= BuildLesson(appLesson, draftID, )
-
-// 	return a.application2.UpdateLessonDraft.UpdateContent(a.ctx, draftID, appLesson)
-// }
-
-// // BuildLesson chuyển đổi DTO LessonUpdate sang Lesson Domain Entity
-// func BuildLesson(input LessonUpdate, id uuid.UUID, material lesson.StudyMaterial) (*lesson.Lesson, error) {
-// 	sections := make([]lesson.Section, 0, len(input.Sections))
-// 	for _, section := range input.Sections {
-// 		examples := make([]lesson.TeacherExample, 0, len(section.TeacherExamples))
-// 		for _, example := range section.TeacherExamples {
-// 			examples = append(examples, lesson.TeacherExample{
-// 				ExampleNum:                 example.ExampleNum,
-// 				Problem:                    example.Problem,
-// 				TeacherSolution:            example.TeacherSolution,
-// 				StudentFriendlyExplanation: example.StudentFriendlyExplanation,
-// 				CommonMistake:              example.CommonMistake,
-// 			})
-// 		}
-// 		sections = append(sections, lesson.Section{
-// 			SectionTitle:      section.SectionTitle,
-// 			TransitionIntro:   section.TransitionIntro,
-// 			DetailedContent:   section.DetailedContent,
-// 			KeyTakeaway:       section.KeyTakeaway,
-// 			StudentClozeNotes: section.StudentClozeNotes,
-// 			TeacherExamples:   examples,
-// 		})
-// 	}
-
-// 	exercises := make([]exercise.Exercise, 0, len(input.Exercises))
-// 	for _, item := range input.Exercises {
-// 		topic := strings.TrimSpace(item.Topic)
-// 		if topic == "" {
-// 			topic = "Toán tổng hợp"
-// 		}
-
-// 		kind := strings.ToLower(strings.TrimSpace(item.Type))
-
-// 		// Xử lý bài tập TRẮC NGHIỆM
-// 		if kind == string(exercise.ExerciseTypeMultipleChoice) || strings.EqualFold(kind, "trắc nghiệm") {
-// 			options := make([]exercise.MCOption, 0, len(item.Options))
-// 			for index, opt := range item.Options {
-// 				label := strings.TrimSpace(opt.Label)
-// 				if label == "" {
-// 					label = string(rune('A' + index))
-// 				}
-
-// 				content := strings.TrimSpace(opt.Content)
-// 				for _, prefix := range []string{label + ".", label + ")", label + ":"} {
-// 					if strings.HasPrefix(strings.ToUpper(content), prefix) {
-// 						content = strings.TrimSpace(content[len(prefix):])
-// 						break
-// 					}
-// 				}
-// 				options = append(options, exercise.NewMCOption(label, content))
-// 			}
-
-// 			value, err := exercise.NewMultipleChoiceExercise(topic, item.Difficulty, item.Question, options, item.Answer, item.Explanation)
-// 			if err != nil {
-// 				return nil, err
-// 			}
-// 			exercises = append(exercises, value)
-// 			continue
-// 		}
-
-// 		// Xử lý bài tập TỰ LUẬN
-// 		if kind != string(exercise.ExerciseTypeEssay) && !strings.EqualFold(kind, "tự luận") {
-// 			return nil, fmt.Errorf("loại bài tập không hợp lệ: %q", item.Type)
-// 		}
-
-// 		parts := make([]exercise.EssayPart, 0, len(item.Parts))
-// 		for _, part := range item.Parts {
-// 			parts = append(parts, exercise.NewEssayPart(part.Label, part.Question, part.Solution, part.Rubric))
-// 		}
-// 		if len(parts) == 0 {
-// 			parts = append(parts, exercise.NewEssayPart("a", item.Question, item.Answer, item.Explanation))
-// 		}
-
-// 		value, err := exercise.NewEssayExercise(topic, item.Difficulty, item.Question, parts)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		exercises = append(exercises, value)
-// 	}
-
-// 	return lesson.ReconstituteLesson(id, input.Title, input.Overview, sections, exercises, material)
-// }
+	return a.application2.UpdateLessonDraft.Update(a.getContext(), application2.UpdateLessonDraftCommand{
+		DraftID: draftID,
+		Lesson:  lsn,
+	})
+}
 
 // ============================================================================
 // 8. DOCUMENTS
@@ -613,6 +510,9 @@ func (a *App) V2ListDocuments() ([]application2.Document, error) {
 func (a *App) V2UploadDocument() (*application2.Document, error) {
 	if a.application2 == nil || a.application2.UploadHandler == nil {
 		return nil, errors.New("dịch vụ tải tài liệu chưa được khởi tạo")
+	}
+	if a.isWebMode {
+		return nil, errors.New("chế độ web vui lòng tải file trực tiếp qua giao diện trình duyệt")
 	}
 	path, err := wailsRuntime.OpenFileDialog(a.ctx, wailsRuntime.OpenDialogOptions{
 		Title: "Chọn tài liệu hoặc hình ảnh",
@@ -636,6 +536,9 @@ func (a *App) V2UploadDocument() (*application2.Document, error) {
 func (a *App) V2UploadDocuments() ([]*application2.Document, error) {
 	if a.application2 == nil || a.application2.UploadHandler == nil {
 		return nil, errors.New("dịch vụ tải tài liệu chưa được khởi tạo")
+	}
+	if a.isWebMode {
+		return nil, errors.New("chế độ web vui lòng tải file trực tiếp qua giao diện trình duyệt")
 	}
 	paths, err := wailsRuntime.OpenMultipleFilesDialog(a.ctx, wailsRuntime.OpenDialogOptions{
 		Title: "Chọn các tài liệu hoặc hình ảnh",
@@ -1204,6 +1107,18 @@ func (a *App) V2ExportLessonPDF(request ExportLessonPDFRequest) (string, error) 
 		defaultName = fmt.Sprintf("Giao_an_GV_%s.pdf", cleanTitle)
 	}
 
+	if a.isWebMode {
+		exportDir := filepath.Join(a.getStorageRoot(), "exports")
+		if err := os.MkdirAll(exportDir, 0755); err != nil {
+			return "", fmt.Errorf("không thể tạo thư mục xuất file: %w", err)
+		}
+		savePath := filepath.Join(exportDir, defaultName)
+		if err := os.WriteFile(savePath, pdfBytes, 0644); err != nil {
+			return "", fmt.Errorf("không thể ghi file PDF: %w", err)
+		}
+		return fmt.Sprintf("/api/download/export?file=%s", url.QueryEscape(defaultName)), nil
+	}
+
 	savePath, err := wailsRuntime.SaveFileDialog(a.ctx, wailsRuntime.SaveDialogOptions{
 		Title:           "Lưu file PDF bài giảng",
 		DefaultFilename: defaultName,
@@ -1241,15 +1156,16 @@ func (a *App) V2ExportBothLessonPDFs(lessonIDStr string) ([]string, error) {
 		return nil, err
 	}
 
-	targetDir, err := wailsRuntime.OpenDirectoryDialog(a.ctx, wailsRuntime.OpenDialogOptions{
-		Title: "Chọn thư mục lưu 2 file PDF (Giáo viên & Học sinh)",
-	})
-	if err != nil {
-		return nil, fmt.Errorf("lỗi mở hộp thoại chọn thư mục: %w", err)
+	cleanTitle := regexp.MustCompile(`[<>:"/\\|?*\s]+`).ReplaceAllString(strings.TrimSpace(lsn.Title().String()), "_")
+	if cleanTitle == "" {
+		cleanTitle = "Bai_giang"
 	}
-	if strings.TrimSpace(targetDir) == "" {
-		return nil, nil // Người dùng bấm Hủy (Cancel)
+	if len(cleanTitle) > 40 {
+		cleanTitle = cleanTitle[:40]
 	}
+
+	teacherName := fmt.Sprintf("Giao_an_GV_%s.pdf", cleanTitle)
+	studentName := fmt.Sprintf("Phieu_bai_tap_HS_%s.pdf", cleanTitle)
 
 	teacherBytes, err := RenderLessonPDFBytes(a.getContext(), lsn, true)
 	if err != nil {
@@ -1260,16 +1176,39 @@ func (a *App) V2ExportBothLessonPDFs(lessonIDStr string) ([]string, error) {
 		return nil, fmt.Errorf("biên dịch PDF Học sinh thất bại: %w", err)
 	}
 
-	cleanTitle := regexp.MustCompile(`[<>:"/\\|?*\s]+`).ReplaceAllString(strings.TrimSpace(lsn.Title().String()), "_")
-	if cleanTitle == "" {
-		cleanTitle = "Bai_giang"
-	}
-	if len(cleanTitle) > 40 {
-		cleanTitle = cleanTitle[:40]
+	if a.isWebMode {
+		exportDir := filepath.Join(a.getStorageRoot(), "exports")
+		if err := os.MkdirAll(exportDir, 0755); err != nil {
+			return nil, fmt.Errorf("không thể tạo thư mục xuất file: %w", err)
+		}
+		gvPath := filepath.Join(exportDir, teacherName)
+		hsPath := filepath.Join(exportDir, studentName)
+
+		if err := os.WriteFile(gvPath, teacherBytes, 0644); err != nil {
+			return nil, fmt.Errorf("không thể ghi file Giáo viên: %w", err)
+		}
+		if err := os.WriteFile(hsPath, studentBytes, 0644); err != nil {
+			return nil, fmt.Errorf("không thể ghi file Học sinh: %w", err)
+		}
+
+		return []string{
+			fmt.Sprintf("/api/download/export?file=%s", url.QueryEscape(teacherName)),
+			fmt.Sprintf("/api/download/export?file=%s", url.QueryEscape(studentName)),
+		}, nil
 	}
 
-	gvPath := filepath.Join(targetDir, fmt.Sprintf("Giao_an_GV_%s.pdf", cleanTitle))
-	hsPath := filepath.Join(targetDir, fmt.Sprintf("Phieu_bai_tap_HS_%s.pdf", cleanTitle))
+	targetDir, err := wailsRuntime.OpenDirectoryDialog(a.ctx, wailsRuntime.OpenDialogOptions{
+		Title: "Chọn thư mục lưu 2 file PDF (Giáo viên & Học sinh)",
+	})
+	if err != nil {
+		return nil, fmt.Errorf("lỗi mở hộp thoại chọn thư mục: %w", err)
+	}
+	if strings.TrimSpace(targetDir) == "" {
+		return nil, nil // Người dùng bấm Hủy (Cancel)
+	}
+
+	gvPath := filepath.Join(targetDir, teacherName)
+	hsPath := filepath.Join(targetDir, studentName)
 
 	if err := os.WriteFile(gvPath, teacherBytes, 0644); err != nil {
 		return nil, fmt.Errorf("không thể ghi file Giáo viên: %w", err)
@@ -1633,4 +1572,43 @@ func (a *App) servePDFStream(w http.ResponseWriter, r *http.Request) {
 func (a *App) ServePDFStream(w http.ResponseWriter, r *http.Request) {
 	a.servePDFStream(w, r)
 }
+
+// ServeExportDownload phục vụ tải file PDF đã xuất cho trình duyệt web
+func (a *App) ServeExportDownload(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS")
+	if r.Method == http.MethodOptions {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	fileName := filepath.Clean(filepath.Base(r.URL.Query().Get("file")))
+	if fileName == "" || fileName == "." || fileName == "/" {
+		http.Error(w, "tên file không hợp lệ", http.StatusBadRequest)
+		return
+	}
+
+	filePath := filepath.Join(a.getStorageRoot(), "exports", fileName)
+	file, err := os.Open(filePath)
+	if err != nil {
+		http.Error(w, "không tìm thấy file xuất: "+fileName, http.StatusNotFound)
+		return
+	}
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil {
+			log.Printf("đóng file xuất thất bại: %v", closeErr)
+		}
+	}()
+
+	info, err := file.Stat()
+	if err != nil {
+		http.Error(w, "không thể đọc metadata file", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/pdf")
+	w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileName))
+	w.Header().Set("Accept-Ranges", "bytes")
+	http.ServeContent(w, r, fileName, info.ModTime(), file)
+}
+
 

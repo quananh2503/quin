@@ -84,6 +84,16 @@ export const LessonEditorView: React.FC<LessonEditorViewProps> = ({
     }
   };
 
+  const triggerBrowserDownload = (url: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', '');
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // Xuất 1 file PDF (GV hoặc HS)
   const handleExportSinglePDF = async (isTeacher: boolean) => {
     setShowDownloadMenu(false);
@@ -97,7 +107,12 @@ export const LessonEditorView: React.FC<LessonEditorViewProps> = ({
         is_teacher: isTeacher,
       });
       if (savedPath) {
-        showToast(`Đã xuất PDF thành công: ${savedPath}`);
+        if (savedPath.startsWith('/api/') || savedPath.startsWith('http')) {
+          triggerBrowserDownload(savedPath);
+          showToast('Đang tải file PDF về máy...');
+        } else {
+          showToast(`Đã xuất PDF thành công: ${savedPath}`);
+        }
       }
     } catch (err) {
       showToast('Lỗi xuất PDF: ' + normalizeError(err), true);
@@ -115,7 +130,20 @@ export const LessonEditorView: React.FC<LessonEditorViewProps> = ({
       const lessonId = draft?.lesson_data?.id || draftId;
       const paths = await api.exportBothLessonPDFs(String(lessonId));
       if (paths && paths.length > 0) {
-        showToast(`Đã xuất thành công 2 file PDF vào thư mục!`);
+        let isWeb = false;
+        paths.forEach((p: string, idx: number) => {
+          if (p.startsWith('/api/') || p.startsWith('http')) {
+            isWeb = true;
+            setTimeout(() => {
+              triggerBrowserDownload(p);
+            }, idx * 400);
+          }
+        });
+        if (isWeb) {
+          showToast('Đang tải cả 2 file PDF về máy...');
+        } else {
+          showToast(`Đã xuất thành công 2 file PDF vào thư mục!`);
+        }
       }
     } catch (err) {
       showToast('Lỗi xuất 2 file PDF: ' + normalizeError(err), true);
