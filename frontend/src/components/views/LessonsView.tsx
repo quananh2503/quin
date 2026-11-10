@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../../api';
 import { formatDateTime, normalizeError, extractContentText } from '../../utils';
-import { V2CreateLesson, V2UploadDocuments } from '../../../wailsjs/go/wails/App';
 import { wails } from '../../../wailsjs/go/models';
 import { 
   Sparkles, 
@@ -146,16 +145,22 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
 
   // Mở hộp thoại native chọn file từ máy tính (hỗ trợ nhiều file)
   const handlePickAndUploadDocument = async () => {
+    // Nếu chạy trên Web / iPad: kích hoạt input file HTML chuẩn của trình duyệt
+    if (typeof window !== 'undefined' && (!(window as any).go?.wails?.App || (window as any).__isWebBridge)) {
+      fileInputRef.current?.click();
+      return;
+    }
+
     try {
       setUploadingDoc(true);
-      const uploadedDocs = await V2UploadDocuments();
+      const uploadedDocs = await api.uploadDocuments();
       if (!uploadedDocs?.length) return;
 
       showToast(`Đã nạp ${uploadedDocs.length} tài liệu`);
       await loadDocuments();
       setSelectedDocIds((current) => [
         ...current,
-        ...uploadedDocs.filter((doc) => doc.id).map((doc) => String(doc.id)),
+        ...uploadedDocs.filter((doc: any) => doc.id).map((doc: any) => String(doc.id)),
       ]);
     } catch (err) {
       showToast('Lỗi khi tải tài liệu: ' + normalizeError(err), true);
@@ -300,7 +305,7 @@ export const LessonsView: React.FC<LessonsViewProps> = ({
         pages: [],
       });
 
-      await V2CreateLesson(request);
+      await api.createLesson(request);
       showToast('Đã gửi yêu cầu! AI đang phân tích tài liệu và biên soạn bài giảng...');
       
       // Reset form sau khi gửi thành công

@@ -66,6 +66,7 @@ type App struct {
 
 func NewApp(oneNoteClient *onenote.Client, meetClient *googlemeet.Client) *App {
 	return &App{
+		ctx:           context.Background(),
 		oneNoteClient: oneNoteClient,
 		meetClient:    meetClient,
 	}

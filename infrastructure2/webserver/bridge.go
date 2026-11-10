@@ -4,8 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"reflect"
+	"runtime/debug"
 	"strings"
 )
 
@@ -45,8 +47,16 @@ func (h *BridgeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	defer func() {
+		if rec := recover(); rec != nil {
+			log.Printf("❌ [WebBridge] PANIC khi gọi %s: %v\nStack:\n%s", methodName, rec, string(debug.Stack()))
+			http.Error(w, fmt.Sprintf("Lỗi máy chủ nội bộ (%s): %v", methodName, rec), http.StatusInternalServerError)
+		}
+	}()
+
 	method := h.target.MethodByName(methodName)
 	if !method.IsValid() {
+		log.Printf("⚠️ [WebBridge] Không tìm thấy method: %s", methodName)
 		http.Error(w, fmt.Sprintf("Không tìm thấy phương thức: %s", methodName), http.StatusNotFound)
 		return
 	}
@@ -69,22 +79,21 @@ func (h *BridgeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if len(rawArgs) < numIn {
-		http.Error(w, fmt.Sprintf("Phương thức %s yêu cầu %d tham số, chỉ nhận được %d", methodName, numIn, len(rawArgs)), http.StatusBadRequest)
-		return
-	}
-
 	inValues := make([]reflect.Value, numIn)
 	for i := 0; i < numIn; i++ {
 		paramType := mType.In(i)
 		argPtr := reflect.New(paramType)
-		if uErr := json.Unmarshal(rawArgs[i], argPtr.Interface()); uErr != nil {
-			http.Error(w, fmt.Sprintf("Lỗi giải mã tham số %d (%s): %v", i, paramType.String(), uErr), http.StatusBadRequest)
-			return
+		if i < len(rawArgs) && len(rawArgs[i]) > 0 && string(rawArgs[i]) != "null" {
+			if uErr := json.Unmarshal(rawArgs[i], argPtr.Interface()); uErr != nil {
+				log.Printf("❌ [WebBridge] Lỗi giải mã tham số %d (%s) cho %s: %v", i, paramType.String(), methodName, uErr)
+				http.Error(w, fmt.Sprintf("Lỗi giải mã tham số %d (%s): %v", i, paramType.String(), uErr), http.StatusBadRequest)
+				return
+			}
 		}
 		inValues[i] = argPtr.Elem()
 	}
 
+	log.Printf("👉 [WebBridge] Đang thực thi %s...", methodName)
 	outValues := method.Call(inValues)
 
 	// Xử lý return values
@@ -92,9 +101,11 @@ func (h *BridgeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if len(outValues) == 1 && outValues[0].Type().Implements(reflect.TypeOf((*error)(nil)).Elem()) {
 		if !outValues[0].IsNil() {
 			errVal := outValues[0].Interface().(error)
+			log.Printf("❌ [WebBridge] Lỗi %s: %v", methodName, errVal)
 			http.Error(w, errVal.Error(), http.StatusInternalServerError)
 			return
 		}
+		log.Printf("✅ [WebBridge] Hoàn thành %s", methodName)
 		w.Header().Set("Content-Type", "application/json")
 		if encErr := json.NewEncoder(w).Encode(map[string]bool{"success": true}); encErr != nil {
 			http.Error(w, fmt.Sprintf("Lỗi mã hóa JSON: %v", encErr), http.StatusInternalServerError)
@@ -106,9 +117,11 @@ func (h *BridgeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if len(outValues) == 2 {
 		if !outValues[1].IsNil() {
 			errVal := outValues[1].Interface().(error)
+			log.Printf("❌ [WebBridge] Lỗi %s: %v", methodName, errVal)
 			http.Error(w, errVal.Error(), http.StatusInternalServerError)
 			return
 		}
+		log.Printf("✅ [WebBridge] Hoàn thành %s", methodName)
 		w.Header().Set("Content-Type", "application/json")
 		if encErr := json.NewEncoder(w).Encode(outValues[0].Interface()); encErr != nil {
 			http.Error(w, fmt.Sprintf("Lỗi mã hóa JSON phản hồi: %v", encErr), http.StatusInternalServerError)
@@ -117,6 +130,7 @@ func (h *BridgeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Trường hợp 3: Không có kết quả trả về hoặc kiểu khác
+	log.Printf("✅ [WebBridge] Hoàn thành %s", methodName)
 	w.Header().Set("Content-Type", "application/json")
 	if encErr := json.NewEncoder(w).Encode(map[string]bool{"success": true}); encErr != nil {
 		http.Error(w, fmt.Sprintf("Lỗi mã hóa JSON: %v", encErr), http.StatusInternalServerError)

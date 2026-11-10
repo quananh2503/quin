@@ -10,7 +10,6 @@ import { Document, Page, pdfjs } from 'react-pdf';
 
 import { api } from '../../api';
 import { normalizeError } from '../../utils';
-import { V2CreateLesson } from '../../../wailsjs/go/wails/App';
 import { wails  } from '../../../wailsjs/go/models';
 
 import {
@@ -513,7 +512,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
         pages: sortedPages, // Rỗng = lấy toàn bộ file bự, có phần tử = chỉ lấy các trang đã chọn
       });
 
-      await V2CreateLesson(request);
+      await api.createLesson(request);
 
       if (sortedPages.length > 0) {
         showToast(`Đã gửi ${sortedPages.length} trang tài liệu cho AI xử lý`);

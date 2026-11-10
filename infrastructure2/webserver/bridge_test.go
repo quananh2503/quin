@@ -37,6 +37,10 @@ func (m *MockApp) FailAction() error {
 	return errors.New("hành động thất bại")
 }
 
+func (m *MockApp) PanicAction() error {
+	panic("giả lập lỗi crash")
+}
+
 func TestBridgeHandler_Success(t *testing.T) {
 	app := &MockApp{}
 	handler := webserver.NewBridgeHandler(app)
@@ -62,6 +66,36 @@ func TestBridgeHandler_Success(t *testing.T) {
 
 	if res.Greeting != "Xin chào Nam" {
 		t.Fatalf("Kỳ vọng 'Xin chào Nam', nhận: %q", res.Greeting)
+	}
+}
+
+func TestBridgeHandler_GracefulDefaultArgs(t *testing.T) {
+	app := &MockApp{}
+	handler := webserver.NewBridgeHandler(app)
+
+	// Gửi mảng rỗng [] cho method yêu cầu 1 tham số -> handler tự khởi tạo giá trị zero mà không bị lỗi 400
+	req := httptest.NewRequest(http.MethodPost, "/api/wails/Greet", bytes.NewReader([]byte("[]")))
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	// Do Name rỗng nên Greet trả về lỗi "tên không được để trống" (500), chứng tỏ đã invoke thành công!
+	if rec.Code != http.StatusInternalServerError {
+		t.Fatalf("Kỳ vọng status 500 từ business logic, nhận: %d", rec.Code)
+	}
+}
+
+func TestBridgeHandler_PanicRecovery(t *testing.T) {
+	app := &MockApp{}
+	handler := webserver.NewBridgeHandler(app)
+
+	req := httptest.NewRequest(http.MethodPost, "/api/wails/PanicAction", bytes.NewReader([]byte("[]")))
+	rec := httptest.NewRecorder()
+
+	handler.ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusInternalServerError {
+		t.Fatalf("Kỳ vọng status 500 khi panic, nhận: %d", rec.Code)
 	}
 }
 
