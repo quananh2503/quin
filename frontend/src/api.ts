@@ -1,4 +1,75 @@
-// Wrapper an toàn gọi các API từ Go backend qua Wails IPC
+// Tự động khởi tạo Cầu nối Web Proxy nếu chạy trên Trình duyệt thông thường (iPad, Safari, Chrome...)
+if (typeof window !== 'undefined' && !(window as any).go?.wails?.App) {
+  (window as any).__isWebBridge = true;
+  (window as any).go = (window as any).go || {};
+  (window as any).go.wails = (window as any).go.wails || {};
+  (window as any).go.wails.App = new Proxy({}, {
+    get: (_target, prop: string) => {
+      return async (...args: any[]) => {
+        const response = await fetch(`/api/wails/${prop}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(args),
+        });
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(errText || `Lỗi HTTP ${response.status}`);
+        }
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          return await response.json();
+        }
+        return await response.text();
+      };
+    },
+  });
+}
+
+function pickFileFromBrowser(accept: string = "*/*"): Promise<File | null> {
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = accept;
+    input.onchange = () => {
+      if (input.files && input.files.length > 0) {
+        resolve(input.files[0]);
+      } else {
+        resolve(null);
+      }
+    };
+    input.click();
+  });
+}
+
+function pickMultipleFilesFromBrowser(accept: string = "*/*"): Promise<File[]> {
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.accept = accept;
+    input.onchange = () => {
+      if (input.files && input.files.length > 0) {
+        resolve(Array.from(input.files));
+      } else {
+        resolve([]);
+      }
+    };
+    input.click();
+  });
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+
+// Wrapper an toàn gọi các API từ Go backend qua Wails IPC hoặc Web Bridge
 const GoApp = () => (window as any).go?.wails?.App;
 
 export const api = {
@@ -24,8 +95,29 @@ export const api = {
 
   // Module 3: PDF / Documents
   listDocuments: () => GoApp().V2ListDocuments(),
-  uploadDocument: () => GoApp().V2UploadDocument(),
-  uploadDocuments: () => GoApp().V2UploadDocuments(),
+  uploadDocument: async () => {
+    if ((window as any).go?.wails?.App && !(window as any).__isWebBridge) {
+      return GoApp().V2UploadDocument();
+    }
+    const file = await pickFileFromBrowser('.pdf,.docx,.doc,.png,.jpg,.jpeg,.webp');
+    if (!file) return null;
+    const b64 = await fileToBase64(file);
+    return await api.saveDocumentData(file.name, b64);
+  },
+  uploadDocuments: async () => {
+    if ((window as any).go?.wails?.App && !(window as any).__isWebBridge) {
+      return GoApp().V2UploadDocuments();
+    }
+    const files = await pickMultipleFilesFromBrowser('.pdf,.docx,.doc,.png,.jpg,.jpeg,.webp');
+    if (!files || files.length === 0) return [];
+    const results = [];
+    for (const f of files) {
+      const b64 = await fileToBase64(f);
+      const doc = await api.saveDocumentData(f.name, b64);
+      if (doc) results.push(doc);
+    }
+    return results;
+  },
   saveDocumentData: (fileName: string, base64Data: string) => GoApp().V2SaveDocumentData(fileName, base64Data),
   getDocument: (id: string) => GoApp().V2GetDocument(id),
   getDocumentPreview: (id: string, page: number) => GoApp().V2GetDocumentPreview(id, page),
@@ -57,6 +149,10 @@ export const api = {
   openExternalURL: async (url: string) => {
     if (!url) return;
     try {
+      if ((window as any).__isWebBridge) {
+        window.open(url, '_blank');
+        return;
+      }
       if (GoApp()?.OpenExternalURL) {
         await GoApp().OpenExternalURL(url);
         return;

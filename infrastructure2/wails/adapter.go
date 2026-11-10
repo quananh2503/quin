@@ -1627,3 +1627,9 @@ func (a *App) servePDFStream(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Accept-Ranges", "bytes")
 	http.ServeContent(w, r, doc.FileName, info.ModTime(), file)
 }
+
+// ServePDFStream là public handler để phục vụ stream PDF cho cả Wails và Web Server độc lập
+func (a *App) ServePDFStream(w http.ResponseWriter, r *http.Request) {
+	a.servePDFStream(w, r)
+}
+

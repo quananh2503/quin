@@ -420,3 +420,51 @@ func blockToTypst(b lesson.Block, audience lesson.Audience) string {
 		return ""
 	}
 }
+
+// cleanLaTeXForHTML chuẩn hóa và làm sạch công thức toán LaTeX đơn giản sang ký tự Unicode hiển thị trong HTML
+func cleanLaTeXForHTML(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.TrimPrefix(s, "$")
+	s = strings.TrimSuffix(s, "$")
+	s = strings.TrimSpace(s)
+
+	s = strings.ReplaceAll(s, `\mathbb{R}`, "ℝ")
+	s = strings.ReplaceAll(s, `\mathbb{Z}`, "ℤ")
+	s = strings.ReplaceAll(s, `\setminus`, `\`)
+	s = strings.ReplaceAll(s, `\pi`, "π")
+	s = strings.ReplaceAll(s, `\infty`, "∞")
+	s = strings.ReplaceAll(s, `\in`, "∈")
+	s = strings.ReplaceAll(s, `\left\{`, "{")
+	s = strings.ReplaceAll(s, `\right\}`, "}")
+	s = strings.ReplaceAll(s, `\left(`, "(")
+	s = strings.ReplaceAll(s, `\right)`, ")")
+	s = strings.ReplaceAll(s, `\{`, "{")
+	s = strings.ReplaceAll(s, `\}`, "}")
+
+
+	// Xử lý \frac{tử}{mẫu} thành tử/mẫu
+	for strings.Contains(s, `\frac{`) {
+		idx := strings.Index(s, `\frac{`)
+		after := s[idx+6:]
+		endNum := strings.Index(after, "}")
+		if endNum == -1 {
+			break
+		}
+		numerator := after[:endNum]
+		rest := after[endNum+1:]
+		if !strings.HasPrefix(rest, "{") {
+			break
+		}
+		endDen := strings.Index(rest[1:], "}")
+		if endDen == -1 {
+			break
+		}
+		denominator := rest[1 : 1+endDen]
+		target := s[idx : idx+6+endNum+1+1+endDen+1]
+		replacement := numerator + "/" + denominator
+		s = strings.Replace(s, target, replacement, 1)
+	}
+
+	return s
+}
+

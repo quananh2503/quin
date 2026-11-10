@@ -7,8 +7,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 
@@ -31,6 +33,7 @@ import (
 	"meet-attendance-clean/infrastructure2/pdf"
 	"meet-attendance-clean/infrastructure2/renderer"
 	wailsAdapter "meet-attendance-clean/infrastructure2/wails"
+	"meet-attendance-clean/infrastructure2/webserver"
 
 	"meet-attendance-clean/infrastructure2/AI/deepseek"
 	"meet-attendance-clean/infrastructure2/AI/pipeline"
@@ -125,6 +128,41 @@ func main() {
 	// 6. Gắn Services vào Wails Adapter & Khởi chạy ứng dụng
 	app := wailsAdapter.NewApp(oneNoteClient, meetClient)
 	app.SetApplication2Services(services)
+
+	// Kiểm tra chế độ chạy Web Server (phục vụ trình duyệt / iPad / Docker / Cloud)
+	isWebMode := false
+	for _, arg := range os.Args[1:] {
+		if arg == "--web" || arg == "-web" {
+			isWebMode = true
+			break
+		}
+	}
+	if os.Getenv("WEB_MODE") == "1" || os.Getenv("PORT") != "" {
+		isWebMode = true
+	}
+	// Nếu chạy trên môi trường Linux không có giao diện đồ họa (headless server/container/render)
+	if runtime.GOOS == "linux" && os.Getenv("DISPLAY") == "" && os.Getenv("WAYLAND_DISPLAY") == "" {
+		isWebMode = true
+	}
+
+	if isWebMode {
+		port := os.Getenv("PORT")
+		if port == "" {
+			port = "8080"
+		}
+		addr := ":" + port
+		log.Printf("==================================================================")
+		log.Printf("🚀 QUIN ĐANG CHẠY Ở CHẾ ĐỘ WEB SERVER CHO TRÌNH DUYỆT / IPAD")
+		log.Printf("👉 Mở trình duyệt truy cập: http://localhost:%s", port)
+		log.Printf("👉 Hoặc truy cập qua IP mạng LAN trên iPad: http://<IP-may-tinh>:%s", port)
+		log.Printf("==================================================================")
+
+		server := webserver.NewServer(addr, app, assets, http.HandlerFunc(app.ServePDFStream))
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("Lỗi khởi chạy Web Server: %v", err)
+		}
+		return
+	}
 
 	err = wails.Run(&options.App{
 		Title:       "QUIN",

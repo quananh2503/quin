@@ -840,7 +840,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
         className="flex-1 overflow-y-auto overflow-x-hidden bg-slate-100/50"
       >
         <Document
-          file={`http://127.0.0.1:8765/pdf-stream?id=${encodeURIComponent(
+          file={`${typeof window !== 'undefined' && !(window as any).__isWebBridge && (window as any).go?.wails?.App ? 'http://127.0.0.1:8765' : ''}/pdf-stream?id=${encodeURIComponent(
             currentDoc.id,
           )}`}
           options={pdfOptions}
