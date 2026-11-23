@@ -30,6 +30,8 @@ config/microsoft-oauth.json
 *.png
 # bỏ qua các file package json và các file ko cần thiết của frontned
 *.json
+!infrastructure2/**/testdata/**
+!infrastructure2/**/testdata/fixtures/**
 *.lock
 eslintcache
 infrastructure2/gemini/key.txt

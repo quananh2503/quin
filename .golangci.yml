@@ -1,0 +1,193 @@
+version: "2"
+run:
+  tests: true
+output:
+  formats:
+    text:
+      path: stdout
+      print-linter-name: true
+      print-issued-lines: true
+linters:
+  default: none
+  enable:
+    - bodyclose
+    - depguard
+    - errcheck
+    - errorlint
+    - funlen
+    - gocritic
+    - ineffassign
+    - nilerr
+    - nilnil
+    - noctx
+    - revive
+    - sqlclosecheck
+    - unused
+    - wrapcheck
+  settings:
+    depguard:
+      rules:
+        domain_isolation:
+          list-mode: lax
+          files:
+            - "**/domain2/**"
+          deny:
+            - pkg: database/sql
+              desc: "KIẾN TRÚC: Domain layer KHÔNG ĐƯỢC phụ thuộc vào database/sql!"
+            - pkg: net/http
+              desc: "KIẾN TRÚC: Domain layer KHÔNG ĐƯỢC phụ thuộc vào HTTP transport!"
+            - pkg: os
+              desc: "KIẾN TRÚC: Domain layer KHÔNG ĐƯỢC truy cập I/O trực tiếp (os)!"
+            - pkg: meet-attendance-clean/infrastructure2
+              desc: "KIẾN TRÚC: Domain layer KHÔNG ĐƯỢC import tầng Infrastructure!"
+            - pkg: meet-attendance-clean/application2
+              desc: "KIẾN TRÚC: Domain layer KHÔNG ĐƯỢC import tầng Application!"
+
+        driver_isolation:
+          list-mode: lax
+          files:
+            - "**/infrastructure2/*/internal/driver/**"
+          deny:
+            - pkg: meet-attendance-clean/domain2
+              desc: "VI PHẠM KIẾN TRÚC: internal/driver là Client vật lý thô, CẤM import domain2!"
+            - pkg: meet-attendance-clean/application2
+              desc: "VI PHẠM KIẾN TRÚC: internal/driver CẤM import application2!"
+
+        sans_io_purity:
+          list-mode: lax
+          files:
+            - "**/infrastructure2/*/internal/encode/**"
+            - "**/infrastructure2/*/internal/process/**"
+            - "**/infrastructure2/*/internal/decode/**"
+          deny:
+            - pkg: os
+              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode chỉ tính toán trong RAM, CẤM import 'os'!"
+            - pkg: os/exec
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: Encode/Process/Decode CẤM import 'os/exec'!"
+            - pkg: net/http
+              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode CẤM import 'net/http'!"
+            - pkg: net/http/httptest
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: Encode/Process/Decode CẤM import 'net/http/httptest'!"
+            - pkg: net
+              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode chỉ tính toán trong RAM, CẤM import 'net'!"
+            - pkg: database/sql
+              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode CẤM import 'database/sql'!"
+            - pkg: syscall
+              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode CẤM import 'syscall'!"
+            - pkg: go.uber.org/mock
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: CẤM dùng mock framework trong Encode/Process/Decode!"
+            - pkg: github.com/stretchr/testify/mock
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: CẤM dùng testify/mock trong Encode/Process/Decode!"
+
+        raw_isolation:
+          list-mode: lax
+          files:
+            - "**/infrastructure2/*/internal/raw/**"
+          deny:
+            - pkg: meet-attendance-clean/domain2
+              desc: "VI PHẠM KIẾN TRÚC: internal/raw CẤM import domain2!"
+            - pkg: meet-attendance-clean/application2
+              desc: "VI PHẠM KIẾN TRÚC: internal/raw CẤM import application2!"
+            - pkg: os
+              desc: "VI PHẠM KIẾN TRÚC: internal/raw CẤM import 'os'!"
+            - pkg: net/http
+              desc: "VI PHẠM KIẾN TRÚC: internal/raw CẤM import 'net/http'!"
+            - pkg: database/sql
+              desc: "VI PHẠM KIẾN TRÚC: internal/raw CẤM import 'database/sql'!"
+            - pkg: syscall
+              desc: "VI PHẠM KIẾN TRÚC: internal/raw CẤM import 'syscall'!"
+
+        ai_infra_isolation:
+          list-mode: lax
+          files:
+            - "**/infrastructure2/AI/**"
+          deny:
+            - pkg: meet-attendance-clean/infrastructure2/media
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/media!"
+            - pkg: meet-attendance-clean/infrastructure2/database
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/database!"
+            - pkg: meet-attendance-clean/infrastructure2/gemini
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/gemini!"
+            - pkg: meet-attendance-clean/infrastructure2/html
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/html!"
+            - pkg: meet-attendance-clean/infrastructure2/onenote
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/onenote!"
+            - pkg: meet-attendance-clean/infrastructure2/pdf
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/pdf!"
+            - pkg: meet-attendance-clean/infrastructure2/renderer
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/renderer!"
+            - pkg: meet-attendance-clean/infrastructure2/wails
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/wails!"
+            - pkg: meet-attendance-clean/infrastructure2/webserver
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/webserver!"
+            - pkg: meet-attendance-clean/infrastructure2/document
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/document!"
+            - pkg: meet-attendance-clean/infrastructure2/googlemeet
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/googlemeet!"
+            - pkg: meet-attendance-clean/infrastructure2/oauth2
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/oauth2!"
+            - pkg: meet-attendance-clean/infrastructure2/http
+              desc: "CÔ LẬP NGANG: infrastructure2/AI CẤM import infrastructure2/http!"
+
+    funlen:
+      lines: 80
+      statements: 50
+      ignore-comments: true
+
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+      exclude-functions:
+        - (net/http.ResponseWriter).Write
+        - (*bytes.Buffer).Write
+        - (*bytes.Buffer).WriteString
+
+    gocritic:
+      disabled-checks:
+        - whyNoLint
+        - hugeParam
+        - paramTypeCombine
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+
+    revive:
+      rules:
+        - name: exported
+          disabled: false
+        - name: var-naming
+          disabled: false
+        - name: package-comments
+          disabled: true
+        - name: error-naming
+          disabled: false
+        - name: error-strings
+          disabled: false
+
+    wrapcheck:
+      ignore-sigs:
+        - .Errorf(
+        - errors.New(
+        - errors.Unwrap(
+        - errors.Join(
+        - .Wrap(
+        - .Wrapf(
+        - (context.Context).Err()
+      ignore-package-globs:
+        - encoding/*
+        - github.com/pkg/errors
+
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - funlen
+          - wrapcheck
+          - errcheck
+      - path: (adapter|adapter_[^/]+)\.go$
+        linters:
+          - wrapcheck
+      - path: infrastructure2/AI/internal/raw/
+        linters:
+          - revive

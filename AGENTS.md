@@ -1,103 +1,97 @@
-# AGENTS & SUBAGENTS CODING RULES (QUIN PROJECT)
+# HƯỚNG DẪN CỐT LÕI DÀNH CHO AI (QUIN + GOA ARCHITECTURE HARNESS)
 
-Tài liệu này định nghĩa các quy tắc cốt lõi mang tính bắt buộc (MANDATORY RULES) áp dụng cho mọi Agent và Subagent khi phát triển, sửa đổi hoặc mở rộng mã nguồn trong dự án QUIN.
-
----
-
-## 1. NGUYÊN TẮC TEST-DRIVEN & TỰ KIỂM CHỨNG (AUTOMATED VERIFICATION)
-
-1. **Hợp đồng là Unit Test (Contract via Tests)**:
-   - Mọi logic nghiệp vụ mới đều phải được bao phủ bởi Unit Test.
-   - Code chỉ được coi là hoàn thành khi lệnh `go test -v <package>` trả về **PASS (exit code 0)**.
-2. **Nghiêm cấm sửa Test (Do Not Tamper With Tests)**:
-   - Khi được giao nhiệm vụ implement một hàm để pass bài test đã có sẵn, Subagent **TUYỆT ĐỐI KHÔNG ĐƯỢC PHÉP** sửa file `*_test.go` nhằm mục đích làm cho test pass.
-   - Chỉ được sửa đổi file implementation.
-3. **Mã nguồn tối thiểu (Minimal Implementation)**:
-   - Chỉ viết lượng code vừa đủ để thỏa mãn các điều kiện của Unit Test, không viết tính năng thừa thãi hoặc tự ý phỏng đoán nghiệp vụ ngoài phạm vi test.
+Tài liệu này là quy chuẩn bắt buộc AI phải luôn ghi nhớ và tuân thủ khi làm việc trên workspace `quin` với bộ kiểm toán kiến trúc **GOA**.
 
 ---
 
-## 2. NGUYÊN TẮC XỬ LÝ LỖI (ZERO UNCHECKED ERRORS)
+## 1. Kiến Trúc Phân Tầng Của QUIN & Nguồn Chân Lý Thực Thi (`make check-ai`)
 
-1. **Tuyệt đối không bỏ qua lỗi (No Ignored Errors)**:
-   - Mọi hàm hoặc method trả về `error` đều **BẮT BUỘC PHẢI ĐƯỢC KIỂM TRA** bằng `if err != nil`.
-   - **CẤM** gán error vào blank identifier `_ = someFunc()` hoặc `_, _ = someFunc()`.
-   - **CẤM** nuốt lỗi trong block `if err != nil` mà không trả về hoặc không ghi log ngữ cảnh cụ thể.
-2. **Bắt buộc bọc lỗi với ngữ cảnh rõ ràng (Wrap with Context)**:
-   - Khi chuyển tiếp lỗi, dùng `fmt.Errorf("mô tả hành động thất bại: %w", err)` để giữ nguyên call-chain.
-   - Không trả về lỗi mơ hồ kiểu `errors.New("fail")`.
+Dự án `quin` (module `meet-attendance-clean`) phân tầng Clean Architecture như sau:
+- **Domain**: `domain2/` (Shared kernel: `domain2/kernel`)
+- **Application**: `application2/` (Port contract tests: `application2/porttest/`)
+- **Infrastructure**: `infrastructure2/`
+
+Bộ 5 tầng **`make check-ai`** (`Makefile`, `.golangci.yml`, `goa-audit`) là **nguồn chân lý thực thi** cho mọi quy chuẩn kiến trúc và kiểm thử:
+1. `make lint` (`golangci-lint`: `depguard`, `funlen`, `errcheck`, `errorlint`, `gocritic`, `bodyclose`, `noctx`, `nilerr`, `nilnil`, `revive`, `wrapcheck`, `unused`)
+2. `make audit` (`goa-audit`: 46 luật kiểm toán kiến trúc & test boundary)
+3. `make ratchet` (Test Sans-I/O thuần trên RAM: `encode`, `process`, `decode`, `application2/porttest`)
+4. `make test-race` (`go test -race -shuffle=on`)
+5. `make build-check` (Đảm bảo `domain2`, `application2`, và package `infrastructure2/<pkg>` biên dịch & pass test)
 
 ---
 
-## 3. BỘ CÔNG CỤ BẮT BUỘC KIỂM TRA (VERIFICATION TOOLCHAIN)
+## 2. Kiến Trúc Bất Biến Của Package Infrastructure (Lồng Package & Cô Lập Trình Biên Dịch)
 
-Trước khi Subagent báo cáo hoàn thành nhiệm vụ, Subagent **BẮT BUỘC** phải tự chạy 3 lệnh sau trên package vừa chỉnh sửa:
+Mọi package trong `infrastructure2/<ten_package>/` chỉ có **1 mục đích tồn tại duy nhất**:
+> Nhận yêu cầu từ tầng Application (qua Port Interface), giao tiếp với hệ thống vật lý bên ngoài, và trả về đối tượng nghiệp vụ thông qua hàm khởi tạo `domain2.*.New...()` (hoặc `Reconstitute...()`).
 
-### Lệnh 1: Kiểm thử chức năng
-```powershell
-go test -v ./<path-to-package>/...
+Cấu trúc thư mục BẮT BUỘC:
+
+```text
+infrastructure2/<ten_package>/
+├── adapter.go / adapter_<context>.go   # Mặt tiền DUY NHẤT (chỉ cho phép file prefix adapter*)
+├── adapter_test.go                     # Gọi application2/porttest.Verify*Contract
+└── internal/                           # HỘP KHÓA Go compiler: ngoài <ten_package>/ không import được
+    ├── raw/                            # 0. DTO dữ liệu thuần (0 func, 0 method)
+    ├── driver/                         # 1. Client/Connection vật lý & Wrapper (HTTP/Pool/Retry/KeyPool)
+    ├── encode/                         # 2. Chiều đi (Sans-I/O, stateless): Domain/Input ──► raw
+    ├── process/                        # 3. Trung gian (Sans-I/O, stateless): Raw ──► raw (+ testdata/fixtures/)
+    └── decode/                         # 4. Chiều về ACL (Sans-I/O, stateless): raw ──► Domain
 ```
-*(Yêu cầu: 100% Pass, không có bài test nào bị Fail)*
 
-### Lệnh 2: Kiểm tra triệt để lỗi bị bỏ qua (Unchecked / Blank Errors)
-Sử dụng công cụ `errcheck` với cờ `-blank` để quét mọi chỗ gán vào `_`:
-```powershell
-& "C:\Users\ADMIN\go\bin\errcheck.exe" -blank ./<path-to-package>/...
-```
-*(Yêu cầu: Không có bất kỳ dòng output nào báo lỗi chưa kiểm tra)*
-
-### Lệnh 3: Kiểm tra cấu trúc & chuẩn Go
-```powershell
-go vet ./<path-to-package>/...
-```
-*(Yêu cầu: Không có cảnh báo cú pháp)*
-
-> **Nếu bất kỳ lệnh nào trong 3 lệnh trên báo lỗi, Subagent BẮT BUỘC phải tự đọc lỗi, tự sửa code và chạy lại cho đến khi cả 3 đều xanh.**
+* **Tài nguyên tĩnh (Static Assets)**: Prompt hoặc template dài > 50 dòng có thể đặt trong `assets/` bên trong stage sử dụng chúng (ví dụ `internal/encode/assets/`) và nạp qua `//go:embed`.
+* **CẤM TUYỆT ĐỐI**:
+  * Tạo file không bắt đầu bằng `adapter` ở thư mục gốc `infrastructure2/<ten_package>/`.
+  * Tạo thư mục/package con dưới `infrastructure2/<ten_package>/` khác `internal/` (cấm `deepseek/`, `gemini/`, `keys/`, `pipeline/`, `tools/` ở cấp trực tiếp dưới `<ten_package>/`).
+  * Tạo package con dưới `internal/` ngoài 5 tên chuẩn `{raw, driver, encode, process, decode}` (mỗi stage có thể chia subpackage nếu cần, trừ giới hạn file/export).
+  * Import chéo ngang sang package anh em khác trong `infrastructure2/*` (ví dụ `infrastructure2/AI` **CẤM** import `infrastructure2/media` hay `infrastructure2/database`; nếu cần dependency như chuyển đổi media, nhận qua interface nhỏ tại constructor ở `adapter.go` hoặc để tầng `application2`/`main.go` điều phối!).
+  * Import chéo ngang giữa `driver`, `encode`, `process`, `decode` (chỉ được import `internal/raw`).
 
 ---
 
-## 4. QUY TRÌNH TRA CỨU TÀI LIỆU (GODOC-FIRST)
+## 3. Ma Trận Cô Lập & Ngưỡng Cứng (Hard Thresholds)
 
-1. Không cần nạp toàn bộ context của dự án vào prompt của Subagent.
-2. Khi Subagent cần biết signature hoặc tài liệu của hàm/struct, dùng lệnh `go doc`:
-   ```powershell
-   go doc <package>.<SymbolName>
-   # Ví dụ:
-   go doc meet-attendance-clean/domain2/lesson.Topic
-   go doc meet-attendance-clean/domain2/lesson.NewTopic
-   ```
-3. Đọc kỹ comment GoDoc được viết sẵn trong file interface/stub để hiểu đúng input, output và invariants trước khi viết code.
+| Package | Vai trò | Được import | CẤM tuyệt đối |
+| :--- | :--- | :--- | :--- |
+| **`<ten_package>` (`adapter*.go`)** | Mặt tiền điều phối Port | `domain2`, `internal/{raw,driver,encode,process,decode}` | I/O trực tiếp (`os`, `net`, `database/sql`, `syscall`), `application2`, infra anh em. Hàm/method ≤ **50 dòng**; struct ≤ **4 fields**; export ≤ **4 symbols**. |
+| **`internal/raw`** | DTO dữ liệu trung chuyển | stdlib thuần dữ liệu | **0 function, 0 method**. Cấm SDK bên thứ ba (`*.*/**`), `domain2`, `application2`, `os`, `net`, `io`, `context`, `sync`, `reflect`, `unsafe`, `runtime`, `embed`, `html/template`, `text/template`, `database/sql`, `syscall`. |
+| **`internal/driver`** | Client vật lý & Wrapper (`HTTP`, `KeyPool`, `Retry`) | `internal/raw`, SDK I/O, stdlib | Cấm `domain2`, `application2`, `encode`/`process`/`decode`. Struct ≤ **4 fields**. |
+| **`internal/encode`** | Chiều đi 100% Sans-I/O | `internal/raw`, `domain2` (≤ 1 Aggregate/file, trừ `domain2/kernel`) | Cấm `driver`/`process`/`decode`, SDK bên thứ ba (`*.*/**`), I/O (`os`, `net` trừ `net/url`,`net/netip`,`net/mail`, `database/sql`, `syscall`), ambient clock (`time.Now`, `time.Sleep`...), **0 method trên struct**, **cấm `context.Context`**, export ≤ **5 symbols**. |
+| **`internal/process`** | Gia công/Sanitize/Parse/Verify dữ liệu thô 100% Sans-I/O | `internal/raw`, parser/schema libs | Cấm `domain2`, `application2`, `driver`/`encode`/`decode`, I/O, ambient clock, **0 method**, **cấm `context.Context`**, export ≤ **5 symbols**. |
+| **`internal/decode`** | Chốt chặn ACL 100% Sans-I/O (`raw` → `domain2.*.New*`) | `internal/raw`, `domain2` (≤ 1 Aggregate/file, bắt buộc gọi `New*`/`Reconstitute*`) | Cấm `driver`/`encode`/`process`, SDK bên thứ ba (`*.*/**`), I/O, ambient clock, **0 method**, **cấm `context.Context`**, export ≤ **5 symbols**. |
 
----
-
-## 5. QUY ĐỊNH BẮT BUỘC VỀ MODEL AI (MANDATORY MODEL POLICY)
-
-1. **Model Gemini chuẩn hiện tại**:
-   - Model Gemini duy nhất được phép sử dụng là **`gemini-3.8-flash`** (`ModelGeminiFlash`).
-   - Google đã ngừng cung cấp và chặn truy cập đối với các model cũ (`gemini-3.7-flash`, `gemini-2.5-flash`, `gemini-1.5-flash`, v.v.). **TUYỆT ĐỐI CẤM** gọi hoặc fallback về các model đã bị Google deprecated này.
-2. **Quy định về định dạng đầu vào PDF (`application/pdf`)**:
-   - Giai đoạn có tài liệu PDF đầu vào (Stage 1 Planner, Stage 2 Authoring khi truyền tài liệu nguồn): **BẮT BUỘC** gọi qua **`gemini-3.8-flash`**.
-   - Dòng **Gemma 4** (`gemma-4-31b-it`, `gemma-4-26b-a4b-it`) trên Google GenAI API chỉ nhận trực tiếp Text, Image (PNG/JPEG) và Video (frames); **KHÔNG** hỗ trợ binary blob `application/pdf` (Google API Gateway sẽ trả về `400 INVALID_ARGUMENT`).
-3. **Quy định về Fallback**:
-   - Khi cần fallback hoặc xử lý các Stage thuần Text/JSON (như Stage 1.75 Polisher, Stage Repairer), chỉ sử dụng các model hợp lệ và không rò rỉ các config không tương thích (`ThinkingConfig` unsupported).
+### Ngưỡng Cứng Bắt Buộc
+1. **Hàm ở `adapter*.go`**: ≤ **50 dòng**. Hàm ở các file khác: ≤ **80 dòng / 50 statements** (`funlen`).
+2. **Số file non-test / package**: ≤ **12 file `.go`**.
+3. **Bề mặt Export**: Root ≤ **4 symbols**; mỗi package trong `encode`/`process`/`decode` ≤ **5 symbols**.
+4. **Struct Fields**: ≤ **4 fields** trên mọi struct ở root và `internal/driver`.
+5. **Layout**: `const`/`var` đặt ở đầu file hoặc sát type sở hữu; pure field getter đặt sau các non-getter methods của cùng struct (`make fmt-layout`).
 
 ---
 
-## 6. NGUYÊN TẮC CẤU TRÚC FILE GO & PHÂN TÁCH TEST (MODULAR FILE & TEST ORGANIZATION)
+## 4. Quy Chuẩn Kiểm Thử Hạ Tầng Sans-I/O & 14 Luật Test Tự Động (`infra-test/*`)
 
-1. **Một trách nhiệm - Một file (Single Responsibility File)**:
-   - **CẤM** dồn toàn bộ các struct, interface, converters và helpers vào chung một file monolithic duy nhất (như `convertToJepg.go`).
-   - Mỗi component / converter / domain service cần nằm ở một file riêng mang tên mô tả rõ ràng trách nhiệm của nó:
-     - `interfaces.go`: Định nghĩa các interface giao tiếp chung (`Convert`, `MultiPageConvert`).
-     - `detector.go`: Nhận diện định dạng tài liệu (`TypeDetector`).
-     - `image_converter.go`: Xử lý chuyển đổi ảnh (`ImageToJPEGConverter`).
-     - `pdf_converter.go`: Xử lý chuyển đổi PDF đa trang (`PDFToJPEGConverter`).
-     - `docx_converter.go`: Xử lý chuyển đổi Word (`DocxToJPEGConverter`).
-     - `converter.go`: Điều phối chuyển đổi tổng hợp (`Converter`) và helper lưu trữ.
-2. **Phân tách file Test tương ứng (1-to-1 Test Mapping & Black-box Testing)**:
-   - Mỗi file implementation `xyz.go` phải có một file test tương ứng `xyz_test.go` (ví dụ: `detector_test.go`, `image_converter_test.go`, `pdf_converter_test.go`, `docx_converter_test.go`, `converter_test.go`).
-   - Các kịch bản kiểm thử tích hợp lớn (Batch Folder Scan, E2E Integration) phải được tách thành file riêng (như `batch_integration_test.go`).
-   - Bắt buộc khai báo test theo chuẩn Black-box Testing: `package <pkg>_test` (ví dụ: `package media_test`) để kiểm tra đúng public API và tránh phụ thuộc vào private state.
-3. **Mục đích hỗ trợ Debug cho Agent & Developer**:
-   - Khi file được chia nhỏ theo đúng trách nhiệm, dung lượng file ngắn gọn (100–300 dòng), Agent và lập trình viên có thể đọc hiểu trọn vẹn ngữ cảnh, xác định vị trí lỗi ngay lập tức, không làm phình context window và giảm thiểu tối đa rủi ro xung đột hoặc hỏng hóc chéo khi refactor.
+1. **Black-Box 100%**: Mọi `*_test.go` trong `infrastructure2/**` bắt buộc dùng `package <stage>_test`.
+2. **Bắt buộc có test ở mọi package logic**: Mọi adapter và stage (trừ `internal/raw`) phải có ít nhất 1 `Test*(t *testing.T)` trực tiếp gọi hàm/method export của package đó.
+3. **100% Exported Sans-I/O Coverage**: Mọi hàm export trong `encode`, `process`, `decode` phải được gọi trực tiếp từ `Test*`.
+4. **Kỹ thuật Mối Hàn Vàng (Golden Seam)** ở `internal/process`:
+   - Đặt fixture thật trong `internal/process/testdata/fixtures/`.
+   - `internal/process/*_test.go` bắt buộc nhúng bằng `//go:embed testdata/fixtures/...` (CẤM import `os`, `net/http`, `httptest`, `mock`).
+   - `internal/process/*_test.go` bắt buộc có ít nhất 1 `Fuzz*(f *testing.F)` trực tiếp gọi hàm của `internal/process`.
+5. **Ranh giới Test `internal/driver`**:
+   - Dùng hộp cát vật lý (`httptest.NewServer`, `t.TempDir`), CẤM import `domain2`/`application2`.
+   - Bắt buộc gọi `defer goleak.VerifyNone(t)` (`go.uber.org/goleak`).
+   - Bắt buộc test `context.WithCancel` / `context.WithTimeout` nếu driver nhận `context.Context`.
+6. **Ranh giới Test `internal/decode` & Projection `internal/encode`**:
+   - `decode_test.go` phải kiểm chứng trực tiếp hành vi/invariant của đối tượng `domain2` trả về.
+   - Nếu `encode` import `domain2`, `encode_test.go` phải khởi tạo đối tượng `domain2` thật.
+7. **Port Contract Test (`application2/porttest`)**:
+   - Định nghĩa bộ kiểm thử hợp đồng `Verify<Port>Contract` trong `application2/porttest/` (pure in-memory/contract, không phụ thuộc `infrastructure2`).
+   - `adapter_test.go` bắt buộc gọi `porttest.Verify*Contract(...)`.
 
+---
+
+## 5. Quy Định Bắt Buộc Về Model AI Trong Mã Nguồn QUIN
+
+- Model Gemini hợp lệ duy nhất trong code QUIN là **`gemini-3.8-flash`** (cấm fallback về `gemini-2.5-flash` / `gemini-1.5-flash`).
+- Xử lý lỗi nghiêm ngặt: mọi `error` phải được kiểm tra (`errcheck -blank`) và bọc ngữ cảnh rõ ràng (`wrapcheck`).
