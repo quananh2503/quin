@@ -95,3 +95,58 @@ infrastructure2/<ten_package>/
 
 - Model Gemini hợp lệ duy nhất trong code QUIN là **`gemini-3.8-flash`** (cấm fallback về `gemini-2.5-flash` / `gemini-1.5-flash`).
 - Xử lý lỗi nghiêm ngặt: mọi `error` phải được kiểm tra (`errcheck -blank`) và bọc ngữ cảnh rõ ràng (`wrapcheck`).
+
+---
+
+## 6. Quy Trình 4 Giai Đoạn Staged Test-First & Tách Vai Clean-Room (Bắt Buộc)
+
+Thay vì để 1 agent vừa tự ra đề test dễ vừa tự viết code cắt bớt nghiệp vụ, bắt buộc vận hành **4 Giai Đoạn Tuyến Tính** kết hợp **tách vai Agent (Spec/Test Agent ≠ Implementer Agent)**:
+
+0. **Giai Đoạn 0 — Trinh Sát & Đọc Đủ 100% Nghiệp Vụ Cũ + Đóng Băng Fixture (`testdata/fixtures/`)**:
+   - Đọc đầy đủ 100% file nguồn và test cũ của package mục tiêu trước khi xóa hay thiết kế lại.
+   - Đóng băng payload mẫu thật vào `internal/process/testdata/fixtures/` (và đồng bộ với `driver_test.go` theo kỹ thuật Mối Hàn Vàng).
+1. **Giai Đoạn 1 — Chốt `internal/raw` & Dựng Khung Stub (Compile Xanh)**:
+   - Chốt toàn bộ DTO dữ liệu thuần trong `internal/raw/` (`0 func, 0 method`).
+   - Dựng khung chữ ký hàm stub trả `errors.New("TODO: not implemented")` cho `adapter*.go` và các stage `driver`, `encode`, `process`, `decode` (có thể chia subpackage bên trong từng stage để vừa giữ 100% nghiệp vụ vừa đảm bảo mỗi package ≤ 5 exported symbols và ≤ 12 files).
+2. **Giai Đoạn 2 — Viết & Khóa Cứng Bộ Test 5 Chốt Chặn (Trạng Thái RED)**:
+   - Viết đầy đủ 5 lớp test black-box theo **Ma Trận Checklist Mục 7** bên dưới + `application2/porttest/` (có cả happy path lẫn error path) + E2E loopback test ở `adapter_test.go` kiểm chứng đầy đủ từng Phase điều phối.
+   - Chạy `make lint && make audit` để xác nhận bộ test vượt 100% quy chuẩn kiến trúc (`infra-test/*` và `depguard`).
+   - Khóa cứng toàn bộ file test & fixture bằng staging area:
+     `git add 'infrastructure2/AI/*_test.go' 'infrastructure2/AI/**/*_test.go' 'infrastructure2/AI/**/testdata/**' 'application2/porttest/**'`
+3. **Giai Đoạn 3 — Gọi Subagent Implementer Con Độc Lập Làm Xanh & Nghiệm Thu**:
+   - Gọi một **Subagent Implementer con với context mới tinh** (chỉ giao: đọc `AGENTS.md`, triển khai code sản xuất trong `infrastructure2/AI/` và wiring `main.go` cho tới khi `make check-ai` xanh 100%, **TUYỆT ĐỐI CẤM** sửa bất kỳ file `*_test.go`, `**/testdata/**`, hay `application2/porttest/**` nào).
+   - Sau khi Implementer hoàn tất, Orchestrator nghiệm thu bắt buộc:
+     1. `make test-lock-check SPEC_REF=STAGED TARGET=infrastructure2/AI` (chứng minh 0 file test/fixture bị chỉnh sửa trong Pha Implement).
+     2. `make check-ai` (5 tầng `lint`, `audit` 46 rules, `ratchet`, `test-race`, `build-check` xanh 100%).
+     3. `make fmt-layout-check` (`reordered=0`).
+
+---
+
+## 7. Ma Trận Checklist Bao Phủ 100% Cho 5 Lớp Test (Universal Coverage Matrix)
+
+1. **`internal/encode/*_test.go` (`package <pkg>_test`) — Bảng Hoán Vị Đầu Vào (Input Permutation)**:
+   - *Full Payload*: Đủ tài liệu text + ảnh multimodal thật (`image_url` base64 đầy đủ, không cắt cụt) + schema JSON thật + user prompt.
+   - *Minimal / Zero-Value*: Bỏ trống trường optional (`model == ""`, `userPrompt == ""`).
+   - *Boundary & Escaping*: Ký tự đặc biệt, Unicode toán học, model variant (`chat` vs `flash`/`reasoner`).
+   - *Collection Edges*: 0, 1, N tài liệu / câu hỏi phân bổ.
+   - *Invalid Input*: Input thiếu bắt buộc báo lỗi ngay trong RAM.
+2. **`internal/driver/*_test.go` (`package driver_test`) — Hộp Cát Vật Lý & Cơ Học**:
+   - *Physical Happy Path & Capture*: `httptest.NewServer` kiểm tra header, payload JSON thật (gồm multimodal `image_url`), đối chiếu fixture `../process/testdata/fixtures/`.
+   - *Context Cancellation & Timeout*: `context.WithCancel` / `context.WithTimeout` dừng ngay, trả lỗi chuẩn.
+   - *Transient Fault & Retry*: Giả lập 429 / 500 / 503 ở 1–2 lần đầu → tự retry thành công + xoay vòng `KeyPool`.
+   - *Permanent Fault & Fast-Fail*: 400 / 401 hoặc API key rỗng → dừng ngay ở lần đầu, không retry lãng phí.
+   - *Resource Cleanup & Concurrency*: `defer goleak.VerifyNone(t)` + test `KeyPool` cooldown/auto-disable & `CallParallel` dưới `-race` (kể cả khi 1 worker lỗi giữa chừng).
+3. **`internal/process/*_test.go` (`package <pkg>_test`) — Lọc Rác Đa Hình + Fuzzing**:
+   - *Standard Extraction*: Nạp fixture thật qua `//go:embed testdata/fixtures/*`.
+   - *High-Noise / Filtering*: Markdown fence, text thừa ngoài JSON, `<think>...</think>`, LaTeX unescaped, mã ASCII rác (`\f`, `\b`, `\v`, `\x0Dightarrow`, `\x0Aeq`).
+   - *Malformed / Corrupted*: JSON cụt (cắt giữa chuỗi/ngoặc), JSON hỏng hoàn toàn trả lỗi rõ ràng, không panic.
+   - *Audit & Repair Semantics*: Test `AuditMathField`/`AuditTopicContent` (dấu `$` lẻ, LaTeX trần ngoài `$`, ASCII rác), `ExtractContextField`/`SetContextField`, `ExtractCompilerErrorAnchors`, `LaTeXToMiTeX`.
+   - *Go Fuzzing (`Fuzz*`)*: Ít nhất 1 hàm `Fuzz*(f *testing.F)` gọi trực tiếp hàm trong `process`.
+4. **`internal/decode/*_test.go` (`package <pkg>_test`) — Đột Biến Phá Luật Domain**:
+   - *Valid Reconstitution*: DTO đầy đủ (`TheoryPoints`, `ClozeFormula`, `CalloutTip`, `Variants`, `Examples`, `Drills`, `ShortAnswers`, `AnswerKey`) → đúc thành công `*lesson.Lesson` và assert sâu nội dung từng Block & Exercise.
+   - *Domain Invariant Rejections*: Đột biến từng trường bắt buộc (`materials` rỗng, field rỗng) → trả lỗi Domain.
+   - *Lossless Conversion*: Kiểm tra `FormatStepSolution` / `SplitStepLines` và chế độ fallback `PlanToLesson`.
+5. **`adapter*_test.go` (`package ai_test`) & `application2/porttest/` — Port Contract + E2E Loopback Full-Pipeline**:
+   - `application2/porttest.VerifyLessonGeneratorContract`: Kiểm chứng CẢ **Happy Path** (trả `*lesson.Lesson` hợp lệ thỏa mãn invariants) LẪN **Error Paths** (`materials` rỗng, `ctx` cancel).
+   - **E2E Loopback Test trong `adapter_test.go`**: Dựng `httptest.NewServer` phân biệt rõ request từng Phase, xác nhận `adapter.Generate(...)` chạy **đủ chuỗi Phase theo đúng thứ tự**:
+     `Phase 0 (Convert Media -> JPEG)` → `Phase 1A (Harvester kèm ảnh multimodal image_url thật)` → `Phase 1B (Curriculum Planner dùng Inventory + JSON Schema thật)` → `Phase 1.5 (Verifier kiểm tra UnassignedIDs)` → `Phase 2 (Parallel Topic Generator kèm ảnh + assigned questions)` → `Phase 3 (Repairer Audit + RepairMath/SanitizeLaTeX khi có lỗi toán)` → `Phase 4/5 (Assemble/Decode ra *lesson.Lesson đầy đủ nội dung & Typst khi yêu cầu)`.
