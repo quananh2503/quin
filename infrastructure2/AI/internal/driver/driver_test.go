@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"go.uber.org/goleak"
+	"goa/pkg/cmdvcr"
 
 	"meet-attendance-clean/infrastructure2/AI/internal/driver"
 	"meet-attendance-clean/infrastructure2/AI/internal/raw"
@@ -348,20 +349,14 @@ func TestMediaRunner_And_TypstRunner(t *testing.T) {
 	if _, errStat := os.Stat(filepath.Join(outDir, "raw_data", "plan_output.json")); errStat != nil {
 		t.Errorf("artifact not written: %v", errStat)
 	}
-
-	// Fake executable typst script to verify CompileTypst happy path & error stderr capture
-	fakeTypst := filepath.Join(tmpDir, "fake-typst.sh")
-	script := "#!/bin/sh\nif grep -q 'BROKEN' \"$4\"; then echo 'test.typ:2:1: error: broken' >&2; exit 1; fi\ntouch \"$5\"\n"
-	if err := os.WriteFile(fakeTypst, []byte(script), 0o755); err != nil {
-		t.Fatalf("write fake typst: %v", err)
+	opts := tr.BuildOptions("Lesson", "deepseek-flash", "prompt")
+	if opts.OutputDir != outDir || opts.Workers != 4 || len(opts.SelectedTopicIDs) != 1 || opts.SelectedTopicIDs[0] != "T1" {
+		t.Errorf("unexpected BuildOptions: %+v", opts)
 	}
-	tr.WithTypstCLI(fakeTypst)
 
-	if _, errOK := tr.CompileTypst(context.Background(), "raw_data/ok.typ", "ok.pdf", "#text[OK]", true); errOK != nil {
-		t.Fatalf("CompileTypst ok failed: %v", errOK)
-	}
-	stderr, errBroken := tr.CompileTypst(context.Background(), "raw_data/bad.typ", "bad.pdf", "BROKEN", false)
-	if errBroken == nil || !strings.Contains(stderr, "test.typ:2:1") {
-		t.Errorf("expected error and stderr from fake typst, got stderr=%q err=%v", stderr, errBroken)
+	// Default OSRunner must block real subprocess execution during go test.
+	tr.WithTypstCLI("/nonexistent/typst")
+	if _, errExec := tr.CompileTypst(context.Background(), "raw_data/ok.typ", "ok.pdf", "#text[OK]", true); !errors.Is(errExec, cmdvcr.ErrExecForbiddenInTest) {
+		t.Errorf("expected cmdvcr.ErrExecForbiddenInTest during go test, got: %v", errExec)
 	}
 }

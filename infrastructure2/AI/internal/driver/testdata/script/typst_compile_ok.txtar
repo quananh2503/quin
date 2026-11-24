@@ -1,0 +1,15 @@
+# Chạy binary typst thật để biên dịch một file .typ hợp lệ ra file PDF thật
+
+exec typst compile --input teacher=true sample.typ out.pdf
+exists out.pdf
+
+-- sample.typ --
+#let IS_TEACHER = sys.inputs.at("teacher", default: "true") == "true"
+// @ANCHOR:T1|theory|0
+#if IS_TEACHER [
+  = Giao An Giao Vien
+] else [
+  = Phieu Hoc Sinh
+]
+Có spec chính thức (OpenAPI / Protobuf / SQL schema): Dùng spec làm hợp đồng gốc (go-schemathesis, Pact BDCT, sqlc).
+Không có spec hoặc là CLI/3rd-party "hộp đen": Chạy Probe Test (//go:build probe) hoặc go-vcr (chế độ Record) / Keploy / testscript với binary thật để thu về response thô thật (cả happy path lẫn lỗi thật: 429, JSON cụt, stderr thật của typst), chạy bộ lọc xóa API key/PII, rồi đóng băng vào internal/process/testdata/fixtures/.

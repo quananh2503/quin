@@ -22,6 +22,7 @@ linters:
     - noctx
     - revive
     - sqlclosecheck
+    - unparam
     - unused
     - wrapcheck
   settings:
@@ -56,28 +57,49 @@ linters:
         sans_io_purity:
           list-mode: lax
           files:
+            - "**/infrastructure2/*/internal/policy/**"
             - "**/infrastructure2/*/internal/encode/**"
             - "**/infrastructure2/*/internal/process/**"
             - "**/infrastructure2/*/internal/decode/**"
           deny:
             - pkg: os
-              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode chỉ tính toán trong RAM, CẤM import 'os'!"
+              desc: "VI PHẠM SANS-I/O: Policy/Encode/Process/Decode chỉ tính toán trong RAM, CẤM import 'os'!"
             - pkg: os/exec
-              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: Encode/Process/Decode CẤM import 'os/exec'!"
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: Policy/Encode/Process/Decode CẤM import 'os/exec'!"
             - pkg: net/http
-              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode CẤM import 'net/http'!"
+              desc: "VI PHẠM SANS-I/O: Policy/Encode/Process/Decode CẤM import 'net/http'!"
             - pkg: net/http/httptest
-              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: Encode/Process/Decode CẤM import 'net/http/httptest'!"
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: Policy/Encode/Process/Decode CẤM import 'net/http/httptest'!"
             - pkg: net
-              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode chỉ tính toán trong RAM, CẤM import 'net'!"
+              desc: "VI PHẠM SANS-I/O: Policy/Encode/Process/Decode chỉ tính toán trong RAM, CẤM import 'net'!"
             - pkg: database/sql
-              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode CẤM import 'database/sql'!"
+              desc: "VI PHẠM SANS-I/O: Policy/Encode/Process/Decode CẤM import 'database/sql'!"
             - pkg: syscall
-              desc: "VI PHẠM SANS-I/O: Encode/Process/Decode CẤM import 'syscall'!"
+              desc: "VI PHẠM SANS-I/O: Policy/Encode/Process/Decode CẤM import 'syscall'!"
             - pkg: go.uber.org/mock
-              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: CẤM dùng mock framework trong Encode/Process/Decode!"
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: CẤM dùng mock framework trong Policy/Encode/Process/Decode!"
             - pkg: github.com/stretchr/testify/mock
-              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: CẤM dùng testify/mock trong Encode/Process/Decode!"
+              desc: "VI PHẠM TEST BOUNDARY SANS-I/O: CẤM dùng testify/mock trong Policy/Encode/Process/Decode!"
+
+        policy_isolation:
+          list-mode: lax
+          files:
+            - "**/infrastructure2/*/internal/policy/**"
+          deny:
+            - pkg: meet-attendance-clean/domain2
+              desc: "VI PHẠM KIẾN TRÚC: internal/policy chỉ chứa luật kỹ thuật hạ tầng, CẤM import domain2!"
+            - pkg: meet-attendance-clean/application2
+              desc: "VI PHẠM KIẾN TRÚC: internal/policy CẤM import application2!"
+
+        infra_no_raw_exec:
+          list-mode: lax
+          files:
+            - "**/infrastructure2/**"
+          deny:
+            - pkg: os/exec
+              desc: "VI PHẠM KIẾN TRÚC CLI: CẤM import 'os/exec' trong Infrastructure; phải dùng goa/pkg/cmdvcr!"
+            - pkg: syscall
+              desc: "VI PHẠM KIẾN TRÚC CLI: CẤM import 'syscall' trong Infrastructure!"
 
         raw_isolation:
           list-mode: lax
@@ -183,6 +205,7 @@ linters:
       - path: _test\.go
         linters:
           - funlen
+          - unparam
           - wrapcheck
           - errcheck
       - path: (adapter|adapter_[^/]+)\.go$

@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
-	"time"
 
 	"meet-attendance-clean/domain2/lesson"
 	"meet-attendance-clean/infrastructure2/AI/internal/decode"
 	"meet-attendance-clean/infrastructure2/AI/internal/driver"
 	"meet-attendance-clean/infrastructure2/AI/internal/encode"
 	"meet-attendance-clean/infrastructure2/AI/internal/encode/prompts"
+	"meet-attendance-clean/infrastructure2/AI/internal/policy"
 	"meet-attendance-clean/infrastructure2/AI/internal/process"
 	"meet-attendance-clean/infrastructure2/AI/internal/process/anchor"
 	"meet-attendance-clean/infrastructure2/AI/internal/process/mathaudit"
@@ -37,31 +37,16 @@ func NewLessonGenerator(
 	workers int,
 	convertMedia func(ctx context.Context, data []byte, fileType string, fileName string) ([][]byte, error),
 ) (*LessonGenerator, error) {
-	cooldown := 100 * time.Millisecond
-	if len(apiKeys) <= 1 {
-		cooldown = 0
-	}
-	client, err := driver.NewClient(raw.ClientConfig{
-		APIKeys:    apiKeys,
-		BaseURL:    baseURL,
-		Timeout:    180 * time.Second,
-		MaxRetries: 3,
-		Cooldown:   cooldown,
-	})
+	cfg, opts := policy.BuildPipelineDefaults(apiKeys, baseURL, model, workers)
+	client, err := driver.NewClient(cfg)
 	if err != nil {
 		return nil, fmt.Errorf("init driver client: %w", err)
-	}
-	if strings.TrimSpace(model) == "" {
-		model = "deepseek-chat"
-	}
-	if workers <= 0 {
-		workers = 30
 	}
 	return &LessonGenerator{
 		client: client,
 		media:  driver.NewMediaRunner(convertMedia),
-		runner: driver.NewTypstRunner("", workers),
-		model:  strings.TrimSpace(model),
+		runner: driver.NewTypstRunner("", opts.Workers),
+		model:  opts.Model,
 	}, nil
 }
 
@@ -312,19 +297,15 @@ func (g *LessonGenerator) applySelfHealTasks(
 	failedAttempts map[string]int,
 	model string,
 ) raw.TopicContent {
-	var toSendAI []raw.RepairTask
-	for _, task := range errTasks {
-		failedAttempts[task.TargetID]++
-		if failedAttempts[task.TargetID] >= 2 {
-			tc = anchor.SetContextField(tc, task.TargetID, mathaudit.FallbackSanitizeLaTeX(task.Content))
-		} else {
-			toSendAI = append(toSendAI, task)
-		}
+	toSendAI, toFallback := policy.PartitionSelfHealTasks(errTasks, failedAttempts)
+	for _, task := range toFallback {
+		tc = anchor.SetContextField(tc, task.TargetID, mathaudit.FallbackSanitizeLaTeX(task.Content))
 	}
-	if len(toSendAI) > 0 {
-		for _, task := range g.repairMathTasks(ctx, toSendAI, model) {
-			tc = anchor.SetContextField(tc, task.TargetID, task.FixedContent)
-		}
+	if len(toSendAI) == 0 {
+		return tc
+	}
+	for _, task := range g.repairMathTasks(ctx, toSendAI, model) {
+		tc = anchor.SetContextField(tc, task.TargetID, task.FixedContent)
 	}
 	return tc
 }

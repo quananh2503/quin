@@ -5,24 +5,29 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"goa/pkg/cmdvcr"
 
 	"meet-attendance-clean/infrastructure2/AI/internal/raw"
 )
 
 // TypstRunner handles file output persistence and Typst CLI compilation.
 type TypstRunner struct {
-	typstCLI         string
-	outputDir        string
-	workers          int
-	selectedTopicIDs []string
+	typstCLI string
+	runner   cmdvcr.Runner
+	cfg      raw.PipelineOptions
 }
 
 // NewTypstRunner creates a TypstRunner with output directory and worker count.
 func NewTypstRunner(outputDir string, workers int) *TypstRunner {
-	return &TypstRunner{outputDir: outputDir, workers: workers}
+	return &TypstRunner{
+		cfg: raw.PipelineOptions{
+			OutputDir: outputDir,
+			Workers:   workers,
+		},
+	}
 }
 
 // WithTypstCLI configures a custom path to the typst executable.
@@ -31,24 +36,30 @@ func (t *TypstRunner) WithTypstCLI(cli string) *TypstRunner {
 	return t
 }
 
+// WithRunner injects a cmdvcr.Runner (for example a ReplayOnly Recorder in tests).
+func (t *TypstRunner) WithRunner(r cmdvcr.Runner) *TypstRunner {
+	t.runner = r
+	return t
+}
+
 // WithOutputDir configures the artifact output directory.
 func (t *TypstRunner) WithOutputDir(dir string) *TypstRunner {
-	t.outputDir = dir
+	t.cfg.OutputDir = dir
 	return t
 }
 
 // WithSelectedTopics configures optional topic ID filtering.
 func (t *TypstRunner) WithSelectedTopics(ids []string) *TypstRunner {
-	t.selectedTopicIDs = append([]string(nil), ids...)
+	t.cfg.SelectedTopicIDs = append([]string(nil), ids...)
 	return t
 }
 
 // WriteArtifact writes bytes to a path relative to OutputDir.
 func (t *TypstRunner) WriteArtifact(relPath string, data []byte) error {
-	if strings.TrimSpace(t.outputDir) == "" {
+	if strings.TrimSpace(t.cfg.OutputDir) == "" {
 		return errors.New("output directory is not configured")
 	}
-	fullPath := filepath.Join(t.outputDir, relPath)
+	fullPath := filepath.Join(t.cfg.OutputDir, relPath)
 	if err := os.MkdirAll(filepath.Dir(fullPath), 0o755); err != nil {
 		return fmt.Errorf("create artifact directory for %s: %w", relPath, err)
 	}
@@ -64,13 +75,18 @@ func (t *TypstRunner) CompileTypst(ctx context.Context, typRelPath, pdfRelPath, 
 		return "", err
 	}
 
+	runner := t.runner
+	if runner == nil {
+		runner = &cmdvcr.OSRunner{}
+	}
+
 	cli, err := t.resolveTypstCLI()
 	if err != nil {
 		return "", err
 	}
 
-	typPath := filepath.Join(t.outputDir, typRelPath)
-	pdfPath := filepath.Join(t.outputDir, pdfRelPath)
+	typPath := filepath.Join(t.cfg.OutputDir, typRelPath)
+	pdfPath := filepath.Join(t.cfg.OutputDir, pdfRelPath)
 	if err := os.MkdirAll(filepath.Dir(pdfPath), 0o755); err != nil {
 		return "", fmt.Errorf("create pdf directory for %s: %w", pdfRelPath, err)
 	}
@@ -80,12 +96,19 @@ func (t *TypstRunner) CompileTypst(ctx context.Context, typRelPath, pdfRelPath, 
 		teacherFlag = "teacher=true"
 	}
 
-	cmd := exec.CommandContext(ctx, cli, "compile", "--input", teacherFlag, typPath, pdfPath)
-	out, errCompile := cmd.CombinedOutput()
-	if errCompile != nil {
-		return string(out), fmt.Errorf("typst compile %s: %w", typRelPath, errCompile)
+	resp, errRun := runner.Run(ctx, cmdvcr.Request{
+		Bin:  cli,
+		Args: []string{"compile", "--input", teacherFlag, typPath, pdfPath},
+	})
+	if errRun != nil {
+		return "", fmt.Errorf("typst compile %s: %w", typRelPath, errRun)
 	}
-	return string(out), nil
+
+	combined := resp.Stdout + resp.Stderr
+	if resp.ExitCode != 0 {
+		return combined, fmt.Errorf("typst compile %s: exit code %d", typRelPath, resp.ExitCode)
+	}
+	return combined, nil
 }
 
 // BuildOptions constructs PipelineOptions from the runner configuration.
@@ -94,9 +117,9 @@ func (t *TypstRunner) BuildOptions(title, model, prompt string) raw.PipelineOpti
 		Title:            title,
 		Model:            model,
 		UserPrompt:       prompt,
-		OutputDir:        t.outputDir,
-		Workers:          t.workers,
-		SelectedTopicIDs: append([]string(nil), t.selectedTopicIDs...),
+		OutputDir:        t.cfg.OutputDir,
+		Workers:          t.cfg.Workers,
+		SelectedTopicIDs: append([]string(nil), t.cfg.SelectedTopicIDs...),
 	}
 }
 
@@ -104,7 +127,10 @@ func (t *TypstRunner) resolveTypstCLI() (string, error) {
 	if strings.TrimSpace(t.typstCLI) != "" {
 		return t.typstCLI, nil
 	}
-	if p, err := exec.LookPath("typst"); err == nil {
+	if t.runner != nil {
+		return "typst", nil
+	}
+	if p, err := cmdvcr.LookPath("typst"); err == nil {
 		return p, nil
 	}
 	homeDir, err := os.UserHomeDir()
@@ -119,11 +145,11 @@ func (t *TypstRunner) resolveTypstCLI() (string, error) {
 
 // SelectedTopicIDs returns a copy of the configured selected topic IDs.
 func (t *TypstRunner) SelectedTopicIDs() []string {
-	return append([]string(nil), t.selectedTopicIDs...)
+	return append([]string(nil), t.cfg.SelectedTopicIDs...)
 }
 
 // OutputDir returns the configured output directory.
-func (t *TypstRunner) OutputDir() string { return t.outputDir }
+func (t *TypstRunner) OutputDir() string { return t.cfg.OutputDir }
 
 // Workers returns the configured worker concurrency.
-func (t *TypstRunner) Workers() int { return t.workers }
+func (t *TypstRunner) Workers() int { return t.cfg.Workers }

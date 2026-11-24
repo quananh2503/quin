@@ -24,6 +24,7 @@ func TestAuditMathField(t *testing.T) {
 		{"ValidMath", "Cho hình chóp $S.ABCD$ cạnh $a$.", true, ""},
 		{"ASCIIFormFeed", "Cho tam giác \f ABC", false, "ASCII"},
 		{"ASCIIBackspace", "Cho tam giác \b ABC", false, "ASCII"},
+		{"ASCIIVerticalTab", "Cho tam giác \v ABC", false, "ASCII"},
 		{"OddDollar", "Phương trình $x^2 = 1 và $y=2$", false, "$"},
 		{"NakedVec", "Xác định \\vec{AB} trong không gian", false, "LaTeX"},
 		{"NakedFrac", "Tỉ số \\frac{1}{2} đoạn thẳng", false, "LaTeX"},
@@ -53,12 +54,33 @@ func TestAuditTopicContent_And_FallbackSanitize(t *testing.T) {
 	}
 
 	tasks := mathaudit.AuditTopicContent(brokenTC)
-	if len(tasks) < 10 {
-		t.Fatalf("got %d repair tasks, want >= 10", len(tasks))
-	}
+	seen := make(map[string]bool, len(tasks))
 	for _, task := range tasks {
 		if !strings.HasPrefix(task.TargetID, "T1|") {
 			t.Errorf("unexpected TargetID prefix: %q", task.TargetID)
+		}
+		seen[task.TargetID] = true
+	}
+	wantIDs := []string{
+		"T1|theory|0",
+		"T1|cloze",
+		"T1|callout",
+		"T1|v|0|rec",
+		"T1|v|0|step|0",
+		"T1|v|0|tip",
+		"T1|v|0|ex_prob",
+		"T1|v|0|ex_sol",
+		"T1|v|0|drill|0|prompt",
+		"T1|v|0|drill|0|sol",
+		"T1|ans|0|guide",
+		"T1|ans|0|final",
+	}
+	if len(tasks) != len(wantIDs) {
+		t.Fatalf("got %d repair tasks, want %d", len(tasks), len(wantIDs))
+	}
+	for _, id := range wantIDs {
+		if !seen[id] {
+			t.Errorf("missing expected repair task %q", id)
 		}
 	}
 
@@ -69,6 +91,18 @@ func TestAuditTopicContent_And_FallbackSanitize(t *testing.T) {
 	gotEsc := mathaudit.FallbackSanitizeLaTeX("Dạng #1: toạ_độ $M(x_0)$")
 	if gotEsc != `Dạng \#1: toạ\_độ $M(x_0)$` {
 		t.Errorf("FallbackSanitizeLaTeX escape = %q", gotEsc)
+	}
+	if gotLeadHash := mathaudit.FallbackSanitizeLaTeX("#head"); gotLeadHash != `\#head` {
+		t.Errorf("FallbackSanitizeLaTeX leading # = %q", gotLeadHash)
+	}
+	if gotLeadUnder := mathaudit.FallbackSanitizeLaTeX("_lead"); gotLeadUnder != `\_lead` {
+		t.Errorf("FallbackSanitizeLaTeX leading _ = %q", gotLeadUnder)
+	}
+	if gotAlreadyEsc := mathaudit.FallbackSanitizeLaTeX(`\#already \_kept`); gotAlreadyEsc != `\#already \_kept` {
+		t.Errorf("FallbackSanitizeLaTeX already escaped = %q", gotAlreadyEsc)
+	}
+	if gotInMath := mathaudit.FallbackSanitizeLaTeX("$x_1 #2$"); gotInMath != "$x_1 #2$" {
+		t.Errorf("FallbackSanitizeLaTeX inside math = %q", gotInMath)
 	}
 	gotOdd := mathaudit.FallbackSanitizeLaTeX("Giá trị $x = 10")
 	if gotOdd != "Giá trị $x = 10$" {

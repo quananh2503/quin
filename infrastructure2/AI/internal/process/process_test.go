@@ -36,6 +36,12 @@ func TestExtractLLMResponse_FromGoldenFixture(t *testing.T) {
 	if llmResp.Model != "deepseek-flash" {
 		t.Errorf("Model = %q, want deepseek-flash", llmResp.Model)
 	}
+	if !strings.Contains(llmResp.Usage.RawJSON, `"prompt_cache_hit_tokens":960`) {
+		t.Errorf("Usage.RawJSON missing expected field: %s", llmResp.Usage.RawJSON)
+	}
+	if llmResp.FinishReason != "stop" || llmResp.Raw == "" {
+		t.Errorf("expected FinishReason='stop' and non-empty Raw: %+v", llmResp)
+	}
 
 	// Fallback to ReasoningContent when Content is empty
 	reasoningResp := raw.ChatResponse{
@@ -44,7 +50,7 @@ func TestExtractLLMResponse_FromGoldenFixture(t *testing.T) {
 		},
 	}
 	fallbackOut, err := process.ExtractLLMResponse(reasoningResp, nil, "deepseek-reasoner")
-	if err != nil || !strings.Contains(fallbackOut.Content, `"total_items"`) {
+	if err != nil || !strings.Contains(fallbackOut.Content, `"total_items"`) || fallbackOut.ReasoningContent == "" {
 		t.Errorf("ReasoningContent fallback failed: out=%+v err=%v", fallbackOut, err)
 	}
 
@@ -113,6 +119,85 @@ func TestRepairTruncatedJSON_And_ParseLessonPlan(t *testing.T) {
 
 	if _, errNoTopics := process.ParseLessonPlan(`{"lesson_title":"X","topics":[]}`, inv); errNoTopics == nil {
 		t.Fatal("expected error when topics is empty")
+	}
+	if _, errBadPlan := process.ParseLessonPlan(`not valid json`, inv); errBadPlan == nil {
+		t.Fatal("expected error when LessonPlan JSON is invalid")
+	}
+
+	planWithInv := `{"lesson_title":"X","topics":[{"topic_id":"T1"}],"inventory":{"total_items":2,"items":[{"id":"K1"}]}}`
+	parsedPlan, err := process.ParseLessonPlan(planWithInv, raw.DocumentInventory{TotalItems: 99})
+	if err != nil {
+		t.Fatalf("ParseLessonPlan failed: %v", err)
+	}
+	if parsedPlan.Inventory.TotalItems != 2 || len(parsedPlan.Inventory.Items) != 1 {
+		t.Errorf("empty inventory arg must not overwrite parsed plan inventory: %+v", parsedPlan.Inventory)
+	}
+}
+
+func TestSanitizeRawJSONLaTeX_FencesBracketsAndVec(t *testing.T) {
+	cases := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{"FenceWithoutBraces", "```json\nhello\n```", "hello"},
+		{"FenceUnclosed", "```json\nplain_body", "plain_body"},
+		{"FenceNoNewline", "```inline```", "```inline"},
+		{"ArrayLeadingBeforeObject", `prefix [{"a":1}] suffix`, `[{"a":1}]`},
+		{"ArrayOnly", `lead [1, 2] tail`, `[1, 2]`},
+		{"ObjectLeadingBeforeArray", `lead {"arr":[1,2]} tail`, `{"arr":[1,2]}`},
+		{"UnclosedObjectPassesThrough", `lead {"arr":1`, `lead {"arr":1`},
+		{"UnclosedArrayPassesThrough", `lead [1, 2`, `lead [1, 2`},
+		{"OverlineAndArrow", `{"v":"\overline{AB}","p":"\overrightarrow{CD}"}`, `{"v":"\\vec{AB}","p":"\\vec{CD}"}`},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := process.SanitizeRawJSONLaTeX(tc.input); got != tc.want {
+				t.Errorf("%s: got %q, want %q", tc.name, got, tc.want)
+			}
+		})
+	}
+
+	ctrl := "{\"iff\":\"\x0Deftrightarrow\",\"imp\":\"\x0DRightarrow\",\"neq\":\"a\x0Aeq\"}"
+	fixed := process.SanitizeRawJSONLaTeX(ctrl)
+	if !strings.Contains(fixed, `\\Leftrightarrow`) || !strings.Contains(fixed, `\\Rightarrow`) || !strings.Contains(fixed, `\\neq`) {
+		t.Errorf("control char replacement failed: %s", fixed)
+	}
+}
+
+func TestRepairTruncatedJSON_NestedEscapedAndMismatched(t *testing.T) {
+	cases := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{"ClosedObjectAndArray", `{"items":[{"id":"1"}],"extra":{"k":"v`, `{"items":[{"id":"1"}],"extra":{"k":"v"}}`},
+		{"EscapedQuoteInString", `{"a":"x\"y","b":["z`, `{"a":"x\"y","b":["z"]}`},
+		{"LeadingUnmatchedClosers", `}]{"a":[1`, `}]{"a":[1]}`},
+		{"MismatchedCloserDoesNotPop", `[{"a":1]`, `[{"a":1]}]`},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if got := process.RepairTruncatedJSON(tc.input); got != tc.want {
+				t.Errorf("%s: got %q, want %q", tc.name, got, tc.want)
+			}
+		})
+	}
+}
+
+func TestParseInventory_TruncatedAndTotalItems(t *testing.T) {
+	truncInv := `{"items":[{"id":"I1","snippet":"Đề`
+	inv, err := process.ParseInventory(truncInv)
+	if err != nil {
+		t.Fatalf("ParseInventory failed on truncated JSON: %v", err)
+	}
+	if inv.TotalItems != 1 || len(inv.Items) != 1 || inv.Items[0].ID != "I1" {
+		t.Errorf("unexpected repaired inventory: %+v", inv)
+	}
+
+	explicitInv, err := process.ParseInventory(`{"total_items":5,"items":[{"id":"I1"}]}`)
+	if err != nil || explicitInv.TotalItems != 5 {
+		t.Errorf("explicit TotalItems should be preserved, got %+v err=%v", explicitInv, err)
 	}
 }
 

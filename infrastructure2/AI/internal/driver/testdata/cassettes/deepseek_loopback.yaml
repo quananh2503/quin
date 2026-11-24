@@ -1,0 +1,52 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 97
+        host: 127.0.0.1:46429
+        body: '{"model":"deepseek-chat","messages":[{"role":"user","content":"Ping VCR record"}],"stream":false}'
+        headers:
+            Content-Type:
+                - application/json
+        url: http://127.0.0.1:46429/chat/completions
+        method: POST
+      response:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 516
+        body: |-
+            {
+            			"id": "chatcmpl-vcr-001",
+            			"choices": [{
+            				"index": 0,
+            				"message": {
+            					"role": "assistant",
+            					"content": "{\"total_items\":1,\"items\":[{\"id\":\"DOC1_B1_HD1\",\"source_name\":\"SGK\",\"source_label\":\"HĐ 1\",\"item_type\":\"hoat_dong\",\"snippet\":\"Vectơ trong không gian\"}]}"
+            				},
+            				"finish_reason": "stop"
+            			}],
+            			"usage": {
+            				"prompt_tokens": 120,
+            				"completion_tokens": 45,
+            				"total_tokens": 165,
+            				"prompt_cache_hit_tokens": 64,
+            				"prompt_cache_miss_tokens": 56
+            			}
+            		}
+        headers:
+            Content-Length:
+                - "516"
+            Content-Type:
+                - application/json
+            Date:
+                - Tue, 24 Nov 2026 19:32:30 GMT
+            X-Ds-Trace-Id:
+                - trace-vcr-demo-001
+        status: 200 OK
+        code: 200
+        duration: 742.135µs

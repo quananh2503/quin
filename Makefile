@@ -1,6 +1,7 @@
-.PHONY: all lint lint-fix audit ratchet test-race deadcode build-check verify check-ai test scaffold-infra test-lock-check fmt-layout fmt-layout-check
+.PHONY: all lint lint-fix audit verify-cassettes ratchet test-race deadcode build-check verify check-ai test test-live mutate scaffold-infra test-lock-check fmt-layout fmt-layout-check
 
 GOLANGCI_LINT := $(shell which golangci-lint 2>/dev/null || echo $(HOME)/go/bin/golangci-lint)
+GREMLINS := $(shell which gremlins 2>/dev/null || echo $(HOME)/go/bin/gremlins)
 GOA_BIN := /home/quanan/Projects/goa/bin
 TARGET_INFRA ?= infrastructure2/AI
 
@@ -29,7 +30,7 @@ ratchet:
 	@echo "🔒 [TẦNG 3/5] Đang chạy Kiểm Thử Sans-I/O trên RAM..."
 	@PKGS=""; \
 		[ -d application2/porttest ] && PKGS="$$PKGS ./application2/porttest/..."; \
-		for d in $(TARGET_INFRA)/internal/encode $(TARGET_INFRA)/internal/process $(TARGET_INFRA)/internal/decode; do \
+		for d in $(TARGET_INFRA)/internal/policy $(TARGET_INFRA)/internal/encode $(TARGET_INFRA)/internal/process $(TARGET_INFRA)/internal/decode; do \
 			[ -d "$$d" ] && PKGS="$$PKGS ./$$d/..."; \
 		done; \
 		test -n "$$PKGS" || (echo "❌ Không tìm thấy package Sans-I/O (internal/{encode,process,decode}) trong $(TARGET_INFRA)"; exit 1); \
@@ -54,8 +55,16 @@ deadcode:
 	@echo "🧹 Đang quét Dead Code trên $(TARGET_INFRA)..."
 	@go run golang.org/x/tools/cmd/deadcode@latest -test ./$(TARGET_INFRA)/...
 
+# Kiểm tra schema, checksum & không rò secret trên mọi CLI cassette YAML (nếu có)
+verify-cassettes:
+	@CASSETTE_DIRS=$$(find "$(TARGET_INFRA)/internal/process" -type d -path '*/testdata/fixtures/cassettes' 2>/dev/null); \
+	if [ -n "$$CASSETTE_DIRS" ]; then \
+		echo "📼 [TẦNG 3/6] Đang kiểm tra chuẩn CLI cassettes (goa-cmdvcr verify)..."; \
+		$(GOA_BIN)/goa-cmdvcr verify -require-version $$CASSETTE_DIRS; \
+	fi
+
 # ĐƯỜNG GĂNG THỬ LỬA TOÀN DIỆN (THE GO HARNESS GAUNTLET)
-verify: lint audit ratchet test-race build-check
+verify: lint audit verify-cassettes ratchet test-race build-check
 	@echo ""
 	@echo "================================================================================"
 	@echo "🎉 TOÀN BỘ ĐƯỜNG GĂNG HARNESS GAUNTLET ĐÃ QUA 100%! CODE AN TOÀN ĐỂ COMMIT!"
@@ -63,6 +72,31 @@ verify: lint audit ratchet test-race build-check
 
 check-ai: verify
 test: test-race
+
+# Cổng nghiệm thu chất lượng assertion: Mutation Testing (gremlins) trên các package Sans-I/O
+# Ví dụ: make mutate  hoặc  make mutate TARGET=./infrastructure2/AI/internal/process/mathaudit DIFF=HEAD
+DIFF_FLAG := $(if $(DIFF),--diff $(DIFF),)
+mutate:
+	@if [ ! -x "$(GREMLINS)" ]; then \
+		echo "❌ Không tìm thấy gremlins tại $(GREMLINS). Cài bằng: go install github.com/go-gremlins/gremlins/cmd/gremlins@latest"; \
+		exit 1; \
+	fi
+	@if [ -n "$(TARGET)" ]; then \
+		echo "🧬 Đang chạy gremlins mutation testing trên $(TARGET) $(DIFF_FLAG) (ngưỡng efficacy >= 70%)..."; \
+		$(GREMLINS) unleash "$(TARGET)" $(DIFF_FLAG) --workers 2 --timeout-coefficient 5 --threshold-efficacy 70 --threshold-mcover 75 -S l; \
+	else \
+		for d in $(TARGET_INFRA)/internal/policy $(TARGET_INFRA)/internal/encode $(TARGET_INFRA)/internal/process $(TARGET_INFRA)/internal/decode; do \
+			if [ -d "$$d" ]; then \
+				echo "🧬 Đang chạy gremlins trên ./$$d $(DIFF_FLAG)..."; \
+				$(GREMLINS) unleash "./$$d" $(DIFF_FLAG) --workers 2 --timeout-coefficient 5 --threshold-efficacy 70 --threshold-mcover 75 -S l || exit 1; \
+			fi; \
+		done; \
+	fi
+
+# Kiểm tra 1 Happy-Path với môi trường runtime thật (//go:build live)
+test-live:
+	@echo "🌐 Đang chạy Happy-Path Runtime Probe (-tags=live)..."
+	@go test -tags=live -v ./$(TARGET_INFRA)/...
 
 fmt-layout-check:
 	@$(GOA_BIN)/goa-fmt-layout -dir . -pkg "./$(TARGET_INFRA)/..."

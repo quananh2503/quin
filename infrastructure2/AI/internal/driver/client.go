@@ -12,13 +12,9 @@ import (
 	"sync"
 	"time"
 
+	"meet-attendance-clean/infrastructure2/AI/internal/policy"
+	"meet-attendance-clean/infrastructure2/AI/internal/policy/resilience"
 	"meet-attendance-clean/infrastructure2/AI/internal/raw"
-)
-
-const (
-	defaultBaseURL    = "https://api.deepseek.com"
-	defaultTimeout    = 180 * time.Second
-	defaultMaxRetries = 3
 )
 
 // Client sends HTTP chat completion requests with retry, backoff, and key rotation.
@@ -31,28 +27,16 @@ type Client struct {
 
 // NewClient creates a new HTTP Client configured with the given ClientConfig.
 func NewClient(cfg raw.ClientConfig) (*Client, error) {
-	pool, err := NewKeyPool(cfg.APIKeys, cfg.Cooldown)
+	normalized := resilience.NormalizeClientConfig(cfg)
+	pool, err := NewKeyPool(normalized.APIKeys, normalized.Cooldown)
 	if err != nil {
 		return nil, fmt.Errorf("create key pool: %w", err)
 	}
 
-	baseURL := strings.TrimRight(strings.TrimSpace(cfg.BaseURL), "/")
-	if baseURL == "" {
-		baseURL = defaultBaseURL
-	}
-	timeout := cfg.Timeout
-	if timeout <= 0 {
-		timeout = defaultTimeout
-	}
-	maxRetries := cfg.MaxRetries
-	if maxRetries <= 0 {
-		maxRetries = defaultMaxRetries
-	}
-
 	return &Client{
-		httpClient: &http.Client{Timeout: timeout},
-		baseURL:    baseURL,
-		maxRetries: maxRetries,
+		httpClient: &http.Client{Timeout: normalized.Timeout},
+		baseURL:    normalized.BaseURL,
+		maxRetries: normalized.MaxRetries,
 		keyPool:    pool,
 	}, nil
 }
@@ -77,16 +61,16 @@ func (c *Client) PostChat(ctx context.Context, req raw.ChatRequest) (raw.ChatRes
 
 	endpoint := c.baseURL + "/chat/completions"
 	var lastErr error
-	for attempt := 1; attempt <= c.maxRetries; attempt++ {
-		resp, body, retry, errAttempt := c.attemptChat(ctx, endpoint, payload, attempt)
+	for idx, backoff := range resilience.RetryDelays(c.maxRetries) {
+		resp, body, retry, errAttempt := c.attemptChat(ctx, endpoint, payload, idx)
 		if errAttempt == nil {
 			return resp, body, nil
 		}
 		lastErr = errAttempt
-		if !retry || attempt >= c.maxRetries {
+		if !retry || backoff == 0 {
 			return raw.ChatResponse{}, nil, lastErr
 		}
-		if errWait := waitBackoff(ctx, time.Duration(attempt)*25*time.Millisecond); errWait != nil {
+		if errWait := waitBackoff(ctx, backoff); errWait != nil {
 			return raw.ChatResponse{}, nil, errWait
 		}
 	}
@@ -98,12 +82,7 @@ func (c *Client) CallParallel(ctx context.Context, reqs []raw.ChatRequest, worke
 	if len(reqs) == 0 {
 		return nil, nil
 	}
-	if workers <= 0 {
-		workers = 1
-	}
-	if workers > len(reqs) {
-		workers = len(reqs)
-	}
+	workers = policy.ClampWorkers(workers, len(reqs))
 
 	runCtx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -194,14 +173,9 @@ func (c *Client) attemptChat(
 	if res.StatusCode == http.StatusOK {
 		return c.decodeOKResponse(key, body)
 	}
-	if res.StatusCode == http.StatusTooManyRequests || res.StatusCode >= http.StatusInternalServerError {
-		c.keyPool.ReportFailure(key, false)
-		return raw.ChatResponse{}, nil, true, fmt.Errorf("provider HTTP %d: %s", res.StatusCode, string(body))
-	}
-
-	permanent := res.StatusCode == http.StatusUnauthorized || res.StatusCode == http.StatusForbidden
+	retryable, permanent := resilience.ClassifyHTTPFailure(res.StatusCode)
 	c.keyPool.ReportFailure(key, permanent)
-	return raw.ChatResponse{}, nil, false, fmt.Errorf("provider HTTP %d: %s", res.StatusCode, string(body))
+	return raw.ChatResponse{}, nil, retryable, fmt.Errorf("provider HTTP %d: %s", res.StatusCode, string(body))
 }
 
 func (c *Client) decodeOKResponse(key string, body []byte) (resp raw.ChatResponse, rawBytes []byte, retry bool, err error) {

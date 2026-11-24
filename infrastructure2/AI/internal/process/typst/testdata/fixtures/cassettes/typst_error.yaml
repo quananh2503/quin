@@ -1,0 +1,25 @@
+version: 1
+meta:
+  tool: typst
+  tool_version: typst 0.15.1 (9dfd3a08)
+  recorded_at: "2026-11-24T13:15:21Z"
+  duration_ms: 4
+  os: linux
+  arch: amd64
+request:
+  bin: typst
+  args:
+    - compile
+    - --input
+    - teacher=true
+    - <WORKDIR>/raw_data/broken.typ
+    - <WORKDIR>/broken.pdf
+response:
+  exit_code: 1
+  stderr: |+
+    error: unknown variable: unknown_typst_symbol
+      ┌─ raw_data/broken.typ:5:1
+      │
+    5 │ #unknown_typst_symbol[Nhan dien dang toan]
+      │  ^^^^^^^^^^^^^^^^^^^^
+

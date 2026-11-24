@@ -12,6 +12,7 @@ import (
 
 	"golang.org/x/image/draw"
 
+	"meet-attendance-clean/infrastructure2/AI/internal/policy"
 	"meet-attendance-clean/infrastructure2/AI/internal/raw"
 )
 
@@ -106,7 +107,7 @@ func (m *MediaRunner) convertToImageDoc(
 }
 
 func ensureMaxImageDimension(imgBytes []byte, maxDim int) []byte {
-	if len(imgBytes) == 0 || maxDim <= 0 {
+	if len(imgBytes) == 0 {
 		return imgBytes
 	}
 	src, _, err := image.Decode(bytes.NewReader(imgBytes))
@@ -114,24 +115,9 @@ func ensureMaxImageDimension(imgBytes []byte, maxDim int) []byte {
 		return imgBytes
 	}
 	bounds := src.Bounds()
-	w, h := bounds.Dx(), bounds.Dy()
-	if w <= maxDim && h <= maxDim {
+	targetW, targetH, resize := policy.ClampImageDimensions(bounds.Dx(), bounds.Dy(), maxDim)
+	if !resize {
 		return imgBytes
-	}
-
-	var targetW, targetH int
-	if w > h {
-		targetW = maxDim
-		targetH = int(float64(h) * float64(maxDim) / float64(w))
-	} else {
-		targetH = maxDim
-		targetW = int(float64(w) * float64(maxDim) / float64(h))
-	}
-	if targetW < 1 {
-		targetW = 1
-	}
-	if targetH < 1 {
-		targetH = 1
 	}
 
 	dst := image.NewRGBA(image.Rect(0, 0, targetW, targetH))

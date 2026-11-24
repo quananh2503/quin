@@ -1,0 +1,13 @@
+# Chạy binary typst thật trên file lỗi cú pháp để xác minh exit code != 0 và định dạng stderr thật
+
+! exec typst compile --input teacher=true broken.typ out.pdf
+stderr 'broken\.typ:5:'
+stderr 'unknown variable'
+! exists out.pdf
+
+-- broken.typ --
+#let x = 1
+// @ANCHOR:T1|theory|0
+#text[Ly thuyet hop le]
+// @ANCHOR:T1|v|0|rec
+#unknown_typst_symbol[Nhan dien dang toan]
