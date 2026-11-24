@@ -1,0 +1,44 @@
+{
+  "topic_id": "T1",
+  "title": "Khái niệm vectơ trong không gian",
+  "difficulty": "Nhận biết",
+  "theory_points": [
+    "Vectơ trong không gian là một đoạn thẳng có hướng.",
+    "Hai vectơ bằng nhau khi cùng hướng và cùng độ dài."
+  ],
+  "cloze_formula": "$|\\vec{AB}| = ...$",
+  "callout_tip": "Vectơ đối là vectơ ngược hướng và cùng độ dài.",
+  "variants": [
+    {
+      "variant_id": "V1",
+      "variant_name": "",
+      "recognition": "Đề bài cho hình chóp hoặc hình lập phương",
+      "action_steps": [
+        "Bước 1: Xác định điểm đầu và điểm cuối của vectơ.",
+        "Bước 2: Áp dụng quy tắc hình bình hành."
+      ],
+      "quick_tip": "Các cạnh song song và bằng nhau tạo ra vectơ bằng nhau.",
+      "example": {
+        "title": "Ví dụ 1",
+        "problem": "Cho hình lập phương $ABCD.A'B'C'D'$ cạnh $1$. Tính $|\\vec{AB}|$.",
+        "solution": "Bước 1: Điểm đầu là $A$, điểm cuối là $B$.\nBước 2: $|\\vec{AB}| = AB = 1$."
+      },
+      "drills": [
+        {
+          "title": "Bài 1.1",
+          "level": "TuongTu100",
+          "prompt": "Cho hình lập phương cạnh $2$. Tính $|\\vec{AD}|$.",
+          "solution": "$|\\vec{AD}| = 2$.",
+          "answer": "2"
+        }
+      ]
+    }
+  ],
+  "answer_key": [
+    {
+      "drill_id": "Bài 1.1",
+      "short_guide": "Độ dài cạnh",
+      "final_answer": "2"
+    }
+  ]
+}

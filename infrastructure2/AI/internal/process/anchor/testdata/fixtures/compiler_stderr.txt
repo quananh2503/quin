@@ -1,0 +1,5 @@
+error: unknown variable
+  ┌─ test.typ:5:10
+  │
+5 │ #text[Nhận diện dạng toán]
+  │       ^^^^^^^^

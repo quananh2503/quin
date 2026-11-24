@@ -1,0 +1,41 @@
+{
+  "topic_id": "T1",
+  "title": "Khái niệm vectơ",
+  "difficulty": "Nhận biết",
+  "theory_points": ["Vectơ là đoạn thẳng có hướng $\\vec{AB}$."],
+  "cloze_formula": "$|\\vec{AB}| = ...$",
+  "callout_tip": "Khẩu quyết nhớ nhanh",
+  "variants": [
+    {
+      "variant_id": "V1",
+      "variant_name": "Nhận biết vectơ",
+      "recognition": "Đề cho hình vẽ",
+      "action_steps": [
+        "Bước 1: Tìm gốc ngọn",
+        "Bước 2: Tính độ dài $$|\\vec{AB}| = 2$$"
+      ],
+      "quick_tip": "Mẹo loại trừ đáp án",
+      "example": {
+        "title": "Ví dụ 1",
+        "problem": "Cho hình chóp",
+        "solution": "Bước 1: Chọn gốc. Bước 2: Kết luận."
+      },
+      "drills": [
+        {
+          "title": "Bài 1",
+          "level": "TuongTu100",
+          "prompt": "Bài tập 1",
+          "solution": "Lời giải bài 1",
+          "answer": "A"
+        }
+      ]
+    }
+  ],
+  "answer_key": [
+    {
+      "drill_id": "Bài 1",
+      "short_guide": "Dùng quy tắc",
+      "final_answer": "A"
+    }
+  ]
+}

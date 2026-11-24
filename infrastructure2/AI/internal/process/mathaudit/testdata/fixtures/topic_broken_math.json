@@ -1,0 +1,32 @@
+{
+  "topic_id": "T1",
+  "title": "Dạng 1",
+  "theory_points": ["Lỗi dính \\vec{a} ngoài toán"],
+  "cloze_formula": "Lỗi dính lẻ dollar $x + 1",
+  "callout_tip": "Dính ASCII \f rác",
+  "variants": [
+    {
+      "variant_id": "V1",
+      "recognition": "Lỗi rec \\frac{1}{2}",
+      "action_steps": ["Lỗi step $a + b"],
+      "quick_tip": "Lỗi tip \\bar{x}",
+      "example": {
+        "problem": "Lỗi ex_prob $p",
+        "solution": "Lỗi ex_sol \\sqrt{2}"
+      },
+      "drills": [
+        {
+          "prompt": "Lỗi drill_prompt $d",
+          "solution": "Lỗi drill_sol \\Delta"
+        }
+      ]
+    }
+  ],
+  "answer_key": [
+    {
+      "drill_id": "V1.1",
+      "final_answer": "Lỗi ans_final $ans",
+      "short_guide": "Lỗi ans_guide \\times"
+    }
+  ]
+}

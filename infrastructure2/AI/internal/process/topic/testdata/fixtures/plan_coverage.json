@@ -1,0 +1,31 @@
+{
+  "lesson_title": "Vectơ trong không gian",
+  "overview": "Tổng hợp các dạng toán cơ bản",
+  "inventory": {
+    "total_items": 3,
+    "items": [
+      {"id": "DOC1_HD1", "source_name": "SGK", "source_label": "HĐ 1", "item_type": "hoat_dong", "snippet": "Lực căng"},
+      {"id": "DOC1_VD1", "source_name": "SGK", "source_label": "VD 1", "item_type": "vi_du", "snippet": "Tứ diện"},
+      {"id": "DOC1_BT1", "source_name": "SGK", "source_label": "BT 1", "item_type": "bai_tap", "snippet": "Bài tập chưa gán"}
+    ]
+  },
+  "topics": [
+    {
+      "topic_id": "T1",
+      "title": "Định nghĩa vectơ",
+      "difficulty": "NhanBiet",
+      "target_output": "Nhận diện vectơ",
+      "core_concept": "Đoạn thẳng có hướng",
+      "assigned_question_ids": ["DOC1_HD1", "DOC1_VD1"],
+      "variants": ["Nhận biết vectơ cùng phương"]
+    },
+    {
+      "topic_id": "T2",
+      "title": "Dạng chưa gán bài",
+      "difficulty": "ThongHieu",
+      "target_output": "Phân tích",
+      "core_concept": "Quy tắc 3 điểm",
+      "assigned_question_ids": []
+    }
+  ]
+}

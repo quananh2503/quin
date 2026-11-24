@@ -1,0 +1,18 @@
+Dưới đây là BẢN KIỂM KÊ VÉT CẠN gồm %d câu hỏi / bài tập / hoạt động đã được bóc tách từ các tài liệu học tập:
+
+%s
+
+NHIỆM VỤ: Dựa trên bản kiểm kê 100%% ở trên, hãy nhóm chúng lại thành các DẠNG TOÁN CHUYÊN SÂU (Topics) trong kế hoạch bài giảng.
+
+QUY TẮC PHÂN RÃ SƯ PHẠM DÀNH CHO HỌC SINH (ĐẶC BIỆT LƯU TÂM HỌC SINH MẤT GỐC/YẾU):
+1. NGUYÊN TẮC ĐƠN KỸ NĂNG (ATOMIC SKILL):
+   - Học sinh yếu cần học theo từng bước nhỏ. Mỗi dạng toán phải tập trung vào một kỹ năng cốt lõi (từ nhận biết cơ bản, hoạt động khám phá, ví dụ mẫu rồi mới nâng dần lên bài tập luyện tập và vận dụng).
+   - Tuyệt đối không gom nhiều công thức hoặc phương pháp giải khác nhau vào cùng một dạng.
+2. TÁCH DẠNG MÔ HÌNH HÓA THỰC TIỄN:
+   - Các bài toán mô hình hóa thực tế (cân bằng lực vật lý, chuyển động trong không gian, khoảng cách/đo đạc đời sống) BẮT BUỘC TÁCH THÀNH DẠNG RIÊNG BIỆT.
+3. CHỐNG GOM GỘP QUÁ TẢI (ANTI-LUMPING):
+   - Mỗi dạng toán chỉ nên phân bổ số lượng bài tập vừa phải (tối đa 12 câu tiêu biểu). Nếu có quá nhiều câu (như chứng minh đẳng thức hay tính góc), BẮT BUỘC PHẢI PHÂN RÃ thành các tiểu dạng chuyên sâu hơn.
+4. QUY TẮC BẢO TOÀN VÉT CẠN (CHECKSUM):
+   - Toàn bộ các mã item ID trong bản kiểm kê BẮT BUỘC phải được phân bổ vào trường "assigned_question_ids" của các dạng toán phù hợp. Không được bỏ sót bất kỳ item ID nào.
+
+Yêu cầu riêng của giáo viên: %s

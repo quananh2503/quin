@@ -21,6 +21,7 @@ import (
 	application2 "meet-attendance-clean/application2"
 	"meet-attendance-clean/config"
 	"meet-attendance-clean/domain2/assignment"
+	"meet-attendance-clean/domain2/document"
 	"meet-attendance-clean/domain2/lesson"
 
 	// "meet-attendance-clean/infrastructure/onenote"
@@ -35,8 +36,7 @@ import (
 	wailsAdapter "meet-attendance-clean/infrastructure2/wails"
 	"meet-attendance-clean/infrastructure2/webserver"
 
-	"meet-attendance-clean/infrastructure2/AI/deepseek"
-	"meet-attendance-clean/infrastructure2/AI/pipeline"
+	ai "meet-attendance-clean/infrastructure2/AI"
 	"meet-attendance-clean/infrastructure2/media"
 )
 
@@ -271,7 +271,7 @@ func buildApplicationServices(
 
 	// Router điều phối: chọn giữa DeepSeek Pipeline mới và Gemini cũ (đọc key động từ SQLite)
 	dsGen := &dynamicDeepSeekGenerator{apiKeys: apiKeysRepo}
-	dualGen := pipeline.NewDualLessonGenerator(dynGemini, dsGen)
+	dualGen := ai.NewDualLessonGenerator(dynGemini.Generate, dsGen.Generate)
 
 	// Document Handlers
 	uploadHandler, err := application2.NewUploadDocumentHandler(documents, storageRoot)
@@ -351,27 +351,19 @@ func (d *dynamicDeepSeekGenerator) Generate(ctx context.Context, title string, m
 	if dsModel == "" {
 		dsModel = "deepseek-flash"
 	}
-	dsProvider := deepseek.NewProvider(key, dsModel)
-	dsPlanner := pipeline.NewPlanner(dsProvider, dsModel)
-	dsGenerator := pipeline.NewGenerator(dsProvider, dsModel, 30)
-	dsRepairer := pipeline.NewRepairer(dsProvider, dsModel)
-	dsAssembler := pipeline.NewAssembler()
-
-	dsOrchestrator := pipeline.NewOrchestrator(
-		nil,
-		dsPlanner,
-		dsGenerator,
-		nil,
-		dsRepairer,
-		dsAssembler,
-	)
-	adapter := pipeline.NewOrchestratorLessonGeneratorAdapter(
-		media.NewConverter(),
-		dsOrchestrator,
-		dsAssembler,
+	conv := media.NewConverter()
+	adapter, errNew := ai.NewLessonGenerator(
+		strings.Split(key, ","),
 		"",
+		dsModel,
 		30,
+		func(ctx context.Context, data []byte, fileType string, fileName string) ([][]byte, error) {
+			return conv.ConvertBytesToJPEGPages(ctx, data, document.FileType(fileType), fileName)
+		},
 	)
+	if errNew != nil {
+		return nil, fmt.Errorf("khởi tạo DeepSeek LessonGenerator thất bại: %w", errNew)
+	}
 	return adapter.Generate(ctx, title, materials, model, prompt)
 }
 

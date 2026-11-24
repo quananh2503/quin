@@ -1,0 +1,54 @@
+NHIỆM VỤ: Biên soạn tài liệu học tập hoàn chỉnh cho Dạng toán:
+👉 [%s] %s (Mức độ: %s)
+- Mục tiêu cần đạt: %s
+- Cốt lõi phương pháp: %s
+- Các biến thể dự kiến: %s
+
+%s
+
+YÊU CẦU CẤU TRÚC JSON ĐẦU RA (TopicContent):
+{
+  "topic_id": "%s",
+  "title": "%s",
+  "difficulty": "%s",
+  "theory_points": [
+    "2-3 gạch đầu dòng lý thuyết nền tảng cốt lõi, tối giản, trực diện, không chứng minh hàn lâm (toán bọc trong $...$)"
+  ],
+  "cloze_formula": "1 câu công thức then chốt có chỗ trống '...' để học sinh tự điền khuyết ($...$)",
+  "callout_tip": "Khẩu quyết ghi nhớ cốt lõi chung của dạng (nếu có)",
+  "variants": [
+    {
+      "variant_id": "V1",
+      "variant_name": "BẮT BUỘC ĐIỀN: Tên gọi cụ thể mô tả phương pháp giải",
+      "recognition": "Dấu hiệu nhận diện đặc trưng",
+      "action_steps": [
+        "Hành động bước 1...",
+        "Hành động bước 2..."
+      ],
+      "quick_tip": "Câu chốt mẹo phản xạ siêu tốc hoặc mẹo loại trừ 5 giây",
+      "example": {
+        "title": "Ví dụ minh họa cho biến thể",
+        "problem": "Đề bài đầy đủ dữ kiện ($...$)",
+        "solution": "Bước 1: ...\nBước 2: ..."
+      },
+      "drills": [
+        {
+          "title": "Bài 1.1",
+          "level": "TuongTu100",
+          "prompt": "Đề bài đẳng cấu chỉ đổi số liệu ($...$)",
+          "solution": "Lời giải ngắn gọn 1-2 dòng cho giáo viên ($...$)",
+          "answer": "Đáp án hoặc kết quả số"
+        }
+      ]
+    }
+  ],
+  "answer_key": [
+    {
+      "drill_id": "Bài 1.1",
+      "short_guide": "Tóm tắt bước làm chính",
+      "final_answer": "Đáp số cuối cùng"
+    }
+  ]
+}
+
+Yêu cầu riêng của giáo viên: %s

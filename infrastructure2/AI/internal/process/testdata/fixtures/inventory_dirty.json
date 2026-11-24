@@ -1,0 +1,15 @@
+```json
+{
+  "total_items": 1,
+  "items": [
+    {
+      "id": "DOC1_B1_BT1",
+      "source_name": "SGK_Toan12",
+      "source_label": "Bài 1.1",
+      "item_type": "bai_tap",
+      "snippet": "Tính \frac{1}{2} độ dài \vec{AB} khi x \neq 0",
+      "has_solution": false
+    }
+  ]
+}
+```

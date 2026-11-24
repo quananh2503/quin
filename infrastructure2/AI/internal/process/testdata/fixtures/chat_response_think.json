@@ -1,0 +1,20 @@
+{
+  "id": "chatcmpl-harvest-001",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "<think>Đang quét tài liệu SGK Toán 12...</think>{\"total_items\": 2, \"items\": [{\"id\": \"DOC1_B1_HD1\", \"source_name\": \"SGK_KNTT_12\", \"source_label\": \"Hoạt động 1 (Tr. 3)\", \"item_type\": \"hoat_dong\", \"snippet\": \"Biểu diễn lực căng dây $\\\\vec{T}$ trong không gian\", \"has_solution\": true}, {\"id\": \"DOC1_B1_VD1\", \"source_name\": \"SGK_KNTT_12\", \"source_label\": \"Ví dụ 1 (Tr. 5)\", \"item_type\": \"vi_du\", \"snippet\": \"Tính độ dài $\\\\overrightarrow{AB}$ trong tứ diện đều\", \"has_solution\": true}]}"
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 1200,
+    "completion_tokens": 300,
+    "total_tokens": 1500,
+    "prompt_cache_hit_tokens": 960,
+    "prompt_cache_miss_tokens": 240
+  }
+}

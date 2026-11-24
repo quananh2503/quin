@@ -1,0 +1,8 @@
+{
+  "repaired_items": [
+    {
+      "target_id": "T1|theory|0",
+      "fixed_content": "Lỗi dính $\\vec{a}$ ngoài toán"
+    }
+  ]
+}

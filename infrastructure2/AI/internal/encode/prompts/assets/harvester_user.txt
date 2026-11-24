@@ -1,0 +1,19 @@
+NHIỆM VỤ: Quét toàn bộ %d tài liệu học tập đính kèm và lập bản kiểm kê VÉT CẠN 100%% TẤT CẢ các câu hỏi, bài tập, hoạt động, ví dụ...
+
+QUY TẮC BẮT BUỘC ĐỂ KHÔNG BỎ SÓT NỘI DUNG (KHÔNG ĐƯỢC TỰ Ý CẮT BỚT):
+1. VÉT CẠN TOÀN DIỆN (COMPREHENSIVE HARVESTING):
+   - Với Sách giáo khoa (SGK): BẮT BUỘC bóc tách từng Hoạt động (HĐ), Luyện tập (LT), Vận dụng (VĐ), Ví dụ (VD), và Bài tập cuối bài (BT). TUYỆT ĐỐI KHÔNG tự ý bỏ qua các câu HĐ, LT, VĐ với lý do là lý thuyết minh họa trên lớp.
+   - Với Đề thi / Trắc nghiệm: Bóc tách từng câu Trắc nghiệm 4 lựa chọn, Trắc nghiệm Đúng/Sai, Trả lời ngắn, Tự luận. CẤM viết tắt dạng dải C1..C50, BẮT BUỘC liệt kê từng câu độc lập.
+   - Với Bài toán thực tế đời sống: Bắt buộc bóc tách chi tiết các bài toán mô hình hóa thực tiễn (vật lý, cân bằng lực, chuyển động, đo đạc không gian...).
+
+2. QUY ƯỚC ĐẶT MÃ ID CHUẨN XÁC ĐỂ TRÁNH TRÙNG LẶP (ANTI-COLLISION):
+   Mỗi mục bài tập/câu hỏi BẮT BUỘC có một trường "id" duy nhất theo định dạng:
+   [Mã_Tài_Liệu]_[Tên_Bài_Hoặc_Phần]_[Mã_Câu]
+   Ví dụ cụ thể:
+   - Tài liệu SGK Bài 1: DOC1_B1_HD1, DOC1_B1_VD1, DOC1_B1_LT1, DOC1_B1_BT1, DOC1_B1_BT2...
+   - Tài liệu SGK Bài 2: DOC1_B2_HD1, DOC1_B2_VD1, DOC1_B2_BT1, DOC1_B2_BT2...
+   - Tài liệu SGK Ôn tập chương: DOC1_OnTap1, DOC1_OnTap2...
+   - Tài liệu Đề kiểm tra/Trắc nghiệm: DOC3_C1, DOC3_C2, DOC3_DS1, DOC3_TLN1...
+
+3. TRƯỜNG "snippet":
+   Mô tả vắn tắt 1-2 câu nội dung của bài toán (yêu cầu tìm gì, dạng toán gì, hình học gì) để bước sau có thể phân loại sư phạm chính xác.
